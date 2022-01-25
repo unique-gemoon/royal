@@ -14,7 +14,10 @@ export const BlocActionButton = styled.div`
             left: calc(50% - 690px + 15px);
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
-                height: calc(50vh - 130px + 25px + 90px);
+                height: calc(50vh - 110px + 25px + 90px);
+                border-radius: 13px;
+                overflow: hidden;
+                box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
             }
         }
     }
@@ -33,7 +36,7 @@ export const BlocActionButton = styled.div`
             right: calc(50% - 690px + 15px);
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
-                max-height: calc(50vh - 190px + 25px + 90px);
+                max-height: calc(50vh - 184px + 25px + 90px);
                 border-radius: 13px;
                 overflow: hidden;
                 box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
@@ -46,7 +49,7 @@ export const BlocActionButton = styled.div`
             right: calc(50% - 690px + 15px);
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
-                height: calc(50vh - 250px + 25px + 90px);
+                height: calc(50vh - 230px + 25px + 90px);
                 border-radius: 13px;
                 overflow: hidden;
                 box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
@@ -156,7 +159,7 @@ export const FolowersModal = styled.div`
         display: none
     }
     .content-tab-modal{
-        height: calc(50vh - 48px - 240px + 25px + 90px);
+        height: calc(50vh  - 240px + 25px + 90px);
         & > div{
             padding: 0;
             height: 100%;
@@ -378,7 +381,7 @@ export const FolowerSearch = styled.div`
         }
     }
     .content-search-results{
-        height: calc(50vh - 40px - 296px + 25px + 90px);
+        height: calc(50vh - 288px + 25px + 90px);
         background: linear-gradient(#2f6fba 0%, #3375b5 99.88%);
         box-shadow: 0px 3px 10px rgba(26, 57, 91, .90);
         border-radius: 12px;
@@ -413,7 +416,7 @@ export const BlocNotification = styled.div`
         height: 47px;
         color: #FFF;
         position: relative;
-        overflow: inherit;
+        overflow: initial;
         text-transform: initial;
         display: flex;
         align-items: center;
@@ -421,6 +424,16 @@ export const BlocNotification = styled.div`
         white-space: nowrap;
         justify-content: center;
         font-size: 13px;
+        &:before {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(#1c2135 0%, rgba(28, 33, 53, 0) 100%);
+            opacity: 0.1;
+        }
         .count-notif{
             margin-left: 10px;
             width: 22px;
@@ -443,6 +456,7 @@ export const BlocNotification = styled.div`
         height: calc(100% - 47px);
         .list-notifs{
             height: calc(100% - 33px);
+            overflow-y: scroll;
         }
         .item-notif{
             position: relative;
@@ -523,3 +537,89 @@ export const BlocNotification = styled.div`
     }
     
 `;
+export const BlocMessagerie = styled.div`
+    width: 233px;
+    .bloc-lists-messagerie{
+        height: 100%;
+        position: relative;
+        .start-new-message{
+            position: absolute;
+            bottom: 42px;
+            right: 10px;
+            height: 42px;
+            width: 42px;
+            min-width: 42px;
+            border-radius: 50%;
+            background-color: #EDAF5D;
+            color: #FFF;
+        }
+        .header-messagerie{
+            & > svg{
+                font-size: 16px;
+                margin-right: 5px;
+            }
+        }
+    }
+    .header-messagerie{
+        height: 47px;
+        color: #FFF;
+        position: relative;
+        overflow: initial;
+        text-transform: initial;
+        display: flex;
+        align-items: center;
+        flex-direction: initial;
+        white-space: nowrap;
+        justify-content: center;
+        font-size: 13px;
+        &:before {
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(#1c2135 0%, rgba(28, 33, 53, 0) 100%);
+            opacity: 0.1;
+        }
+
+    }  
+    .content-messagerie {
+        height: calc(100% - 47px);
+        .list-messagerie{
+            height: calc(100% - 33px);
+            overflow-y: scroll;
+            &::-webkit-scrollbar {
+                background-color: transparent
+            }
+        }
+        .show-more-folower{
+            margin-bottom: 0;
+            height: 33px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            background: linear-gradient(#3064b4 0%, #1a5b93 100%);
+            opacity: 0.6;
+            font-size: 13px;
+            line-height: 18px;
+            position: relative;
+            &:before {
+                content: "";
+                position: absolute;
+                top: 0px;
+                left: 0;
+                right: 0;
+                height: 8px;
+                background: linear-gradient(#1c2135 0%, rgba(28, 33, 53, 0) 100%);
+                opacity: 0.4;
+            }
+            svg{
+                font-size: 18px;
+                margin-right: 3px;
+            }
+        }
+    }
+`;
+export const ItemListMessagerie = styled.div``;

@@ -20,6 +20,7 @@ import { dividerClasses } from '@mui/material';
 import BlocFolowers from '../components/blocFolowers';
 import SearchFolowers from '../components/searchFolowers';
 import Notifications from '../components/notifications';
+import Messagerie from '../components/messagerie';
 
 export default function Home() {
     const [dataMasonry, setDataMasonry] = useState([
@@ -128,9 +129,32 @@ export default function Home() {
             timer: "45mn",
             statut: "old"
         },
+        {
+            id: 4,
+            title: "Création du compte2",
+            timer: "45mn",
+            statut: "old"
+        },
+        {
+            id: 5,
+            title: "Création du compte2",
+            timer: "45mn",
+            statut: "old"
+        },
+        {
+            id: 6,
+            title: "Création du compte2",
+            timer: "45mn",
+            statut: "old"
+        },
+        {
+            id: 7,
+            title: "Création du compte2",
+            timer: "45mn",
+            statut: "old"
+        },
     ]);
     const [newNotifs, setNewNotif] = useState(dataNotifs.filter((newNotif) => newNotif.statut === "new"));
-    
     const setItem = (item) => {
         const cpDataMasonry = [...dataMasonry];
         for(var i=0; i < cpDataMasonry.length;i++){
@@ -173,7 +197,7 @@ export default function Home() {
                             <Col md={3}>
                                 <OptionsBtnAction>
                                     <ButtonAction className='messages-bloc-action' setCount={2} icon={<MailOutlineRoundedIcon />}>
-                                        <div>Bloc Message</div>
+                                        <Messagerie />
                                     </ButtonAction>
                                     <ButtonAction className='search-bloc-action' icon={<SearchRoundedIcon />} >
                                         <SearchFolowers />
@@ -182,7 +206,7 @@ export default function Home() {
                                         <BlocFolowers />
                                     </ButtonAction>
                                     <ButtonAction className='notification-bloc-action' setCount={newNotifs.length} icon={<NotificationsNoneOutlinedIcon />} >
-                                        <Notifications item={newNotifs}  />
+                                        <Notifications items={newNotifs.length ? newNotifs : dataNotifs } setNotif={setNewNotif} />
                                     </ButtonAction>
                                 </OptionsBtnAction>
                             </Col>

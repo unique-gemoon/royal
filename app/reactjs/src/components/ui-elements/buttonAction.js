@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import React, { useState } from 'react';
 import { BlocActionButton , ButtonIcon} from "../../assets/styles/componentStyle"
 
-export default function ButtonAction({ isOpen, children, className='', icon, setCount}) {
+export default function ButtonAction({ children, className='', icon=null, setCount=null}) {
 
     const [toggleAction, setToggleAction] = useState(false);
     const [countNotif, setCountNotif] = useState(setCount);
@@ -21,7 +21,6 @@ export default function ButtonAction({ isOpen, children, className='', icon, set
             {toggleAction ? 
                 <div className="content-button-action">
                     {children}
-                    {console.log(toggleAction)}
                 </div>
             : null}
             
