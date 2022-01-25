@@ -1,0 +1,18 @@
+
+body {
+  margin: 0;
+  font-family: 'UtopiaStd-SemiboldDispIt';
+  font-family: 'ProximaNovaSoftW03-Regular';
+  font-size: 20px;
+  background-image: url(assets/images/bg-royalis.png);
+  background-position: center;
+  background-size: cover;
+  min-height: 100vh;
+}
+body.add-pli-showing{
+  overflow: hidden;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
