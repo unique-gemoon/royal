@@ -26,7 +26,7 @@ export default function Messagerie() {
         {
             id: 1,
             name: "Fossum",
-            etat: "sended",
+            etat: "reading",
             timer: "20h",
             lastMesssage: "Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré..."
         },
@@ -36,6 +36,18 @@ export default function Messagerie() {
             etat: "send",
             timer: "1jour",
             lastMesssage: "Oui ça va. Et tiu ?"
+        },
+        {
+            id: 3,
+            name: "Jacquou",
+            timer: "11.09.2020",
+            lastMesssage: "J’ai vu ta dernière publication sur la page universelle !"
+        },
+        {
+            id: 4,
+            name: "Lou",
+            timer: "10.08.2020",
+            lastMesssage: "Oui tout est assez calme récemment"
         },
     ]
 
@@ -60,10 +72,9 @@ export default function Messagerie() {
                 <Button className='start-new-message'><ModeEditOutlineOutlinedIcon /></Button>
             </div>) : null}
             {state.activeItem ? (
-            <>
             <div className='bloc-message-item'>
                 <div className='header-messagerie'>
-                    <span onClick={(e) => {
+                    <span className='back-to-list' onClick={(e) => {
                           e.preventDefault();
                           const cpState = { ...state };
                           cpState.activeItem = false;
@@ -75,16 +86,16 @@ export default function Messagerie() {
                     <div>
                         <Button
                             id="demo-positioned-button"
-                            aria-controls={open ? 'basic-menu' : undefined}
+                            aria-controls={open ? 'menu-option-message' : undefined}
                             aria-haspopup="true"
                             aria-expanded={open ? 'true' : undefined}
                             onClick={handleClick}
+                            className='btn-option-message'
                         >
                             <MoreVertIcon />
                         </Button>
                         <Menu
-                            id="basic-menu"
-                            aria-labelledby="demo-positioned-button"
+                            id="menu-option-message"
                             anchorEl={anchorEl}
                             open={open}
                             onClose={handleClose}
@@ -92,23 +103,22 @@ export default function Messagerie() {
                             'aria-labelledby': 'basic-button',
                             }}
                             anchorOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-        transformOrigin={{
-          vertical: 'top',
-          horizontal: 'right',
-        }}
-                        >
-                            <MenuItem onClick={handleClose}>Profile</MenuItem> 
+                                vertical: -14,
+                                horizontal: 33,
+                            }}
+                                transformOrigin={{
+                                vertical: 'top',
+                                horizontal: 'right',
+                            }}
+                        >   <span className='close-drop-menu' onClick={handleClose}><MoreVertIcon /></span>
+                            <MenuItem onClick={handleClose}>Bloquer</MenuItem> 
                         </Menu>
                     </div>
 
 
                 </div>
                 <div className='content-messagerie'></div>
-            </div>
-            </>) : null}
+            </div>) : null}
         </BlocMessagerie>
   );
 }

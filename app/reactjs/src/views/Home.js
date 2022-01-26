@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import Masonry from '@mui/lab/Masonry';
-import ItemMasonry from '../components/itemMasonry';
+import ItemMasonry from '../components/itemMasonry/itemMasonry';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { ContainerDef, DefaultMain, FooterDefault, OptionsBtnAction } from '../assets/styles/globalStyle';
 import {Modal, Row, Col} from 'react-bootstrap';
@@ -170,7 +170,7 @@ export default function Home() {
         <DefaultMain>
             <StyledEngineProvider injectFirst>
                 <ContainerDef>
-                    <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={0}>
+                    <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
                         {dataMasonry.map((item) => (
                             <div key={item.id}>
                                 <ItemMasonry item={item} setItem={setItem}/>

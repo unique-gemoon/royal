@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
-import HeadItem from './itemMasonry/headItem';
-
+import { MasonryItem } from '../../assets/styles/componentStyle';
+import HeadItem from './headItem';
 
 export default function ItemMasonry({item, setItem = ()=>{}}) {
 
     return (
-        <div className='item-masonry'>
+        <MasonryItem>
             {/* <HeadItem item={item} setItem={setItem} /> */}
             <img style={{ width: "100%" }} src={item.image} alt='' />
-        </div>
+        </MasonryItem>
     )
 }

@@ -16,23 +16,48 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
-/* width */
+/* width
 ::-webkit-scrollbar {
   width: 5px;
 }
 
-/* Track */
 ::-webkit-scrollbar-track {
-  background: #418cd5; 
+  background: transparent; 
 }
  
-/* Handle */
 ::-webkit-scrollbar-thumb {
   background: #1e52a0; 
   border-radius: 10px;
 }
 
-/* Handle on hover */
 ::-webkit-scrollbar-thumb:hover {
   background: #555; 
+} */
+
+#menu-option-message > .MuiPaper-root{
+  border-radius: 10.62px;
+  background: linear-gradient(#1663a0 0%, #135d98 93.46%);
+  color: #FFF;
+  
+    
+}
+#menu-option-message > .MuiPaper-root .close-drop-menu{
+  position: absolute;
+  right: 12px;
+}
+#menu-option-message > .MuiPaper-root .close-drop-menu svg{
+  font-size: 20px;
+}
+#menu-option-message > .MuiPaper-root ul{
+  padding: 9px 20px 9px 0;
+  min-width: 141px;
+  position: relative;
+}
+#menu-option-message > .MuiPaper-root ul li{
+  font-family: 'ProximaNovaSoftW03-Semibold';
+  font-size: 14px;
+  line-height: 18px;
+}
+#menu-option-message > .MuiPaper-root ul li:hover{
+  background-color: transparent;
 }

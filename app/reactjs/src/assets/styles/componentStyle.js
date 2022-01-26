@@ -165,7 +165,7 @@ export const FolowersModal = styled.div`
             height: 100%;
             .list-tab-modal{
                 height: calc(100% - 33px);
-                overflow-y: scroll;
+                overflow-y: auto;
             }
             .show-more-folower{
                 margin-bottom: 0;
@@ -385,11 +385,11 @@ export const FolowerSearch = styled.div`
         background: linear-gradient(#2f6fba 0%, #3375b5 99.88%);
         box-shadow: 0px 3px 10px rgba(26, 57, 91, .90);
         border-radius: 12px;
-        overflow: scroll;
+        overflow: hidden;
         .list-result-search {
             height: calc(100% - 33px);
             background: linear-gradient(#2f6fba 0%, #3375b5 99.88%);
-            overflow-y: scroll;
+            overflow-y: auto;
         }
         .show-more-folower{
             margin-bottom: 0;
@@ -456,7 +456,7 @@ export const BlocNotification = styled.div`
         height: calc(100% - 47px);
         .list-notifs{
             height: calc(100% - 33px);
-            overflow-y: scroll;
+            overflow-y: auto;
         }
         .item-notif{
             position: relative;
@@ -557,6 +557,7 @@ export const BlocMessagerie = styled.div`
             & > svg{
                 font-size: 16px;
                 margin-right: 5px;
+                margin-top: -3px;
             }
         }
     }
@@ -572,6 +573,7 @@ export const BlocMessagerie = styled.div`
         white-space: nowrap;
         justify-content: center;
         font-size: 13px;
+        font-family: 'ProximaNovaSoftW03-Semibold';
         &:before {
             content: "";
             position: absolute;
@@ -588,10 +590,8 @@ export const BlocMessagerie = styled.div`
         height: calc(100% - 47px);
         .list-messagerie{
             height: calc(100% - 33px);
-            overflow-y: scroll;
-            &::-webkit-scrollbar {
-                background-color: transparent
-            }
+            overflow-y: auto;
+            
         }
         .show-more-folower{
             margin-bottom: 0;
@@ -600,11 +600,11 @@ export const BlocMessagerie = styled.div`
             align-items: center;
             justify-content: center;
             cursor: pointer;
-            background: linear-gradient(#3064b4 0%, #1a5b93 100%);
-            opacity: 0.6;
+            background: linear-gradient(#174fa0 0%, #0c4a7a 100%);
             font-size: 13px;
             line-height: 18px;
             position: relative;
+            color: #7fa2d6;
             &:before {
                 content: "";
                 position: absolute;
@@ -618,8 +618,81 @@ export const BlocMessagerie = styled.div`
             svg{
                 font-size: 18px;
                 margin-right: 3px;
+                color: #7fa2d6;
+            }
+        }
+    }
+    .bloc-message-item{
+        .header-messagerie{
+            justify-content: space-between;
+            padding: 6px 14px;
+            .back-to-list{
+                cursor: pointer;
+                svg{
+                    color: #edb05e;
+                }
+            }
+            .name-messagerie{
+                padding: 0 15px;
+                text-align: center;
+                width: 100%;
+            }
+            .btn-option-message{
+                padding: 0;
+                min-width: auto;
+                color: #FFF;
+                margin-left: auto
+            }
+            svg{
+                font-size: 20px;
+            }
+            
+        }
+    }
+`;
+export const ListItemsMessagerie = styled.div``;
+export const ItemListMessagerie = styled.div`
+    padding: 10px 16px;
+    font-size: 12px;
+    line-height: 18px;
+    color: #C3DEEA;
+    position: relative;
+    cursor: pointer;
+    &:nth-child(even){
+        &:before{
+            content: "";
+            position: absolute;
+            left: 0;
+            bottom: 0;
+            right: 0;
+            top: 0;
+            background: #d0eafc;
+            opacity: 0.15;
+        }
+    }
+    .head-item-list-message{
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        .name-item-message {
+            font-family: 'ProximaNovaSoftW03-Semibold';
+            color: #FFF;
+            font-size: 14px;
+        }
+        .date-message{
+            margin-left: auto;
+            padding-left: 10px;
+            svg{
+                color: #74E8BE;
+                font-size: 18px;
+                margin-right: 3px;
             }
         }
     }
 `;
-export const ItemListMessagerie = styled.div``;
+
+export const MasonryItem = styled.div`
+    background-color: #FFF;
+    border-radius: 20px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+`;
