@@ -3,12 +3,13 @@ import Masonry from '@mui/lab/Masonry';
 import ItemMasonry from '../components/itemMasonry/itemMasonry';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { ContainerDef, DefaultMain, FooterDefault, OptionsBtnAction } from '../assets/styles/globalStyle';
-import {Modal, Row, Col} from 'react-bootstrap';
+import { Modal, Row, Col } from 'react-bootstrap';
 import imgM1 from "../assets/images/masonry-model1.png";
 import imgM2 from '../assets/images/masonry-model2.png';
 import imgM3 from '../assets/images/masonry-model3.png';
 import imgM4 from '../assets/images/masonry-model4.png';
 import imgM5 from '../assets/images/masonry-model5.png';
+import imgPli from '../assets/images/image-pli-1.png';
 import ButtonAction from '../components/ui-elements/buttonAction';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -16,7 +17,6 @@ import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import NewPli from '../components/NewPli';
 import SeeCounter from '../components/ui-elements/seeCounter';
-import { dividerClasses } from '@mui/material';
 import BlocFolowers from '../components/blocFolowers';
 import SearchFolowers from '../components/searchFolowers';
 import Notifications from '../components/notifications';
@@ -26,88 +26,163 @@ export default function Home() {
     const [dataMasonry, setDataMasonry] = useState([
         {
             id: 1,
-            image: imgM1,
             namePost: "Jacob",
-            isOpen: false
-            
+            abonnes: 109,
+            abonnements: 109,
+            isOpen: false,
+            niveau1: 'music',
+            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
+                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
+            photos: [
+                {
+                    id: 1,
+                    img: imgPli,
+                },
+            ],
+            video: "VIDEO",
+            music: [
+                {
+                    id: 1,
+                    name: "Plants",
+                    genre: "Crumb",
+                    url: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+                }
+            ],
         },
         {
             id: 2,
-            image: imgM1,
             namePost: "Jacob",
-            isOpen: false
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: true,
+            isOpen: false,
+            niveau1: 'music',
+            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
+                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
+            photos: [
+                {
+                    id: 1,
+                    img: imgPli,
+                },
+            ],
+            music: [
+                {
+                    id: 1,
+                    name: "Plants",
+                    genre: "Crumb",
+                    url: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+                }
+            ]
         },
         {
             id: 3,
-            image: imgM5,
-            namePost: "Jacob",
-            isOpen: false
+            namePost: "Lys",
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            isOpen: false,
+            niveau1: 'soundage',
+            titleSoundage: "Qui gagnera l’élection présidentielle 2022 ?",
+            soundage: [
+                {
+                    id: 1,
+                    label: "Emmanuel Macron",
+                    countQte: "38%",
+                    choix: false,
+                    value: 1,
+                },
+                {
+                    id: 2,
+                    label: "Eric Zemmour",
+                    countQte: "35%",
+                    choix: false,
+                    value: 2,
+                },
+                {
+                    id: 3,
+                    label: "Marine Le Pen",
+                    countQte: "27%",
+                    choix: false,
+                    value: 3,
+                }
+            ]
         },
         {
             id: 4,
-            image: imgM2,
             namePost: "Jacob",
-            isOpen: false
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            isOpen: false,
+            niveau1: 'descriptionNV1',
+            descriptionMiniature: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
+                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
+            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
+                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
+            photos: [
+                {
+                    id: 1,
+                    img: imgPli,
+                },
+            ],
         },
         {
             id: 5,
-            image: imgM3,
             namePost: "Jacob",
-            isOpen: false
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            isOpen: false,
+            niveau1: 'photo',
+            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
+                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
+            photos: [
+                {
+                    id: 1,
+                    img: imgPli,
+                },
+            ],
+            music: [
+                {
+                    id: 1,
+                    name: "Plants",
+                    genre: "Crumb",
+                    url: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+                }
+            ]
         },
         {
             id: 6,
-            image: imgM1,
             namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 7,
-            image: imgM5,
-            namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 8,
-            image: imgM2,
-            namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 9,
-            image: imgM4,
-            namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 10,
-            image: imgM3,
-            namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 11,
-            image: imgM5,
-            namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 12,
-            image: imgM2,
-            namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 13,
-            image: imgM2,
-            namePost: "Jacob",
-            isOpen: false
-        },
-        {
-            id: 14,
-            image: imgM4,
-            namePost: "Jacob",
-            isOpen: false
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            isOpen: false,
+            niveau1: 'soundage',
+            titleSoundage: "Qui gagnera l’élection présidentielle 2022 ?",
+            soundage: [
+                        {
+                            id: 1,
+                            label: "Emmanuel Macron",
+                            countQte: "38%",
+                            choix: false,
+                            value: 1,
+                        },
+                        {
+                            id: 2,
+                            label: "Eric Zemmour",
+                            countQte: "35%",
+                            choix: false,
+                            value: 2,
+                        },
+                        {
+                            id: 3,
+                            label: "Marine Le Pen",
+                            countQte: "27%",
+                            choix: false,
+                            value: 3,
+                        }
+            ]
         },
     ]);
     const [dataNotifs, setDataNotifs] = useState([
@@ -157,8 +232,8 @@ export default function Home() {
     const [newNotifs, setNewNotif] = useState(dataNotifs.filter((newNotif) => newNotif.statut === "new"));
     const setItem = (item) => {
         const cpDataMasonry = [...dataMasonry];
-        for(var i=0; i < cpDataMasonry.length;i++){
-            if(cpDataMasonry[i].id==item.id){
+        for (var i = 0; i < cpDataMasonry.length; i++) {
+            if (cpDataMasonry[i].id == item.id) {
                 cpDataMasonry[i] = item;
                 // console.log(cpDataMasonry[i])   
             }
@@ -173,11 +248,10 @@ export default function Home() {
                     <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
                         {dataMasonry.map((item) => (
                             <div key={item.id}>
-                                <ItemMasonry item={item} setItem={setItem}/>
-                                <Modal show={item.isOpen} onHide={()=>{setItem({...item,isOpen:false})}}>
-                                    
+                                <ItemMasonry item={item} setItem={setItem} />
+                                <Modal show={item.isOpen} onHide={() => { setItem({ ...item, isOpen: false }) }}>
                                     <Modal.Body>
-                                        <ItemMasonry item={item} setItem={setItem}/>
+                                        <ItemMasonry item={item} setItem={setItem} />
                                     </Modal.Body>
                                 </Modal>
                             </div>
@@ -206,7 +280,7 @@ export default function Home() {
                                         <BlocFolowers />
                                     </ButtonAction>
                                     <ButtonAction className='notification-bloc-action' setCount={newNotifs.length} icon={<NotificationsNoneOutlinedIcon />} >
-                                        <Notifications items={newNotifs.length ? newNotifs : dataNotifs } setNotif={setNewNotif} />
+                                        <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
                                     </ButtonAction>
                                 </OptionsBtnAction>
                             </Col>
