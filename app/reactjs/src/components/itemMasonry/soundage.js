@@ -1,55 +1,56 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { SoundageBloc, ItemResultSoundage } from '../../assets/styles/componentStyle';
 import RadioButton from '../ui-elements/radioButton';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 
-export default function Soundage({ item, setItem }) {
+export default function Soundage({ name, niveau, item, setItem }) {
 
-    const [check , setCheck] = useState('');
-    const [showResult , setShowResult] = useState(false);
-
+    const [items] = useState(niveau == 1 ? [...item.nv1.soundage] : [...item.nv2.soundage]);
     return (
-        <SoundageBloc>
-            <p className='titre-saoundage'>{item.titleSoundage}</p>
-                {!showResult && item && item.soundage &&
-                    (<>
-                        <RadioButton 
-                            className="bloc-choix-soundage" 
-                            options={item.soundage} 
-                            value={check} 
-                            name={item.id} 
-                            onChange={(val) => {
-                                for (let i = 0; i < item.soundage.length; i++) {
-                                    if (parseInt(item.soundage[i].id) === parseInt(val.id)) {
-                                        item.soundage[i].choix = true;
-                                        setCheck(val.id);
-                                    } else {
-                                        item.soundage[i].choix = false;
-                                    }
+        <> {items ? (<SoundageBloc>
+            {!item.result && 
+                (<>
+                    <RadioButton
+                        className="bloc-choix-soundage"
+                        options={items}
+                        value={item.value}
+                        name={name}
+                        onChange={(val) => {
+                            for (let i = 0; i < items.length; i++) {
+                                if (items[i].value == val.value) {
+                                    items[i].choix = true;
+                                } else {
+                                    items[i].choix = false;
                                 }
-                                setItem(item);
-                            }}
-                        />
-                        <p className='btn-show-result' onClick={() => { if (check){ setShowResult(true) }
-                            }}>Voir les résultats</p>
-                    </>
+                            }
+                            if (niveau == 1) {
+                                setItem({ ...item, value: val.value, nv1: { ...item.nv1, soundage: items } });
+                            } else if (niveau == 2) {
+                                setItem({ ...item, value: val.value, nv2: { ...item.nv2, soundage: items } });
+                            }
+                        }}
+                    />
+                <p className='btn-show-result' onClick={() => { setItem({ ...item, result: true})}}>Voir les résultats</p>
+                </>
                 )}
 
-                {showResult ? (
-                    <div className='bloc-result-soundage'>
-                        {item.soundage && item.soundage.map((val, index) => (
+            
+            {item.result &&   (
+                <div className='bloc-result-soundage'>
+                    {items.map((val, index) => (
 
-                            <ItemResultSoundage key={index} purcentage={val.countQte}>
-                            <div className='content-result-soundage' > 
+                        <ItemResultSoundage key={index} purcentage={val.countQte}>
+                            <div className='content-result-soundage' >
                                 <span>{val.label}</span> {val.choix ? <CheckCircleOutlineIcon /> : null}
                             </div>
                             <span className='purcentage-item'>{val.countQte}</span>
                         </ItemResultSoundage>
 
-                        ))}
-                        
-                    </div>
-                ) : null}
-        </SoundageBloc>
+                    ))}
+
+                </div>
+            )}
+        </SoundageBloc>) : null}
+        </>
     );
 }

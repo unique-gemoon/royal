@@ -6,6 +6,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import BallotIcon from '../../assets/images/icons/ballotIcon';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
+import CloseFullscreenTwoToneIcon from '@mui/icons-material/CloseFullscreenTwoTone';
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import InsertLinkIcon from '@mui/icons-material/InsertLink';
 import PersonAddAltOutlinedIcon from '@mui/icons-material/PersonAddAltOutlined';
@@ -18,7 +19,7 @@ import Tooltip from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import ArrowDownIcon from '../../assets/images/icons/ArrowDownIcon';
 
-export default function HeadItem({ item, setItem = ()=>{} }) {
+export default function HeadItem({ item, setItem = ()=>{}, state, setState }) {
     const [toggleProfile, setToggleProfile] = useState(false);
     const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
     const handleTooltipClose = () => {
@@ -32,20 +33,20 @@ export default function HeadItem({ item, setItem = ()=>{} }) {
             <HeadContentItem>
                 <div className='bloc-content-item'>
                     <DetailsItems>
-                    {item.description || item.descriptionMiniature ?
+                        {(item.nv1.description && !item.nv1.soundage) || (item.nv2 && item.nv2.description) ?
                             <div className='item-detail format-text-detail'>
                                 <FormatSizeIcon />
                             </div> : null}
-                        {item.music ? <div className='item-detail sound-detail'>
+                        {item.nv1.music || (item.nv2 && item.nv2.music)  ? <div className='item-detail sound-detail'>
                             <GraphicEqIcon />
                         </div> : null}
-                        {item.soundage ? <div className='item-detail soundage-detail'>
+                        {item.nv1.soundage || (item.nv2 && item.nv2.soundage) ? <div className='item-detail soundage-detail'>
                             <BallotIcon />
                         </div> : null}
-                        {item.photos ? <div className='item-detail image-detail'>
+                        {item.nv1.photos || (item.nv2 && item.nv2.photos)  ? <div className='item-detail image-detail'>
                             <ImageIcon />
                         </div> : null}
-                        {item.video ? <div className='item-detail video-detail'>
+                        {item.nv1.video || (item.nv2 && item.nv2.video)  ? <div className='item-detail video-detail'>
                             <PlayArrowIcon />
                         </div> : null}
                     </DetailsItems> 
@@ -90,7 +91,7 @@ export default function HeadItem({ item, setItem = ()=>{} }) {
                 </div>
                 <div className='option-item'>
                     <div className='users-enligne-pli'>
-                        14 <VisibilityIcon /> <OpenInFullOutlinedIcon className='open-zoom-icon' />
+                    14 <VisibilityIcon /> {state.showModal ? <CloseFullscreenTwoToneIcon className='open-zoom-icon' onClick={() => setState({ ...state, showModal: false })} /> : <OpenInFullOutlinedIcon className='open-zoom-icon' onClick={() => setState({ ...state, showModal: true })} />}
                     </div>
                     <div className='nb-message-comment'>
                     3 <CommentOutlinedIcon /> <ArrowDownIcon />

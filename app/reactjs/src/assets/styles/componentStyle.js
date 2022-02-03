@@ -1,4 +1,5 @@
 import { Button } from "@mui/material";
+import { Modal } from "react-bootstrap";
 import styled from "styled-components";
 import { OrangeColor } from "./globalStyle";
 
@@ -703,6 +704,48 @@ export const MasonryItem = styled.div`
     .descripton-miniature{
         margin-bottom: 15px;
     }
+    .content-bloc-NV2{
+        padding: 22px 23px 0px;
+        font-size: 15px;
+        line-height: 22px;
+    }
+    .toggle-pli2 {
+        display: flex;
+        align-items: normal;
+        justify-content: center;
+        background-color: #94A9B2;
+        color: #FFF;
+        font-size: 13px;
+        line-height: 1;
+        padding: 5px;
+        svg{
+            font-size: 16px;
+            margin-left: 4px;
+        }
+        span{
+            display: flex;
+            align-items: center;
+            margin: 0 8px;
+            &.toggle-zoom{
+                cursor: pointer;
+            }
+        }
+    }
+`;
+export const ModalItem = styled(Modal)`
+    background-color: rgba(6, 20, 30, .94);
+    .modal-dialog{
+        width: 900px;
+        max-width: 90%;
+        .modal-content{
+            border-radius: 0px;
+            background-color: transparent;
+            border: 0;
+        }
+        .modal-body{
+            padding: 0;
+        }
+    }
 `;
 export const MusicPlayer = styled.div`
     margin-bottom: 12px;
@@ -781,6 +824,11 @@ export const BarTimer = styled.div`
             padding: 6px;
             font-size: 13px;
             line-height: 1;
+            cursor: pointer;
+            transition: .3s ease;
+            &:hover{
+                background-color: #e6e6e6;
+            }
             & > span{
                 color: #798993;
             }
@@ -898,4 +946,82 @@ export const SoundageBloc = styled.div`
         margin-bottom: 5px;
     }
     margin-bottom: 10px;
+`;
+export const BlocGalleryImages = styled.div`
+    display: flex;
+    flex-wrap: wrap;
+    cursor: pointer;
+    margin: 0 -2px 15px;
+    .item-gallery{
+        padding: 2px;
+        position: relative;
+        height: 220px;
+        &:before{
+            content: "";
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            right: 2px;
+            bottom: 2px;
+            background: #000;
+            opacity: .22;
+            transition: .3s ease-in-out;
+            border-radius: 10px;
+        }
+        &:hover{
+            &::before{
+                opacity: 0;
+            }
+        }
+        img{
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+    }
+    &.tow-item{
+        .item-gallery{
+            width: 50%;
+        }
+    }
+    &.four-item{
+        .item-gallery{
+            width: 50%;
+            height: 110px;
+        }
+    }
+    &.three-item{
+        flex-flow: column wrap;
+        width: 100%;
+        height: 260px;
+        .item-gallery{
+            width: calc(40% - 2px);
+            order: 2;
+            height: 110px;
+            &:first-child{
+                width: calc(60% - 2px);
+                order: 1;
+                height: 220px;
+            }
+        }
+    }
+`;
+export const VideoPlayer = styled.div`
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+    .video-react {
+        .video-react-big-play-button{
+            font-size: 69px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: transparent !important;
+            border: 0;
+        }
+        .video-react-control-bar{
+            background-color: rgba(0, 0, 0, .27);
+        }
+    }
 `;

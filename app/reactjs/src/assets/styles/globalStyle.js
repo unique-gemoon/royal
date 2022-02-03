@@ -17,6 +17,8 @@ export const DefaultMain = styled.div`
         right: 0;
         height: 200px;
         background: linear-gradient(rgba(130, 179, 244, 0) 0%, #80b1f4 93.45%);
+        pointer-events: none;
+        z-index: 99;
     }
 `;
 export const ContainerDef = styled(Container)`

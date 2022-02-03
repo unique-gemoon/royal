@@ -17,14 +17,14 @@ export default function RadioButton({
             <input
               type={"radio"}
               name={name}
-              checked={radio.value === value}
+              checked={radio.value == value}
               disabled={disabled}
               onChange={(e) => {
                 if (e.target.checked) onChange(radio);
               }}
-              id={`${name}_${key}`}
+              id={`${radio.value}_${key}`}
             />
-            <label htmlFor={`${name}_${key}`}>{radio.label}</label>
+            <label htmlFor={`${radio.value}_${key}`}>{radio.label}</label>
           </div>
         ))}
       </div>

@@ -4,13 +4,13 @@ import { BarTimer } from '../assets/styles/componentStyle';
 import { Button } from "@mui/material";
 import TimerOutlinedIcon from '@mui/icons-material/TimerOutlined';
 
-export default function BarTemporelle() {
+export default function BarTemporelle({ state, setState, ...props}) {
     return (
         <BarTimer>
             <LinearProgress className="progressBar-item" variant="determinate" value={93} />
             <div className='bloc-timer-Bar'>
                 <Button>-</Button>
-                <div className='content-timer-bar'>
+                <div className='content-timer-bar' onClick={() => setState({...state,showPli2: !state.showPli2 })}>
                     <span className='timer-down'>320</span>
                     <div className='timer-item'>
                         <TimerOutlinedIcon /> 04 : 12 : 06

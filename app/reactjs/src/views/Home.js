@@ -3,13 +3,9 @@ import Masonry from '@mui/lab/Masonry';
 import ItemMasonry from '../components/itemMasonry/itemMasonry';
 import { StyledEngineProvider } from '@mui/material/styles';
 import { ContainerDef, DefaultMain, FooterDefault, OptionsBtnAction } from '../assets/styles/globalStyle';
-import { Modal, Row, Col } from 'react-bootstrap';
-import imgM1 from "../assets/images/masonry-model1.png";
-import imgM2 from '../assets/images/masonry-model2.png';
-import imgM3 from '../assets/images/masonry-model3.png';
-import imgM4 from '../assets/images/masonry-model4.png';
-import imgM5 from '../assets/images/masonry-model5.png';
+import { Row, Col } from 'react-bootstrap';
 import imgPli from '../assets/images/image-pli-1.png';
+import videoPli from '../assets/images/video.mp4';
 import ButtonAction from '../components/ui-elements/buttonAction';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
@@ -29,83 +25,79 @@ export default function Home() {
             namePost: "Jacob",
             abonnes: 109,
             abonnements: 109,
-            isOpen: false,
-            niveau1: 'music',
-            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
-                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
-            photos: [
-                {
-                    id: 1,
-                    img: imgPli,
-                },
-            ],
-            video: "VIDEO",
-            music: [
-                {
+            statutAbonne: false,
+            nv1: {
+                music: {
                     id: 1,
                     name: "Plants",
                     genre: "Crumb",
-                    url: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+                    lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
                 }
-            ],
+            },
+            nv2:{
+                description: "Voici mon nouveau son du moment, qu’est ce que vous en pensez ?",
+                music: {
+                    id: 1,
+                    name: "Plants",
+                    genre: "Crumb",
+                    lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+                },
+                photos: [
+                    {
+                        id: 1,
+                        source: imgPli,
+                    },
+                ],
+
+            }
         },
         {
             id: 2,
             namePost: "Jacob",
             abonnes: 109,
             abonnements: 109,
-            statutAbonne: true,
-            isOpen: false,
-            niveau1: 'music',
-            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
-                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
-            photos: [
-                {
-                    id: 1,
-                    img: imgPli,
-                },
-            ],
-            music: [
-                {
+            statutAbonne: false,
+            nv1: {
+                music: {
                     id: 1,
                     name: "Plants",
                     genre: "Crumb",
-                    url: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+                    lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
                 }
-            ]
+            }
         },
         {
             id: 3,
-            namePost: "Lys",
+            namePost: "Jacob",
             abonnes: 109,
             abonnements: 109,
-            statutAbonne: false,
-            isOpen: false,
-            niveau1: 'soundage',
-            titleSoundage: "Qui gagnera l’élection présidentielle 2022 ?",
-            soundage: [
-                {
-                    id: 1,
-                    label: "Emmanuel Macron",
-                    countQte: "38%",
-                    choix: false,
-                    value: 1,
-                },
-                {
-                    id: 2,
-                    label: "Eric Zemmour",
-                    countQte: "35%",
-                    choix: false,
-                    value: 2,
-                },
-                {
-                    id: 3,
-                    label: "Marine Le Pen",
-                    countQte: "27%",
-                    choix: false,
-                    value: 3,
-                }
-            ]
+            statutAbonne: true,
+            nv1: {
+                description: 'On the 10th anniversary of the passage of the #CVAA10',
+                soundage: [
+                    {
+                        id: 1,
+                        label: "Emmanuel Macron",
+                        countQte: "38%",
+                        choix: false,
+                        value: "Emmanuel-Macron0",
+                    },
+                    {
+                        id: 2,
+                        label: "Eric Zemmour",
+                        countQte: "35%",
+                        choix: false,
+                        value: "Eric-Zemmour0",
+                    },
+                    {
+                        id: 3,
+                        label: "Marine Le Pen",
+                        countQte: "27%",
+                        choix: false,
+                        value: "Marine-Pen0",
+                    }
+                ],
+            }
         },
         {
             id: 4,
@@ -113,18 +105,35 @@ export default function Home() {
             abonnes: 109,
             abonnements: 109,
             statutAbonne: false,
-            isOpen: false,
-            niveau1: 'descriptionNV1',
-            descriptionMiniature: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
-                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
-            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
-                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
-            photos: [
-                {
-                    id: 1,
-                    img: imgPli,
-                },
-            ],
+            nv1:{
+                description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
+                    On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
+            },
+            nv2:{
+                soundage: [
+                    {
+                        id: 1,
+                        label: "Emmanuel Macron",
+                        countQte: "38%",
+                        choix: false,
+                        value: "Emmanuel-Macron3",
+                    },
+                    {
+                        id: 2,
+                        label: "Eric Zemmour",
+                        countQte: "35%",
+                        choix: false,
+                        value: "Eric-Zemmour3",
+                    },
+                    {
+                        id: 3,
+                        label: "Marine Le Pen",
+                        countQte: "27%",
+                        choix: false,
+                        value: "Marine-Pen3",
+                    }
+                ],
+            }
         },
         {
             id: 5,
@@ -132,24 +141,27 @@ export default function Home() {
             abonnes: 109,
             abonnements: 109,
             statutAbonne: false,
-            isOpen: false,
-            niveau1: 'photo',
-            description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
-                On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
-            photos: [
-                {
-                    id: 1,
-                    img: imgPli,
-                },
-            ],
-            music: [
-                {
-                    id: 1,
-                    name: "Plants",
-                    genre: "Crumb",
-                    url: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-                }
-            ]
+            nv1:{
+                description: "On the 10th anniversary of the passage of the #CVAA10",
+                photos: [
+                    {
+                        id: 1,
+                        source: imgPli,
+                    },
+                    {
+                        id: 2,
+                        source: imgPli,
+                    },
+                    {
+                        id: 3,
+                        source: imgPli,
+                    },
+                    {
+                        id: 4,
+                        source: imgPli,
+                    },
+                ],
+            }
         },
         {
             id: 6,
@@ -157,35 +169,128 @@ export default function Home() {
             abonnes: 109,
             abonnements: 109,
             statutAbonne: false,
-            isOpen: false,
-            niveau1: 'soundage',
-            titleSoundage: "Qui gagnera l’élection présidentielle 2022 ?",
-            soundage: [
-                        {
-                            id: 1,
-                            label: "Emmanuel Macron",
-                            countQte: "38%",
-                            choix: false,
-                            value: 1,
-                        },
-                        {
-                            id: 2,
-                            label: "Eric Zemmour",
-                            countQte: "35%",
-                            choix: false,
-                            value: 2,
-                        },
-                        {
-                            id: 3,
-                            label: "Marine Le Pen",
-                            countQte: "27%",
-                            choix: false,
-                            value: 3,
-                        }
-            ]
+            nv1:{
+                description: "On the 10th anniversary of the passage of the #CVAA10",
+                video: videoPli,
+            }
+        },
+        {
+            id: 7,
+            namePost: "Jacob",
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: true,
+            nv1: {
+                description: 'On the 10th anniversary of the passage of the #CVAA10',
+                soundage: [
+                    {
+                        id: 1,
+                        label: "Emmanuel Macron",
+                        countQte: "38%",
+                        choix: false,
+                        value: 'Emmanuel-Macron1',
+                    },
+                    {
+                        id: 2,
+                        label: "Eric Zemmour",
+                        countQte: "35%",
+                        choix: false,
+                        value: "Eric-Zemmour1",
+                    },
+                    {
+                        id: 3,
+                        label: "Marine Le Pen",
+                        countQte: "27%",
+                        choix: false,
+                        value: "Marine-Pen1",
+                    }
+                ],
+            }
+        },
+        {
+            id: 8,
+            namePost: "Jacob",
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            nv1: {
+                description: "On the 10th anniversary of the passage of the #CVAA10",
+                video: videoPli,
+            }
+        },
+        {
+            id: 9,
+            namePost: "Jacob",
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            nv1: {
+                description: "On the 10th anniversary of the passage of the #CVAA10",
+                photos: [
+                    {
+                        id: 1,
+                        source: imgPli,
+                    },
+                    {
+                        id: 2,
+                        source: imgPli,
+                    },
+                ],
+            }
+        },
+        {
+            id: 10,
+            namePost: "Jacob",
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            nv1: {
+                description: "On the 10th anniversary of the passage of the #CVAA10",
+                photos: [
+                    {
+                        id: 1,
+                        source: imgPli,
+                    },
+                    {
+                        id: 2,
+                        source: imgPli,
+                    },
+                    {
+                        id: 3,
+                        source: imgPli,
+                    },
+                ],
+            }
+        },
+        {
+            id: 11,
+            namePost: "Jacob",
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            nv1: {
+                description: <>On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world.<br />
+                    On the 10th anniversary of the passage of the #CVAA10, we celebrate the brilliant minds and technologies that continue to build a more equitable world and technologies that continue to build a more equitable world. </>,
+            }
+        },
+        {
+            id: 12,
+            namePost: "Jacob",
+            abonnes: 109,
+            abonnements: 109,
+            statutAbonne: false,
+            nv1: {
+                description: "On the 10th anniversary of the passage of the #CVAA10",
+                photos: [
+                    {
+                        id: 1,
+                        source: imgPli,
+                    },
+                ],
+            }
         },
     ]);
-    const [dataNotifs, setDataNotifs] = useState([
+    const [dataNotifs] = useState([
         {
             id: 1,
             title: "Création du compte",
@@ -234,13 +339,13 @@ export default function Home() {
         const cpDataMasonry = [...dataMasonry];
         for (var i = 0; i < cpDataMasonry.length; i++) {
             if (cpDataMasonry[i].id == item.id) {
-                cpDataMasonry[i] = item;
-                // console.log(cpDataMasonry[i])   
+                cpDataMasonry[i] = item; 
             }
         }
         setDataMasonry(cpDataMasonry);
     }
-
+    
+    
     return (
         <DefaultMain>
             <StyledEngineProvider injectFirst>
@@ -248,12 +353,7 @@ export default function Home() {
                     <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
                         {dataMasonry.map((item) => (
                             <div key={item.id}>
-                                <ItemMasonry item={item} setItem={setItem} />
-                                <Modal show={item.isOpen} onHide={() => { setItem({ ...item, isOpen: false }) }}>
-                                    <Modal.Body>
-                                        <ItemMasonry item={item} setItem={setItem} />
-                                    </Modal.Body>
-                                </Modal>
+                                <ItemMasonry item={item} setItem={setItem} open={false} />
                             </div>
                         ))}
                     </Masonry>
