@@ -10,7 +10,7 @@ export default function Input({
   onClick,
   value,
   id,
-  className = "",
+  className = "form-group",
   children,
   ...props
 }) {

@@ -696,6 +696,7 @@ export const MasonryItem = styled.div`
     background-color: #FFF;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
     .bloc-miniature{
         padding: 0 23px;
         font-size: 15px;
@@ -703,6 +704,10 @@ export const MasonryItem = styled.div`
     }
     .descripton-miniature{
         margin-bottom: 15px;
+    }
+    .Bloc-NV2{
+        max-height: ${({ height }) => (height ? `calc(700px - ${height}px)`: 0)};
+        overflow-y: scroll;
     }
     .content-bloc-NV2{
         padding: 22px 23px 0px;
@@ -1023,5 +1028,174 @@ export const VideoPlayer = styled.div`
         .video-react-control-bar{
             background-color: rgba(0, 0, 0, .27);
         }
+    }
+`;
+export const BlocEmojis = styled.div`
+    .btn-toggle-emoji{
+        padding: 0;
+        position: absolute;
+        right: 0;
+        top: -4px;
+        min-width: auto;
+        color: #a0a4b5;
+        transition: .3s ease-in-out;
+        svg{
+            font-size: 18px;
+        }
+        &:hover, &.active-emoji{
+            color: #EEAA67;
+        }
+        span{
+            display: none;
+        }
+    }
+    .bloc-list-emoji{
+        position: absolute;
+        right: 0;
+        .emoji-picker-react {
+            height: 200px;
+            .content-wrapper, .emoji-group{
+                &:before{
+                    content: none;
+                }
+            }
+        }
+        
+    }
+`;
+export const FormComment = styled.div`
+    background-color: #d9dce1;
+    padding: 14px 12px 14px 18px;
+    display: flex;
+    align-items: center;
+    .form-control{
+        font-family: 'ProximaNovaSoftW03-Semibold';
+        background-color: transparent;
+        border: 0;
+        border-bottom: 1px solid #8a9bac;
+        font-size: 13px;
+        border-radius: 0;
+        padding: 0;
+        padding-right: 20px;
+        color: #6a7b89;
+        transition: .3s ease-in-out;
+        &:focus{
+            border-color: #EEAA67;
+            box-shadow: none;
+            outline: none;
+        }
+    }
+    .content-form-comment{
+        position: relative;
+        width: 100%;
+        margin-right: 8px;
+    }
+    .btn-send-comment {
+        color: #3583D6;
+        border: 1px solid #3583D6;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        padding: 0;
+        top: 7px;
+        svg{
+            font-size: 10px;
+            transform: rotate(-90deg);
+            margin-bottom: 1px;
+        }
+    }
+`;
+
+export const CommentItem = styled.div`
+    padding: 14px 18px;
+    border-bottom: 1px solid #D5DFE9;
+    &:last-child{
+        border-bottom: 0;
+    }
+    .bloc-item-reponces{
+        padding: 0 10px;
+    }
+    .head-comment {
+        font-family: 'ProximaNovaSoftW03-Semibold';
+        font-size: 14px;
+        line-height: 18px;
+        display: flex;
+        color: #798993;
+        span{
+            display: block;
+            margin: 0 5px;
+        }
+        .name-user-comment{
+            color: #070707;
+            margin-left: 0;
+        }
+    }
+    .content-text-comment{
+        font-size: 15px;
+        padding-left: 10px;
+    }
+    .toggle-reponces {
+        margin-bottom: 0;
+        cursor: pointer;
+        font-size: 14px;
+        line-height: 24px;
+        color: #3583d6;
+        svg{
+            margin-right: 5px;
+            path{
+                fill: #3583d6;
+            }
+        }
+        &.open{
+            svg{
+                transform: rotate(180deg);
+            }
+        }
+    }
+    .bloc-item-reponces{
+        .reponces-list{
+            padding: 0 10px;
+            & > div{
+                padding: 5px 0;
+                margin-bottom: 5px;
+                &:last-child{
+                    margin-bottom: 0;
+                }
+            }
+        }
+    }
+    .bloc-repondre{
+        padding: 0 10px;
+        .repondre-comment{
+            font-size: 11px;
+            line-height: 24px;
+            color: #798993;
+            text-transform: uppercase;
+            margin-bottom: 4px;
+            display: flex;
+            align-items: baseline;
+            cursor: pointer;
+            &.closed{
+                svg{
+                    path{
+                        fill: #798993;
+                    }
+                }
+            }
+            svg{
+                margin-right: 5px;
+            }
+        }
+        ${FormComment}{
+            background-color: transparent;
+            padding: 0;
+            margin-bottom: 12px;
+        }
+    }
+`;
+export const CommentsBloc = styled.div`
+    &.emoji-open{
+        min-height: 250px;
     }
 `;

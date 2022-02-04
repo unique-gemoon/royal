@@ -48,8 +48,50 @@ export default function Home() {
                         source: imgPli,
                     },
                 ],
-
-            }
+                video: videoPli,
+            },
+            comments:[
+                {
+                    id: 1,
+                    user: "Dan",
+                    subject: "J’aime bien cette citation !",
+                    time: "il y a 3mn",
+                    reponses: [
+                        {
+                            id: 1,
+                            user: "Dan",
+                            subject: "J’aime bien cette citation !",
+                            time: "il y a 2mn",
+                        },
+                        {
+                            id: 2,
+                            user: "Jacquou",
+                            subject: "J’aime bien cette citation !",
+                            time: "il y a 2mn",
+                        },
+                        {
+                            id: 3,
+                            user: "Dan",
+                            subject: "J’aime bien cette citation !",
+                            time: "il y a 2mn",
+                        },
+                    ]
+                },
+                {
+                    id: 2,
+                    user: "Dan",
+                    subject: "J’aime bien cette citation !",
+                    time: "il y a 3mn",
+                    reponses: [
+                        {
+                            id: 1,
+                            user: "Dan",
+                            subject: "J’aime bien cette citation !",
+                            time: "il y a 2mn",
+                        },
+                    ],
+                },
+            ]
         },
         {
             id: 2,
