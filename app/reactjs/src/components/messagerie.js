@@ -9,9 +9,11 @@ import MenuItem from '@mui/material/MenuItem';
 import ListMessagerie from './listMessagerie';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
+import InputEmoji from './ui-elements/inputEmoji';
 
 export default function Messagerie() {
     const [state, setState] = useState({
+
         activeItem: false,
     });
     const [anchorEl, setAnchorEl] = useState(null);
@@ -117,7 +119,11 @@ export default function Messagerie() {
 
 
                 </div>
-                <div className='content-messagerie'></div>
+                <div className='bloc-view-message'>
+
+                    <div className='content-view-messagerie'></div>
+                      <InputEmoji typeInput='textarea' />
+                </div>
             </div>) : null}
         </BlocMessagerie>
   );

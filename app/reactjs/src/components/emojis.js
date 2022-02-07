@@ -38,7 +38,7 @@ export default function Emojis({ state = {}, setState = () => { } }) {
     const onEmojiClick = (event, emojiObject) => {
         setChosenEmoji(emojiObject);
         if (emojiObject.emoji) {
-            setState({ ...state, comment: { ...state.comment, value: state.comment.value + emojiObject.emoji }, opened: !toggleEmoji });
+            setState({ ...state, inputEmoji: { ...state.inputEmoji, value: state.inputEmoji.value + emojiObject.emoji }, opened: !toggleEmoji });
         }
         setToggleEmoji(false);
     };

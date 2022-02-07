@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import ArrowDownIcon from '../../assets/images/icons/ArrowDownIcon';
 import ReplyIcon from '../../assets/images/icons/replyIcon';
 import { CommentItem } from '../../assets/styles/componentStyle';
-import CommentForm from './commentForm';
+import InputEmoji from '../ui-elements/inputEmoji';
 
 export default function ItemComment({name, time, subject, children}) {
     const [state, setState] = useState({
@@ -19,7 +19,7 @@ export default function ItemComment({name, time, subject, children}) {
             <div className='content-text-comment'> {subject}</div>
             <div className='bloc-repondre'>
                 <p className={`repondre-comment ${!state.repondre ? 'closed' : ''}`} onClick={() => setState({ ...state, repondre: !state.repondre })}><ReplyIcon /> Répondre</p>
-                {state.repondre ? <CommentForm /> : null}
+                {state.repondre ? <InputEmoji name="comment-pli" placeholder="Mon commentaire" /> : null}
             </div>
             
             {children ? <div className='bloc-item-reponces'>

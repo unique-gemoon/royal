@@ -1,17 +1,18 @@
 import { Button } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { FormComment } from '../../assets/styles/componentStyle';
-import Input from '../ui-elements/input';
+import { FormEmoji } from '../../assets/styles/componentStyle';
+import Input from './input';
 import SendIcon from '@mui/icons-material/Send';
 import Emojis from '../emojis';
 
-export default function CommentForm({ opened, setOpened = () => {}}) {
+export default function InputEmoji({ name, placeholder, typeInput, opened, setOpened = () => {}, ...props}) {
     const [state, setState] = useState({
-        comment: {
-            name: "comment-input",
-            placeholder: "Mon commentaire",
+        inputEmoji: {
+            name: "message-input",
+            placeholder: "Ecrire un message",
             value: "",
             type: "text",
+            as: typeInput
         },
         opened
     });
@@ -19,22 +20,22 @@ export default function CommentForm({ opened, setOpened = () => {}}) {
         setOpened(state.opened);
     }, [state]);
     return (
-        <FormComment>
-            <div className='content-form-comment'>
+        <FormEmoji className={props.className}>
+            <div className='content-form-emoji'>
                 <Input
-                    {...state.comment}
+                    {...state.inputEmoji}
                     onChange={(e) => {
                         const cpState = { ...state };
-                        cpState.comment.value = e.target.value;
+                        cpState.inputEmoji.value = e.target.value;
                         setState(cpState);
                     }}
                 />
                 <Emojis setState={setState} state={state} />
             </div>
             
-            <Button className='btn-send-comment'>
+            <Button className='btn-send-emoji'>
                 <SendIcon />
             </Button>
-        </FormComment>
+        </FormEmoji>
     );
 }

@@ -538,6 +538,118 @@ export const BlocNotification = styled.div`
     }
     
 `;
+export const BlocEmojis = styled.div`
+    .btn-toggle-emoji{
+        padding: 0;
+        position: absolute;
+        right: 0;
+        top: -4px;
+        min-width: auto;
+        color: #a0a4b5;
+        transition: .3s ease-in-out;
+        svg{
+            font-size: 18px;
+        }
+        &:hover, &.active-emoji{
+            color: #EEAA67;
+        }
+        span{
+            display: none;
+        }
+    }
+    .bloc-list-emoji{
+        position: absolute;
+        right: 0;
+        .emoji-picker-react {
+            height: 200px;
+            .content-wrapper, .emoji-group{
+                &:before{
+                    content: none;
+                }
+            }
+        }
+        
+    }
+`;
+export const FormEmoji = styled.div`
+    
+    display: flex;
+    align-items: center;
+    &.commentaire-form{
+        background-color: #d9dce1;
+        padding: 14px 12px 14px 18px;
+        .form-control{
+            font-family: 'ProximaNovaSoftW03-Semibold';
+            color: #6a7b89;
+            &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                color: #6a7b89;
+            }
+            &::-moz-placeholder { /* Firefox 19+ */
+                color: #6a7b89;
+            }
+            &:-ms-input-placeholder { /* IE 10+ */
+                color: #6a7b89;
+            }
+            &:-moz-placeholder { /* Firefox 18- */
+                color: #6a7b89;
+            }
+        }
+    }
+    .form-control{
+        font-family: 'ProximaNovaSoftW03-Regular';
+        background-color: transparent;
+        border: 0;
+        border-bottom: 1px solid #8a9bac;
+        font-size: 13px;
+        border-radius: 0;
+        padding: 0;
+        padding-right: 20px;
+        color: #fff;
+        transition: .3s ease-in-out;
+        &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+            color: #fff;
+        }
+        &::-moz-placeholder { /* Firefox 19+ */
+            color: #fff;
+        }
+        &:-ms-input-placeholder { /* IE 10+ */
+            color: #fff;
+        }
+        &:-moz-placeholder { /* Firefox 18- */
+            color: #fff;
+        }
+        &:focus{
+            border-color: #EEAA67;
+            box-shadow: none;
+            outline: none;
+        }
+    }
+    textarea{
+        min-height: 20px;
+        line-height: initial;
+        border: 0 !important;
+    }
+    .content-form-emoji{
+        position: relative;
+        width: 100%;
+        margin-right: 8px;
+    }
+    .btn-send-emoji {
+        color: #3583D6;
+        border: 1px solid #3583D6;
+        border-radius: 50%;
+        width: 18px;
+        height: 18px;
+        min-width: 18px;
+        padding: 0;
+        top: 7px;
+        svg{
+            font-size: 10px;
+            transform: rotate(-90deg);
+            margin-bottom: 1px;
+        }
+    }
+`;
 export const BlocMessagerie = styled.div`
     width: 233px;
     .bloc-lists-messagerie{
@@ -624,9 +736,14 @@ export const BlocMessagerie = styled.div`
         }
     }
     .bloc-message-item{
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+        height: 100%;
         .header-messagerie{
             justify-content: space-between;
             padding: 6px 14px;
+            min-height: 47px;
             .back-to-list{
                 cursor: pointer;
                 svg{
@@ -648,6 +765,44 @@ export const BlocMessagerie = styled.div`
                 font-size: 20px;
             }
             
+        }
+        .bloc-view-message{
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            .content-view-messagerie{
+                height: 100%;
+                overflow-y: scroll;
+            }
+            ${FormEmoji}{
+                padding: 0 14px 3px;
+                background: linear-gradient(#1663a0 0%, #135d98 93.46%);
+                .content-form-emoji{
+                    display: flex;
+                    align-items: flex-start;
+                    .form-group{
+                        order: 2;
+                    }
+                    ${BlocEmojis}{
+                        order: 1;
+                        margin-right: 5px;
+                        position: relative;
+                        top: -4px;
+                        .btn-toggle-emoji{
+                            position: static;
+                        }
+                        .bloc-list-emoji{
+                            bottom: 33px;
+                            right: auto;
+                            left: 0;
+                            .emoji-picker-react {
+                                width: 206px;
+                                box-shadow: none;
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 `;
@@ -696,7 +851,6 @@ export const MasonryItem = styled.div`
     background-color: #FFF;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
-    overflow: hidden;
     .bloc-miniature{
         padding: 0 23px;
         font-size: 15px;
@@ -708,6 +862,7 @@ export const MasonryItem = styled.div`
     .Bloc-NV2{
         max-height: ${({ height }) => (height ? `calc(700px - ${height}px)`: 0)};
         overflow-y: scroll;
+        border-radius: 0 0 20px 20px;
     }
     .content-bloc-NV2{
         padding: 22px 23px 0px;
@@ -1030,82 +1185,8 @@ export const VideoPlayer = styled.div`
         }
     }
 `;
-export const BlocEmojis = styled.div`
-    .btn-toggle-emoji{
-        padding: 0;
-        position: absolute;
-        right: 0;
-        top: -4px;
-        min-width: auto;
-        color: #a0a4b5;
-        transition: .3s ease-in-out;
-        svg{
-            font-size: 18px;
-        }
-        &:hover, &.active-emoji{
-            color: #EEAA67;
-        }
-        span{
-            display: none;
-        }
-    }
-    .bloc-list-emoji{
-        position: absolute;
-        right: 0;
-        .emoji-picker-react {
-            height: 200px;
-            .content-wrapper, .emoji-group{
-                &:before{
-                    content: none;
-                }
-            }
-        }
-        
-    }
-`;
-export const FormComment = styled.div`
-    background-color: #d9dce1;
-    padding: 14px 12px 14px 18px;
-    display: flex;
-    align-items: center;
-    .form-control{
-        font-family: 'ProximaNovaSoftW03-Semibold';
-        background-color: transparent;
-        border: 0;
-        border-bottom: 1px solid #8a9bac;
-        font-size: 13px;
-        border-radius: 0;
-        padding: 0;
-        padding-right: 20px;
-        color: #6a7b89;
-        transition: .3s ease-in-out;
-        &:focus{
-            border-color: #EEAA67;
-            box-shadow: none;
-            outline: none;
-        }
-    }
-    .content-form-comment{
-        position: relative;
-        width: 100%;
-        margin-right: 8px;
-    }
-    .btn-send-comment {
-        color: #3583D6;
-        border: 1px solid #3583D6;
-        border-radius: 50%;
-        width: 18px;
-        height: 18px;
-        min-width: 18px;
-        padding: 0;
-        top: 7px;
-        svg{
-            font-size: 10px;
-            transform: rotate(-90deg);
-            margin-bottom: 1px;
-        }
-    }
-`;
+
+
 
 export const CommentItem = styled.div`
     padding: 14px 18px;
@@ -1187,10 +1268,25 @@ export const CommentItem = styled.div`
                 margin-right: 5px;
             }
         }
-        ${FormComment}{
+        ${FormEmoji}{
             background-color: transparent;
             padding: 0;
             margin-bottom: 12px;
+                .form-control{
+                    color: #6a7b89;
+                    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                        color: #6a7b89;
+                    }
+                    &::-moz-placeholder { /* Firefox 19+ */
+                        color: #6a7b89;
+                    }
+                    &:-ms-input-placeholder { /* IE 10+ */
+                        color: #6a7b89;
+                    }
+                    &:-moz-placeholder { /* Firefox 18- */
+                        color: #6a7b89;
+                    }
+                }
         }
     }
 `;

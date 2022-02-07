@@ -12,6 +12,7 @@ export default function Input({
   id,
   className = "form-group",
   children,
+  as,
   ...props
 }) {
   return (
@@ -19,6 +20,7 @@ export default function Input({
       {label ? <label>{label}</label> : null}
 
       <Form.Control
+        as={as}
         type={type}
         placeholder={placeholder}
         value={value}
