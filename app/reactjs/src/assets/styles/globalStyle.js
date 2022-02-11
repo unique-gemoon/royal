@@ -188,6 +188,7 @@ export const DetailsItems = styled.div`
     .item-detail{
         height: 23px;
         width: 23px;
+        min-width: 23px;
         border-radius: 50%;
         color: #FFF;
         display: flex;

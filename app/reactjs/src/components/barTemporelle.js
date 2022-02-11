@@ -10,7 +10,7 @@ export default function BarTemporelle({ state, setState, ...props}) {
             <LinearProgress className="progressBar-item" variant="determinate" value={93} />
             <div className='bloc-timer-Bar'>
                 <Button>-</Button>
-                <div className='content-timer-bar' onClick={() => setState({...state,showPli2: !state.showPli2 })}>
+                <div className='content-timer-bar' onClick={() => {state && setState({...state,showPli2: !state.showPli2 }) }}>
                     <span className='timer-down'>320</span>
                     <div className='timer-item'>
                         <TimerOutlinedIcon /> 04 : 12 : 06

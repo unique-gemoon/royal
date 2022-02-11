@@ -4,6 +4,28 @@ import styled from "styled-components";
 import { OrangeColor } from "./globalStyle";
 
 
+export const DropZoneBloc = styled.div`
+    flex: 1;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    border-width: 2px;
+    border-radius: 12px;
+    border-color: #EDAF5D;
+    border-style: dashed;
+    background-color: rgba(15, 51, 104, .70);
+    color: #bdbdbd;
+    outline: none;
+    transition: border .24s ease-in-out;
+    position: absolute;
+    top: 5px;
+    left: 5px;
+    right: 5px;
+    bottom: 14px;
+    z-index: 1;
+`
 export const BlocActionButton = styled.div`
     .content-button-action{
         position: fixed;
@@ -152,8 +174,135 @@ export const BlocAddPli = styled.div`
                 transform: rotateX(-180deg);
             }
         }
+
+    }
+    .cadre-content-pli{
+        padding: 25px 20px 20px;
+        position: relative;
+        textarea{
+            background-color: transparent !important;
+            border: 0;
+            border-radius: 0;
+            border-bottom: 1px solid #84bad8;
+            margin-bottom: 40px;
+            min-height: 44px;
+            font-family: 'ProximaNovaSoftW03-Semibold';
+            font-weight: normal;
+            font-size: 18px;
+            line-height: 21px;
+            color: #FFF;
+            width: 100%;
+            padding-bottom: 20px;
+            &:focus{
+                border-color: ${OrangeColor};
+                box-shadow: none;
+                outline: none;
+            }
+            &::-webkit-input-placeholder {
+                color: #A7C9E9;
+            }
+            &::-moz-placeholder {
+                color: #A7C9E9;
+            }
+            &:-ms-input-placeholder {
+                color: #A7C9E9;
+            }
+            &:-moz-placeholder {
+                color: #A7C9E9;
+            }
+        }
+    }
+    .emoji-picker-react {
+        height: 116px !important;
+        box-shadow: none;
+        .emoji-categories{
+            display: none;
+        }
+    }
+    .new-pli-nv1{
+        .options-new-pli{
+            & > div{
+                &:last-child{
+                    order: 2;
+                }
+            }
+        }
+        .liste-files{
+            order: 3;
+            margin: 0 10px;
+            display: flex;
+            align-items: center;
+            .bloc-item-image-file{
+            }
+        }
+        .toggle-action-dropzone{
+            order: 1;
+        }
     }
 `;
+export const ImageUpload = styled.div``;
+
+export const VideoUpload = styled.div`
+    position: relative;
+    button{
+        padding: 0;
+        min-width: auto;
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        
+    }
+`;
+
+export const SoundUpload = styled.div`
+    display: flex;
+    align-items: center;
+    background-color: #FFF;
+    height: 46px;
+        border-radius: 10px;
+    position: relative;
+    .icon-sound{
+        background: linear-gradient(#fc6965 0.01%,#fc9765 92.44%);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: #FFF;
+        width: 46px;
+        min-width: 46px;
+        height: 46px;
+        border-radius: 10px 0 0 10px;
+    }
+    .name-sound{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 18px;
+        line-height: 21px;
+        color: #565c6b;
+        padding: 12px;
+        margin: 0;
+        span{
+            display: inline-block;
+            &:first-child{
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                max-width: 86px;
+            }
+            &:last-child{
+                margin-left: 2px;
+            }
+        }
+    }
+    & > button{
+        padding: 0;
+        min-width: auto;
+        position: absolute;
+        top: -10px;
+        right: -10px;
+    }
+`;
+
 export const FolowersModal = styled.div`
     border-radius: 12px;
     .MuiTabs-indicator{
@@ -551,7 +700,7 @@ export const BlocEmojis = styled.div`
             font-size: 18px;
         }
         &:hover, &.active-emoji{
-            color: #EEAA67;
+            color: #EEAA67 !important;
         }
         span{
             display: none;
@@ -1293,5 +1442,57 @@ export const CommentItem = styled.div`
 export const CommentsBloc = styled.div`
     &.emoji-open{
         min-height: 250px;
+    }
+`;
+export const BlocNewPliContent = styled.div`
+    .toggle-action-dropzone{
+        .is-active-dropzone{
+            .item-detail{
+                &:not(.active){
+                    background: #B2BAD3 !important;
+                    svg{
+                        color: #FFF;
+                        path{
+                            fill: #FFF;
+                        }
+                    }
+                }
+            }
+        }
+        .item-detail{
+            height: 34px;
+            width: 34px;
+            min-width: 34px;
+            margin-right: 9px;
+            svg{
+                font-size: 20px;
+            }
+            &.soundage-detail{
+                svg{
+                    width: 16px;
+                    height: 16px;
+                }
+            }
+            
+        }
+    }
+    .options-new-pli{
+        display: flex;
+        align-items: center;
+    }
+    ${BlocEmojis}{
+        position: relative;
+        .btn-toggle-emoji{
+            position: static;
+            color: rgba(255, 255, 255, .55);
+            svg {
+                font-size: 28px;
+            }
+        }
+        .bloc-list-emoji{
+            right: auto;
+            left: 0;
+            bottom: 30px;
+        }
     }
 `;
