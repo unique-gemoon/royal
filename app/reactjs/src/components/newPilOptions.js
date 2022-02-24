@@ -36,19 +36,15 @@ export default function NewPilOptions({ state = {}, setState = () => { } }) {
     const [current, setCurrent] = useState('');
     const [openDrop, setopenDrop] = useState(false);
     const [files, setFiles] = useState([]);
-    console.log(current);
 
     const { getRootProps, getInputProps } = useDropzone({
-        accept: current ? dropFile[current].accept : '',
-        multiple: current ? dropFile[current].multiple : '',
+        accept: (current && dropFile[current]) ? dropFile[current].accept : '',
+        multiple: (current && dropFile[current]) ? dropFile[current].multiple : '',
         onDrop: acceptedFiles => {
             setFiles([...files, ...acceptedFiles]);
-            console.log('iam ', current);
-            if (current) {
-                console.log('iam here');
+            if (current && dropFile[current]) {
                 var element = {};
                 element[current] = { ...dropFile[current], liste: [...dropFile[current].liste, ...acceptedFiles] };
-                console.log(element);
                 setDropFile({ ...dropFile, ...element });
                 console.log(element);
             }
@@ -95,7 +91,7 @@ export default function NewPilOptions({ state = {}, setState = () => { } }) {
                 <div className='liste-files'>
 
                     { 
-                        current && dropFile[current].liste.map(file => (
+                        current && dropFile[current] && dropFile[current].liste.map(file => (
 
                             <div className='bloc-item-image-file' key={file.path}>
                                 {current === "images" ?
@@ -123,25 +119,24 @@ export default function NewPilOptions({ state = {}, setState = () => { } }) {
                     }
 
                 </div>
-
                 <div className='toggle-action-dropzone'>
-                    <DetailsItems className={`${openDrop ? "is-active-dropzone" : ''}`}>
-                        <Button onClick={() => { setopenDrop(true); setCurrent('music'); removeAll(); }} className={`item-detail sound-detail ${(!current || current === "music") && openDrop ? "active" : ''}`}>
-                            <GraphicEqIcon />
-                        </Button>
-                        <Button onClick={() => { setCurrent('') }} className={`item-detail soundage-detail ${(!current || current === "") && openDrop ? "active" : ''}`}>
-                            <BallotIcon />
-                        </Button>
+                    <DetailsItems className={`${openDrop || state.openSoundage ? "is-active-dropzone" : ''}`}>
                         <Button onClick={() => { setopenDrop(true); setCurrent('images') }} className={`item-detail image-detail ${(!current || current === "images") && openDrop ? "active" : ''}`}>
                             <ImageIcon />
                         </Button>
                         <Button onClick={() => { setopenDrop(true); setCurrent('video'); removeAll(); }} className={`item-detail video-detail ${(!current || current === "video") && openDrop ? "active" : ''}`}>
-                        <PlayArrowIcon />
-                    </Button>
-                </DetailsItems>
+                            <PlayArrowIcon />
+                        </Button>
+                        <Button onClick={() => { setCurrent('soundage'); setState({ ...state, openSoundage: !state.openSoundage }) }} className={`item-detail soundage-detail ${(!current || current === "soundage") ? "active" : ''}`}>
+                            <BallotIcon />
+                        </Button>
+                        <Button onClick={() => { setopenDrop(true); setCurrent('music'); removeAll(); }} className={`item-detail sound-detail ${(!current || current === "music") && openDrop ? "active" : ''}`}>
+                            <GraphicEqIcon />
+                        </Button>
+                    </DetailsItems>
+                </div>
+                <Emojis setState={setState} state={state} />
             </div>
-            <Emojis setState={setState} state={state} />
-        </div>
-    </BlocNewPliContent >
+        </BlocNewPliContent >
     );
 }

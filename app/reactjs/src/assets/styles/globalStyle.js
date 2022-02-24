@@ -1,11 +1,25 @@
 import { Container } from 'react-bootstrap';
 import styled from "styled-components";
+import underlineIcon from "../images/icons/underlineIcon.svg";
 
 
 
 export const BleuColor = "#225282";
 export const OrangeColor = "#EDAF5D";
+export const mixinIcon = ({ urlIcon, width, height, important = false }) => `
+  width: ${width}px;
+  min-width: ${width}px;
+  height: ${height}px;
+  background: url(${urlIcon}) ${important ? "!important" : ""};
+  display: inline-block;
+  vertical-align: middle;
+  background-repeat: no-repeat;
+  background-size: contain;
+`;
 
+export const UnderlineIcon = styled.i`
+  ${mixinIcon({ urlIcon: underlineIcon, width: 15, height: 15 })};
+`;
 export const DefaultMain = styled.div`
     position: relative;
     padding: 30px 0;
@@ -22,8 +36,15 @@ export const DefaultMain = styled.div`
     }
 `;
 export const ContainerDef = styled(Container)`
+
     @media(min-width: 1200px){
+        max-width: 1200px;
+    }
+    @media(min-width: 1430px){
         max-width: 1380px;
+    }
+    & > div{
+        margin: 0;
     }
 `;
 export const HeadContentItem = styled.div`
@@ -72,7 +93,7 @@ export const HeadContentItem = styled.div`
             width: calc(100% - 10px);
             display: block;
             margin: 0 auto 10px;
-            min-height: 38px;
+            max-height: 40px;
             position: relative;
             cursor: default;
             &::before{
