@@ -949,17 +949,36 @@ export const BlocMessagerie = styled.div`
             ${FormEmoji}{
                 padding: 0 14px 3px;
                 background: linear-gradient(#1663a0 0%, #135d98 93.46%);
+                align-items: center;
+                height: 42px;
                 .content-form-emoji{
                     display: flex;
-                    align-items: flex-start;
+                    align-items: center;
                     .form-group{
                         order: 2;
+                    }
+                    textarea{
+                        height: 28px !important;
+                        color: #fff;
+                        padding: 4px 6px 0;
+                        margin-top: 6px;
+                        &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                            color: #7fa2d6;
+                        }
+                        &::-moz-placeholder { /* Firefox 19+ */
+                            color: #7fa2d6;
+                        }
+                        &:-ms-input-placeholder { /* IE 10+ */
+                            color: #7fa2d6;
+                        }
+                        &:-moz-placeholder { /* Firefox 18- */
+                            color: #7fa2d6;
+                        }
                     }
                     ${BlocEmojis}{
                         order: 1;
                         margin-right: 5px;
                         position: relative;
-                        top: -4px;
                         .btn-toggle-emoji{
                             position: static;
                         }
@@ -973,6 +992,14 @@ export const BlocMessagerie = styled.div`
                             }
                         }
                     }
+                }
+                .btn-send-emoji{
+                    background-color: ${OrangeColor};
+                    color: #FFF;
+                    border: 0;
+                    width: 18px;
+                    height: 18px;
+                    margin-bottom: 7px;
                 }
             }
         }
