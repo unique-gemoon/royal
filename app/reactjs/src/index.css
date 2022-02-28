@@ -1,0 +1,65 @@
+
+body {
+  margin: 0;
+  font-family: 'UtopiaStd-SemiboldDispIt';
+  font-family: 'ProximaNovaSoftW03-Regular';
+  font-size: 20px;
+  background-image: url(assets/images/bg-royalis.png);
+  background-position: center;
+  background-size: cover;
+  min-height: 100vh;
+}
+body.add-pli-showing{
+  overflow: hidden;
+}
+code {
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+    monospace;
+}
+/* width
+::-webkit-scrollbar {
+  width: 5px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent; 
+}
+ 
+::-webkit-scrollbar-thumb {
+  background: #1e52a0; 
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555; 
+} */
+strong{
+  font-family: 'ProximaNovaSoftW03-Bold';
+}
+#menu-option-message > .MuiPaper-root{
+  border-radius: 10.62px;
+  background: linear-gradient(#1663a0 0%, #135d98 93.46%);
+  color: #FFF;
+  
+    
+}
+#menu-option-message > .MuiPaper-root .close-drop-menu{
+  position: absolute;
+  right: 12px;
+}
+#menu-option-message > .MuiPaper-root .close-drop-menu svg{
+  font-size: 20px;
+}
+#menu-option-message > .MuiPaper-root ul{
+  padding: 9px 20px 9px 0;
+  min-width: 141px;
+  position: relative;
+}
+#menu-option-message > .MuiPaper-root ul li{
+  font-family: 'ProximaNovaSoftW03-Semibold';
+  font-size: 14px;
+  line-height: 18px;
+}
+#menu-option-message > .MuiPaper-root ul li:hover{
+  background-color: transparent;
+}
