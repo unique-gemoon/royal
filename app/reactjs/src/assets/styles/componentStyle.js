@@ -1,9 +1,19 @@
 import { Button } from "@mui/material";
 import { Modal } from "react-bootstrap";
 import styled from "styled-components";
-import { OrangeColor } from "./globalStyle";
+import { BleuColor, OrangeColor } from "./globalStyle";
 
 
+export const CountSee = styled.div`
+   font-family: 'ProximaNovaSoftW03-Semibold';
+   font-size: 20px;
+   color: #1E52A0;
+   display: flex;
+   align-items: center;
+   & > svg{
+       margin-left: 10px;
+   }
+`;
 export const DropZoneBloc = styled.div`
     flex: 1;
     display: flex;
@@ -40,6 +50,21 @@ export const BlocActionButton = styled.div`
         .content-button-action{
             bottom: 90px;
             left: calc(50% - 600px + 24px);
+
+            @media(max-width: 1200px){
+                left: 0;
+                bottom: auto;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                height: calc(100% - 145px);
+                width: 100%;;
+                & > div{
+                    height: 100% !important;
+                    width: 90%;
+                    margin: auto;
+                }
+            }
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
                 height: calc(50vh - 110px + 25px + 90px);
@@ -56,6 +81,20 @@ export const BlocActionButton = styled.div`
         .content-button-action{
             top: 25px;
             left: calc(50% - 600px + 24px);
+            @media(max-width: 1200px){
+                left: 0;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                max-height: calc(100% - 145px);
+                width: 100%;
+                & > div{
+                    height: calc(100vh - 145px) !important;
+                    max-height: initial !important;
+                    width: 90%;
+                    margin: auto;
+                }
+            }
             & > div{
                 max-height: calc(50vh - 296px + 25px + 90px);
             }
@@ -68,6 +107,20 @@ export const BlocActionButton = styled.div`
         .content-button-action{
             top: 25px;
             right: calc(50% - 600px + 24px);
+            @media(max-width: 1200px){
+                right: 0;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                height: calc(100vh - 145px);
+                width: 100%;
+                & > div{
+                    width: 90%;
+                    margin: auto;
+                    height: 100% !important;
+                    max-height: initial !important;
+                }
+            }
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
                 max-height: calc(50vh - 184px + 25px + 90px);
@@ -84,6 +137,20 @@ export const BlocActionButton = styled.div`
         .content-button-action{
             bottom: 90px;
             right: calc(50% - 600px + 24px);
+            @media(max-width: 1200px){
+                right: 0;
+                bottom: auto;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                height: calc(100% - 145px);
+                width: 100%;
+                & > div{
+                    height: 100% !important;
+                    width: 90%;
+                    margin: auto;
+                }
+            }
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
                 height: calc(50vh - 230px + 25px + 90px);
@@ -104,7 +171,9 @@ export const ButtonIcon = styled(Button)`
     border-radius: 50%;
     padding: 0;
     position: relative;
+    transition: .4s ease-in-out;
     .count-notif{
+        font-family: ProximaNovaSoftW03-Semibold;
         height: 24px;
         width: 24px;
         min-width: 24px;
@@ -117,18 +186,113 @@ export const ButtonIcon = styled(Button)`
         justify-content: center;
         color: #FFF;
         background-color: #D87A73;
+        font-size: 12px;
+        line-height: 1;
+        @media(max-width: 767px){
+            border: 3px solid #FFF;
+            top: -7px;
+            right: -8px;
+        }
     }
     &.btn-white{
         color: #EDAF5D;
         background-color: #FFF;
         margin-bottom: 12px;
         margin-left: 15px;
+        @media(max-width: 1200px){
+            margin-left: 0;
+        }
+       
         svg{
             width: 20px;
         }
+        &:hover{
+            background-color: ${OrangeColor};
+            color: #FFF;
+        }
+        &.isopen{
+            background: linear-gradient(#125c99 0.29%,#2d7fc3 100%);
+            color: #FFF;
+        }
+        @media(max-width: 767px){
+            margin-bottom: 0 !important;
+            svg{
+                font-size: 33px;
+                width: auto;
+            }
+            &:hover{
+                background-color: transparent;
+                color: ${OrangeColor};
+            }
+            &.isopen{
+                background: transparent;
+                color: ${BleuColor};
+            }
+        }
     }
-    
 `;
+export const BlocProfileMenu = styled.div`
+    position: relative;
+    z-index: 11;
+    #composition-button {
+        border-radius: 11.5px;
+        background: #fff;
+        padding: 4px 8px;
+        line-height: 1;
+        font-family: "ProximaNovaSoftW03-Semibold";
+        font-size: 15px;
+        color: ${BleuColor};
+        margin-right: 10px;
+        text-transform: initial;
+        i{
+            width: 4px;
+            height: 4px;
+            background: #6ed5ed;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+
+        }
+        span{
+            font-family: "ProximaNovaSoftW03-Regular";
+            color: #7caad6;
+            font-size: 14px;
+        }
+    }
+    .paper-menu-profile{
+        background-color: transparent;
+        border-radius: 12px;
+        width: 232px;
+        margin: 10px 0;
+    }
+    .profil-menu-options{
+        border-radius: 12px;
+        background: linear-gradient(#2d7fc3 0%, #579be9 100%);
+        box-shadow: 0px 4px 13px rgba(26, 57, 91, .63);
+        color: #FFF;
+        padding: 0;
+        .MuiMenuItem-root{
+            font-family: 'ProximaNovaSoftW03-Regular';
+            font-weight: normal;
+            font-size: 13px;
+            line-height: 18px;
+            text-align: left;
+            color: #7dbfc6;
+            border-bottom: 1px solid rgba(112, 112, 112, .5);
+            transition: .3s ease-in-out;
+            @media(max-width: 1200px){
+                justify-content: flex-end;
+            }
+            &:last-child{
+                border: 0;
+            }
+            &:hover{
+                color: #c0f6ff;
+            }
+        }
+    }
+`;
+
 export const ToolBarEditor = styled.div`
     .ql-snow{
         border-radius: 12.81px;
@@ -368,6 +532,9 @@ export const FolowersModal = styled.div`
                 }
             }
         }
+        @media(max-width: 993px){
+            height: calc(100% - 48px);
+        }
     }
     .MuiTabs-flexContainer{
         border-radius: 12px;
@@ -381,6 +548,7 @@ export const FolowersModal = styled.div`
             align-items: center;
             flex-direction: initial;
             white-space: nowrap;
+            width: 50%;
             .count-tab{
                 margin-left: 10px;
                 width: 21px;
@@ -579,6 +747,9 @@ export const FolowerSearch = styled.div`
                 font-size: 18px;
                 margin-right: 3px;
             }
+        }
+        @media(max-width: 993px){
+            height: calc(100% - 38px);
         }
     }
 `;
@@ -1670,12 +1841,17 @@ export const BlocAddPli = styled.div`
         .cadre-content-new-pli{
             position: absolute;
             top: 40px;
+            @media(max-width: 993px){
+                left: 0;
+                right: 0;
+            }
         }
         .content-new-pli{
             position: relative;
             z-index: 1;
             width: 753px;
-            max-width: 100%;
+            max-width: 90%;
+            margin: auto;
             height: auto;
             max-height: 100%;
             border-radius: 13px;
@@ -1697,11 +1873,22 @@ export const BlocAddPli = styled.div`
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
+        transition: .3s ease;
         cursor: pointer;
+        @media(max-width: 1200px){
+            position: static;
+            transform: none;
+        }
         & > svg{
             font-size: 30px;
             transform-origin: center;
             transition: .1s linear;
+        }
+        &:hover{
+            background: ${OrangeColor};
+            & > svg{
+                color: #FFF;
+            }
         }
         &.open-pli{
             background: linear-gradient(#125c99 0.29%, #2d7fc3 100%);
@@ -1710,7 +1897,27 @@ export const BlocAddPli = styled.div`
                 transform: rotateX(-180deg);
             }
         }
-
+        @media(max-width: 767px){
+            padding: 0;
+            height: auto;
+            width: auto;
+            & > svg{
+                font-size: 33px;
+            }
+            &:hover{
+                background: #FFF;
+                & > svg{
+                    color: ${OrangeColor};
+                }
+            }
+            &.open-pli{
+                background: #FFF;
+                & > svg{
+                    color: ${BleuColor};
+                    transform: none;
+                }
+            }
+        }
     }
     .bloc-footer{
         display: flex;

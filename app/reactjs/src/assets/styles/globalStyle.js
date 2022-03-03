@@ -23,6 +23,9 @@ export const UnderlineIcon = styled.i`
 export const DefaultMain = styled.div`
     position: relative;
     padding: 30px 0;
+    @media(max-width: 1200px){
+        padding-top: 0;
+    }
     &:before{
         content: "";
         position: fixed;
@@ -46,6 +49,7 @@ export const ContainerDef = styled(Container)`
     & > div{
         margin: 0;
     }
+    max-width: 100%;
 `;
 export const HeadContentItem = styled.div`
     display: flex;
@@ -236,27 +240,40 @@ export const DetailsItems = styled.div`
         }
     }
 `;
+
+export const HeaderMobile = styled.div`
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+    background-color: #FFF;
+`;
+
 export const FooterDefault = styled.div`
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 999;
-    .see-count-bloc{
-        font-family: 'ProximaNovaSoftW03-Semibold';
-        font-size: 20px;
-        color: #1E52A0;
-        display: flex;
-        align-items: center;
-        & > svg{
-            margin-left: 10px;
-        }
-    }
+    
 `;
 export const OptionsBtnAction = styled.div`
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
     float: right;
-
+    @media(max-width: 1200px){
+        float: none;
+        display: flex;
+        margin: auto;
+        width: 600px;
+        max-width: 100%;
+    }
+    @media(max-width: 767px){
+            background-color: #FFF;
+            padding: 9px 25px;
+    }
 `;

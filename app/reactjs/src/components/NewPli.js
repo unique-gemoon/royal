@@ -1,8 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
-import ReactQuill from "react-quill";
-import EditorToolbar, { modules, formats } from "../components/ui-elements/editorToolBar";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { BlocAddPli, ToolBarEditor } from '../assets/styles/componentStyle';
+import { BlocAddPli } from '../assets/styles/componentStyle';
 import { useOutsideAlerter } from '../helper/events';
 import NewPilOptions from './newPilOptions';
 import BarTemporelle from './barTemporelle';
@@ -12,13 +10,15 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import CountDown from './ui-elements/countDown';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { Button } from '@mui/material';
-import WysiwygEditor from "./ui-elements/wysiwygEditor";
-import { removeTags } from '../helper/fonctions';
 import NewOvertureOptions from './newOvertureOptions';
 import AddSoundage from './addSoundage';
+import { useMediaQuery } from "react-responsive";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
 export default function NewPli() {
 
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 767px)" });
+  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [stateTextarea, setStateTextarea] = useState({
     inputEmoji: {
       name: "message-input",
@@ -94,10 +94,15 @@ export default function NewPli() {
           </div>
         </div>
         : null}
-
-      <div onClick={() => setTogglePli(!togglePli)} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
-        <KeyboardArrowUpIcon />
-      </div>
+      {isDesktopOrLaptop ? 
+        <div onClick={() => setTogglePli(!togglePli)} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
+          <KeyboardArrowUpIcon />
+        </div> : 
+        <div onClick={() => setTogglePli(!togglePli)} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
+          <AddCircleOutlineOutlinedIcon /> 
+        </div>
+      }
+      
     </BlocAddPli>
   );
 }

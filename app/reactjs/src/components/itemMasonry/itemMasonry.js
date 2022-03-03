@@ -5,7 +5,7 @@ import HeadItem from './headItem';
 import ImagesGallery from './imagesGallery';
 import PlayerVideo from './playerVideo';
 import Soundage from './soundage';
-import PlayerMusic from './PlayerMusic';
+import PlayerMusic from './playerMusic';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import OpenInFullOutlinedIcon from '@mui/icons-material/OpenInFullOutlined';
 import CloseFullscreenTwoToneIcon from '@mui/icons-material/CloseFullscreenTwoTone';

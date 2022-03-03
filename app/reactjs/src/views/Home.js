@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import Masonry from '@mui/lab/Masonry';
 import ItemMasonry from '../components/itemMasonry/itemMasonry';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { ContainerDef, DefaultMain, FooterDefault, OptionsBtnAction } from '../assets/styles/globalStyle';
+import { ContainerDef, DefaultMain, FooterDefault, HeaderMobile, OptionsBtnAction } from '../assets/styles/globalStyle';
 import { Row, Col } from 'react-bootstrap';
 import imgPli from '../assets/images/image-pli-1.png';
 import videoPli from '../assets/images/video.mp4';
@@ -11,14 +11,19 @@ import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import NewPli from '../components/NewPli';
+import NewPli from '../components/newPli';
 import SeeCounter from '../components/ui-elements/seeCounter';
 import BlocFolowers from '../components/blocFolowers';
 import SearchFolowers from '../components/searchFolowers';
 import Notifications from '../components/notifications';
 import Messagerie from '../components/messagerie';
+import ProfileMenu from '../components/profileMenu';
+import { useMediaQuery } from "react-responsive";
+import logoType from '../assets/images/Logotype.png';
 
 export default function Home() {
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
+    const isDesktopOrLaptop = useMediaQuery({  query: "(min-width: 1200px)"});
     const [dataMasonry, setDataMasonry] = useState([
         {
             id: 1,
@@ -386,11 +391,47 @@ export default function Home() {
         }
         setDataMasonry(cpDataMasonry);
     }
-    
+    const [action, setAction] = useState({
+        notification: {
+            icon: <NotificationsNoneOutlinedIcon />,
+            isOpen: false
+        },
+        folower: {
+            icon: <PeopleOutlineRoundedIcon />,
+            isOpen: false
+        },
+        search: {
+            icon: <SearchRoundedIcon />,
+            isOpen: false
+        },
+        messagerie: {
+            icon: <MailOutlineRoundedIcon />,
+            isOpen: false
+        }
+    })
+
+    const updateAction = (e,name) => {
+        const cpAction =  {
+            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+            , messagerie: { ...action.messagerie, isOpen: false } };
+        cpAction[name].isOpen = e.isOpen;
+        setAction(cpAction);
+    }
     
     return (
         <DefaultMain>
             <StyledEngineProvider injectFirst>
+                {isTabletOrMobile && (
+                    <HeaderMobile>
+                        <div className='logo'>
+                            <img src={logoType} alt="Royalis" />
+                        </div>
+                        <div className="d-flex">
+                            <SeeCounter countSee={14} />
+                            <ProfileMenu />
+                        </div>
+                    </HeaderMobile>
+                )}
                 <ContainerDef>
                     <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
                         {dataMasonry.map((item) => (
@@ -402,32 +443,109 @@ export default function Home() {
                 </ContainerDef>
 
                 <FooterDefault>
-                    <ContainerDef>
-                        <Row className='align-items-center'>
-                            <Col md={3}>
-                                <SeeCounter countSee={14} />
-                            </Col>
-                            <Col md={6}>
-                                <NewPli />
-                            </Col>
-                            <Col md={3}>
-                                <OptionsBtnAction>
-                                    <ButtonAction className='messages-bloc-action' setCount={2} icon={<MailOutlineRoundedIcon />}>
-                                        <Messagerie />
-                                    </ButtonAction>
-                                    <ButtonAction className='search-bloc-action' icon={<SearchRoundedIcon />} >
-                                        <SearchFolowers />
-                                    </ButtonAction>
-                                    <ButtonAction className='abonnee-bloc-action' setCount={2} icon={<PeopleOutlineRoundedIcon />} >
-                                        <BlocFolowers />
-                                    </ButtonAction>
-                                    <ButtonAction className='notification-bloc-action' setCount={newNotifs.length} icon={<NotificationsNoneOutlinedIcon />} >
-                                        <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
-                                    </ButtonAction>
-                                </OptionsBtnAction>
-                            </Col>
-                        </Row>
-                    </ContainerDef>
+                    {isDesktopOrLaptop && (
+                        <ContainerDef>
+                            <Row className='align-items-center'>
+                                <Col md={3}>
+                                    <div className="d-md-flex">
+                                        <ProfileMenu />
+                                        <SeeCounter countSee={14} />
+                                    </div>
+                                </Col>
+                                <Col md={6}>
+                                    <NewPli />
+                                </Col>
+                                <Col md={3}>
+                                    <OptionsBtnAction>
+                                        <ButtonAction 
+                                        className='messages-bloc-action' 
+                                        setCount={2} 
+                                        action={action.messagerie} 
+                                        icon={action.messagerie.icon}
+                                        setAction={(e) => {
+                                            setAction({ ...action, messagerie: { ...action.messagerie, isOpen: e.isOpen }})
+                                        }}
+                                        >
+                                            <Messagerie />
+                                        </ButtonAction>
+                                        <ButtonAction
+                                        className='search-bloc-action' 
+                                        action={action.search} 
+                                        icon={action.search.icon} 
+                                        setAction={(e) => {
+                                            setAction({ ...action, search: { ...action.search, isOpen: e.isOpen } })
+                                        }}
+                                        >
+                                            <SearchFolowers />
+                                        </ButtonAction>
+                                        <ButtonAction 
+                                        className='abonnee-bloc-action' 
+                                        action={action.folower} 
+                                        setCount={2} 
+                                        icon={action.folower.icon} 
+                                        setAction={(e) => {
+                                            setAction({ ...action, folower: { ...action.folower, isOpen: e.isOpen } })
+                                        }}
+                                        >
+                                            <BlocFolowers />
+                                        </ButtonAction>
+                                        <ButtonAction 
+                                        className='notification-bloc-action' 
+                                        action={action.notification} 
+                                        setCount={newNotifs.length} 
+                                        icon={action.notification.icon} 
+                                        setAction={(e) => {
+                                            setAction({ ...action, notification: { ...action.notification, isOpen: e.isOpen } })
+                                        }}
+                                        >
+                                            <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
+                                        </ButtonAction>
+                                    </OptionsBtnAction>
+                                </Col>
+                            </Row>
+                        </ContainerDef>
+                    )}
+                    {isTabletOrMobile && (
+                        <OptionsBtnAction>
+                            <ButtonAction
+                                className='messages-bloc-action'
+                                setCount={2}
+                                action={action.messagerie}
+                                icon={action.messagerie.icon}
+                                setAction={(e) => { updateAction(e, 'messagerie'); }}
+                            >
+                                <Messagerie />
+                            </ButtonAction>
+                            <ButtonAction
+                                className='search-bloc-action'
+                                action={action.search}
+                                icon={action.search.icon}
+                                setAction={(e) => { updateAction(e, 'search'); }}
+                            >
+                                <SearchFolowers />
+                            </ButtonAction>
+                            <NewPli />
+                            <ButtonAction
+                                className='abonnee-bloc-action'
+                                action={action.folower}
+                                setCount={2}
+                                icon={action.folower.icon}
+                                setAction={(e) => { updateAction(e, 'folower'); }}
+                            >
+                                <BlocFolowers />
+                            </ButtonAction>
+                            <ButtonAction
+                                className='notification-bloc-action'
+                                action={action.notification}
+                                setCount={newNotifs.length}
+                                icon={action.notification.icon}
+                                setAction={(e) => { updateAction(e, 'notification'); }}
+                            >
+                                <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
+                            </ButtonAction>
+                        </OptionsBtnAction>
+                    )}
+                    
                 </FooterDefault>
             </StyledEngineProvider>
         </DefaultMain>
