@@ -17,7 +17,6 @@ import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOu
 
 export default function NewPli() {
 
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 767px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [stateTextarea, setStateTextarea] = useState({
     inputEmoji: {
@@ -72,11 +71,13 @@ export default function NewPli() {
                   {stateTextarea.openSoundage ? <AddSoundage state={stateTextarea.soundageOptions} setState={(e) => setStateTextarea({ ...stateTextarea, soundageOptions: e })} /> : null}
                   <div className='bloc-footer'>
                     <NewPilOptions state={stateTextarea} setState={setStateTextarea} />
-                    <CountDown maxCount={280} setState={(stateTextarea.inputEmoji.value ? stateTextarea.inputEmoji.value : '').length} />
-                    {!addOverture ? (
-                      <div className='bloc-btn-publish'>
-                        <Button className='btn-publish'>Publier <SendRoundedIcon /></Button>
-                      </div>) : null}
+                    <div className='count-publish-pli1'>
+                      <CountDown maxCount={280} setState={(stateTextarea.inputEmoji.value ? stateTextarea.inputEmoji.value : '').length} />
+                      {!addOverture ? (
+                        <div className='bloc-btn-publish'>
+                          <Button className='btn-publish'>Publier <SendRoundedIcon /></Button>
+                        </div>) : null}
+                    </div>
                   </div>
                 </div>
                 <BarTemporelle />

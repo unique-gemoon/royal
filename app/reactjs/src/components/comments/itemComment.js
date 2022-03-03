@@ -9,7 +9,7 @@ export default function ItemComment({name, time, subject, children}) {
         openReponces: false,
         repondre: false,
     })
-    console.log(state);
+    //console.log(state);
     return (
         <CommentItem>
             <div className='head-comment'>

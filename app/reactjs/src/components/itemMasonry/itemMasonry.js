@@ -47,9 +47,8 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false })
                                 setState={setState}
                             />
                         </div>
-                        {state.showPli2 ?
                         <div className='Bloc-NV2'>
-                            {item.nv2 ?
+                            {item.nv2 && state.showModal ?
                                 <div className='content-bloc-NV2'>
                                     {item.nv2.description ? <div className='descripton-miniature'>{item.nv2.description}</div> : null}
                                     {item.nv2.music ? <PlayerMusic item={item.nv2.music} isClick={true} /> : null}
@@ -58,10 +57,13 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false })
                                     {item.nv2.video ? <PlayerVideo item={item.nv2.video} /> : null}
                                 </div>
                                 : null}
-                            <div className='toggle-pli2'><span className='users-views'>14 <CommentOutlinedIcon /></span> . <span className='toggle-zoom' onClick={() => setState({ ...state, showModal: false })}>Retour au pli ouvert<CloseFullscreenTwoToneIcon className='open-zoom-icon' /></span></div>
-                                <BlocComments item={item} />
+                            {state.showPli2 ?
+                                <>
+                                    <div className='toggle-pli2'><span className='users-views'>14 <VisibilityIcon /></span> . <span className='toggle-zoom' onClick={() => setState({ ...state, showPli2: false })}>Etendre le pli<CloseFullscreenTwoToneIcon className='open-zoom-icon' /></span></div>
+                                    <BlocComments item={item} />
+                                </>
+                            : null}
                         </div>
-                        : null}
                     </MasonryItem>
                 </ModalItem.Body>
             </ModalItem>
@@ -81,21 +83,16 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false })
                         setState={setState}
                     />
                 </div>
-                {state.showPli2 ?
+                
                 <div className='Bloc-NV2'>
-                    {item.nv2 ?
-                        <div className='content-bloc-NV2'>
-                            {item.nv2.description ? <div className='descripton-miniature'>{item.nv2.description}</div> : null}
-                            {item.nv2.music ? <PlayerMusic item={item.nv2.music} isClick={true} /> : null}
-                            {item.nv2.soundage ? <Soundage name={`bloc_${item.id}_2`} niveau={2} item={item} setItem={setItem} /> : null}
-                            {item.nv2.photos ? <ImagesGallery items={item.nv2.photos} /> : null}
-                            {item.nv2.video ? <PlayerVideo item={item.nv2.video} /> : null}
-                        </div>
-                        : null}
-                    <div className='toggle-pli2'><span className='users-views'>14 <VisibilityIcon /></span> . <span className='toggle-zoom' onClick={() => setState({ ...state, showModal: true })}>Etendre le pli<OpenInFullOutlinedIcon className='open-zoom-icon' /></span></div>
+                    
+                    {state.showPli2 ?
+                        <>
+                            <div className='toggle-pli2'><span className='users-views'>14 <VisibilityIcon /></span> . <span className='toggle-zoom' onClick={() => setState({ ...state, showPli2: false })}>Etendre le pli<CloseFullscreenTwoToneIcon className='open-zoom-icon' /></span></div>
                         <BlocComments item={item} />
+                        </>
+                    : null}
                 </div>
-                : null}
             </MasonryItem>
 
 

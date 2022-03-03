@@ -41,7 +41,7 @@ export const DefaultMain = styled.div`
 export const ContainerDef = styled(Container)`
 
     @media(min-width: 1200px){
-        max-width: 1200px;
+        max-width: 1250px;
     }
     @media(min-width: 1430px){
         max-width: 1380px;
@@ -144,8 +144,13 @@ export const HeadContentItem = styled.div`
                     height: 28px;
                     min-width: 28px;
                     margin-right: 5px;
+                    transition: .3s ease-in-out;
                     svg{
                         font-size: 18px;
+                    }
+                    &:hover{
+                        color: #FFF;
+                        background-color: #edaf5d;
                     }
                 }
                 &.btn-switch-folowers{
@@ -158,9 +163,14 @@ export const HeadContentItem = styled.div`
                     border-radius: 24px;
                     text-transform: capitalize;
                     padding: 4px 10px;
+                    transition: .3s ease-in-out;
                     svg{
                         margin-left: 3px;
                         font-size: 18px;
+                    }
+                    &:hover{
+                        color: #FFF;
+                        background-color: #edaf5d;
                     }
                 }
             }
@@ -187,6 +197,7 @@ export const HeadContentItem = styled.div`
             color: #96A9B2;
             font-size: 18px;
             margin-left: 3px;
+            transition: .3s ease-in-out;
             &.open-zoom-icon{
                 color: #071D33;
                 font-size: 14px;
@@ -196,14 +207,36 @@ export const HeadContentItem = styled.div`
             margin-left: 15px;
             cursor: pointer;
         }
+        
         .users-enligne-pli{
             display: flex;
             align-items: center;
+            &:hover{
+                svg{
+                    &:first-of-type{
+                        color: ${OrangeColor};
+                    }
+                }
+            }
             
         }
         .nb-message-comment{
             display: flex;
             align-items: center;
+            &:hover{
+                svg{
+                    &:first-of-type{
+                        color: ${OrangeColor};
+                    }
+                }
+            }
+        }
+        .btn-copy{
+            &:hover{
+                svg{
+                    color: ${OrangeColor};
+                }
+            }
         }
     }
 `;
@@ -238,6 +271,9 @@ export const DetailsItems = styled.div`
         &.soundage-detail{
             background-color: #62c4b4;
         }
+    }
+    @media(max-width: 767px){
+        justify-content: center;
     }
 `;
 

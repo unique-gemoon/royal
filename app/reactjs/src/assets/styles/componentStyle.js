@@ -49,16 +49,17 @@ export const BlocActionButton = styled.div`
     &.messages-bloc-action{
         .content-button-action{
             bottom: 90px;
-            left: calc(50% - 600px + 24px);
+            left: calc(50% - 625px + 24px);
 
             @media(max-width: 1200px){
-                left: 0;
+                left: 15px;
                 bottom: auto;
                 top: 55px;
             }
             @media(max-width: 993px){
                 height: calc(100% - 145px);
-                width: 100%;;
+                width: 100%;
+                left: 0px;
                 & > div{
                     height: 100% !important;
                     width: 90%;
@@ -80,14 +81,15 @@ export const BlocActionButton = styled.div`
     &.search-bloc-action{
         .content-button-action{
             top: 25px;
-            left: calc(50% - 600px + 24px);
+            left: calc(50% - 625px + 24px);
             @media(max-width: 1200px){
-                left: 0;
+                left: 15px;
                 top: 55px;
             }
             @media(max-width: 993px){
                 max-height: calc(100% - 145px);
                 width: 100%;
+                left: 0px;
                 & > div{
                     height: calc(100vh - 145px) !important;
                     max-height: initial !important;
@@ -106,16 +108,17 @@ export const BlocActionButton = styled.div`
     &.abonnee-bloc-action{
         .content-button-action{
             top: 25px;
-            right: calc(50% - 600px + 24px);
+            right: calc(50% - 625px + 24px);
             @media(max-width: 1200px){
-                right: 0;
+                right: 15px;
                 top: 55px;
             }
             @media(max-width: 993px){
                 height: calc(100vh - 145px);
                 width: 100%;
+                right: 0px;
                 & > div{
-                    width: 90%;
+                    width: 90% !important;
                     margin: auto;
                     height: 100% !important;
                     max-height: initial !important;
@@ -127,6 +130,7 @@ export const BlocActionButton = styled.div`
                 border-radius: 13px;
                 overflow: hidden;
                 box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
+                width: 300px;
             }
             @media(min-width: 1430px){
                 right: calc(50% - 690px + 24px);
@@ -136,18 +140,19 @@ export const BlocActionButton = styled.div`
     &.notification-bloc-action{
         .content-button-action{
             bottom: 90px;
-            right: calc(50% - 600px + 24px);
+            right: calc(50% - 625px + 24px);
             @media(max-width: 1200px){
-                right: 0;
+                right: 15px;
                 bottom: auto;
                 top: 55px;
             }
             @media(max-width: 993px){
                 height: calc(100% - 145px);
                 width: 100%;
+                right: 0px;
                 & > div{
                     height: 100% !important;
-                    width: 90%;
+                    width: 90% !important;
                     margin: auto;
                 }
             }
@@ -258,6 +263,9 @@ export const BlocProfileMenu = styled.div`
             color: #7caad6;
             font-size: 14px;
         }
+        @media(max-width: 993px){
+            margin-right: 0;
+        }
     }
     .paper-menu-profile{
         background-color: transparent;
@@ -297,12 +305,10 @@ export const ToolBarEditor = styled.div`
     .ql-snow{
         border-radius: 12.81px;
         background: rgba(31, 85, 119, .45);
-        border: 0;
-        .ql-snow {
-            .ql-formats {
-                display: flex;
-                align-items: center;
-            }
+        border: 0 !important;
+        .ql-formats {
+            display: flex;
+            align-items: center;
         }
         .ql-stroke{
             stroke: #FFF !important;
@@ -311,7 +317,7 @@ export const ToolBarEditor = styled.div`
             fill: #FFF !important;
         }
         .ql-formats{
-            margin-right: 0;
+            margin-right: 0 !important;
         }
         &.ql-toolbar{
             button{
@@ -386,7 +392,7 @@ export const ImageUpload = styled.div`
     width: 45px;
     height: 45px;
     position: relative;
-    margin: 0 5px;
+    margin: 5px;
     img {
         height: 100%;
         width: 100%;
@@ -755,7 +761,7 @@ export const FolowerSearch = styled.div`
 `;
 
 export const BlocNotification = styled.div`
-    width: 250px;
+    width: 300px;
     .header-notif{
         height: 47px;
         color: #FFF;
@@ -1718,6 +1724,11 @@ export const BlocNewPliContent = styled.div`
             right: auto;
             left: 0;
             bottom: 30px;
+            @media(max-width: 767px){
+                right: 0;
+                left: auto;
+                bottom: 38px;
+            }
         }
     }
     &.pli2-ouverture-bloc{
@@ -1850,13 +1861,16 @@ export const BlocAddPli = styled.div`
             position: relative;
             z-index: 1;
             width: 753px;
-            max-width: 90%;
+            max-width: 100%;
             margin: auto;
             height: auto;
             max-height: 100%;
             border-radius: 13px;
             background: linear-gradient(#2d7fc3 0%, #579be9 100%);
             overflow: hidden;
+            @media(max-width: 993px){
+                max-width: 90%;
+            }
         }
     }
     .toggled-new-pli{
@@ -1924,6 +1938,14 @@ export const BlocAddPli = styled.div`
         align-items: center;
         & > div{
             margin-bottom: 10px;
+        }
+        @media(max-width:767px){
+            flex-wrap: wrap;
+            justify-content: center;
+            .options-new-pli{
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     }
     .bloc-btn-publish{
@@ -2029,6 +2051,23 @@ export const BlocAddPli = styled.div`
         .toggle-action-dropzone{
             order: 1;
         }
+        .count-publish-pli1{
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        @media(max-width: 767px){
+            .liste-files{
+                order: 1;
+                flex-wrap: wrap;
+                justify-content: center;
+                overflow-x: initial;
+                width: auto;
+            }
+            .count-publish-pli1{
+                margin-left: initial;
+            }
+        }
     }
     ${BarTimer}{
         background-color: #FFF;
@@ -2099,6 +2138,14 @@ export const BlocAddPli = styled.div`
                 right: 20px;
                 z-index: 9;
             }
+            @media(max-width: 993px){
+                padding: 25px 20px 10px;
+                .bloc-footer{
+                    position: static;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+            }
         }
         .bloc-toggle-emoji{
             display: flex;
@@ -2108,6 +2155,10 @@ export const BlocAddPli = styled.div`
         .count-publish-pli2{
             margin-left: auto;
             display: flex;
+            @media(max-width: 993px){
+                display: inline-flex;
+                margin: initial;
+            }
         }
     }
 

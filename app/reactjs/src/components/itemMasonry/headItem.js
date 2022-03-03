@@ -90,10 +90,16 @@ export default function HeadItem({ item, setItem = ()=>{}, state, setState }) {
                     <span className='timer-post'> . 12</span>
                 </div>
                 <div className='option-item'>
-                    <div className='users-enligne-pli'>
-                    14 <VisibilityIcon /> {state.showModal ? <CloseFullscreenTwoToneIcon className='open-zoom-icon' onClick={() => setState({ ...state, showModal: false })} /> : <OpenInFullOutlinedIcon className='open-zoom-icon' onClick={() => setState({ ...state, showModal: true })} />}
+                    {state.showPli2 ?
+                    <div className='users-enligne-pli' onClick={() => { state && setState({ ...state, showPli2: false }) }}>
+                        14 <VisibilityIcon /> <CloseFullscreenTwoToneIcon className='open-zoom-icon' /> 
                     </div>
-                    <div className='nb-message-comment'>
+                    :
+                    <div className='users-enligne-pli' onClick={() => { state && setState({ ...state, showPli2: true }) }}>
+                        14 <VisibilityIcon /> <OpenInFullOutlinedIcon className='open-zoom-icon' />
+                    </div> 
+                    }
+                    <div className='nb-message-comment' onClick={() => setState({ ...state, showModal: !state.showModal })}>
                     3 <CommentOutlinedIcon /> <ArrowDownIcon />
                     </div>
                     <div className='btn-copy'>
