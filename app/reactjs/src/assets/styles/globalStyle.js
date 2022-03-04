@@ -1,6 +1,8 @@
 import { Container } from 'react-bootstrap';
 import styled from "styled-components";
 import underlineIcon from "../images/icons/underlineIcon.svg";
+import replyIcon from "../images/icons/replyIcon.svg";
+import replyIconGreen from "../images/icons/replyIconGreen.svg";
 
 
 
@@ -19,6 +21,12 @@ export const mixinIcon = ({ urlIcon, width, height, important = false }) => `
 
 export const UnderlineIcon = styled.i`
   ${mixinIcon({ urlIcon: underlineIcon, width: 15, height: 15 })};
+`;
+export const ReplyIcon = styled.i`
+  ${mixinIcon({ urlIcon: replyIcon, width: 10, height: 9 })};
+`;
+export const ReplyIconGreen = styled.i`
+  ${mixinIcon({ urlIcon: replyIconGreen, width: 10, height: 9 })};
 `;
 export const DefaultMain = styled.div`
     position: relative;

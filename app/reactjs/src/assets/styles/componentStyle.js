@@ -1000,13 +1000,13 @@ export const FormEmoji = styled.div`
     }
 `;
 export const BlocMessagerie = styled.div`
-    width: 233px;
+    width: 310px;
     .bloc-lists-messagerie{
         height: 100%;
         position: relative;
         .start-new-message{
             position: absolute;
-            bottom: 42px;
+            bottom: 15px;
             right: 10px;
             height: 42px;
             width: 42px;
@@ -1275,21 +1275,7 @@ export const MasonryItem = styled.div`
         }
     }
 `;
-export const ModalItem = styled(Modal)`
-    background-color: rgba(6, 20, 30, .94);
-    .modal-dialog{
-        width: 900px;
-        max-width: 90%;
-        .modal-content{
-            border-radius: 0px;
-            background-color: transparent;
-            border: 0;
-        }
-        .modal-body{
-            padding: 0;
-        }
-    }
-`;
+
 export const MusicPlayer = styled.div`
     margin-bottom: 12px;
     .controls-player{
@@ -1374,7 +1360,7 @@ export const BarTimer = styled.div`
             justify-content: space-between;
             position: relative;
             height: 26px;
-            padding: 6px;
+            padding: 6px 10px;
             font-size: 13px;
             line-height: 1;
             cursor: pointer;
@@ -1390,7 +1376,7 @@ export const BarTimer = styled.div`
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                left: -4px;
+                left: 0px;
                 width: 26px;
                 width: 4px;
                 background: #DCDFDE;
@@ -1400,7 +1386,7 @@ export const BarTimer = styled.div`
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                right: -4px;
+                right: 0px;
                 width: 26px;
                 width: 4px;
                 background: #DCDFDE;
@@ -1542,6 +1528,7 @@ export const BlocGalleryImages = styled.div`
     &.tow-item{
         .item-gallery{
             width: 50%;
+            height: 106px;
         }
     }
     &.four-item{
@@ -1553,7 +1540,7 @@ export const BlocGalleryImages = styled.div`
     &.three-item{
         flex-flow: column wrap;
         width: 100%;
-        height: 260px;
+        height: 220px;
         .item-gallery{
             width: calc(40% - 2px);
             order: 2;
@@ -1585,6 +1572,60 @@ export const VideoPlayer = styled.div`
     }
 `;
 
+export const ModalItem = styled(Modal)`
+    background-color: rgba(6, 20, 30, .94);
+    .modal-dialog{
+        width: 900px;
+        max-width: 90%;
+        .modal-content{
+            border-radius: 0px;
+            background-color: transparent;
+            border: 0;
+        }
+        .modal-body{
+            padding: 0;
+        }
+    }
+    ${BarTimer}{
+        .bloc-timer-Bar{
+            .content-timer-bar {
+                height: 48px;
+            }
+            button{
+                height: 48px;
+                width: 115px;
+            }
+        }
+            
+    }
+    ${BlocGalleryImages}{
+        &.one-item{
+            .item-gallery {
+                height: 440px;
+                margin: auto;
+            }
+        }
+        &.four-item{
+            .item-gallery{
+                height: 220px;
+            }
+        }
+        &.tow-item{
+            .item-gallery{
+                height: 220px;
+            }
+        }
+        &.three-item{
+            height: 440px;
+            .item-gallery{
+                height: 220px;
+                &:first-child{
+                    height: 440px;
+                }
+            }
+        }
+    }
+`;
 
 
 export const CommentItem = styled.div`

@@ -436,7 +436,7 @@ export default function Home() {
                     <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
                         {dataMasonry.map((item) => (
                             <div key={item.id}>
-                                <ItemMasonry item={item} setItem={setItem} open={false} />
+                                <ItemMasonry item={item} setItem={setItem} open={false} action={action} setAction={setAction} />
                             </div>
                         ))}
                     </Masonry>
@@ -453,7 +453,7 @@ export default function Home() {
                                     </div>
                                 </Col>
                                 <Col md={6}>
-                                    <NewPli />
+                                    <NewPli action={action} setAction={setAction} />
                                 </Col>
                                 <Col md={3}>
                                     <OptionsBtnAction>
@@ -524,7 +524,7 @@ export default function Home() {
                             >
                                 <SearchFolowers />
                             </ButtonAction>
-                            <NewPli />
+                            <NewPli action={action} setAction={setAction} />
                             <ButtonAction
                                 className='abonnee-bloc-action'
                                 action={action.folower}

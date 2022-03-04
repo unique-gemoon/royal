@@ -12,7 +12,7 @@ import CloseFullscreenTwoToneIcon from '@mui/icons-material/CloseFullscreenTwoTo
 import CommentOutlinedIcon from '@mui/icons-material/CommentOutlined';
 import BlocComments from '../comments/blocComments';
 
-export default function ItemMasonry({ item, setItem = () => { }, open = false }) {
+export default function ItemMasonry({ item, setItem = () => { }, open = false, action, setAction = () => { } }) {
     const [state, setState] = useState({
         showPli2: open,
         showModal: false,
@@ -34,7 +34,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false })
                 <ModalItem.Body>
                     <MasonryItem height={height}>
                         <div className='bloc-NV1' ref={refHeight}>
-                            <HeadItem item={item} setItem={setItem} state={state} setState={setState} />
+                            <HeadItem item={item} setItem={setItem} state={state} setState={setState} action={action} setAction={setAction} />
                             <div className='bloc-miniature'>
                                 {item.nv1.description ? <div className='descripton-miniature'>{item.nv1.description}</div> : null}
                                 {item.nv1.soundage ? <Soundage name={`modal_${item.id}_1`} niveau={1} item={item} setItem={setItem} /> : null}
@@ -69,7 +69,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false })
             </ModalItem>
             <MasonryItem height={height}>
                 <div className='bloc-NV1' ref={refHeight}>
-                    <HeadItem item={item} setItem={setItem} state={state} setState={setState}/>
+                    <HeadItem item={item} setItem={setItem} state={state} setState={setState} action={action} setAction={setAction}/>
                     <div className='bloc-miniature'>
 
                         {item.nv1.description ? <div className='descripton-miniature'>{item.nv1.description}</div> : null}

@@ -1,4 +1,5 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDetectClickOutside } from "react-detect-click-outside";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { BlocAddPli } from '../assets/styles/componentStyle';
 import { useOutsideAlerter } from '../helper/events';
@@ -15,7 +16,7 @@ import AddSoundage from './addSoundage';
 import { useMediaQuery } from "react-responsive";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
-export default function NewPli() {
+export default function NewPli({ action, setAction = () => { }}) {
 
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [stateTextarea, setStateTextarea] = useState({
@@ -36,9 +37,13 @@ export default function NewPli() {
     ]
   });
   const [togglePli, setTogglePli] = useState(false);
-
-  const ref = useRef(null);
-  useOutsideAlerter(ref, () => setTogglePli(false));
+  const handleToggle = (e) => {
+    
+      setTogglePli(true);
+  };
+  const divRef = useRef();
+  const handler = useCallback(() => setTogglePli(false), []);
+  useOutsideAlerter(divRef, handler);
   useEffect(() => {
     if (togglePli) {
       document.body.classList.add("add-pli-showing");
@@ -48,14 +53,14 @@ export default function NewPli() {
   }, [togglePli]);
 
   const [addOverture, setAddOverture] = useState(false);
-
+  
 
   return (
     <BlocAddPli>
       {togglePli ?
         <div className="bloc-new-pli">
-          <div className='cadre-content-new-pli'>
-            <div className='content-new-pli'>
+          <div className='cadre-content-new-pli' >
+            <div className='content-new-pli' ref={divRef}>
 
               <div className='new-pli-nv1'>
                 <div className='cadre-content-pli'>
@@ -96,10 +101,24 @@ export default function NewPli() {
         </div>
         : null}
       {isDesktopOrLaptop ? 
-        <div onClick={() => setTogglePli(!togglePli)} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
+        <div onClick={() => {
+          handleToggle();
+          const cpAction = {
+            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+            , messagerie: { ...action.messagerie, isOpen: false }
+          };
+          setAction(cpAction);
+          }} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`} ref={divRef} >
           <KeyboardArrowUpIcon />
         </div> : 
-        <div onClick={() => setTogglePli(!togglePli)} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
+        <div onClick={() => {
+          handleToggle();
+          const cpAction = {
+            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+            , messagerie: { ...action.messagerie, isOpen: false }
+          };
+          setAction(cpAction);
+        }} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
           <AddCircleOutlineOutlinedIcon /> 
         </div>
       }

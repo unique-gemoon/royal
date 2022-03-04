@@ -19,7 +19,7 @@ import Tooltip from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import ArrowDownIcon from '../../assets/images/icons/ArrowDownIcon';
 
-export default function HeadItem({ item, setItem = ()=>{}, state, setState }) {
+export default function HeadItem({ item, setItem = () => { }, state, setState, action, setAction = () => { } }) {
     const [toggleProfile, setToggleProfile] = useState(false);
     const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
     const handleTooltipClose = () => {
@@ -99,7 +99,14 @@ export default function HeadItem({ item, setItem = ()=>{}, state, setState }) {
                         14 <VisibilityIcon /> <OpenInFullOutlinedIcon className='open-zoom-icon' />
                     </div> 
                     }
-                    <div className='nb-message-comment' onClick={() => setState({ ...state, showModal: !state.showModal })}>
+                    <div className='nb-message-comment' onClick={() => {
+                        setState({ ...state, showModal: !state.showModal });
+                        const cpAction = {
+                            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+                            , messagerie: { ...action.messagerie, isOpen: false }
+                        };
+                        setAction(cpAction);
+                    }}>
                     3 <CommentOutlinedIcon /> <ArrowDownIcon />
                     </div>
                     <div className='btn-copy'>
