@@ -59,7 +59,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false })
                                 : null}
                             {state.showPli2 ?
                                 <>
-                                    <div className='toggle-pli2'><span className='users-views'>14 <VisibilityIcon /></span> . <span className='toggle-zoom' onClick={() => setState({ ...state, showPli2: false })}>Etendre le pli<CloseFullscreenTwoToneIcon className='open-zoom-icon' /></span></div>
+                                    <div className='toggle-pli2' onClick={() => setState({ ...state, showPli2: false })}><span className='users-views'>14 <VisibilityIcon /></span> . <span className='toggle-zoom'>Etendre le pli<CloseFullscreenTwoToneIcon className='open-zoom-icon' /></span></div>
                                     <BlocComments item={item} />
                                 </>
                             : null}
@@ -88,7 +88,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false })
                     
                     {state.showPli2 ?
                         <>
-                            <div className='toggle-pli2'><span className='users-views'>14 <VisibilityIcon /></span> . <span className='toggle-zoom' onClick={() => setState({ ...state, showPli2: false })}>Etendre le pli<CloseFullscreenTwoToneIcon className='open-zoom-icon' /></span></div>
+                            <div className='toggle-pli2' onClick={() => setState({ ...state, showPli2: false })}><span className='users-views'>14 <VisibilityIcon /></span> . <span className='toggle-zoom'>Etendre le pli<CloseFullscreenTwoToneIcon className='open-zoom-icon' /></span></div>
                         <BlocComments item={item} />
                         </>
                     : null}

@@ -68,7 +68,6 @@ export default function Messagerie() {
                             setState={setState}
                         />
                     </div>
-                    <p className='show-more-folower'><ArrowCircleDownIcon /> Voir les anciens messages</p>
                 </div>
 
                 <Button className='start-new-message'><ModeEditOutlineOutlinedIcon /></Button>

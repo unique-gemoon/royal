@@ -107,7 +107,6 @@ export default function SearchFolowers() {
                             <ItemListFolower key={item.id} item={item} /> 
                         ))}
                     </div>
-                    <p className='show-more-folower'><SearchRoundedIcon /> Voir plus de résultats</p>
                 </div> 
             : null}
             

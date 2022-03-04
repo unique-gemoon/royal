@@ -507,7 +507,7 @@ export const FolowersModal = styled.div`
             padding: 0;
             height: 100%;
             .list-tab-modal{
-                height: calc(100% - 33px);
+                height: 100%;
                 overflow-y: auto;
             }
             .show-more-folower{
@@ -734,7 +734,7 @@ export const FolowerSearch = styled.div`
         border-radius: 12px;
         overflow: hidden;
         .list-result-search {
-            height: calc(100% - 33px);
+            height: 100%;
             background: linear-gradient(#2f6fba 0%, #3375b5 99.88%);
             overflow-y: auto;
         }
@@ -805,7 +805,7 @@ export const BlocNotification = styled.div`
     .content-notifs {
         height: calc(100% - 47px);
         .list-notifs{
-            height: calc(100% - 33px);
+            height: 100%;
             overflow-y: auto;
         }
         .item-notif{
@@ -1051,7 +1051,7 @@ export const BlocMessagerie = styled.div`
     .content-messagerie {
         height: calc(100% - 47px);
         .list-messagerie{
-            height: calc(100% - 33px);
+            height: 100%;
             overflow-y: auto;
             
         }
@@ -1227,6 +1227,7 @@ export const MasonryItem = styled.div`
     background-color: #FFF;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
     .bloc-miniature{
         padding: 0 23px;
         font-size: 15px;
@@ -1254,9 +1255,12 @@ export const MasonryItem = styled.div`
         font-size: 13px;
         line-height: 1;
         padding: 5px;
+        cursor: pointer;
+        transition: .3s ease-in-out;
         svg{
             font-size: 16px;
             margin-left: 4px;
+            transition: .3s ease-in-out;
         }
         span{
             display: flex;
@@ -1265,6 +1269,9 @@ export const MasonryItem = styled.div`
             &.toggle-zoom{
                 cursor: pointer;
             }
+        }
+        &:hover{
+            background-color: ${BleuColor};
         }
     }
 `;
@@ -1346,10 +1353,17 @@ export const BarTimer = styled.div`
         button{
             padding: 0;
             width: 50px;
+            height: 26px;
             min-width: 50px;
             color: #FEB92B;
+            transition: .3s ease-in-out;
+            border-radius: 0;
             svg{
                 font-size: 16px;
+            }
+            &:hover{
+                background-color: ${OrangeColor};
+                color: #FFF;
             }
         }
         .content-timer-bar{
@@ -1431,7 +1445,7 @@ export const ItemResultSoundage = styled.div`
             bottom: 0;
             width: ${({ purcentage }) => (purcentage ? purcentage : 0)};
             border-radius: 6px;
-            background: linear-gradient(rgba(65, 185, 214, 0.39) 0%, rgba(53, 131, 214, 0.39) 100%);
+            background: linear-gradient(to right, rgb(53, 131, 214, .39) 0%,rgb(65, 185, 214, .39) 100%);
         }
         span{
             display: block;
@@ -1453,7 +1467,8 @@ export const SoundageBloc = styled.div`
             input{
                 display: none;
                 &:checked ~ label{
-                    background: linear-gradient(rgba(65, 185, 214, 0.39) 0%, rgba(53, 131, 214, 0.39) 100%);
+                    background: #3583d6;
+                    color: #FFF;
                 } 
             }
             label{
@@ -1471,7 +1486,8 @@ export const SoundageBloc = styled.div`
                 cursor: pointer;
                 transition: .8s all;
                 &:hover{
-                    background: linear-gradient(rgba(65, 185, 214, 0.39) 0%, rgba(53, 131, 214, 0.39) 100%);
+                    background: #3583d6;
+                    color: #FFF;
                 }
             }
         }
@@ -1483,6 +1499,10 @@ export const SoundageBloc = styled.div`
         color: #798993;
         cursor: pointer;
         margin-bottom: 5px;
+        transition: .3s ease-in-out;
+        &:hover{
+            color: ${BleuColor};
+        }
     }
     margin-bottom: 10px;
 `;
