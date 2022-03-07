@@ -11,7 +11,7 @@ import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import NewPli from '../components/newPli';
+import NewPli from '../components/NewPli';
 import SeeCounter from '../components/ui-elements/seeCounter';
 import BlocFolowers from '../components/blocFolowers';
 import SearchFolowers from '../components/searchFolowers';
