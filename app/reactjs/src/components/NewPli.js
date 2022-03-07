@@ -1,8 +1,7 @@
-import React, { useEffect, useRef, useState } from 'react';
-import ReactQuill from "react-quill";
-import EditorToolbar, { modules, formats } from "../components/ui-elements/editorToolBar";
+import React, { useCallback, useEffect, useRef, useState } from 'react';
+import { useDetectClickOutside } from "react-detect-click-outside";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { BlocAddPli, ToolBarEditor } from '../assets/styles/componentStyle';
+import { BlocAddPli } from '../assets/styles/componentStyle';
 import { useOutsideAlerter } from '../helper/events';
 import NewPilOptions from './newPilOptions';
 import BarTemporelle from './barTemporelle';
@@ -12,13 +11,14 @@ import RemoveIcon from '@mui/icons-material/Remove';
 import CountDown from './ui-elements/countDown';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import { Button } from '@mui/material';
-import WysiwygEditor from "./ui-elements/wysiwygEditor";
-import { removeTags } from '../helper/fonctions';
 import NewOvertureOptions from './newOvertureOptions';
 import AddSoundage from './addSoundage';
+import { useMediaQuery } from "react-responsive";
+import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 
-export default function NewPli() {
+export default function NewPli({ action, setAction = () => { }}) {
 
+  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [stateTextarea, setStateTextarea] = useState({
     inputEmoji: {
       name: "message-input",
@@ -37,9 +37,13 @@ export default function NewPli() {
     ]
   });
   const [togglePli, setTogglePli] = useState(false);
-
-  const ref = useRef(null);
-  useOutsideAlerter(ref, () => setTogglePli(false));
+  const handleToggle = (e) => {
+    
+      setTogglePli(true);
+  };
+  const divRef = useRef();
+  const handler = useCallback(() => setTogglePli(false), []);
+  useOutsideAlerter(divRef, handler);
   useEffect(() => {
     if (togglePli) {
       document.body.classList.add("add-pli-showing");
@@ -49,14 +53,14 @@ export default function NewPli() {
   }, [togglePli]);
 
   const [addOverture, setAddOverture] = useState(false);
-
+  
 
   return (
     <BlocAddPli>
       {togglePli ?
         <div className="bloc-new-pli">
-          <div className='cadre-content-new-pli'>
-            <div className='content-new-pli'>
+          <div className='cadre-content-new-pli' >
+            <div className='content-new-pli' ref={divRef}>
 
               <div className='new-pli-nv1'>
                 <div className='cadre-content-pli'>
@@ -72,11 +76,13 @@ export default function NewPli() {
                   {stateTextarea.openSoundage ? <AddSoundage state={stateTextarea.soundageOptions} setState={(e) => setStateTextarea({ ...stateTextarea, soundageOptions: e })} /> : null}
                   <div className='bloc-footer'>
                     <NewPilOptions state={stateTextarea} setState={setStateTextarea} />
-                    <CountDown maxCount={280} setState={(stateTextarea.inputEmoji.value ? stateTextarea.inputEmoji.value : '').length} />
-                    {!addOverture ? (
-                      <div className='bloc-btn-publish'>
-                        <Button className='btn-publish'>Publier <SendRoundedIcon /></Button>
-                      </div>) : null}
+                    <div className='count-publish-pli1'>
+                      <CountDown maxCount={280} setState={(stateTextarea.inputEmoji.value ? stateTextarea.inputEmoji.value : '').length} />
+                      {!addOverture ? (
+                        <div className='bloc-btn-publish'>
+                          <Button className='btn-publish'>Publier <SendRoundedIcon /></Button>
+                        </div>) : null}
+                    </div>
                   </div>
                 </div>
                 <BarTemporelle />
@@ -94,10 +100,29 @@ export default function NewPli() {
           </div>
         </div>
         : null}
-
-      <div onClick={() => setTogglePli(!togglePli)} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
-        <KeyboardArrowUpIcon />
-      </div>
+      {isDesktopOrLaptop ? 
+        <div onClick={() => {
+          handleToggle();
+          const cpAction = {
+            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+            , messagerie: { ...action.messagerie, isOpen: false }
+          };
+          setAction(cpAction);
+          }} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`} ref={divRef} >
+          <KeyboardArrowUpIcon />
+        </div> : 
+        <div onClick={() => {
+          handleToggle();
+          const cpAction = {
+            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+            , messagerie: { ...action.messagerie, isOpen: false }
+          };
+          setAction(cpAction);
+        }} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
+          <AddCircleOutlineOutlinedIcon /> 
+        </div>
+      }
+      
     </BlocAddPli>
   );
 }

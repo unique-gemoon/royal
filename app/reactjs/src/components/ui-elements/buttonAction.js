@@ -1,16 +1,33 @@
 import { Button } from '@mui/material';
-import React, { useState } from 'react';
-import { BlocActionButton , ButtonIcon} from "../../assets/styles/componentStyle"
+import React, { useRef, useState } from 'react';
+import { BlocActionButton , ButtonIcon} from "../../assets/styles/componentStyle";
+import { motion, useCycle } from "framer-motion";
 
-export default function ButtonAction({ children, className='', icon=null, setCount=null}) {
+export default function ButtonAction({ children, className = '', icon = null, setCount = null, action, setAction = () => { }}) {
 
     const [toggleAction, setToggleAction] = useState(false);
     const [countNotif, setCountNotif] = useState(setCount);
+    const containerRef = useRef(null);
+    const sidebar = {
+        open:{
+            transition: {
+                opacity: 1,
+                duration: 0.15
+            }
+        },
+        closed: {
+            transition: {
+                opacity: 0,
+                duration: 0.15
+            }
+        }
+    };
     return (
         <BlocActionButton className={className}>
-            <ButtonIcon className={`btn-white ${toggleAction ? 'isopen' : ''}`} 
+            <ButtonIcon className={`btn-white ${action.isOpen ? 'isopen' : ''}`} 
                 onClick={() => { 
-                    setToggleAction(!toggleAction); 
+                    setAction({...action, isOpen:!action.isOpen}); 
+                    console.log(action)
                     setTimeout(() => {
                         setCountNotif("")
                     }, 1000);  
@@ -18,10 +35,15 @@ export default function ButtonAction({ children, className='', icon=null, setCou
                 {icon}
                  {countNotif ? <span className='count-notif'>{countNotif}</span> : null} 
             </ButtonIcon>
-            {toggleAction ? 
-                <div className="content-button-action">
+            {action.isOpen ? 
+                <motion.div 
+                    initial={false}
+                    variants={sidebar}
+                    animate={action.isOpen ? "open" : "closed"}
+                    ref={containerRef}
+                className="content-button-action">
                     {children}
-                </div>
+                </motion.div>
             : null}
             
         </BlocActionButton>

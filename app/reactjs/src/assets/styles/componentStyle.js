@@ -1,9 +1,19 @@
 import { Button } from "@mui/material";
 import { Modal } from "react-bootstrap";
 import styled from "styled-components";
-import { OrangeColor } from "./globalStyle";
+import { BleuColor, OrangeColor } from "./globalStyle";
 
 
+export const CountSee = styled.div`
+   font-family: 'ProximaNovaSoftW03-Semibold';
+   font-size: 20px;
+   color: #1E52A0;
+   display: flex;
+   align-items: center;
+   & > svg{
+       margin-left: 10px;
+   }
+`;
 export const DropZoneBloc = styled.div`
     flex: 1;
     display: flex;
@@ -39,7 +49,23 @@ export const BlocActionButton = styled.div`
     &.messages-bloc-action{
         .content-button-action{
             bottom: 90px;
-            left: calc(50% - 600px + 24px);
+            left: calc(50% - 625px + 24px);
+
+            @media(max-width: 1200px){
+                left: 15px;
+                bottom: auto;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                height: calc(100% - 145px);
+                width: 100%;
+                left: 0px;
+                & > div{
+                    height: 100% !important;
+                    width: 90%;
+                    margin: auto;
+                }
+            }
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
                 height: calc(50vh - 110px + 25px + 90px);
@@ -55,7 +81,22 @@ export const BlocActionButton = styled.div`
     &.search-bloc-action{
         .content-button-action{
             top: 25px;
-            left: calc(50% - 600px + 24px);
+            left: calc(50% - 625px + 24px);
+            @media(max-width: 1200px){
+                left: 15px;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                max-height: calc(100% - 145px);
+                width: 100%;
+                left: 0px;
+                & > div{
+                    height: calc(100vh - 145px) !important;
+                    max-height: initial !important;
+                    width: 90%;
+                    margin: auto;
+                }
+            }
             & > div{
                 max-height: calc(50vh - 296px + 25px + 90px);
             }
@@ -67,13 +108,29 @@ export const BlocActionButton = styled.div`
     &.abonnee-bloc-action{
         .content-button-action{
             top: 25px;
-            right: calc(50% - 600px + 24px);
+            right: calc(50% - 625px + 24px);
+            @media(max-width: 1200px){
+                right: 15px;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                height: calc(100vh - 145px);
+                width: 100%;
+                right: 0px;
+                & > div{
+                    width: 90% !important;
+                    margin: auto;
+                    height: 100% !important;
+                    max-height: initial !important;
+                }
+            }
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
                 max-height: calc(50vh - 184px + 25px + 90px);
                 border-radius: 13px;
                 overflow: hidden;
                 box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
+                width: 300px;
             }
             @media(min-width: 1430px){
                 right: calc(50% - 690px + 24px);
@@ -83,7 +140,22 @@ export const BlocActionButton = styled.div`
     &.notification-bloc-action{
         .content-button-action{
             bottom: 90px;
-            right: calc(50% - 600px + 24px);
+            right: calc(50% - 625px + 24px);
+            @media(max-width: 1200px){
+                right: 15px;
+                bottom: auto;
+                top: 55px;
+            }
+            @media(max-width: 993px){
+                height: calc(100% - 145px);
+                width: 100%;
+                right: 0px;
+                & > div{
+                    height: 100% !important;
+                    width: 90% !important;
+                    margin: auto;
+                }
+            }
             & > div{
                 background: linear-gradient(#2d7fc3 0%, #579be9 100%);
                 height: calc(50vh - 230px + 25px + 90px);
@@ -104,7 +176,9 @@ export const ButtonIcon = styled(Button)`
     border-radius: 50%;
     padding: 0;
     position: relative;
+    transition: .4s ease-in-out;
     .count-notif{
+        font-family: ProximaNovaSoftW03-Semibold;
         height: 24px;
         width: 24px;
         min-width: 24px;
@@ -117,28 +191,124 @@ export const ButtonIcon = styled(Button)`
         justify-content: center;
         color: #FFF;
         background-color: #D87A73;
+        font-size: 12px;
+        line-height: 1;
+        @media(max-width: 767px){
+            border: 3px solid #FFF;
+            top: -7px;
+            right: -8px;
+        }
     }
     &.btn-white{
         color: #EDAF5D;
         background-color: #FFF;
         margin-bottom: 12px;
         margin-left: 15px;
+        @media(max-width: 1200px){
+            margin-left: 0;
+        }
+       
         svg{
             width: 20px;
         }
+        &:hover{
+            background-color: ${OrangeColor};
+            color: #FFF;
+        }
+        &.isopen{
+            background: linear-gradient(#125c99 0.29%,#2d7fc3 100%);
+            color: #FFF;
+        }
+        @media(max-width: 767px){
+            margin-bottom: 0 !important;
+            svg{
+                font-size: 33px;
+                width: auto;
+            }
+            &:hover{
+                background-color: transparent;
+                color: ${OrangeColor};
+            }
+            &.isopen{
+                background: transparent;
+                color: ${BleuColor};
+            }
+        }
     }
-    
 `;
+export const BlocProfileMenu = styled.div`
+    position: relative;
+    z-index: 11;
+    #composition-button {
+        border-radius: 11.5px;
+        background: #fff;
+        padding: 4px 8px;
+        line-height: 1;
+        font-family: "ProximaNovaSoftW03-Semibold";
+        font-size: 15px;
+        color: ${BleuColor};
+        margin-right: 10px;
+        text-transform: initial;
+        i{
+            width: 4px;
+            height: 4px;
+            background: #6ed5ed;
+            border-radius: 50%;
+            display: inline-block;
+            margin-right: 5px;
+
+        }
+        span{
+            font-family: "ProximaNovaSoftW03-Regular";
+            color: #7caad6;
+            font-size: 14px;
+        }
+        @media(max-width: 993px){
+            margin-right: 0;
+        }
+    }
+    .paper-menu-profile{
+        background-color: transparent;
+        border-radius: 12px;
+        width: 232px;
+        margin: 10px 0;
+    }
+    .profil-menu-options{
+        border-radius: 12px;
+        background: linear-gradient(#2d7fc3 0%, #579be9 100%);
+        box-shadow: 0px 4px 13px rgba(26, 57, 91, .63);
+        color: #FFF;
+        padding: 0;
+        .MuiMenuItem-root{
+            font-family: 'ProximaNovaSoftW03-Regular';
+            font-weight: normal;
+            font-size: 13px;
+            line-height: 18px;
+            text-align: left;
+            color: #7dbfc6;
+            border-bottom: 1px solid rgba(112, 112, 112, .5);
+            transition: .3s ease-in-out;
+            @media(max-width: 1200px){
+                justify-content: flex-end;
+            }
+            &:last-child{
+                border: 0;
+            }
+            &:hover{
+                color: #c0f6ff;
+            }
+        }
+    }
+`;
+
 export const ToolBarEditor = styled.div`
     .ql-snow{
         border-radius: 12.81px;
         background: rgba(31, 85, 119, .45);
-        border: 0;
-        .ql-snow {
-            .ql-formats {
-                display: flex;
-                align-items: center;
-            }
+        border: 0 !important;
+        .ql-formats {
+            display: flex;
+            align-items: center;
         }
         .ql-stroke{
             stroke: #FFF !important;
@@ -147,7 +317,7 @@ export const ToolBarEditor = styled.div`
             fill: #FFF !important;
         }
         .ql-formats{
-            margin-right: 0;
+            margin-right: 0 !important;
         }
         &.ql-toolbar{
             button{
@@ -222,7 +392,7 @@ export const ImageUpload = styled.div`
     width: 45px;
     height: 45px;
     position: relative;
-    margin: 0 5px;
+    margin: 5px;
     img {
         height: 100%;
         width: 100%;
@@ -337,7 +507,7 @@ export const FolowersModal = styled.div`
             padding: 0;
             height: 100%;
             .list-tab-modal{
-                height: calc(100% - 33px);
+                height: 100%;
                 overflow-y: auto;
             }
             .show-more-folower{
@@ -368,6 +538,9 @@ export const FolowersModal = styled.div`
                 }
             }
         }
+        @media(max-width: 993px){
+            height: calc(100% - 48px);
+        }
     }
     .MuiTabs-flexContainer{
         border-radius: 12px;
@@ -381,6 +554,7 @@ export const FolowersModal = styled.div`
             align-items: center;
             flex-direction: initial;
             white-space: nowrap;
+            width: 50%;
             .count-tab{
                 margin-left: 10px;
                 width: 21px;
@@ -560,7 +734,7 @@ export const FolowerSearch = styled.div`
         border-radius: 12px;
         overflow: hidden;
         .list-result-search {
-            height: calc(100% - 33px);
+            height: 100%;
             background: linear-gradient(#2f6fba 0%, #3375b5 99.88%);
             overflow-y: auto;
         }
@@ -580,11 +754,14 @@ export const FolowerSearch = styled.div`
                 margin-right: 3px;
             }
         }
+        @media(max-width: 993px){
+            height: calc(100% - 38px);
+        }
     }
 `;
 
 export const BlocNotification = styled.div`
-    width: 250px;
+    width: 300px;
     .header-notif{
         height: 47px;
         color: #FFF;
@@ -628,7 +805,7 @@ export const BlocNotification = styled.div`
     .content-notifs {
         height: calc(100% - 47px);
         .list-notifs{
-            height: calc(100% - 33px);
+            height: 100%;
             overflow-y: auto;
         }
         .item-notif{
@@ -823,13 +1000,13 @@ export const FormEmoji = styled.div`
     }
 `;
 export const BlocMessagerie = styled.div`
-    width: 233px;
+    width: 310px;
     .bloc-lists-messagerie{
         height: 100%;
         position: relative;
         .start-new-message{
             position: absolute;
-            bottom: 42px;
+            bottom: 15px;
             right: 10px;
             height: 42px;
             width: 42px;
@@ -874,7 +1051,7 @@ export const BlocMessagerie = styled.div`
     .content-messagerie {
         height: calc(100% - 47px);
         .list-messagerie{
-            height: calc(100% - 33px);
+            height: 100%;
             overflow-y: auto;
             
         }
@@ -1050,6 +1227,7 @@ export const MasonryItem = styled.div`
     background-color: #FFF;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
+    overflow: hidden;
     .bloc-miniature{
         padding: 0 23px;
         font-size: 15px;
@@ -1077,9 +1255,12 @@ export const MasonryItem = styled.div`
         font-size: 13px;
         line-height: 1;
         padding: 5px;
+        cursor: pointer;
+        transition: .3s ease-in-out;
         svg{
             font-size: 16px;
             margin-left: 4px;
+            transition: .3s ease-in-out;
         }
         span{
             display: flex;
@@ -1089,23 +1270,12 @@ export const MasonryItem = styled.div`
                 cursor: pointer;
             }
         }
-    }
-`;
-export const ModalItem = styled(Modal)`
-    background-color: rgba(6, 20, 30, .94);
-    .modal-dialog{
-        width: 900px;
-        max-width: 90%;
-        .modal-content{
-            border-radius: 0px;
-            background-color: transparent;
-            border: 0;
-        }
-        .modal-body{
-            padding: 0;
+        &:hover{
+            background-color: ${BleuColor};
         }
     }
 `;
+
 export const MusicPlayer = styled.div`
     margin-bottom: 12px;
     .controls-player{
@@ -1169,10 +1339,17 @@ export const BarTimer = styled.div`
         button{
             padding: 0;
             width: 50px;
+            height: 26px;
             min-width: 50px;
             color: #FEB92B;
+            transition: .3s ease-in-out;
+            border-radius: 0;
             svg{
                 font-size: 16px;
+            }
+            &:hover{
+                background-color: ${OrangeColor};
+                color: #FFF;
             }
         }
         .content-timer-bar{
@@ -1183,7 +1360,7 @@ export const BarTimer = styled.div`
             justify-content: space-between;
             position: relative;
             height: 26px;
-            padding: 6px;
+            padding: 6px 10px;
             font-size: 13px;
             line-height: 1;
             cursor: pointer;
@@ -1199,7 +1376,7 @@ export const BarTimer = styled.div`
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                left: -4px;
+                left: 0px;
                 width: 26px;
                 width: 4px;
                 background: #DCDFDE;
@@ -1209,7 +1386,7 @@ export const BarTimer = styled.div`
                 position: absolute;
                 top: 0;
                 bottom: 0;
-                right: -4px;
+                right: 0px;
                 width: 26px;
                 width: 4px;
                 background: #DCDFDE;
@@ -1254,7 +1431,7 @@ export const ItemResultSoundage = styled.div`
             bottom: 0;
             width: ${({ purcentage }) => (purcentage ? purcentage : 0)};
             border-radius: 6px;
-            background: linear-gradient(rgba(65, 185, 214, 0.39) 0%, rgba(53, 131, 214, 0.39) 100%);
+            background: linear-gradient(to right, rgb(53, 131, 214, .39) 0%,rgb(65, 185, 214, .39) 100%);
         }
         span{
             display: block;
@@ -1276,7 +1453,8 @@ export const SoundageBloc = styled.div`
             input{
                 display: none;
                 &:checked ~ label{
-                    background: linear-gradient(rgba(65, 185, 214, 0.39) 0%, rgba(53, 131, 214, 0.39) 100%);
+                    background: #3583d6;
+                    color: #FFF;
                 } 
             }
             label{
@@ -1294,7 +1472,8 @@ export const SoundageBloc = styled.div`
                 cursor: pointer;
                 transition: .8s all;
                 &:hover{
-                    background: linear-gradient(rgba(65, 185, 214, 0.39) 0%, rgba(53, 131, 214, 0.39) 100%);
+                    background: #3583d6;
+                    color: #FFF;
                 }
             }
         }
@@ -1306,6 +1485,10 @@ export const SoundageBloc = styled.div`
         color: #798993;
         cursor: pointer;
         margin-bottom: 5px;
+        transition: .3s ease-in-out;
+        &:hover{
+            color: ${BleuColor};
+        }
     }
     margin-bottom: 10px;
 `;
@@ -1345,6 +1528,7 @@ export const BlocGalleryImages = styled.div`
     &.tow-item{
         .item-gallery{
             width: 50%;
+            height: 106px;
         }
     }
     &.four-item{
@@ -1356,7 +1540,7 @@ export const BlocGalleryImages = styled.div`
     &.three-item{
         flex-flow: column wrap;
         width: 100%;
-        height: 260px;
+        height: 220px;
         .item-gallery{
             width: calc(40% - 2px);
             order: 2;
@@ -1388,6 +1572,60 @@ export const VideoPlayer = styled.div`
     }
 `;
 
+export const ModalItem = styled(Modal)`
+    background-color: rgba(6, 20, 30, .94);
+    .modal-dialog{
+        width: 900px;
+        max-width: 90%;
+        .modal-content{
+            border-radius: 0px;
+            background-color: transparent;
+            border: 0;
+        }
+        .modal-body{
+            padding: 0;
+        }
+    }
+    ${BarTimer}{
+        .bloc-timer-Bar{
+            .content-timer-bar {
+                height: 48px;
+            }
+            button{
+                height: 48px;
+                width: 115px;
+            }
+        }
+            
+    }
+    ${BlocGalleryImages}{
+        &.one-item{
+            .item-gallery {
+                height: 440px;
+                margin: auto;
+            }
+        }
+        &.four-item{
+            .item-gallery{
+                height: 220px;
+            }
+        }
+        &.tow-item{
+            .item-gallery{
+                height: 220px;
+            }
+        }
+        &.three-item{
+            height: 440px;
+            .item-gallery{
+                height: 220px;
+                &:first-child{
+                    height: 440px;
+                }
+            }
+        }
+    }
+`;
 
 
 export const CommentItem = styled.div`
@@ -1547,6 +1785,11 @@ export const BlocNewPliContent = styled.div`
             right: auto;
             left: 0;
             bottom: 30px;
+            @media(max-width: 767px){
+                right: 0;
+                left: auto;
+                bottom: 38px;
+            }
         }
     }
     &.pli2-ouverture-bloc{
@@ -1670,17 +1913,25 @@ export const BlocAddPli = styled.div`
         .cadre-content-new-pli{
             position: absolute;
             top: 40px;
+            @media(max-width: 993px){
+                left: 0;
+                right: 0;
+            }
         }
         .content-new-pli{
             position: relative;
             z-index: 1;
             width: 753px;
             max-width: 100%;
+            margin: auto;
             height: auto;
             max-height: 100%;
             border-radius: 13px;
             background: linear-gradient(#2d7fc3 0%, #579be9 100%);
             overflow: hidden;
+            @media(max-width: 993px){
+                max-width: 90%;
+            }
         }
     }
     .toggled-new-pli{
@@ -1697,11 +1948,22 @@ export const BlocAddPli = styled.div`
         bottom: 0;
         left: 50%;
         transform: translateX(-50%);
+        transition: .3s ease;
         cursor: pointer;
+        @media(max-width: 1200px){
+            position: static;
+            transform: none;
+        }
         & > svg{
             font-size: 30px;
             transform-origin: center;
             transition: .1s linear;
+        }
+        &:hover{
+            background: ${OrangeColor};
+            & > svg{
+                color: #FFF;
+            }
         }
         &.open-pli{
             background: linear-gradient(#125c99 0.29%, #2d7fc3 100%);
@@ -1710,13 +1972,41 @@ export const BlocAddPli = styled.div`
                 transform: rotateX(-180deg);
             }
         }
-
+        @media(max-width: 767px){
+            padding: 0;
+            height: auto;
+            width: auto;
+            & > svg{
+                font-size: 33px;
+            }
+            &:hover{
+                background: #FFF;
+                & > svg{
+                    color: ${OrangeColor};
+                }
+            }
+            &.open-pli{
+                background: #FFF;
+                & > svg{
+                    color: ${BleuColor};
+                    transform: none;
+                }
+            }
+        }
     }
     .bloc-footer{
         display: flex;
         align-items: center;
         & > div{
             margin-bottom: 10px;
+        }
+        @media(max-width:767px){
+            flex-wrap: wrap;
+            justify-content: center;
+            .options-new-pli{
+                flex-wrap: wrap;
+                justify-content: center;
+            }
         }
     }
     .bloc-btn-publish{
@@ -1822,6 +2112,23 @@ export const BlocAddPli = styled.div`
         .toggle-action-dropzone{
             order: 1;
         }
+        .count-publish-pli1{
+            margin-left: auto;
+            display: flex;
+            align-items: center;
+        }
+        @media(max-width: 767px){
+            .liste-files{
+                order: 1;
+                flex-wrap: wrap;
+                justify-content: center;
+                overflow-x: initial;
+                width: auto;
+            }
+            .count-publish-pli1{
+                margin-left: initial;
+            }
+        }
     }
     ${BarTimer}{
         background-color: #FFF;
@@ -1892,6 +2199,14 @@ export const BlocAddPli = styled.div`
                 right: 20px;
                 z-index: 9;
             }
+            @media(max-width: 993px){
+                padding: 25px 20px 10px;
+                .bloc-footer{
+                    position: static;
+                    flex-wrap: wrap;
+                    justify-content: center;
+                }
+            }
         }
         .bloc-toggle-emoji{
             display: flex;
@@ -1901,6 +2216,10 @@ export const BlocAddPli = styled.div`
         .count-publish-pli2{
             margin-left: auto;
             display: flex;
+            @media(max-width: 993px){
+                display: inline-flex;
+                margin: initial;
+            }
         }
     }
 

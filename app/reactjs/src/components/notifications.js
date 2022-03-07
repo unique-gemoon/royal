@@ -22,10 +22,7 @@ export default function Notifications({items, setNotif}) {
                         </div>
                     ))}
                 </div>
-                <p className='show-more-folower'onClick={()=>{ 
-                    setNotif({...items});
-                }
-            }><ArrowCircleDownIcon /> Voir plus d’abonnés</p>
+                
             </div>
         </BlocNotification>
     );

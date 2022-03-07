@@ -1,6 +1,4 @@
 import React, { useRef, useState } from 'react';
-import ReactQuill from "react-quill";
-import EditorToolbar, { modules, formats } from "../components/ui-elements/editorToolBar";
 import { useDropzone } from 'react-dropzone';
 import ImageIcon from '@mui/icons-material/Image';
 import GraphicEqIcon from '@mui/icons-material/GraphicEq';
@@ -17,6 +15,8 @@ import { removeTags } from '../helper/fonctions';
 import CountDown from './ui-elements/countDown';
 import SendRoundedIcon from '@mui/icons-material/SendRounded';
 import AddSoundage from './addSoundage';
+import ReactQuill from "react-quill";
+import EditorToolbar, { modules, formats } from "../components/ui-elements/editorToolBar";
 
 export default function NewOvertureOptions({ state = {}, setState = () => { } }) {
 

@@ -19,7 +19,7 @@ import Tooltip from '@mui/material/Tooltip';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import ArrowDownIcon from '../../assets/images/icons/ArrowDownIcon';
 
-export default function HeadItem({ item, setItem = ()=>{}, state, setState }) {
+export default function HeadItem({ item, setItem = () => { }, state, setState, action, setAction = () => { } }) {
     const [toggleProfile, setToggleProfile] = useState(false);
     const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
     const handleTooltipClose = () => {
@@ -90,10 +90,23 @@ export default function HeadItem({ item, setItem = ()=>{}, state, setState }) {
                     <span className='timer-post'> . 12</span>
                 </div>
                 <div className='option-item'>
-                    <div className='users-enligne-pli'>
-                    14 <VisibilityIcon /> {state.showModal ? <CloseFullscreenTwoToneIcon className='open-zoom-icon' onClick={() => setState({ ...state, showModal: false })} /> : <OpenInFullOutlinedIcon className='open-zoom-icon' onClick={() => setState({ ...state, showModal: true })} />}
+                    {state.showPli2 ?
+                    <div className='users-enligne-pli' onClick={() => { state && setState({ ...state, showPli2: false }) }}>
+                        14 <VisibilityIcon /> <CloseFullscreenTwoToneIcon className='open-zoom-icon' /> 
                     </div>
-                    <div className='nb-message-comment'>
+                    :
+                    <div className='users-enligne-pli' onClick={() => { state && setState({ ...state, showPli2: true }) }}>
+                        14 <VisibilityIcon /> <OpenInFullOutlinedIcon className='open-zoom-icon' />
+                    </div> 
+                    }
+                    <div className='nb-message-comment' onClick={() => {
+                        setState({ ...state, showModal: !state.showModal });
+                        const cpAction = {
+                            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+                            , messagerie: { ...action.messagerie, isOpen: false }
+                        };
+                        setAction(cpAction);
+                    }}>
                     3 <CommentOutlinedIcon /> <ArrowDownIcon />
                     </div>
                     <div className='btn-copy'>

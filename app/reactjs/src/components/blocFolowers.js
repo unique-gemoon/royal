@@ -86,7 +86,6 @@ export default function BlocFolowers() {
                                     <ItemListFolower key={item.id} item={item} /> 
                                 ))}
                             </div>
-                            <p className='show-more-folower'><ArrowCircleDownIcon /> Voir plus d’abonnés</p>
                         </TabPanel>
                         <TabPanel value="2">
                             <div className='list-tab-modal'>
@@ -94,7 +93,6 @@ export default function BlocFolowers() {
                                     <ItemListFolower key={item.id} item={item} /> 
                                 ))}
                             </div>
-                            <p className='show-more-folower'><ArrowCircleDownIcon /> Voir plus d’abonnements</p>
                         </TabPanel>
                     </div>
                 </TabContext>

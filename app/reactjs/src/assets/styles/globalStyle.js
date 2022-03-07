@@ -1,6 +1,8 @@
 import { Container } from 'react-bootstrap';
 import styled from "styled-components";
 import underlineIcon from "../images/icons/underlineIcon.svg";
+import replyIcon from "../images/icons/replyIcon.svg";
+import replyIconGreen from "../images/icons/replyIconGreen.svg";
 
 
 
@@ -20,9 +22,18 @@ export const mixinIcon = ({ urlIcon, width, height, important = false }) => `
 export const UnderlineIcon = styled.i`
   ${mixinIcon({ urlIcon: underlineIcon, width: 15, height: 15 })};
 `;
+export const ReplyIcon = styled.i`
+  ${mixinIcon({ urlIcon: replyIcon, width: 10, height: 9 })};
+`;
+export const ReplyIconGreen = styled.i`
+  ${mixinIcon({ urlIcon: replyIconGreen, width: 10, height: 9 })};
+`;
 export const DefaultMain = styled.div`
     position: relative;
     padding: 30px 0;
+    @media(max-width: 1200px){
+        padding-top: 0;
+    }
     &:before{
         content: "";
         position: fixed;
@@ -38,7 +49,7 @@ export const DefaultMain = styled.div`
 export const ContainerDef = styled(Container)`
 
     @media(min-width: 1200px){
-        max-width: 1200px;
+        max-width: 1250px;
     }
     @media(min-width: 1430px){
         max-width: 1380px;
@@ -46,6 +57,7 @@ export const ContainerDef = styled(Container)`
     & > div{
         margin: 0;
     }
+    max-width: 100%;
 `;
 export const HeadContentItem = styled.div`
     display: flex;
@@ -140,8 +152,13 @@ export const HeadContentItem = styled.div`
                     height: 28px;
                     min-width: 28px;
                     margin-right: 5px;
+                    transition: .3s ease-in-out;
                     svg{
                         font-size: 18px;
+                    }
+                    &:hover{
+                        color: #FFF;
+                        background-color: #edaf5d;
                     }
                 }
                 &.btn-switch-folowers{
@@ -154,9 +171,14 @@ export const HeadContentItem = styled.div`
                     border-radius: 24px;
                     text-transform: capitalize;
                     padding: 4px 10px;
+                    transition: .3s ease-in-out;
                     svg{
                         margin-left: 3px;
                         font-size: 18px;
+                    }
+                    &:hover{
+                        color: #FFF;
+                        background-color: #edaf5d;
                     }
                 }
             }
@@ -183,6 +205,7 @@ export const HeadContentItem = styled.div`
             color: #96A9B2;
             font-size: 18px;
             margin-left: 3px;
+            transition: .3s ease-in-out;
             &.open-zoom-icon{
                 color: #071D33;
                 font-size: 14px;
@@ -192,14 +215,36 @@ export const HeadContentItem = styled.div`
             margin-left: 15px;
             cursor: pointer;
         }
+        
         .users-enligne-pli{
             display: flex;
             align-items: center;
+            &:hover{
+                svg{
+                    &:first-of-type{
+                        color: ${OrangeColor};
+                    }
+                }
+            }
             
         }
         .nb-message-comment{
             display: flex;
             align-items: center;
+            &:hover{
+                svg{
+                    &:first-of-type{
+                        color: ${OrangeColor};
+                    }
+                }
+            }
+        }
+        .btn-copy{
+            &:hover{
+                svg{
+                    color: ${OrangeColor};
+                }
+            }
         }
     }
 `;
@@ -235,28 +280,44 @@ export const DetailsItems = styled.div`
             background-color: #62c4b4;
         }
     }
+    @media(max-width: 767px){
+        justify-content: center;
+    }
 `;
+
+export const HeaderMobile = styled.div`
+    position: sticky;
+    top: 0;
+    z-index: 999;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 30px;
+    background-color: #FFF;
+`;
+
 export const FooterDefault = styled.div`
     position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
     z-index: 999;
-    .see-count-bloc{
-        font-family: 'ProximaNovaSoftW03-Semibold';
-        font-size: 20px;
-        color: #1E52A0;
-        display: flex;
-        align-items: center;
-        & > svg{
-            margin-left: 10px;
-        }
-    }
+    
 `;
 export const OptionsBtnAction = styled.div`
     display: inline-flex;
     align-items: center;
     justify-content: space-between;
     float: right;
-
+    @media(max-width: 1200px){
+        float: none;
+        display: flex;
+        margin: auto;
+        width: 600px;
+        max-width: 100%;
+    }
+    @media(max-width: 767px){
+            background-color: #FFF;
+            padding: 9px 25px;
+    }
 `;

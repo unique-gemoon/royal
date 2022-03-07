@@ -133,9 +133,9 @@ export default function NewPilOptions({ state = {}, setState = () => { } }) {
                         <Button onClick={() => { setopenDrop(true); setCurrent('music'); removeAll(); }} className={`item-detail sound-detail ${(!current || current === "music") && openDrop ? "active" : ''}`}>
                             <GraphicEqIcon />
                         </Button>
+                        <Emojis setState={setState} state={state} />
                     </DetailsItems>
                 </div>
-                <Emojis setState={setState} state={state} />
             </div>
         </BlocNewPliContent >
     );
