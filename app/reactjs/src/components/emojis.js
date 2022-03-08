@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import Picker, { SKIN_TONE_MEDIUM_DARK } from 'emoji-picker-react';
+import Picker, {  SKIN_TONE_NEUTRAL } from 'emoji-picker-react';
 import { BlocEmojis } from '../assets/styles/componentStyle';
 import { Button } from '@mui/material';
 import SentimentSatisfiedAltRoundedIcon from '@mui/icons-material/SentimentSatisfiedAltRounded';
@@ -51,9 +51,11 @@ export default function Emojis({ state = {}, setState = () => { } }) {
                 <div className='bloc-list-emoji'>
                 <Picker
                     onEmojiClick={onEmojiClick}
-                    skinTone={SKIN_TONE_MEDIUM_DARK}
+                    skinTone={ SKIN_TONE_NEUTRAL}
                     native
+                    unified={true}
                     disableSearchBar
+                    disableSkinTonePicker={true}
                 />
             </div>  
             : null}

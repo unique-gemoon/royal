@@ -109,10 +109,14 @@ export default function NewOvertureOptions({ state = {}, setState = () => { } })
                     const cpState = { ...stateWysiwyg };
                     const value = e || "";
 
-                    if (removeTags(value).length <= 280) {
+                    if (removeTags(value).length > 2000) {
+                        console.log("tt")
+                        cpState.inputEmoji.value = value.replace(/<\/?[^>]+(>|$)/g, '').substring(0, 2000);
+                    }else{
                         cpState.inputEmoji.value = value;
-                        setStateWysiwyg(cpState);
                     }
+                        
+                    setStateWysiwyg(cpState);
                 }}
                 placeholder={stateWysiwyg.inputEmoji.placeholder}
                 modules={modules}
@@ -126,7 +130,7 @@ export default function NewOvertureOptions({ state = {}, setState = () => { } })
             )}
 
             <div className='options-new-pli'>
-                {stateWysiwyg.openSoundage ? <AddSoundage state={stateWysiwyg.soundageOptions} setState={(e) => setStateWysiwyg({ ...stateWysiwyg, soundageOptions: e })} /> : null}
+                {stateWysiwyg.openSoundage ? <AddSoundage state={stateWysiwyg.soundageOptions} showSoundage={stateWysiwyg.openSoundage} setShowSoundage={(e) => setStateWysiwyg({ ...stateWysiwyg, openSoundage: e })} setState={(e) => setStateWysiwyg({ ...stateWysiwyg, soundageOptions: e })} /> : null}
                 <div className='liste-files'>
                     {dropFile["images"].liste.length > 0 ? <div className='bloc-item-image-file'>
                         {dropFile["images"].liste.map((file, i) => (

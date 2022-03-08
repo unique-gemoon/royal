@@ -73,7 +73,7 @@ export default function NewPli({ action, setAction = () => { }}) {
                         setStateTextarea(cpState);
                       }
                     }} />
-                  {stateTextarea.openSoundage ? <AddSoundage state={stateTextarea.soundageOptions} setState={(e) => setStateTextarea({ ...stateTextarea, soundageOptions: e })} /> : null}
+                  {stateTextarea.openSoundage ? <AddSoundage state={stateTextarea.soundageOptions} showSoundage={stateTextarea.openSoundage} setShowSoundage={(e) => setStateTextarea({ ...stateTextarea, openSoundage: e })} setState={(e) => setStateTextarea({ ...stateTextarea, soundageOptions: e })} /> : null}
                   <div className='bloc-footer'>
                     <NewPilOptions state={stateTextarea} setState={setStateTextarea} />
                     <div className='count-publish-pli1'>

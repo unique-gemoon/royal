@@ -5,15 +5,16 @@ import { Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
-export default function AddSoundage({state, setState = ()=>{} }) {
+export default function AddSoundage({ state, setState = () => { }, showSoundage, setShowSoundage = () => { } }) {
     const removeFile = file => () => {
             const newFiles = [...state];
             newFiles.splice(newFiles.indexOf(file), 1);
             setState(newFiles);
         }
+    console.log(showSoundage)
   return (
     <BlocNewSoundage>
-        <p className='titre-add-soundage'>Ajouter un soundage <HighlightOffIcon /></p>
+          <p className='titre-add-soundage'>Ajouter un soundage <HighlightOffIcon onClick={() => { setShowSoundage(!showSoundage) }} /></p>
         <div className='items-soundage'>
               {state.map( (option, index) => (
                   <div className='row-soundage' key={index}>
