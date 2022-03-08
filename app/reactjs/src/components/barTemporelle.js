@@ -7,7 +7,7 @@ import AddIcon from '@mui/icons-material/Add';
 import RemoveIcon from '@mui/icons-material/Remove';
 export default function BarTemporelle({ state, setState, ...props}) {
     return (
-        <BarTimer>
+        <BarTimer className={props.className}>
             <LinearProgress className="progressBar-item" variant="determinate" value={93} />
             <div className='bloc-timer-Bar'>
                 <Button><RemoveIcon /></Button>

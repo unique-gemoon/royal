@@ -1405,6 +1405,12 @@ export const BarTimer = styled.div`
             }
         }
     }
+    &.nv-hide{
+        .bloc-timer-Bar{
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+        }
+    }
 `;
 
 export const ItemResultSoundage = styled.div`

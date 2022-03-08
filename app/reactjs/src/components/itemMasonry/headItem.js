@@ -93,18 +93,17 @@ export default function HeadItem({ item, setItem = () => { }, state, setState, a
                 {state.showModal ?
                     <div className='users-enligne-pli' onClick={() => {
                         setState({ ...state, showModal: false});
-                        const cpAction = {
-                            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
-                            , messagerie: { ...action.messagerie, isOpen: false }
-                        };
-                        setAction(cpAction);
                      }}>
                         14 <VisibilityIcon /> <CloseFullscreenTwoToneIcon className='open-zoom-icon' /> 
                     </div>
                     :
                     <div className='users-enligne-pli' onClick={() => { 
                         state && setState({ ...state, showModal: true,  showPli2: true })
-                        
+                        const cpAction = {
+                            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+                            , messagerie: { ...action.messagerie, isOpen: false }
+                        };
+                        setAction(cpAction);
                         }}>
                         14 <VisibilityIcon /> <OpenInFullOutlinedIcon className='open-zoom-icon' />
                     </div> 

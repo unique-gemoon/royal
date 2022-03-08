@@ -85,6 +85,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false, a
                     <BarTemporelle
                         state={state}
                         setState={setState}
+                        className={state.showPli2 && item.nv2 ? "" : "nv-hide"}
                     />
                 </div>
                 
