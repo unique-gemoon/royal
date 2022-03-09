@@ -28,6 +28,8 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false, a
             }, 1000);
         }
     }, []);
+
+    
     return (
         <>
 
@@ -53,7 +55,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false, a
                                 <>
                                     <div className='content-bloc-NV2'>
                                         {item.nv2.description ? <div className='descripton-miniature'>{item.nv2.description}</div> : null}
-                                        {item.nv2.music ? <PlayerMusic item={item.nv2.music} isClick={true} /> : null}
+                                        {item.nv2.music ? <PlayerMusic item={item.nv2.music} /> : null}
                                         {item.nv2.soundage ? <Soundage name={`modal_${item.id}_2`} niveau={2} item={item} setItem={setItem} /> : null}
                                         {item.nv2.photos ? <ImagesGallery items={item.nv2.photos} /> : null}
                                         {item.nv2.video ? <PlayerVideo item={item.nv2.video} /> : null}
@@ -77,7 +79,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false, a
                     <div className='bloc-miniature'>
 
                         {item.nv1.description ? <div className='descripton-miniature'>{item.nv1.description}</div> : null}
-                        {item.nv1.soundage ? <Soundage name={`bloc_${item.id}_1`} niveau={1} item={item} setItem={setItem} /> : null}
+                        {item.nv1.soundage ? <Soundage name={`bloc_${item.id}_1`} niveau={1} item={item} setItem={setItem}  /> : null}
                         {item.nv1.photos ? <ImagesGallery items={item.nv1.photos} /> : null}
                         {item.nv1.video ? <PlayerVideo item={item.nv1.video} /> : null}
                         {item.nv1.music ? <PlayerMusic item={item.nv1.music} /> : null}
@@ -94,7 +96,7 @@ export default function ItemMasonry({ item, setItem = () => { }, open = false, a
                         <>
                             <div className='content-bloc-NV2'>
                                 {item.nv2.description ? <div className='descripton-miniature'>{item.nv2.description}</div> : null}
-                                {item.nv2.music ? <PlayerMusic item={item.nv2.music} isClick={true} /> : null}
+                                {item.nv2.music ? <PlayerMusic item={item.nv2.music} /> : null}
                                 {item.nv2.soundage ? <Soundage name={`bloc_${item.id}_2`} niveau={2} item={item} setItem={setItem} /> : null}
                                 {item.nv2.photos ? <ImagesGallery items={item.nv2.photos} /> : null}
                                 {item.nv2.video ? <PlayerVideo item={item.nv2.video} /> : null}

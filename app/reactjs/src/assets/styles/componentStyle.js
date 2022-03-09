@@ -1476,7 +1476,7 @@ export const SoundageBloc = styled.div`
                 display: block;
                 margin-bottom: 10px;
                 cursor: pointer;
-                transition: .8s all;
+                transition: .3s all;
                 &:hover{
                     background: #3583d6;
                     color: #FFF;
@@ -1559,10 +1559,16 @@ export const BlocGalleryImages = styled.div`
         }
     }
 `;
-export const VideoPlayer = styled.div`
+export const BlocVideoPlayer = styled.div`
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 15px;
+    & > .video-js{
+        width: 100%;
+        position: relative;
+        padding-bottom: 55%;
+        height: auto;
+    }
     .video-react {
         .video-react-big-play-button{
             font-size: 69px;
@@ -1582,7 +1588,11 @@ export const ModalItem = styled(Modal)`
     background-color: rgba(6, 20, 30, .94);
     .modal-dialog{
         width: 900px;
+        max-height: calc(100vh - 60px);
+        overflow-y: scroll;
+        margin: 30px auto;
         max-width: 90%;
+        border-radius: 20px;
         .modal-content{
             border-radius: 0px;
             background-color: transparent;
