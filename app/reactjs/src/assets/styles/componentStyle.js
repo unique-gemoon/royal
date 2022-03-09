@@ -1569,6 +1569,11 @@ export const BlocVideoPlayer = styled.div`
         padding-bottom: 55%;
         height: auto;
     }
+    .vjs-big-play-button{
+        border: 0;
+        background: transparent !important;
+        font-size: 56px;
+    }
     .video-react {
         .video-react-big-play-button{
             font-size: 69px;
