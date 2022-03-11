@@ -90,17 +90,32 @@ export default function HeadItem({ item, setItem = () => { }, state, setState, a
                     <span className='timer-post'> . 12</span>
                 </div>
                 <div className='option-item'>
-                    {state.showPli2 ?
-                    <div className='users-enligne-pli' onClick={() => { state && setState({ ...state, showPli2: false }) }}>
+                {state.showModal ?
+                    <div className='users-enligne-pli' onClick={() => {
+                        setState({ ...state, showModal: false});
+                     }}>
                         14 <VisibilityIcon /> <CloseFullscreenTwoToneIcon className='open-zoom-icon' /> 
                     </div>
                     :
-                    <div className='users-enligne-pli' onClick={() => { state && setState({ ...state, showPli2: true }) }}>
+                    <div className='users-enligne-pli' onClick={() => { 
+                        state && setState({ ...state, showModal: true,  showPli2: true })
+                        const cpAction = {
+                            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+                            , messagerie: { ...action.messagerie, isOpen: false }
+                        };
+                        setAction(cpAction);
+                        }}>
                         14 <VisibilityIcon /> <OpenInFullOutlinedIcon className='open-zoom-icon' />
                     </div> 
                     }
                     <div className='nb-message-comment' onClick={() => {
-                        setState({ ...state, showModal: !state.showModal });
+                        // setState({ ...state, showModal: !state.showModal });
+                        // const cpAction = {
+                        //     ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+                        //     , messagerie: { ...action.messagerie, isOpen: false }
+                        // };
+                        // setAction(cpAction);
+                        setState({ ...state, showPli2: !state.showPli2 });
                         const cpAction = {
                             ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
                             , messagerie: { ...action.messagerie, isOpen: false }

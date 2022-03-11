@@ -1133,6 +1133,7 @@ export const BlocMessagerie = styled.div`
                     align-items: center;
                     .form-group{
                         order: 2;
+                        width: 100%;
                     }
                     textarea{
                         height: 28px !important;
@@ -1227,7 +1228,6 @@ export const MasonryItem = styled.div`
     background-color: #FFF;
     border-radius: 20px;
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
-    overflow: hidden;
     .bloc-miniature{
         padding: 0 23px;
         font-size: 15px;
@@ -1405,6 +1405,12 @@ export const BarTimer = styled.div`
             }
         }
     }
+    &.nv-hide{
+        .bloc-timer-Bar{
+            border-radius: 0 0 20px 20px;
+            overflow: hidden;
+        }
+    }
 `;
 
 export const ItemResultSoundage = styled.div`
@@ -1470,7 +1476,7 @@ export const SoundageBloc = styled.div`
                 display: block;
                 margin-bottom: 10px;
                 cursor: pointer;
-                transition: .8s all;
+                transition: .3s all;
                 &:hover{
                     background: #3583d6;
                     color: #FFF;
@@ -1553,10 +1559,21 @@ export const BlocGalleryImages = styled.div`
         }
     }
 `;
-export const VideoPlayer = styled.div`
+export const BlocVideoPlayer = styled.div`
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 15px;
+    & > .video-js{
+        width: 100%;
+        position: relative;
+        padding-bottom: 55%;
+        height: auto;
+    }
+    .vjs-big-play-button{
+        border: 0;
+        background: transparent !important;
+        font-size: 56px;
+    }
     .video-react {
         .video-react-big-play-button{
             font-size: 69px;
@@ -1576,7 +1593,11 @@ export const ModalItem = styled(Modal)`
     background-color: rgba(6, 20, 30, .94);
     .modal-dialog{
         width: 900px;
+        max-height: calc(100vh - 60px);
+        overflow-y: scroll;
+        margin: 30px auto;
         max-width: 90%;
+        border-radius: 20px;
         .modal-content{
             border-radius: 0px;
             background-color: transparent;
@@ -1881,8 +1902,13 @@ export const BlocNewSoundage = styled.div`
         padding: 11px;
         text-transform: initial;
         height: 37px;
+        transition: .3s ease-in-out;
         svg{
             margin-right: 7px;
+        }
+        &:hover{
+            background-color: ${OrangeColor};
+            color: #FFF;
         }
     }
 `;
@@ -2037,11 +2063,18 @@ export const BlocAddPli = styled.div`
         text-transform: capitalize;
         height: 27px;
         padding: 6px 11px;
+        transition: .3s ease-in-out;
+        align-items: flex-start;
         svg{
             margin-left: 2px;
             font-size: 18px;
             transform: rotate(-90deg);
-            margin-bottom: 1px;
+            position: relative;
+            bottom: 2px;
+        }
+        &:hover{
+            background-color: ${OrangeColor};
+            color: #FFF;
         }
     }
     .cadre-content-pli{
@@ -2225,6 +2258,8 @@ export const BlocAddPli = styled.div`
 
     .wisiwyg-pli2{
         margin-bottom: 20px;
+        max-height: 200px;
+        overflow-y: auto;
         .ql-snow{
             border: 0;
         }
