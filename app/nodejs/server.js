@@ -1,38 +1,62 @@
-require("dotenv").config();
 const express = require("express");
+const session = require("express-session");
+const expressListRoutes = require("express-list-routes");
+const path = require("path");
+const logger = require("morgan");
+const passport = require("passport");
+const bodyParser = require("body-parser");
 const cors = require("cors");
+const db = require("./app/models");
+const routes = require("./app/routes");
 
 const app = express();
+const PORT = process.env.PORT || 8080;
 
 var corsOptions = {
-  origin: process.env.CLIENT_ORIGIN || "http://localhost:8081"
+  origin: process.env.CLIENT_ORIGIN || 'http://localhost:8086'
 };
 
 app.use(cors(corsOptions));
 
-// parse requests of content-type - application/json
-app.use(express.json());
+// Express boilerplate middleware
+// =============================================
+app.use(logger("dev"));
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.json());
 
-// parse requests of content-type - application/x-www-form-urlencoded
-app.use(express.urlencoded({ extended: true }));
+// Express session middleware
+// =============================================
+app.use(
+  session({ secret: "lk46v6qbT36s85rZEj7S7gXUHta6LC", resave: true, saveUninitialized: true })
+);
+app.use(passport.initialize());
+app.use(passport.session());
 
-const db = require("./app/models");
-
-db.sequelize.sync();
-// // drop the table if it already exists
-// db.sequelize.sync({ force: true }).then(() => {
-//   console.log("Drop and re-sync db.");
-// });
+// Routing
+// =============================================
+app.use("/api", routes);
 
 // simple route
 app.get("/", (req, res) => {
   res.json({ message: "Welcome to royalis application." });
 });
 
-require("./app/routes/product.routes")(app);
+//show all routes
+console.log("*************************************\n");
+expressListRoutes(routes);
+console.log("\n*************************************\n");
 
-// set port, listen for requests
-const PORT = process.env.NODE_DOCKER_PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+// Sync sequelize models then start Express app
+// =============================================
+db.sequelize
+  .sync({ force: false })
+  .then(() => {
+    console.log("\n*************************************");
+    console.log(`${process.env.DB_NAME} database connected`);
+  })
+  .then(() => {
+    app.listen(PORT, () => {
+      console.log(`App listening on PORT ${PORT}`);
+      console.log("*************************************\n");
+    });
+  });
