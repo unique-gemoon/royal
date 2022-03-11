@@ -1,8 +1,89 @@
-import { Button } from "@mui/material";
-import { Modal } from "react-bootstrap";
+import { Button, TextField } from "@mui/material";
+import { Form, Modal } from "react-bootstrap";
 import styled from "styled-components";
 import { BleuColor, OrangeColor } from "./globalStyle";
 
+
+
+export const GroupInput = styled(Form.Group)`
+    margin-bottom: 20px;
+    &:last-child{
+        margin-bottom: 0;
+    }
+`;
+
+export const InputDef = styled(TextField)`
+    width: 100%;
+    background: rgba(21, 52, 79, .5);
+    border-radius: 4.93px 4.93px 0px 0px;
+    & > label{
+        line-height: 17px;
+        font-family: "ProximaNovaSoftW03-Semibold";
+        font-weight: normal;
+        font-size: 16px;
+        color: #9ba7bc;
+        opacity: 0.8;
+        &.Mui-focused{
+            color: ${OrangeColor};
+        }
+        &[data-shrink="true"]{
+            color: ${OrangeColor};
+        }
+        &[data-shrink="false"]{
+            transform: translate(16px, 10px) scale(1);
+        }
+    }
+    & > div{
+        width: 100%;
+        &.Mui-focused{
+            fieldset{
+                border-bottom-color: #41b9d6 !important;
+            }
+        }
+    }
+    input{
+        padding: 7px 10px;
+        height: auto;
+        color: #FFF;
+        opacity: 0.8;
+        font-family: "ProximaNovaSoftW03-Semibold";
+    }
+    fieldset{
+        border-radius: 4.93px 4.93px 0px 0px;
+        border: 0;
+        border-bottom: 2px solid #15344F;
+    }
+`;
+
+export const ModalDefault = styled.div`
+    &.modal-footer{
+        padding: 0;
+        border: 0;
+        &.modal-sinscrir{
+            button{
+                border-radius: 7.17px;
+                background: #fff;
+                color: ${OrangeColor};
+                &:hover{
+                    color: #FFF;
+                    background-color: ${OrangeColor};
+                }
+            }
+        }
+        button{
+            min-width: 98px;
+            height: 32px;
+            transition: .3s ease-in-out;
+            font-family: "ProximaNovaSoftW03-Semibold";
+            font-size: 12px;
+            line-height: 15px;
+            margin: 0 7px 15px;
+            color: #FFF;
+            text-transform: initial;
+        }
+    }
+    
+`;
 
 export const CountSee = styled.div`
    font-family: 'ProximaNovaSoftW03-Semibold';
@@ -1848,42 +1929,6 @@ export const BlocNewSoundage = styled.div`
             display: flex;
             align-items: center;
             margin-bottom: 12px;
-            .input-soundage{
-                width: 100%;
-                background: rgb(21 52 79 / 50%);
-                    border-radius: 4.93px 4.93px 0px 0px;
-                & > label{
-                    line-height: 1;
-                    font-family: "ProximaNovaSoftW03-Semibold";
-                    font-weight: normal;
-                    font-size: 16px;
-                    color: #71acc9;
-                    opacity: 0.8;
-                    &.Mui-focused{
-                        color: ${OrangeColor};
-                    }
-                }
-                & > div{
-                    width: 100%;
-                    &.Mui-focused{
-                        fieldset{
-                            border-bottom-color: ${OrangeColor} !important;
-                        }
-                    }
-                }
-                input{
-                    padding: 9px;
-                    min-height: 37px;
-                    color: #FFF;
-                    opacity: 0.8;
-                    font-family: "ProximaNovaSoftW03-Semibold";
-                }
-                fieldset{
-                    border-radius: 4.93px 4.93px 0px 0px;
-                    border: 0;
-                    border-bottom: 2px solid #15344F;
-                }
-            }
             &:last-child{
                 margin-bottom: 0;
             }
