@@ -4,4 +4,5 @@ WORKDIR /app
 COPY app/nodejs/package*.json ./
 RUN npm install
 COPY app/nodejs .
-CMD npm start
+EXPOSE 8080
+CMD [ "node", "server.js" ]
