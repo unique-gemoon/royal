@@ -1,7 +1,6 @@
 const express = require("express");
 const session = require("express-session");
 const expressListRoutes = require("express-list-routes");
-const path = require("path");
 const logger = require("morgan");
 const passport = require("passport");
 const bodyParser = require("body-parser");
@@ -54,7 +53,7 @@ app.listen(PORT, () => {
 });
 
 db.sequelize
-  .sync({ force: false })
+  .sync()
   .then(() => {
     console.log(`${process.env.DB_NAME} database connected`);
     console.log("*************************************\n");
