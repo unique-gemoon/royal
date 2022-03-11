@@ -1,54 +1,34 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import Masonry from '@mui/lab/Masonry';
-import ItemMasonry from '../components/itemMasonry/itemMasonry';
+import ItemMasonry from '../../components/itemMasonry/itemMasonry';
 import { StyledEngineProvider } from '@mui/material/styles';
-import { ContainerDef, DefaultMain, FooterDefault, HeaderMobile, OptionsBtnAction } from '../assets/styles/globalStyle';
+import { ContainerDef, DefaultMain, FooterDefault, HeaderMobile, ModalPopIn, OptionsBtnAction } from '../../assets/styles/globalStyle';
 import { Row, Col } from 'react-bootstrap';
-import imgPli from '../assets/images/image-pli-1.png';
-import videoPli from '../assets/images/video.mp4';
-import ButtonAction from '../components/ui-elements/buttonAction';
+import imgPli from '../../assets/images/image-pli-1.png';
+import videoPli from '../../assets/images/video.mp4';
+import ButtonAction from '../../components/ui-elements/buttonAction';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import NewPli from '../components/NewPli';
-import SeeCounter from '../components/ui-elements/seeCounter';
-import BlocFolowers from '../components/blocFolowers';
-import SearchFolowers from '../components/searchFolowers';
-import Notifications from '../components/notifications';
-import Messagerie from '../components/messagerie';
-import ProfileMenu from '../components/profileMenu';
+import NewPli from '../../components/NewPli';
+import SeeCounter from '../../components/ui-elements/seeCounter';
+import BlocFolowers from '../../components/blocFolowers';
+import SearchFolowers from '../../components/searchFolowers';
+import Notifications from '../../components/notifications';
+import Messagerie from '../../components/messagerie';
+import ProfileMenu from '../../components/profileMenu';
 import { useMediaQuery } from "react-responsive";
-import logoType from '../assets/images/Logotype.png';
-import axios from 'axios';
+import logoType from '../../assets/images/Logotype.png';
+import PopinModal from '../../components/popinModal';
+import { ModalDefault } from '../../assets/styles/componentStyle';
+import { Backdrop, Button, Fade, Link, Modal } from '@mui/material';
+import InputField from '../../components/ui-elements/inputField';
+import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 
-export default function Home() {
+import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
-//signup
-
-    useEffect(() => {
-        let newUser = {
-            firstname: 'ayoub',
-            lastname: 'test',
-            email: 'ayoub@example.com',
-            password: '123456'
-        }
-        
-        const entryPoint = axios.create({
-            baseURL: "http://127.0.0.1:8080",
-        });
-        entryPoint.post("/api/auth/signup", newUser)
-        .then(() => {
-            console.log('ok');
-        })
-        .catch(err => console.log(err))
-
-
-    },[]);
-
-
-
-
+export default function Login() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
     const isDesktopOrLaptop = useMediaQuery({  query: "(min-width: 1200px)"});
     const [dataMasonry, setDataMasonry] = useState([
@@ -376,51 +356,7 @@ export default function Home() {
             }
         },
     ]);
-    const [dataNotifs] = useState([
-        {
-            id: 1,
-            title: "Création du compte",
-            timer: "2mn",
-            statut: "new"
-        },
-        {
-            id: 2,
-            title: "Création du compte1",
-            timer: "21mn",
-            statut: "new"
-        },
-        {
-            id: 3,
-            title: "Création du compte2",
-            timer: "45mn",
-            statut: "old"
-        },
-        {
-            id: 4,
-            title: "Création du compte2",
-            timer: "45mn",
-            statut: "old"
-        },
-        {
-            id: 5,
-            title: "Création du compte2",
-            timer: "45mn",
-            statut: "old"
-        },
-        {
-            id: 6,
-            title: "Création du compte2",
-            timer: "45mn",
-            statut: "old"
-        },
-        {
-            id: 7,
-            title: "Création du compte2",
-            timer: "45mn",
-            statut: "old"
-        },
-    ]);
-    const [newNotifs, setNewNotif] = useState(dataNotifs.filter((newNotif) => newNotif.statut === "new"));
+
     const setItem = (item) => {
         const cpDataMasonry = [...dataMasonry];
         for (var i = 0; i < cpDataMasonry.length; i++) {
@@ -449,14 +385,40 @@ export default function Home() {
         }
     })
 
-    const updateAction = (e,name) => {
-        const cpAction =  {
-            ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
-            , messagerie: { ...action.messagerie, isOpen: false } };
-        cpAction[name].isOpen = e.isOpen;
-        setAction(cpAction);
-    }
-    
+    const [state, setState] = useState({
+        email: {
+            label: "Nom d’utilisateur ou adresse e-mail",
+            name: "email",
+            value: "Lys",
+            type: "text",
+            error: true,
+            errorMessage: "",
+            required: true,
+        },
+        password: {
+            label: "Mot de passe",
+            name: "password",
+            value: "123456",
+            type: "password",
+            error: false,
+            errorMessage: "",
+            required: true,
+        },
+        emailForgot: {
+            label: "Adresse email",
+            name: "emailForgot",
+            value: "",
+            type: "email",
+            error: false,
+            errorMessage: "",
+            required: true,
+        },
+    });
+    const [open, setOpen] = useState(false);
+    const handleOpen = () => setOpen(true);
+    const handleClose = () => setOpen(false);
+    const [message, setMessage] = useState(true);
+    const [linkForgot, setLinkForgot] = useState("");
     return (
         <DefaultMain>
             <StyledEngineProvider injectFirst>
@@ -487,101 +449,118 @@ export default function Home() {
                             <Row className='align-items-center'>
                                 <Col md={3}>
                                     <div className="d-md-flex">
-                                        <ProfileMenu />
                                         <SeeCounter countSee={14} />
                                     </div>
                                 </Col>
                                 <Col md={6}>
-                                    <NewPli action={action} setAction={setAction} />
+                                    <div className='d-flex justify-content-center'>
+                                        <PopinModal className="modal-footer modal-sinscrir" nameButton="S'inscrire">
+                                            <div className='content-modal-view'>
+                                                modale S'inscrire 
+                                            </div>
+                                        </PopinModal>
+                                        <ModalDefault className="modal-footer modal-connect">
+                                            <Button onClick={handleOpen}>Se connecter</Button>
+                                            <ModalPopIn
+                                                aria-labelledby="transition-modal-title"
+                                                aria-describedby="transition-modal-description"
+                                                open={open}
+                                                onClose={handleClose}
+                                                closeAfterTransition
+                                                BackdropComponent={Backdrop}
+                                                BackdropProps={{
+                                                    timeout: 500,
+                                                }}
+                                                className="modal-def"
+                                            >
+                                                <Fade in={open}>
+                                                <div className="content-modal">
+                                                    {linkForgot === "forgotPass" ? 
+                                                    <div className="connection-content">
+                                                        <div className='header-modal'>
+                                                            <KeyboardBackspaceIcon onClick={() => setLinkForgot(null)} />
+                                                            <h2 className='titre-modal'>Mot de passe oublié ?</h2>
+                                                        </div>
+                                                        <form className='form-forgot-pass'>
+                                                            <div className='content-form'>
+                                                                <InputField
+                                                                    {...state.emailForgot}
+                                                                    onChange={(e) => {
+                                                                        const cpState = { ...state };
+                                                                        cpState.emailForgot.value = e.target.value;
+                                                                        setState(cpState);
+                                                                        setMessage(null)
+                                                                    }}
+                                                                />
+                                                            </div>
+                                                            <div className='bloc-btn-modal'>
+                                                                <Button>Envoyer</Button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    : 
+                                                    <div className="connection-content">
+                                                        <div className='header-modal'>
+                                                            <KeyboardBackspaceIcon onClick={() => handleClose()} />
+                                                            <h2 className='titre-modal'>Connexion</h2>
+                                                        </div>
+                                                        <form className='form-connexion'>
+                                                            {message ? <div className="error-form-message">
+                                                                <HighlightOffIcon onClick={() => setMessage(null)} />
+                                                                <span>Le nom d’utilisateur ou le mot de passe est incorrect</span>
+                                                            </div> : null}
+
+                                                            <div className='content-form'>
+                                                                <InputField
+                                                                    {...state.email}
+                                                                    onChange={(e) => {
+                                                                        const cpState = { ...state };
+                                                                        cpState.email.value = e.target.value;
+                                                                        setState(cpState);
+                                                                        setMessage(null)
+                                                                    }}
+                                                                />
+                                                                <InputField
+                                                                    className="password-input"
+                                                                    {...state.password}
+                                                                    onChange={(e) => {
+                                                                        const cpState = { ...state };
+                                                                        cpState.password.value = e.target.value;
+                                                                        setState(cpState);
+                                                                        setMessage(null)
+                                                                    }}
+                                                                />
+                                                                <span
+                                                                    className="pass-oublier"
+                                                                    onClick={(e) => {
+                                                                        setLinkForgot("forgotPass");
+                                                                    }}
+                                                                >
+                                                                    Mot de passe oublié ?
+                                                                </span>
+                                                            </div>
+                                                            <div className='bloc-btn-modal'>
+                                                                <Button>Se connecter</Button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                    }
+                                                    
+                                                </div>
+                                                </Fade>
+                                            </ModalPopIn>
+                                        </ModalDefault>
+                                        
+                                    </div>
                                 </Col>
                                 <Col md={3}>
-                                    <OptionsBtnAction>
-                                        <ButtonAction 
-                                        className='messages-bloc-action' 
-                                        setCount={2} 
-                                        action={action.messagerie} 
-                                        icon={action.messagerie.icon}
-                                        setAction={(e) => {
-                                            setAction({ ...action, messagerie: { ...action.messagerie, isOpen: e.isOpen }})
-                                        }}
-                                        >
-                                            <Messagerie />
-                                        </ButtonAction>
-                                        <ButtonAction
-                                        className='search-bloc-action' 
-                                        action={action.search} 
-                                        icon={action.search.icon} 
-                                        setAction={(e) => {
-                                            setAction({ ...action, search: { ...action.search, isOpen: e.isOpen } })
-                                        }}
-                                        >
-                                            <SearchFolowers />
-                                        </ButtonAction>
-                                        <ButtonAction 
-                                        className='abonnee-bloc-action' 
-                                        action={action.folower} 
-                                        setCount={2} 
-                                        icon={action.folower.icon} 
-                                        setAction={(e) => {
-                                            setAction({ ...action, folower: { ...action.folower, isOpen: e.isOpen } })
-                                        }}
-                                        >
-                                            <BlocFolowers />
-                                        </ButtonAction>
-                                        <ButtonAction 
-                                        className='notification-bloc-action' 
-                                        action={action.notification} 
-                                        setCount={newNotifs.length} 
-                                        icon={action.notification.icon} 
-                                        setAction={(e) => {
-                                            setAction({ ...action, notification: { ...action.notification, isOpen: e.isOpen } })
-                                        }}
-                                        >
-                                            <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
-                                        </ButtonAction>
-                                    </OptionsBtnAction>
                                 </Col>
                             </Row>
                         </ContainerDef>
                     )}
                     {isTabletOrMobile && (
                         <OptionsBtnAction>
-                            <ButtonAction
-                                className='messages-bloc-action'
-                                setCount={2}
-                                action={action.messagerie}
-                                icon={action.messagerie.icon}
-                                setAction={(e) => { updateAction(e, 'messagerie'); }}
-                            >
-                                <Messagerie />
-                            </ButtonAction>
-                            <ButtonAction
-                                className='search-bloc-action'
-                                action={action.search}
-                                icon={action.search.icon}
-                                setAction={(e) => { updateAction(e, 'search'); }}
-                            >
-                                <SearchFolowers />
-                            </ButtonAction>
                             <NewPli action={action} setAction={setAction} />
-                            <ButtonAction
-                                className='abonnee-bloc-action'
-                                action={action.folower}
-                                setCount={2}
-                                icon={action.folower.icon}
-                                setAction={(e) => { updateAction(e, 'folower'); }}
-                            >
-                                <BlocFolowers />
-                            </ButtonAction>
-                            <ButtonAction
-                                className='notification-bloc-action'
-                                action={action.notification}
-                                setCount={newNotifs.length}
-                                icon={action.notification.icon}
-                                setAction={(e) => { updateAction(e, 'notification'); }}
-                            >
-                                <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
-                            </ButtonAction>
                         </OptionsBtnAction>
                     )}
                     

@@ -1,5 +1,6 @@
 
 body {
+  position: relative;
   margin: 0;
   font-family: 'ProximaNovaSoftW03-Regular';
   font-size: 16x;
@@ -35,6 +36,13 @@ code {
 strong{
   font-family: 'ProximaNovaSoftW03-Bold';
 }
+.modal-def{
+    backdrop-filter: blur(3.4667301177978516px);
+    --webkit-backdrop-filter: blur(3.4667301177978516px); 
+}
+.modal-def > div{
+  background-color: transparent;
+}
 #menu-option-message > .MuiPaper-root{
   border-radius: 10.62px;
   background: linear-gradient(#1663a0 0%, #135d98 93.46%);
@@ -61,4 +69,131 @@ strong{
 }
 #menu-option-message > .MuiPaper-root ul li:hover{
   background-color: transparent;
+}
+
+.full-spinner {
+  height: 100%;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  z-index: 9999;
+  top: 0;
+  left: 0;
+}
+.full-spinner.background-load {
+  background-image: url(assets/images/bg-royalis.png);
+  background-position: center;
+  background-size: cover;
+}
+.full-spinner.md .loadingio-spinner-ripple {
+  width: 104px;
+  height: 104px;
+}
+.full-spinner.md .ldio {
+  transform: translateZ(0) scale(1);
+}
+.full-spinner.md .ldio div {
+  border-width: 2.08px;
+  animation: ldio-md 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.full-spinner.xs .loadingio-spinner-ripple {
+  width: 38px;
+  height: 38px;
+}
+.full-spinner.xs .ldio {
+  transform: translateZ(0) scale(0.38);
+}
+.full-spinner.xs .ldio div {
+  border-width: 2px;
+  animation: ldio-xs 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.ldio div {
+  position: absolute;
+  border-width: 4px;
+  border-style: solid;
+  opacity: 1;
+  border-radius: 50%;
+  animation: ldio 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+.ldio div:nth-child(1) {
+  border-color: #225282;
+  animation-delay: 0s !important;
+}
+.ldio div:nth-child(2) {
+  border-color: #EDAF5D;
+  animation-delay: -0.5s !important;
+}
+.loadingio-spinner-ripple {
+  width: 200px;
+  height: 200px;
+  display: inline-block;
+  overflow: hidden;
+  background: transparent;
+}
+.background-load .loadingio-spinner-ripple {
+  background-image: url(assets/images/bg-royalis.png);
+  background-position: center;
+  background-size: cover;
+}
+.ldio {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform: translateZ(0) scale(1);
+  backface-visibility: hidden;
+  transform-origin: 0 0;
+}
+.ldio div {
+  box-sizing: content-box;
+}
+@keyframes ldio {
+  0% {
+    top: 96px;
+    left: 96px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 18px;
+    left: 18px;
+    width: 156px;
+    height: 156px;
+    opacity: 0;
+  }
+}
+@keyframes ldio-md {
+  0% {
+    top: 49.92px;
+    left: 49.92px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 9.36px;
+    left: 9.36px;
+    width: 81.12px;
+    height: 81.12px;
+    opacity: 0;
+  }
+}
+@keyframes ldio-xs {
+  0% {
+    top: 48px;
+    left: 48px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 9px;
+    left: 9px;
+    width: 78px;
+    height: 78px;
+    opacity: 0;
+  }
 }

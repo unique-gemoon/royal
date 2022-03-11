@@ -1,17 +1,43 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Redirect, BrowserRouter, Switch } from "react-router-dom";
+import Loader from "./components/loader";
 
 import { PUBLIC_ROUTE, PRIVATE_ROUTE } from "./config/routes";
-import Home from "./views/Home";
+
+
+const routesList = [
+    //Pages
+    {
+        exact: true,
+        path: PUBLIC_ROUTE.HOME,
+        component: lazy(() => import("./views/home")),
+    },
+    //Connexion
+    {
+        exact: true,
+        path: PUBLIC_ROUTE.LOGIN,
+        component: lazy(() => import("./views/auth/login")),
+    },
+]
+
 
 export default function Router() {
 
     return (
-        <Suspense fallback={<>Loading...</>}>
+        <Suspense fallback={<Loader />}>
             <BrowserRouter>
                 <Switch>
-                    <Route path="/" exact component={Home} />
-                    
+                    {routesList.map((route, index) => (
+                        <Route key={index} path={route.path} exact={route.exact}>
+                            <route.component />
+                        </Route>
+                    ))}
+                    <Redirect
+                        to={{
+                            pathname: PUBLIC_ROUTE.HOME,
+                            state: { from: "/" },
+                        }}
+                    />
                 </Switch>
             </BrowserRouter>
         </Suspense>

@@ -3,6 +3,7 @@ import styled from "styled-components";
 import underlineIcon from "../images/icons/underlineIcon.svg";
 import replyIcon from "../images/icons/replyIcon.svg";
 import replyIconGreen from "../images/icons/replyIconGreen.svg";
+import { Modal } from '@mui/material';
 
 
 
@@ -319,5 +320,109 @@ export const OptionsBtnAction = styled.div`
     @media(max-width: 767px){
             background-color: #FFF;
             padding: 9px 25px;
+    }
+`;
+export const ModalPopIn = styled(Modal) `
+    .content-modal{
+        padding: 24px 30px;
+        color: #FFF;
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        width: 748px;
+        min-height: 200px;
+        border-radius: 12.81px;
+        background: linear-gradient(#2d7fc3 0%, #579be9 100%);  
+        .header-modal {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            h2{
+                font-family: "ProximaNovaSoftW03-Semibold";
+                font-weight: normal;
+                font-size: 20px;
+                line-height: 24px;
+                text-align: left;
+                color: #fff;
+                margin-bottom: 0;
+            }
+            & > svg{
+                color: ${OrangeColor};
+                font-size: 24px;
+                margin-right: 12px;
+                cursor: pointer;
+                transition: .3s linear;
+                position: relative;
+                right: 0;
+                &:hover{
+                    right: 5px;
+                }
+            }
+        }
+        .error-form-message{
+            font-family: "ProximaNovaSoftW03-Semibold";
+            font-size: 16px;
+            line-height: 21px;
+            text-align: center;
+            background: #d87a73;
+            color: #FFF;
+            padding: 5px 10px;
+            border-radius: 6px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            span{
+                display: block;
+                width: 100%;
+                text-align: center;
+                margin-left: 10px;
+            }
+        }
+        .content-form{
+            border-radius: 12.81px;
+            background: rgba(31, 85, 119, .5);
+            padding: 32px 26px 16px;
+            
+        }
+        .form-connexion{
+            .password-input{
+                margin-bottom: 10px;
+            }
+            .pass-oublier{
+                text-decoration: underline;
+                cursor: pointer;
+                font-size: 15px;
+                line-height: 22px;
+                display: inline-block;
+            }
+        }
+        .form-forgot-pass{
+            .content-form{
+                padding-bottom: 32px;
+            }
+        }
+        .bloc-btn-modal{
+            text-align: center;
+            margin-top: 20px;
+        }
+        button{
+            min-width: 132px;
+            height: 32px;
+            transition: .3s ease-in-out;
+            font-family: "ProximaNovaSoftW03-Semibold";
+            font-size: 18px;
+            line-height: 22px;
+            border-radius: 7px;
+            color: ${OrangeColor};
+            text-transform: initial;
+            background-color: #FFF;
+            transition: .3s ease-in-out;
+            &:hover{
+                background-color: ${OrangeColor};
+                color: #FFF;
+            }
+        }
     }
 `;

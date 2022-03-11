@@ -1,6 +1,5 @@
 import React from 'react';
-import TextField from '@mui/material/TextField';
-import { BlocNewSoundage } from '../assets/styles/componentStyle';
+import { BlocNewSoundage, InputDef } from '../assets/styles/componentStyle';
 import { Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
@@ -18,7 +17,7 @@ export default function AddSoundage({ state, setState = () => { }, showSoundage,
         <div className='items-soundage'>
               {state.map( (option, index) => (
                   <div className='row-soundage' key={index}>
-                      <TextField className='input-soundage' id={option.name} label={option.label} variant="outlined" />
+                      <InputDef className='input-soundage' id={option.name} label={option.label} variant="outlined" />
                       <Button onClick={removeFile(option)}><HighlightOffIcon /></Button>
                   </div>
               ))}
