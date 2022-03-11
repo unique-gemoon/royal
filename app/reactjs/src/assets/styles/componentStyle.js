@@ -10,12 +10,39 @@ export const GroupInput = styled(Form.Group)`
     &:last-child{
         margin-bottom: 0;
     }
+    .error-message{
+        font-family: "ProximaNovaSoftW03-Semibold";
+            font-size: 16px;
+            line-height: 21px;
+            background: #d87a73;
+            color: #FFF;
+            padding: 5px 10px;
+            border-radius: 0 0 6px 6px;
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 16px;
+            svg{
+                margin-right: 10px;
+            }
+    }
 `;
 
 export const InputDef = styled(TextField)`
     width: 100%;
     background: rgba(21, 52, 79, .5);
     border-radius: 4.93px 4.93px 0px 0px;
+    &.is-requered{
+        & > label{
+            &:after{
+                content: "*";
+                position: relative;
+                color: #6ed5ed;
+                font-size: 14px;
+                line-height: 16.8px;
+                margin-left: 3px;
+            }
+        }
+    }
     & > label{
         line-height: 17px;
         font-family: "ProximaNovaSoftW03-Semibold";
@@ -34,6 +61,7 @@ export const InputDef = styled(TextField)`
         }
     }
     & > div{
+        
         width: 100%;
         &.Mui-focused{
             fieldset{

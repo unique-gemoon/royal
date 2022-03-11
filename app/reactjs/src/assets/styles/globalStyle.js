@@ -425,4 +425,36 @@ export const ModalPopIn = styled(Modal) `
             }
         }
     }
+    .message-modal-content {
+        width: 530px;
+        max-width: 100%;
+        margin: auto;
+        text-align: center;
+        font-family: "ProximaNovaSoftW03-Semibold";
+        font-size: 16px;
+        line-height: 22px;
+        & > svg{
+            font-size: 42px;
+            color: #6ed5ed;
+            margin-bottom: 20px;
+        }
+        .titre-message-modal{
+            font-size: 18px;
+            line-height: 22px;
+            color: #fff;
+            margin-bottom: 20px;
+        }
+        .text-message-modal{
+            margin-bottom: 26px;
+            opacity: .8;
+            p{
+                margin-bottom: 0;
+            }
+        }
+        button{
+            min-width: 70px;
+            height: 32px;
+            text-transform: uppercase;
+        }
+    }
 `;

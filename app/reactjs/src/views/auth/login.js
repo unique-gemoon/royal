@@ -25,8 +25,9 @@ import { ModalDefault } from '../../assets/styles/componentStyle';
 import { Backdrop, Button, Fade, Link, Modal } from '@mui/material';
 import InputField from '../../components/ui-elements/inputField';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
-
+import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import InscriptionForm from '../../components/inscriptionForm';
 
 export default function Login() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -401,7 +402,6 @@ export default function Login() {
             value: "123456",
             type: "password",
             error: false,
-            errorMessage: "",
             required: true,
         },
         emailForgot: {
@@ -454,11 +454,7 @@ export default function Login() {
                                 </Col>
                                 <Col md={6}>
                                     <div className='d-flex justify-content-center'>
-                                        <PopinModal className="modal-footer modal-sinscrir" nameButton="S'inscrire">
-                                            <div className='content-modal-view'>
-                                                modale S'inscrire 
-                                            </div>
-                                        </PopinModal>
+                                        <InscriptionForm />
                                         <ModalDefault className="modal-footer modal-connect">
                                             <Button onClick={handleOpen}>Se connecter</Button>
                                             <ModalPopIn
@@ -494,11 +490,21 @@ export default function Login() {
                                                                 />
                                                             </div>
                                                             <div className='bloc-btn-modal'>
-                                                                <Button>Envoyer</Button>
+                                                                <Button onClick={(e) => {setLinkForgot("messageForgotPass");}}>Envoyer</Button>
                                                             </div>
                                                         </form>
                                                     </div>
-                                                    : 
+                                                            : linkForgot === "messageForgotPass" ?
+                                                    <div className="message-modal-content">
+                                                        <CheckCircleOutlineIcon />
+                                                        <p className='titre-message-modal'>E-mail de mise à jour de mot de passe envoyé</p>
+                                                        <div className='text-message-modal'>
+                                                            <p>Un e-mail vous a été envoyé.</p>
+                                                            <p>Suivez les instructions pour mettre à jour votre mot de passe.</p>
+                                                        </div>
+                                                            <Button onClick={(e) => { handleClose(); setTimeout(() => { setLinkForgot(null); }, 100);  }}>Ok</Button>
+                                                    </div>
+                                                    :
                                                     <div className="connection-content">
                                                         <div className='header-modal'>
                                                             <KeyboardBackspaceIcon onClick={() => handleClose()} />
