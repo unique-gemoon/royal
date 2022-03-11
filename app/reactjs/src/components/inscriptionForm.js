@@ -61,10 +61,9 @@ export default function InscriptionForm() {
                         { linkForgot === "messageForgotPass" ?
                                 <div className="message-modal-content">
                                     <CheckCircleOutlineIcon />
-                                    <p className='titre-message-modal'>E-mail de mise à jour de mot de passe envoyé</p>
+                                    <p className='titre-message-modal'>Inscription réalisée avec succès</p>
                                     <div className='text-message-modal'>
-                                        <p>Un e-mail vous a été envoyé.</p>
-                                        <p>Suivez les instructions pour mettre à jour votre mot de passe.</p>
+                                    <p>Votre inscription s’est bien réalisée. Veuillez vérifier votre adresse e-mail pour confirmer votre inscription.</p>
                                     </div>
                                     <Button onClick={(e) => { handleClose(); setTimeout(() => { setLinkForgot(null); }, 100); }}>Ok</Button>
                                 </div>
