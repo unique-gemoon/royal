@@ -25,7 +25,7 @@
 			"response": []
 		},
 		{
-			"name": "signup",
+			"name": "register",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"connection": true
@@ -47,10 +47,10 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"firstname\":\"ayoub\",\"lastname\":\"test\",\"email\":\"ayoub@example.com\",\"password\":\"123456\"}"
+					"raw": "{\"username\":\"ayoub\",\"email\":\"ayoub@example.com\",\"password\":\"123456\"}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8080/api/auth/signup",
+					"raw": "http://127.0.0.1:8080/api/auth/register",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -62,7 +62,7 @@
 					"path": [
 						"api",
 						"auth",
-						"signup"
+						"register"
 					]
 				}
 			},
@@ -70,7 +70,15 @@
 		},
 		{
 			"name": "login",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
 			"request": {
+				"auth": {
+					"type": "noauth"
+				},
 				"method": "POST",
 				"header": [
 					{
@@ -155,8 +163,18 @@
 			"response": []
 		},
 		{
-			"name": "user_data",
+			"name": "profile",
 			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsImlhdCI6MTY0NzI3MzU0NjE2NSwiZXhwIjoxNjQ3ODc4MzQ2MTY1fQ.QA45Fzaj3YNlo02ODL2GOKaM0HNdDrJ2z5-JJwLB6Po",
+							"type": "string"
+						}
+					]
+				},
 				"method": "GET",
 				"header": [
 					{
@@ -171,7 +189,7 @@
 					}
 				],
 				"url": {
-					"raw": "http://127.0.0.1:8080/api/auth/user_data",
+					"raw": "http://127.0.0.1:8080/api/auth/profile",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -183,7 +201,7 @@
 					"path": [
 						"api",
 						"auth",
-						"user_data"
+						"profile"
 					]
 				}
 			},

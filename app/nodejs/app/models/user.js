@@ -35,7 +35,7 @@ module.exports = function (sequelize, Sequelize) {
 
     enabled: {
       type: Sequelize.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     },
   });
 

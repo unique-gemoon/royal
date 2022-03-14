@@ -21,11 +21,12 @@
     ],
     "rules": {
         "react/jsx-uses-react": "error",
-        "react/jsx-uses-vars": "error"
+        "react/jsx-uses-vars": "error",
+        "no-unused-vars": ["error", { "args": "none" }]
     },
     "settings": {
         "react": {
-          "version": "latest"
+          "version": "17.0.2"
         }
     }
 }
