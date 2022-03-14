@@ -1,16 +1,15 @@
-const bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcryptjs');
 
 module.exports = function (sequelize, Sequelize) {
   const User = sequelize.define("user", {
       
-    firstname: {
+    username: {
       type: Sequelize.STRING,
       notEmpty: true,
-    },
-
-    lastname: {
-      type: Sequelize.STRING,
-      notEmpty: true,
+      unique: {
+        args: true,
+        msg: "Nom d'utilisateur déjà utilisé!"
+      } 
     },
 
     email: {
@@ -21,7 +20,7 @@ module.exports = function (sequelize, Sequelize) {
       notEmpty: true,
       unique: {
         args: true,
-        msg: 'Email address already in use!'
+        msg: 'Adresse e-mail déjà utilisée!'
       } 
     },
 
@@ -36,7 +35,7 @@ module.exports = function (sequelize, Sequelize) {
 
     enabled: {
       type: Sequelize.BOOLEAN,
-      defaultValue: false,
+      defaultValue: true,
     },
   });
 
