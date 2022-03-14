@@ -1,5 +1,6 @@
 const passport = require("passport");
 const LocalStrategy = require("passport-local").Strategy;
+const { Op } = require('@sequelize/core');
 const db = require("../models");
 
 // Telling passport we want to use a Local Strategy. In other words, we
@@ -21,25 +22,28 @@ passport.use(
       // When a user tries to sign in this code runs
       db.user.findOne({
         where: {
-          email,
+          [Op.or]: [
+            { email },
+            { username: email }
+          ]
         },
       }).then((dbUser) => {
         // If there's no user with the given email
         if (!dbUser) {
           return done(null, false, {
-            message: "Incorrect email.",
+            message: "E-mail ou nom d'utilisateur incorrect.",
           });
         }
         // If there is a user with the given email, but the password
         // the user gives us is incorrect
         if (!dbUser.validPassword(password)) {
           return done(null, false, {
-            message: "Incorrect password.",
+            message: "Mot de passe incorrect.",
           });
         }
         // If none of the above, call the done function
         // and pass the user
-        return done(null, dbUser);
+        return done(null, dbUser, { message: 'Connecté avec succès' });
       });
     }
   )
