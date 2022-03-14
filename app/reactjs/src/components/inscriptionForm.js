@@ -86,7 +86,8 @@ export default function InscriptionForm() {
                                                             cpState.nom.value = e.target.value;
                                                             setState(cpState);
                                                         }}
-                                                        setMessageField={setMessage}
+                                                        state={state.nom}
+                                                        setState={(nom)=>setState({...state, nom})}
                                                     />
                                                 </Col>
                                                 <Col sm={6}>
@@ -107,6 +108,8 @@ export default function InscriptionForm() {
                                                             cpState.email.value = e.target.value;
                                                             setState(cpState);
                                                         }}
+                                                        state={state.email}
+                                                        setState={(email) => setState({ ...state, email })}
                                                     />
                                                 </Col>
                                             </Row>

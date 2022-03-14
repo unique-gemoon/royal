@@ -26,7 +26,7 @@ import { Backdrop, Button, Fade, Link, Modal } from '@mui/material';
 import InputField from '../../components/ui-elements/inputField';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import InscriptionForm from '../../components/inscriptionForm';
 
 export default function Login() {
@@ -444,14 +444,15 @@ export default function Login() {
                 </ContainerDef>
 
                 <FooterDefault>
-                    {isDesktopOrLaptop && (
                         <ContainerDef>
-                            <Row className='align-items-center'>
+                        <Row className='align-items-center justify-content-center'>
+                                {isDesktopOrLaptop && (
                                 <Col md={3}>
                                     <div className="d-md-flex">
                                         <SeeCounter countSee={14} />
                                     </div>
                                 </Col>
+                                )}
                                 <Col md={6}>
                                     <div className='d-flex justify-content-center'>
                                         <InscriptionForm />
@@ -512,7 +513,7 @@ export default function Login() {
                                                         </div>
                                                         <form className='form-connexion'>
                                                             {message ? <div className="error-form-message">
-                                                                <HighlightOffIcon onClick={() => setMessage(null)} />
+                                                                <AddCircleOutlinedIcon onClick={() => setMessage(null)} />
                                                                 <span>Le nom d’utilisateur ou le mot de passe est incorrect</span>
                                                             </div> : null}
 
@@ -559,16 +560,12 @@ export default function Login() {
                                         
                                     </div>
                                 </Col>
+                                {isDesktopOrLaptop && (
                                 <Col md={3}>
                                 </Col>
+                                )}
                             </Row>
                         </ContainerDef>
-                    )}
-                    {isTabletOrMobile && (
-                        <OptionsBtnAction>
-                            <NewPli action={action} setAction={setAction} />
-                        </OptionsBtnAction>
-                    )}
                     
                 </FooterDefault>
             </StyledEngineProvider>

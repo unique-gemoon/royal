@@ -331,9 +331,13 @@ export const ModalPopIn = styled(Modal) `
         left: 50%;
         transform: translate(-50%, -50%);
         width: 748px;
+        max-width: 90%;
         min-height: 200px;
         border-radius: 12.81px;
         background: linear-gradient(#2d7fc3 0%, #579be9 100%);  
+        @media(max-width: 767px){
+            padding: 24px 15px;
+        }
         .header-modal {
             display: flex;
             align-items: center;
@@ -379,11 +383,19 @@ export const ModalPopIn = styled(Modal) `
                 text-align: center;
                 margin-left: 10px;
             }
+            svg{
+                transform-origin: center;
+                transform: rotate(45deg);
+                cursor: pointer;
+            }
         }
         .content-form{
             border-radius: 12.81px;
             background: rgba(31, 85, 119, .5);
             padding: 32px 26px 16px;
+            @media(max-width: 767px){
+                padding: 25px 15px 16px;
+            }
             
         }
         .form-connexion{
@@ -401,6 +413,12 @@ export const ModalPopIn = styled(Modal) `
         .form-forgot-pass{
             .content-form{
                 padding-bottom: 32px;
+                & > div{
+                    margin-bottom: 0;
+                }
+                @media(max-width: 767px){
+                    padding-bottom: 25px;
+                }
             }
         }
         .bloc-btn-modal{
@@ -419,6 +437,7 @@ export const ModalPopIn = styled(Modal) `
             text-transform: initial;
             background-color: #FFF;
             transition: .3s ease-in-out;
+            padding: 6px 26px;
             &:hover{
                 background-color: ${OrangeColor};
                 color: #FFF;
