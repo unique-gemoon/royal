@@ -3,7 +3,7 @@ import {
     InputDef, GroupInput,
 } from "../../assets/styles/componentStyle";
 
-import HighlightOffIcon from '@mui/icons-material/HighlightOff';
+import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 
 export default function InputField({
     label,
@@ -18,19 +18,18 @@ export default function InputField({
     required,
     error = false,
     errorMessage = "",
-    messageField,
-    setMessageField = () => { },
-
+    state,
+    setState = () =>{},
     ...props
 }) {
-    console.log(messageField)
+    console.log(props.state)
     return (
         <GroupInput className={error ? `form-error ${className}` : `${className}`}>
 
             <InputDef className={required ? "is-requered" : ""} type={type} id={id} name={name} label={label} variant="outlined" defaultValue={value} onChange={onChange} fullWidth />
 
             {errorMessage ? (
-                <span className="error-message"><HighlightOffIcon onClick={() => setMessageField(error)} /> {errorMessage}</span>
+                <div className="error-message"><AddCircleOutlinedIcon onClick={() => setState({...state, errorMessage: "", error: false})} /> <span>{errorMessage}</span></div>
             ) : null}
         </GroupInput>
     );
