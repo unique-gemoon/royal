@@ -7,13 +7,10 @@ import { BleuColor, OrangeColor } from "./globalStyle";
 
 export const GroupInput = styled(Form.Group)`
     margin-bottom: 20px;
-    &:last-child{
-        margin-bottom: 0;
-    }
     .error-message{
         font-family: "ProximaNovaSoftW03-Semibold";
-            font-size: 16px;
-            line-height: 21px;
+            font-size: 15px;
+            line-height: 19px;
             background: #d87a73;
             color: #FFF;
             padding: 5px 10px;
@@ -23,6 +20,12 @@ export const GroupInput = styled(Form.Group)`
             margin-bottom: 16px;
             svg{
                 margin-right: 10px;
+                transform-origin: center;
+                transform: rotate(45deg);
+                cursor: pointer;
+            }
+            span{
+                opacity: .8;
             }
     }
 `;
