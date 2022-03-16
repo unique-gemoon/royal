@@ -1,5 +1,6 @@
 import jwt from "jsonwebtoken";
 import db from "../models/index.model.js";
+import sendEmail from "../services/sendEmail.js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
 
@@ -89,7 +90,15 @@ export function forgotPassword(req, res) {
     { where: { email: req.body.email } }
   )
     .then((user) => {
-      res.status(200).json({ message : "ok" });
+
+      const response = sendEmail({
+        from: "",
+        to: req.body.email,
+        subject: "Mot de passe oublié",
+        text: "Vous avez demandé à réinitialiser votre mot de passe.",
+      });
+
+      res.status(200).json({ message : "ok", email : response });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

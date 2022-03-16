@@ -33,6 +33,7 @@
     "morgan": "^1.10.0",
     "mysql": "^2.18.1",
     "mysql2": "^2.0.2",
+    "nodemailer": "^6.7.2",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
@@ -40,6 +41,7 @@
     "sequelize": "^5.22.5"
   },
   "devDependencies": {
+    "@types/nodemailer": "^6.4.4",
     "eslint": "^8.11.0",
     "eslint-plugin-react": "^7.29.4"
   }
