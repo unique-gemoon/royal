@@ -1,8 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import checkDuplicateUsernameOrEmail from "../middleware/checkDuplicateUsernameOrEmail.js";
-import checkEmailExiste from "../middleware/checkEmailExiste.js";
-import checkTokenExiste from "../middleware/checkTokenExiste.js";
+import {checkEmailExiste, checkDuplicateUsernameOrEmail, checkTokenExiste} from "../middleware/checkUser.js";
 import * as controller from "../controllers/auth.controller.js";
 
 const authRoutes = Router();
@@ -18,7 +16,7 @@ authRoutes.post("/rest-password", checkTokenExiste, controller.restPassword);
 authRoutes.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
-  (req, res, next) => {
+  (req, res) => {
     res.status(200).json(req.user);
   }
 );

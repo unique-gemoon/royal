@@ -1,4 +1,5 @@
 import nodemailer from "nodemailer";
+import AWS from "aws-sdk";
 
 export default function sendEmail({
   from = "",
