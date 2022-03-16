@@ -28,7 +28,17 @@ export default function userModel(sequelize, Sequelize) {
       allowNull: false,
     },
 
-    last_login: {
+    passwordResetToken: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+
+    passwordResetTokenAt: {
+      type: Sequelize.DATE,
+      allowNull: true,
+    },
+
+    lastLogin: {
       type: Sequelize.DATE,
     },
 
@@ -53,6 +63,6 @@ export default function userModel(sequelize, Sequelize) {
       null
     );
   });
-
+  
   return User;
 }

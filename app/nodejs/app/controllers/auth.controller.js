@@ -1,5 +1,8 @@
 import jwt from "jsonwebtoken";
 import db from "../models/index.model.js";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
+
 
 const User = db.user;
 const Op = db.Sequelize.Op;
@@ -38,9 +41,16 @@ export function signin(req, res) {
       if (!user.enabled) {
         return res.status(401).send({ message: "Ce compte est désactivé" });
       }
-      // Generate JWT token
-      const token = generateToken(user);
-      res.status(200).json({ token });
+
+      User.update({ lastLogin: new Date() }, { where: { id: user.id } })
+        .then((user) => {
+          // Generate JWT token
+          const token = generateToken(user);
+          res.status(200).json({ token });
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -55,9 +65,54 @@ export function signup(req, res) {
     password: req.body.password,
   })
     .then((user) => {
-      // Generate JWT token
-      const token = generateToken(user);
-      res.status(200).json({ token });
+      User.update({ lastLogin: new Date() }, { where: { id: user.id } })
+        .then((user) => {
+          // Generate JWT token
+          const token = generateToken(user);
+          res.status(200).json({ token });
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+}
+
+export function forgotPassword(req, res) {
+  User.update(
+    {
+      passwordResetToken: crypto.randomBytes(20).toString("hex"),
+      passwordResetTokenAt: new Date(),
+    },
+    { where: { email: req.body.email } }
+  )
+    .then((user) => {
+      res.status(200).json({ message : "ok" });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+}
+
+export function restPassword(req, res) {
+  const password = bcrypt.hashSync(
+    req.body.password,
+    bcrypt.genSaltSync(10),
+    null
+  );
+  
+  User.update(
+    {
+      password,
+      passwordResetToken: '',
+      passwordResetTokenAt: null,
+    },
+    { where: { id: res.user.id } }
+  )
+    .then((user) => {
+      res.status(200).json({ message : "ok" });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
