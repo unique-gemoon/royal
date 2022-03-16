@@ -1,8 +1,8 @@
-const db = require("../models");
-const config = require("../config/auth.config");
+import jwt from "jsonwebtoken";
+import db from "../models/index.model.js";
+
 const User = db.user;
 const Op = db.Sequelize.Op;
-var jwt = require("jsonwebtoken");
 
 function generateToken(user) {
   return jwt.sign(
@@ -14,11 +14,11 @@ function generateToken(user) {
       iat: new Date().getTime(),
       exp: new Date().setDate(new Date().getDate() + 7),
     },
-    config.secret
+    process.env.SECRET_KEY
   );
 }
 
-exports.signin = (req, res) => {
+export function signin(req, res) {
   User.findOne({
     where: {
       [Op.or]: [{ email: req.body.email }, { username: req.body.email }],
@@ -45,9 +45,9 @@ exports.signin = (req, res) => {
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
-};
+}
 
-exports.signup = (req, res) => {
+export function signup(req, res) {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -62,4 +62,4 @@ exports.signup = (req, res) => {
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
-};
+}

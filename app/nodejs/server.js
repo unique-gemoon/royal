@@ -1,14 +1,33 @@
-const express = require("express");
-const session = require("express-session");
-const expressListRoutes = require("express-list-routes");
-const logger = require("morgan");
-const passport = require("passport");
-const bodyParser = require("body-parser");
-const cors = require("cors");
-const db = require("./app/models");
-const routes = require("./app/routes");
-const config = require("./app/config/auth.config");
-require('./app/config/passport')
+import express from "express";
+import session from "express-session";
+import expressListRoutes from "express-list-routes";
+import morgan from "morgan";
+import passport from "passport";
+import bodyParser from "body-parser";
+import cors from "cors";
+import db from "./app/models/index.model.js";
+import router from "./app/routes/index.routes.js";
+import { Strategy, ExtractJwt } from "passport-jwt";
+
+const User = db.user;
+
+passport.use(
+  new Strategy(
+    {
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      secretOrKey: process.env.SECRET_KEY,
+    },
+    function (jwtPayload, done) {
+      return User.findByPk(jwtPayload.sub)
+        .then((user) => {
+          return done(null, { id: user.id, username: user.username, email: user.email });
+        })
+        .catch((err) => {
+          return done(err);
+        });
+    }
+  )
+);
 
 const app = express();
 const PORT = process.env.NODE_DOCKER_PORT;
@@ -21,7 +40,7 @@ app.use(cors(corsOptions));
 
 // Express boilerplate middleware
 // =============================================
-app.use(logger("dev"));
+app.use(morgan("dev"));
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
@@ -29,7 +48,7 @@ app.use(bodyParser.json());
 // =============================================
 app.use(
   session({
-    secret: config.secret,
+    secret: process.env.SECRET_KEY,
     resave: true,
     saveUninitialized: true,
   })
@@ -39,7 +58,7 @@ app.use(passport.session());
 
 // Routing
 // =============================================
-app.use("/api", routes);
+app.use("/api", router);
 
 // simple route
 app.get("/", (req, res) => {
@@ -48,7 +67,7 @@ app.get("/", (req, res) => {
 
 //show all routes
 console.log("*************************************\n");
-expressListRoutes(routes);
+expressListRoutes(router);
 console.log("\n*************************************\n");
 
 // Sync sequelize models then start Express app

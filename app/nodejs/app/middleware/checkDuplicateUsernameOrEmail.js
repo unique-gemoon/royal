@@ -1,17 +1,17 @@
-const db = require("../models");
+import db from "../models/index.model.js";
+
 const User = db.user;
 
-module.exports = function (req, res, next) {
+export default function checkDuplicateUsernameOrEmail(req, res, next) {
   // Username
   User.findOne({
     where: {
       username: req.body.username,
     },
   }).then((user) => {
-
     if (user) {
       res.status(400).send({
-        message: "Failed! Username is already in use!",
+        message: "Nom d'utilisateur est déjà utilisé!",
       });
       return;
     }
@@ -19,11 +19,11 @@ module.exports = function (req, res, next) {
     User.findOne({
       where: {
         email: req.body.email,
-      }
+      },
     }).then((user) => {
       if (user) {
         res.status(400).send({
-          message: "Failed! Email is already in use!",
+          message: "Cet email est déjà utilisé!",
         });
         return;
       }
