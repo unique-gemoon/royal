@@ -1,24 +1,30 @@
-const router = require("express").Router();
-const passport = require('passport');
-const checkDuplicateUsernameOrEmail = require("../middleware/checkDuplicateUsernameOrEmail");
-const controller = require("../controllers/auth.controller");
+import { Router } from "express";
+import passport from "passport";
+import {checkEmailExiste, checkDuplicateUsernameOrEmail, checkTokenExiste} from "../middleware/checkUser.js";
+import * as controller from "../controllers/auth.controller.js";
 
-router.post("/login", controller.signin);
+const authRoutes = Router();
 
-router.post("/register", checkDuplicateUsernameOrEmail, controller.signup);
+authRoutes.post("/login", controller.signin);
 
-router.get(
+authRoutes.post("/register", checkDuplicateUsernameOrEmail, controller.signup);
+
+authRoutes.post("/forgot-password", checkEmailExiste, controller.forgotPassword);
+
+authRoutes.post("/rest-password", checkTokenExiste, controller.restPassword);
+
+authRoutes.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
-  (req, res, next) => {
+  (req, res) => {
     res.status(200).json(req.user);
   }
 );
 
 // Route for logging user out
-router.get("/logout", (req, res) => {
+authRoutes.get("/logout", (req, res) => {
   req.logout();
   res.json("logout successful");
 });
 
-module.exports = router;
+export default authRoutes;

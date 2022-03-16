@@ -116,6 +116,100 @@
 			"response": []
 		},
 		{
+			"name": "forgot-password",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"email\":\"ayoub@example.com\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/auth/forgot-password",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"forgot-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "rest-password",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"token\":\"d45f4cd850342b45a5c4a0e2b6d6a9f129cf1e36\",\n    \"password\":\"123456\"\n}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/auth/rest-password",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"rest-password"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "secrets",
 			"request": {
 				"method": "GET",
@@ -170,7 +264,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsImlhdCI6MTY0NzI3MzU0NjE2NSwiZXhwIjoxNjQ3ODc4MzQ2MTY1fQ.QA45Fzaj3YNlo02ODL2GOKaM0HNdDrJ2z5-JJwLB6Po",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViMyIsImVtYWlsIjoiYXlvdWIzQGV4YW1wbGUuY29tIiwiaWF0IjoxNjQ3NDI4Njg0NjI2LCJleHAiOjE2NDgwMzM0ODQ2MjZ9.DRxctYUbfPgwCfnnM831wWFKghPKp97pb4K_boBVIUk",
 							"type": "string"
 						}
 					]

@@ -1,9 +1,10 @@
-const router = require('express').Router();
-const isAuthenticated = require('../middleware/isAuthenticated');
+import { Router } from "express";
+import authMiddleware from "../middleware/isAuthenticated.js";
 
-router.get('/secrets', isAuthenticated, (req, res) => {
-  res.json('Talk is cheap. Show me the code. -Linus Torvalds');
+const apiRoutes = Router();
+
+apiRoutes.get("/secrets", authMiddleware, (req, res) => {
+  res.json("Talk is cheap. Show me the code. -Linus Torvalds");
 });
 
-
-module.exports = router;
+export default apiRoutes;

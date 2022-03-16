@@ -1,8 +1,12 @@
-const db = require("../models");
-const config = require("../config/auth.config");
+import jwt from "jsonwebtoken";
+import db from "../models/index.model.js";
+import sendEmail from "../services/sendEmail.js";
+import crypto from "crypto";
+import bcrypt from "bcryptjs";
+
+
 const User = db.user;
 const Op = db.Sequelize.Op;
-var jwt = require("jsonwebtoken");
 
 function generateToken(user) {
   return jwt.sign(
@@ -14,11 +18,11 @@ function generateToken(user) {
       iat: new Date().getTime(),
       exp: new Date().setDate(new Date().getDate() + 7),
     },
-    config.secret
+    process.env.SECRET_KEY
   );
 }
 
-exports.signin = (req, res) => {
+export function signin(req, res) {
   User.findOne({
     where: {
       [Op.or]: [{ email: req.body.email }, { username: req.body.email }],
@@ -38,16 +42,23 @@ exports.signin = (req, res) => {
       if (!user.enabled) {
         return res.status(401).send({ message: "Ce compte est désactivé" });
       }
-      // Generate JWT token
-      const token = generateToken(user);
-      res.status(200).json({ token });
+
+      User.update({ lastLogin: new Date() }, { where: { id: user.id } })
+        .then((user) => {
+          // Generate JWT token
+          const token = generateToken(user);
+          res.status(200).json({ token });
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
-};
+}
 
-exports.signup = (req, res) => {
+export function signup(req, res) {
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -55,11 +66,64 @@ exports.signup = (req, res) => {
     password: req.body.password,
   })
     .then((user) => {
-      // Generate JWT token
-      const token = generateToken(user);
-      res.status(200).json({ token });
+      User.update({ lastLogin: new Date() }, { where: { id: user.id } })
+        .then((user) => {
+          // Generate JWT token
+          const token = generateToken(user);
+          res.status(200).json({ token });
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
-};
+}
+
+export function forgotPassword(req, res) {
+  User.update(
+    {
+      passwordResetToken: crypto.randomBytes(20).toString("hex"),
+      passwordResetTokenAt: new Date(),
+    },
+    { where: { email: req.body.email } }
+  )
+    .then((user) => {
+
+      const response = sendEmail({
+        from: "",
+        to: req.body.email,
+        subject: "Mot de passe oublié",
+        text: "Vous avez demandé à réinitialiser votre mot de passe.",
+      });
+
+      res.status(200).json({ message : "ok", email : response });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+}
+
+export function restPassword(req, res) {
+  const password = bcrypt.hashSync(
+    req.body.password,
+    bcrypt.genSaltSync(10),
+    null
+  );
+  
+  User.update(
+    {
+      password,
+      passwordResetToken: '',
+      passwordResetTokenAt: null,
+    },
+    { where: { id: res.user.id } }
+  )
+    .then((user) => {
+      res.status(200).json({ message : "ok" });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+}
