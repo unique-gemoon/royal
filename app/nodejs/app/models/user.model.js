@@ -38,6 +38,10 @@ export default function userModel(sequelize, Sequelize) {
       allowNull: true,
     },
 
+    roles: {
+      type: Sequelize.JSON,
+    },
+
     lastLogin: {
       type: Sequelize.DATE,
     },
@@ -62,6 +66,10 @@ export default function userModel(sequelize, Sequelize) {
       bcrypt.genSaltSync(10),
       null
     );
+    if(!user.roles){
+      user.roles = [];
+    }
+    user.roles = [...user.roles, 'ROLE_USER'];
   });
   
   return User;

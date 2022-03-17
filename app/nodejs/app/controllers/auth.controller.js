@@ -13,6 +13,7 @@ function generateTokens(user) {
     sub: user.id,
     username: user.username,
     email: user.email,
+    roles: user.roles,
     iat: new Date().getTime(),
     exp: new Date().setDate(new Date().getDate() + 3),
   };
