@@ -20,34 +20,8 @@ import Messagerie from '../components/messagerie';
 import ProfileMenu from '../components/profileMenu';
 import { useMediaQuery } from "react-responsive";
 import logoType from '../assets/images/Logotype.png';
-import axios from 'axios';
 
 export default function Home() {
-
-//signup
-
-    useEffect(() => {
-        let newUser = {
-            firstname: 'ayoub',
-            lastname: 'test',
-            email: 'ayoub@example.com',
-            password: '123456'
-        }
-        
-        const entryPoint = axios.create({
-            baseURL: "http://127.0.0.1:8080",
-        });
-        entryPoint.post("/api/auth/signup", newUser)
-        .then(() => {
-            console.log('ok');
-        })
-        .catch(err => console.log(err))
-
-
-    },[]);
-
-
-
 
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
     const isDesktopOrLaptop = useMediaQuery({  query: "(min-width: 1200px)"});

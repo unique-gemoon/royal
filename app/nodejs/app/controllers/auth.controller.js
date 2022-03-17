@@ -141,7 +141,7 @@ export function verifyRefreshToken(req, res) {
         return User.findByPk(jwtPayload.sub)
           .then((user) => {
             if (!user) {
-              return done("user not existe");
+              return res.status(500).send({ message: "user not existe" });
             }
             // Generate JWT token and refresh token
             const tokens = generateTokens(user);
