@@ -7,8 +7,8 @@ export default function sendEmail({
   subject = "",
   text = "",
 }) {
-  if (!from) from = process.env.MAILER_FROM;
-  if (!to) to = process.env.MAILER_TO;
+  if (!from) from = process.env.MAILER_ADMIN;
+  if (!to) to = process.env.MAILER_ADMIN;
 
   if (!from || !to || !subject || !text) {
     return false;
