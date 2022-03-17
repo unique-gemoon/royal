@@ -116,6 +116,53 @@
 			"response": []
 		},
 		{
+			"name": "refresh-token",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1MTYyOTA2OTksImV4cCI6MTY0Nzc3NTQ5MDY5OX0.4C9sno_8_VDKlFuV8wTQ7RYeHPboDzsX14VNim4qplU\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/auth/refresh-token",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"refresh-token"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "forgot-password",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
@@ -264,7 +311,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViMyIsImVtYWlsIjoiYXlvdWIzQGV4YW1wbGUuY29tIiwiaWF0IjoxNjQ3NDI4Njg0NjI2LCJleHAiOjE2NDgwMzM0ODQ2MjZ9.DRxctYUbfPgwCfnnM831wWFKghPKp97pb4K_boBVIUk",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsImlhdCI6MTY0NzUyMTM2NTI2MiwiZXhwIjoxNjQ3NzgwNTY1MjYyfQ.oBO9nJzsUlApHHlztOtBS8kh1QWHko95aiGLUapJyxA",
 							"type": "string"
 						}
 					]
