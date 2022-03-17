@@ -20,6 +20,7 @@ passport.use(
     function (jwtPayload, done) {
       return User.findByPk(jwtPayload.sub)
         .then((user) => {
+          if(!user){return done('user not existe');}
           return done(null, { id: user.id, username: user.username, email: user.email });
         })
         .catch((err) => {
