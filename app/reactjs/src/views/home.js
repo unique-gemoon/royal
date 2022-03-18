@@ -1,32 +1,30 @@
 import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Masonry from "@mui/lab/Masonry";
 import ItemMasonry from "../components/itemMasonry/itemMasonry";
-import FooterOptionsBtn from "../components/footerOptionsBtn";
 import { StyledEngineProvider } from "@mui/material/styles";
 import {
   ContainerDef,
   DefaultMain,
-  FooterDefault,
   HeaderMobile,
 } from "../assets/styles/globalStyle";
-import { Row, Col } from "react-bootstrap";
 import imgPli from "../assets/images/image-pli-1.png";
 import videoPli from "../assets/images/video.mp4";
 import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import NewPli from "../components/newPli";
 import SeeCounter from "../components/ui-elements/seeCounter";
 import ProfileMenu from "../components/profileMenu";
 import { useMediaQuery } from "react-responsive";
 import logoType from "../assets/images/Logotype.png";
 import MessageNotif from "../components/messageNotif";
+import { ROLES } from "../config/vars";
+import FooterHome from "../components/footerHome";
+import FooterAuthHome from "../components/footerAuthHome";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
-
-  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
 
   const [showMessage, setShowMessage] = useState(true);
 
@@ -422,6 +420,11 @@ export default function Home() {
     },
   ]);
 
+  const newPliAdded = false;
+
+  const auth = useSelector((store) => store.auth);
+  const dispatch = useDispatch();
+
   const setItem = (item) => {
     const cpDataMasonry = [...dataMasonry];
     for (var i = 0; i < cpDataMasonry.length; i++) {
@@ -466,17 +469,19 @@ export default function Home() {
           </HeaderMobile>
         )}
         <ContainerDef>
-          <MessageNotif
-            showMessage={showMessage}
-            setShowMessage={setShowMessage}
-            textNotif={
-              <>
-                Votre pli a bien été publié sur la page universelle ! <br /> Il
-                reste 1 minute avant qu’il ne disparaisse si aucun délai
-                supplémentaire ne lui est ajouté par les utilisateurs.
-              </>
-            }
-          />
+          {newPliAdded && (
+            <MessageNotif
+              showMessage={showMessage}
+              setShowMessage={setShowMessage}
+              textNotif={
+                <>
+                  Votre pli a bien été publié sur la page universelle ! <br />{" "}
+                  Il reste 1 minute avant qu'il ne disparaisse si aucun délai
+                  supplémentaire ne lui est ajouté par les utilisateurs.
+                </>
+              }
+            />
+          )}
           <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
             {dataMasonry.map((item) => (
               <div key={item.id}>
@@ -492,39 +497,16 @@ export default function Home() {
           </Masonry>
         </ContainerDef>
 
-        <FooterDefault>
-          {isDesktopOrLaptop && (
-            <ContainerDef>
-              <Row className="align-items-center">
-                <Col md={3}>
-                  <div className="d-md-flex">
-                    <ProfileMenu />
-                    <SeeCounter countSee={14} />
-                  </div>
-                </Col>
-                <Col md={6}>
-                  <NewPli action={action} setAction={setAction} setShowMessage={setShowMessage}/>
-                </Col>
-                <Col md={3}>
-                  <FooterOptionsBtn
-                    action={action}
-                    setAction={setAction}
-                    dataNotifs={dataNotifs}
-                    setShowMessage={setShowMessage}
-                  />
-                </Col>
-              </Row>
-            </ContainerDef>
-          )}
-          {isTabletOrMobile && (
-            <FooterOptionsBtn
-              action={action}
-              setAction={setAction}
-              dataNotifs={dataNotifs}
-              setShowMessage={setShowMessage}
-            />
-          )}
-        </FooterDefault>
+        {auth.roles.includes(ROLES.ROLE_USER) ? (
+          <FooterHome
+            action={action}
+            setAction={setAction}
+            dataNotifs={dataNotifs}
+            setShowMessage={setShowMessage}
+          />
+        ) : (
+          <FooterAuthHome />
+        )}
       </StyledEngineProvider>
     </DefaultMain>
   );

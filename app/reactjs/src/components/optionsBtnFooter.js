@@ -8,7 +8,7 @@ import SearchFolowers from "./searchFolowers";
 import Notifications from "./notifications";
 import Messagerie from "./messagerie";
 
-export default function FooterOptionsBtn({
+export default function OptionsBtnFooter({
   action,
   setAction = () => {},
   dataNotifs,
