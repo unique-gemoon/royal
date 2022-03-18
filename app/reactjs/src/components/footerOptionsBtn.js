@@ -12,6 +12,7 @@ export default function FooterOptionsBtn({
   action,
   setAction = () => {},
   dataNotifs,
+  setShowMessage = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -33,6 +34,7 @@ export default function FooterOptionsBtn({
     if (!cpAction[name]) return;
     cpAction[name].isOpen = e.isOpen;
     setAction(cpAction);
+    setShowMessage(false);
   };
 
   return (
@@ -58,7 +60,13 @@ export default function FooterOptionsBtn({
       >
         <SearchFolowers />
       </ButtonAction>
-      <NewPli action={action} setAction={setAction} />
+      {isTabletOrMobile && (
+        <NewPli
+          action={action}
+          setAction={setAction}
+          setShowMessage={setShowMessage}
+        />
+      )}
       <ButtonAction
         className="abonnee-bloc-action"
         action={action.folower}

@@ -28,6 +28,7 @@ import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
 import AddCircleOutlinedIcon from '@mui/icons-material/AddCircleOutlined';
 import InscriptionForm from '../../components/inscriptionForm';
+import ErrorFormMessage from '../../components/errorFormMessage';
 
 export default function Login() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -429,7 +430,6 @@ export default function Login() {
                         </div>
                         <div className="d-flex">
                             <SeeCounter countSee={14} />
-                            <ProfileMenu />
                         </div>
                     </HeaderMobile>
                 )}
@@ -512,10 +512,7 @@ export default function Login() {
                                                             <h2 className='titre-modal'>Connexion</h2>
                                                         </div>
                                                         <form className='form-connexion'>
-                                                            {message ? <div className="error-form-message">
-                                                                <AddCircleOutlinedIcon onClick={() => setMessage(null)} />
-                                                                <span>Le nom d’utilisateur ou le mot de passe est incorrect</span>
-                                                            </div> : null}
+                                                            {message ? <ErrorFormMessage text="Le nom d’utilisateur ou le mot de passe est incorrect" onClick={() => setMessage(null)} /> : null}
 
                                                             <div className='content-form'>
                                                                 <InputField

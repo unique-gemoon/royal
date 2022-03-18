@@ -21,10 +21,15 @@ import SeeCounter from "../components/ui-elements/seeCounter";
 import ProfileMenu from "../components/profileMenu";
 import { useMediaQuery } from "react-responsive";
 import logoType from "../assets/images/Logotype.png";
+import MessageNotif from "../components/messageNotif";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
+
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
+
+  const [showMessage, setShowMessage] = useState(true);
+
   const [dataMasonry, setDataMasonry] = useState([
     {
       id: 1,
@@ -371,6 +376,7 @@ export default function Home() {
       },
     },
   ]);
+
   const [dataNotifs] = useState([
     {
       id: 1,
@@ -425,6 +431,7 @@ export default function Home() {
     }
     setDataMasonry(cpDataMasonry);
   };
+
   const [action, setAction] = useState({
     notification: {
       icon: <NotificationsNoneOutlinedIcon />,
@@ -459,6 +466,17 @@ export default function Home() {
           </HeaderMobile>
         )}
         <ContainerDef>
+          <MessageNotif
+            showMessage={showMessage}
+            setShowMessage={setShowMessage}
+            textNotif={
+              <>
+                Votre pli a bien été publié sur la page universelle ! <br /> Il
+                reste 1 minute avant qu’il ne disparaisse si aucun délai
+                supplémentaire ne lui est ajouté par les utilisateurs.
+              </>
+            }
+          />
           <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
             {dataMasonry.map((item) => (
               <div key={item.id}>
@@ -485,13 +503,14 @@ export default function Home() {
                   </div>
                 </Col>
                 <Col md={6}>
-                  <NewPli action={action} setAction={setAction} />
+                  <NewPli action={action} setAction={setAction} setShowMessage={setShowMessage}/>
                 </Col>
                 <Col md={3}>
                   <FooterOptionsBtn
                     action={action}
                     setAction={setAction}
                     dataNotifs={dataNotifs}
+                    setShowMessage={setShowMessage}
                   />
                 </Col>
               </Row>
@@ -502,6 +521,7 @@ export default function Home() {
               action={action}
               setAction={setAction}
               dataNotifs={dataNotifs}
+              setShowMessage={setShowMessage}
             />
           )}
         </FooterDefault>
