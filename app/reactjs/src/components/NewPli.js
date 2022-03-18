@@ -15,8 +15,9 @@ import NewOvertureOptions from './newOvertureOptions';
 import AddSoundage from './addSoundage';
 import { useMediaQuery } from "react-responsive";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+import ErrorFormMessage from './errorFormMessage';
 
-export default function NewPli({ action, setAction = () => { }}) {
+export default function NewPli({ action, setAction = () => { } , setShowMessage = () => { }, ...props}) {
 
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [stateTextarea, setStateTextarea] = useState({
@@ -27,7 +28,7 @@ export default function NewPli({ action, setAction = () => { }}) {
       type: "text",
       as: 'textarea'
     },
-    openSoundage: false, 
+    openSoundage: false,
     soundageOptions: [
       {
         name: "option-1",
@@ -38,8 +39,8 @@ export default function NewPli({ action, setAction = () => { }}) {
   });
   const [togglePli, setTogglePli] = useState(false);
   const handleToggle = (e) => {
-    
-      setTogglePli(true);
+   
+    setTogglePli(true);
   };
   const divRef = useRef();
   const handler = useCallback(() => setTogglePli(false), []);
@@ -53,7 +54,9 @@ export default function NewPli({ action, setAction = () => { }}) {
   }, [togglePli]);
 
   const [addOverture, setAddOverture] = useState(false);
-  
+  const [message, setMessage] = useState(true);
+
+
 
   return (
     <BlocAddPli>
@@ -61,7 +64,7 @@ export default function NewPli({ action, setAction = () => { }}) {
         <div className="bloc-new-pli">
           <div className='cadre-content-new-pli' >
             <div className='content-new-pli' ref={divRef}>
-
+              {message ? <ErrorFormMessage text="Veuillez ajouter du contenu à votre pli." onClick={() => setMessage(null)} /> : null}
               <div className='new-pli-nv1'>
                 <div className='cadre-content-pli'>
                   <TextareaAutosize
@@ -100,18 +103,20 @@ export default function NewPli({ action, setAction = () => { }}) {
           </div>
         </div>
         : null}
-      {isDesktopOrLaptop ? 
+      {isDesktopOrLaptop ?
         <div onClick={() => {
+          setShowMessage(false);
           handleToggle();
           const cpAction = {
             ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
             , messagerie: { ...action.messagerie, isOpen: false }
           };
           setAction(cpAction);
-          }} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`} ref={divRef} >
+        }} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`} ref={divRef} >
           <KeyboardArrowUpIcon />
-        </div> : 
+        </div> :
         <div onClick={() => {
+          setShowMessage(false);
           handleToggle();
           const cpAction = {
             ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
@@ -119,10 +124,10 @@ export default function NewPli({ action, setAction = () => { }}) {
           };
           setAction(cpAction);
         }} className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}>
-          <AddCircleOutlineOutlinedIcon /> 
+          <AddCircleOutlineOutlinedIcon />
         </div>
       }
-      
+
     </BlocAddPli>
   );
 }

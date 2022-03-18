@@ -24,34 +24,38 @@ export default function Messagerie() {
      const handleClose = () => {
         setAnchorEl(null);
     };
-    const dataListMessage = [
+    const [dataListMessage, setDataListMessage] = useState([
         {
             id: 1,
             name: "Fossum",
             etat: "reading",
             timer: "20h",
-            lastMesssage: "Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré..."
+            lastMesssage: "Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré...",
+            newMessage: false,
         },
         {
             id: 2,
             name: "Ellie",
             etat: "send",
             timer: "1jour",
-            lastMesssage: "Oui ça va. Et tiu ?"
+            lastMesssage: "Oui ça va. Et tiu ?",
+            newMessage: false,
         },
         {
             id: 3,
             name: "Jacquou",
             timer: "11.09.2020",
-            lastMesssage: "J’ai vu ta dernière publication sur la page universelle !"
+            lastMesssage: "J’ai vu ta dernière publication sur la page universelle !",
+            newMessage: true,
         },
         {
             id: 4,
             name: "Lou",
             timer: "10.08.2020",
-            lastMesssage: "Oui tout est assez calme récemment"
+            lastMesssage: "Oui tout est assez calme récemment",
+            newMessage: false,
         },
-    ]
+    ])
 
   return (
      <BlocMessagerie>
@@ -64,6 +68,7 @@ export default function Messagerie() {
                     <div className='list-messagerie'>
                         <ListMessagerie 
                             data={dataListMessage} 
+                            setData={setDataListMessage}
                             state={state}
                             setState={setState}
                         />

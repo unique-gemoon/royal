@@ -365,30 +365,7 @@ export const ModalPopIn = styled(Modal) `
                 }
             }
         }
-        .error-form-message{
-            font-family: "ProximaNovaSoftW03-Semibold";
-            font-size: 16px;
-            line-height: 21px;
-            text-align: center;
-            background: #d87a73;
-            color: #FFF;
-            padding: 5px 10px;
-            border-radius: 6px;
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 16px;
-            span{
-                display: block;
-                width: 100%;
-                text-align: center;
-                margin-left: 10px;
-            }
-            svg{
-                transform-origin: center;
-                transform: rotate(45deg);
-                cursor: pointer;
-            }
-        }
+        
         .content-form{
             border-radius: 12.81px;
             background: rgba(31, 85, 119, .5);
@@ -475,5 +452,29 @@ export const ModalPopIn = styled(Modal) `
             height: 32px;
             text-transform: uppercase;
         }
+    }
+`;
+export const ErroreMessageForm = styled.div`
+    font-family: "ProximaNovaSoftW03-Semibold";
+    font-size: 16px;
+    line-height: 21px;
+    text-align: center;
+    background: #d87a73;
+    color: #FFF;
+    padding: 5px 10px;
+    border-radius: 6px;
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 16px;
+    span{
+        display: block;
+        width: 100%;
+        text-align: center;
+        margin-left: 10px;
+    }
+    svg{
+        transform-origin: center;
+        transform: rotate(45deg);
+        cursor: pointer;
     }
 `;

@@ -348,6 +348,33 @@ export const ButtonIcon = styled(Button)`
         }
     }
 `;
+export const NotificationMessage = styled.div`
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 20px 15px;
+    background: #225282;
+    box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.16);
+    color: #FFF;
+    text-align: center;
+    z-index: 9999;
+    transform: translateY(-100%);
+    transition: .5s all;
+    &.isMesssage{
+        transform: translateY(0);
+    }
+    svg{
+        cursor: pointer;
+        position: absolute;
+        right: 15px;
+        top: 50%;
+        transform: translateY(-50%);
+    }
+    @media(max-width: 1200px){
+        top: 50px;
+    }
+`;
 export const BlocProfileMenu = styled.div`
     position: relative;
     z-index: 11;
@@ -1323,6 +1350,22 @@ export const ItemListMessagerie = styled.div`
             font-family: 'ProximaNovaSoftW03-Semibold';
             color: #FFF;
             font-size: 14px;
+            display: flex;
+            &.hasMesaage{
+                &::before{
+                    content: "";
+                    position: relative;
+                    top: 5px;
+                    min-width: 4px;
+                    width: 4px;
+                    height: 4px;
+                    border-radius: 50%;
+                    display: block;
+                    margin-right: 8px;
+                    background: #db6b6b;
+                    border: 1px solid #dd9b9b;
+                }
+            }
         }
         .date-message{
             margin-left: auto;

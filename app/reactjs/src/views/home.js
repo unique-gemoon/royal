@@ -11,7 +11,7 @@ import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import PeopleOutlineRoundedIcon from '@mui/icons-material/PeopleOutlineRounded';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import NewPli from '../components/NewPli';
+import NewPli from '../components/newPli';
 import SeeCounter from '../components/ui-elements/seeCounter';
 import BlocFolowers from '../components/blocFolowers';
 import SearchFolowers from '../components/searchFolowers';
@@ -21,6 +21,7 @@ import ProfileMenu from '../components/profileMenu';
 import { useMediaQuery } from "react-responsive";
 import logoType from '../assets/images/Logotype.png';
 import axios from 'axios';
+import MessageNotif from '../components/messageNotif';
 
 export default function Home() {
 
@@ -51,6 +52,9 @@ export default function Home() {
 
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
     const isDesktopOrLaptop = useMediaQuery({  query: "(min-width: 1200px)"});
+
+    const [showMessage, setShowMessage] = useState(true);
+
     const [dataMasonry, setDataMasonry] = useState([
         {
             id: 1,
@@ -456,7 +460,6 @@ export default function Home() {
         cpAction[name].isOpen = e.isOpen;
         setAction(cpAction);
     }
-    
     return (
         <DefaultMain>
             <StyledEngineProvider injectFirst>
@@ -472,6 +475,7 @@ export default function Home() {
                     </HeaderMobile>
                 )}
                 <ContainerDef>
+                    <MessageNotif showMessage={showMessage} setShowMessage={setShowMessage} textNotif={<>Votre pli a bien été publié sur la page universelle ! <br /> Il reste 1 minute avant qu’il ne disparaisse  si aucun délai supplémentaire ne lui est ajouté par les utilisateurs.</>} />
                     <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
                         {dataMasonry.map((item) => (
                             <div key={item.id}>
@@ -492,7 +496,7 @@ export default function Home() {
                                     </div>
                                 </Col>
                                 <Col md={6}>
-                                    <NewPli action={action} setAction={setAction} />
+                                    <NewPli setShowMessage={setShowMessage} action={action} setAction={setAction} />
                                 </Col>
                                 <Col md={3}>
                                     <OptionsBtnAction>
@@ -503,6 +507,7 @@ export default function Home() {
                                         icon={action.messagerie.icon}
                                         setAction={(e) => {
                                             setAction({ ...action, messagerie: { ...action.messagerie, isOpen: e.isOpen }})
+                                            setShowMessage(false);
                                         }}
                                         >
                                             <Messagerie />
@@ -513,6 +518,7 @@ export default function Home() {
                                         icon={action.search.icon} 
                                         setAction={(e) => {
                                             setAction({ ...action, search: { ...action.search, isOpen: e.isOpen } })
+                                            setShowMessage(false);
                                         }}
                                         >
                                             <SearchFolowers />
@@ -524,6 +530,7 @@ export default function Home() {
                                         icon={action.folower.icon} 
                                         setAction={(e) => {
                                             setAction({ ...action, folower: { ...action.folower, isOpen: e.isOpen } })
+                                            setShowMessage(false);
                                         }}
                                         >
                                             <BlocFolowers />
@@ -535,6 +542,7 @@ export default function Home() {
                                         icon={action.notification.icon} 
                                         setAction={(e) => {
                                             setAction({ ...action, notification: { ...action.notification, isOpen: e.isOpen } })
+                                            setShowMessage(false);
                                         }}
                                         >
                                             <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
@@ -551,7 +559,7 @@ export default function Home() {
                                 setCount={2}
                                 action={action.messagerie}
                                 icon={action.messagerie.icon}
-                                setAction={(e) => { updateAction(e, 'messagerie'); }}
+                                setAction={(e) => { updateAction(e, 'messagerie'); setShowMessage(false); }}
                             >
                                 <Messagerie />
                             </ButtonAction>
@@ -559,17 +567,17 @@ export default function Home() {
                                 className='search-bloc-action'
                                 action={action.search}
                                 icon={action.search.icon}
-                                setAction={(e) => { updateAction(e, 'search'); }}
+                                setAction={(e) => { updateAction(e, 'search'); setShowMessage(false); }}
                             >
                                 <SearchFolowers />
                             </ButtonAction>
-                            <NewPli action={action} setAction={setAction} />
+                            <NewPli setShowMessage={setShowMessage} action={action} setAction={setAction} />
                             <ButtonAction
                                 className='abonnee-bloc-action'
                                 action={action.folower}
                                 setCount={2}
                                 icon={action.folower.icon}
-                                setAction={(e) => { updateAction(e, 'folower'); }}
+                                setAction={(e) => { updateAction(e, 'folower'); setShowMessage(false); }}
                             >
                                 <BlocFolowers />
                             </ButtonAction>
@@ -578,7 +586,7 @@ export default function Home() {
                                 action={action.notification}
                                 setCount={newNotifs.length}
                                 icon={action.notification.icon}
-                                setAction={(e) => { updateAction(e, 'notification'); }}
+                                setAction={(e) => { updateAction(e, 'notification'); setShowMessage(false); }}
                             >
                                 <Notifications items={newNotifs.length ? newNotifs : dataNotifs} setNotif={setNewNotif} />
                             </ButtonAction>
