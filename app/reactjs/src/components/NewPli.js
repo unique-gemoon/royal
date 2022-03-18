@@ -17,7 +17,7 @@ import { useMediaQuery } from "react-responsive";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import ErrorFormMessage from './errorFormMessage';
 
-export default function NewPli({ action, setAction = () => { } , setShowMessage = () => { }, ...props}) {
+export default function NewPli({ action, setAction = () => { } , setShowMessage = () => { }}) {
 
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [stateTextarea, setStateTextarea] = useState({

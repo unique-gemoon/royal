@@ -13,6 +13,8 @@ authRoutes.post("/forgot-password", checkEmailExiste, controller.forgotPassword)
 
 authRoutes.post("/rest-password", checkTokenExiste, controller.restPassword);
 
+authRoutes.post("/refresh-token", controller.verifyRefreshToken);
+
 authRoutes.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
