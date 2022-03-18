@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { BlocMessagerie } from '../assets/styles/componentStyle';
+import React, { useState } from 'react';
+import { BlocMessagerie, MessageFindFolower } from '../assets/styles/componentStyle';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
@@ -10,18 +10,30 @@ import ListMessagerie from './listMessagerie';
 import KeyboardArrowLeftIcon from '@mui/icons-material/KeyboardArrowLeft';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import InputEmoji from './ui-elements/inputEmoji';
+import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
+import Input from './ui-elements/input';
+import ItemListFolower from './itemListFolower';
+import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 
-export default function Messagerie() {
+export default function Messagerie({ dataAbonnement }) {
     const [state, setState] = useState({
-
+        showSearchFolower: false,
         activeItem: false,
+        resultSearch: false,
+        search: {
+            type: "text",
+            id: "search-folowers",
+            value: "",
+            placeholder: "Qui recherchez-vous ?",
+            className: 'search-input'
+        },
     });
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
-     const handleClose = () => {
+    const handleClose = () => {
         setAnchorEl(null);
     };
     const [dataListMessage, setDataListMessage] = useState([
@@ -56,79 +68,160 @@ export default function Messagerie() {
             newMessage: false,
         },
     ])
+    const [dataFolower, setDataFolower] = useState([
+        {
+            id: 4,
+            name: "LangNickname",
+            idMessanger: 12,
+            statut: 0
+        },
+        {
+            id: 5,
+            name: "Elly",
+            idMessanger: 12,
+            statut: 0
+        },
+        {
+            id: 6,
+            name: "LangNickname",
+            idMessanger: 12,
+            statut: 0
+        },
+        {
+            id: 7,
+            name: "Elly",
+            idMessanger: 12,
+            statut: 0
+        },
+        {
+            id: 8,
+            name: "LangNickname",
+            idMessanger: 12,
+            statut: 0
+        },
+        {
+            id: 9,
+            name: "Elly",
+            idMessanger: 12,
+            statut: 0
+        },
+    ]);
+    console.log(state.showSearchFolower)
+    return (
+        <BlocMessagerie>
+            {!state.activeItem && !state.showSearchFolower ? (
+                <div className='bloc-lists-messagerie'>
+                    <div className='header-messagerie'>
+                        <MailOutlineRoundedIcon /> Messages
+                    </div>
+                    <div className='content-messagerie'>
+                        <div className='list-messagerie'>
+                            <ListMessagerie
+                                data={dataListMessage}
+                                setData={setDataListMessage}
+                                state={state}
+                                setState={setState}
+                            />
+                        </div>
+                    </div>
 
-  return (
-     <BlocMessagerie>
-            {!state.activeItem ? (
-            <div className='bloc-lists-messagerie'>
-                <div className='header-messagerie'>
-                    <MailOutlineRoundedIcon /> Messages 
-                </div>
-                <div className='content-messagerie'>
-                    <div className='list-messagerie'>
-                        <ListMessagerie 
-                            data={dataListMessage} 
-                            setData={setDataListMessage}
-                            state={state}
-                            setState={setState}
+                    <Button className='start-new-message' onClick={() => { setState({ ...state, activeItem: false, showSearchFolower: true }) }}><ModeEditOutlineOutlinedIcon /></Button>
+                </div>) : null}
+                {state.activeItem ? (
+                <div className='bloc-message-item'>
+                    <div className='header-messagerie'>
+                        <span className='back-to-list' onClick={(e) => {
+                            e.preventDefault();
+                            const cpState = { ...state };
+                            cpState.activeItem = false;
+                            setState(cpState);
+                        }}>
+                            <KeyboardArrowLeftIcon />
+                        </span>
+                        <span className='name-messagerie'>{state.activeItem.name}</span>
+                        <div>
+                            <Button
+                                id="demo-positioned-button"
+                                aria-controls={open ? 'menu-option-message' : undefined}
+                                aria-haspopup="true"
+                                aria-expanded={open ? 'true' : undefined}
+                                onClick={handleClick}
+                                className='btn-option-message'
+                            >
+                                <MoreVertIcon />
+                            </Button>
+                            <Menu
+                                id="menu-option-message"
+                                anchorEl={anchorEl}
+                                open={open}
+                                onClose={handleClose}
+                                MenuListProps={{
+                                    'aria-labelledby': 'basic-button',
+                                }}
+                                anchorOrigin={{
+                                    vertical: -14,
+                                    horizontal: 33,
+                                }}
+                                transformOrigin={{
+                                    vertical: 'top',
+                                    horizontal: 'right',
+                                }}
+                            >   <span className='close-drop-menu' onClick={handleClose}><MoreVertIcon /></span>
+                                <MenuItem onClick={handleClose}>Bloquer</MenuItem>
+                            </Menu>
+                        </div>
+
+
+                    </div>
+                    <div className='bloc-view-message'>
+
+                        <div className='content-view-messagerie'></div>
+                        <InputEmoji typeInput='textarea' />
+                    </div>
+                </div>) : null}
+            {state.showSearchFolower ? (
+                <MessageFindFolower>
+                    <div className='header-messagerie'>
+                        <span className='back-to-list' onClick={(e) => {
+                            e.preventDefault();
+                            const cpState = { ...state };
+                            cpState.showSearchFolower = false;
+                            setState(cpState);
+                        }}>
+                            <KeyboardArrowLeftIcon />
+                        </span>
+                        <span className='title-find-distin'><ModeEditOutlineOutlinedIcon /> Trouver un destinataire</span>
+                    </div>
+                    <div className='bloc-search-folower'>
+                        <SearchRoundedIcon />
+                        <Input
+                            {...state.search}
+                            onChange={(e) => {
+                                const cpState = { ...state };
+                                cpState.search.value = e.target.value;
+                                setState(cpState);
+                                if (cpState.search.value.length >= 3) {
+                                    setState({ ...state, resultSearch: true });
+                                } else {
+                                    setState({ ...state, resultSearch: false });
+                                }
+                            }}
                         />
                     </div>
-                </div>
-
-                <Button className='start-new-message'><ModeEditOutlineOutlinedIcon /></Button>
-            </div>) : null}
-            {state.activeItem ? (
-            <div className='bloc-message-item'>
-                <div className='header-messagerie'>
-                    <span className='back-to-list' onClick={(e) => {
-                          e.preventDefault();
-                          const cpState = { ...state };
-                          cpState.activeItem = false;
-                          setState(cpState);
-                        }}>
-                         <KeyboardArrowLeftIcon />
-                    </span> 
-                    <span className='name-messagerie'>{state.activeItem.name}</span>
-                    <div>
-                        <Button
-                            id="demo-positioned-button"
-                            aria-controls={open ? 'menu-option-message' : undefined}
-                            aria-haspopup="true"
-                            aria-expanded={open ? 'true' : undefined}
-                            onClick={handleClick}
-                            className='btn-option-message'
-                        >
-                            <MoreVertIcon />
-                        </Button>
-                        <Menu
-                            id="menu-option-message"
-                            anchorEl={anchorEl}
-                            open={open}
-                            onClose={handleClose}
-                            MenuListProps={{
-                            'aria-labelledby': 'basic-button',
-                            }}
-                            anchorOrigin={{
-                                vertical: -14,
-                                horizontal: 33,
-                            }}
-                                transformOrigin={{
-                                vertical: 'top',
-                                horizontal: 'right',
-                            }}
-                        >   <span className='close-drop-menu' onClick={handleClose}><MoreVertIcon /></span>
-                            <MenuItem onClick={handleClose}>Bloquer</MenuItem> 
-                        </Menu>
+                    <div className='header-info-search'>
+                        <PeopleOutlineRoundedIcon /> Abonnements
                     </div>
-
-
-                </div>
-                <div className='bloc-view-message'>
-
-                    <div className='content-view-messagerie'></div>
-                      <InputEmoji typeInput='textarea' />
-                </div>
-            </div>) : null}
+                    {state.resultSearch ?
+                        <div className='content-search-results'>
+                            <div className='list-result-search'>
+                                {dataFolower.map((item) => (
+                                    <ItemListFolower state={state} setState={setState} shwoButtonMessage={false} key={item.id} item={item} />
+                                ))}
+                            </div>
+                        </div>
+                        : null}
+                    <span className='name-messagerie'>{state.activeItem.name}</span>
+                </MessageFindFolower>) : <p>No resultat</p>}
         </BlocMessagerie>
-  );
+    );
 }
