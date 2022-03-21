@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useMediaQuery } from "react-responsive";
+import { useSelector, useDispatch } from "react-redux";
 import { Backdrop, Button, Fade } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -10,11 +11,13 @@ import { ModalDefault } from '../assets/styles/componentStyle';
 import InputField from './ui-elements/inputField';
 import InscriptionForm from './inscriptionForm';
 import ErrorFormMessage from './errorFormMessage';
+import * as actionTypes from "../store/functions/actionTypes";
 
 export default function FooterAuthHome({}) {
 
     const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
 
+    const dispatch = useDispatch();
     const [open, setOpen] = useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
@@ -48,6 +51,16 @@ export default function FooterAuthHome({}) {
           required: true,
       },
   });
+
+  const submitLogin = (e) => {
+    e.preventDefault();
+    handleClose();
+    dispatch({
+        type: actionTypes.LOGIN_SUCCESS,
+        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NDc4NTA0ODE3NTMsImV4cCI6MTY0ODEwOTY4MTc1M30.Y6M5ldfwVr3Z94ALcAqFOLbSNHn2a0TGZbB4ZhnV_0k",
+        refreshToken: "test",
+    });
+  };
 
     return (<FooterDefault>
       <ContainerDef>
@@ -117,7 +130,7 @@ export default function FooterAuthHome({}) {
                                           <KeyboardBackspaceIcon onClick={() => handleClose()} />
                                           <h2 className='titre-modal'>Connexion</h2>
                                       </div>
-                                      <form className='form-connexion'>
+                                      <form className='form-connexion'  onSubmit={submitLogin}>
                                           {message ? <ErrorFormMessage text="Le nom d’utilisateur ou le mot de passe est incorrect" onClick={() => setMessage(null)} /> : null}
 
                                           <div className='content-form'>
@@ -150,7 +163,7 @@ export default function FooterAuthHome({}) {
                                               </span>
                                           </div>
                                           <div className='bloc-btn-modal'>
-                                              <Button>Se connecter</Button>
+                                              <Button type="submit">Se connecter</Button>
                                           </div>
                                       </form>
                                   </div>
