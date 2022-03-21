@@ -1,4 +1,5 @@
 import db from "../models/index.model.js";
+import { validateEmail } from "./functions.js";
 
 const User = db.user;
 
@@ -65,4 +66,60 @@ export function checkEmailExiste(req, res, next) {
     }
     next();
   });
+}
+
+export function checkDataSignin(req, res, next) {
+  if (!validateEmail(req.body.email)) {
+    res
+      .status(401)
+      .send({ message: "Votre email n'est pas correctement renseigné." });
+    return;
+  } else if (String(req.body.password).length < 6) {
+    res.status(401).send({
+      message: "Votre mot de passe doit contenir au moins 6 caractères.",
+    });
+    return;
+  }
+  next();
+}
+
+export function checkDataSignup(req, res, next) {
+  if (!req.body.username) {
+    res
+      .status(401)
+      .send({ message: "Votre username n'est pas correctement renseigné." });
+    return;
+  } else if (!validateEmail(req.body.email)) {
+    res
+      .status(401)
+      .send({ message: "Votre email n'est pas correctement renseigné." });
+    return;
+  } else if (String(req.body.password).length < 6) {
+    res.status(401).send({
+      message: "Votre mot de passe doit contenir au moins 6 caractères.",
+    });
+    return;
+  }
+  next();
+}
+
+export function deleteAccount(req, res) {
+  if (req.user) {
+    req.user
+      .destroy()
+      .then(() => {
+        res.status(200).json({ message: "Votre compte est bien supprimé." });
+      })
+      .catch((err) => {
+        res.status(400).send({
+          message: "Oups! un problème est survenu durant la suppression du compte.",
+        });
+        return;
+      });
+  } else {
+    res.status(401).send({
+      message: "Utilisateur non défini",
+    });
+    return;
+  }
 }
