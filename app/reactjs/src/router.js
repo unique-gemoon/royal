@@ -12,12 +12,6 @@ const routesList = [
         path: PUBLIC_ROUTE.HOME,
         component: lazy(() => import("./views/home")),
     },
-    //Connexion
-    {
-        exact: true,
-        path: PUBLIC_ROUTE.LOGIN,
-        component: lazy(() => import("./views/auth/login")),
-    },
 ]
 
 
