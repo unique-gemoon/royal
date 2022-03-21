@@ -114,6 +114,13 @@ export const InputDef = styled(TextField)`
         color: #FFF;
         opacity: 0.8;
         font-family: "ProximaNovaSoftW03-Semibold";
+        &:-webkit-autofill,
+        &:-webkit-autofill:hover, 
+        &:-webkit-autofill:focus {
+            -webkit-text-fill-color: #fff;
+            box-shadow: 0 0 0px 1000px transparent inset;
+            transition: background-color 5000s ease-in-out 0s;
+        }
     }
     fieldset{
         border-radius: 4.93px 4.93px 0px 0px;
@@ -1868,6 +1875,19 @@ export const BlocVideoPlayer = styled.div`
 
 export const ModalItem = styled(Modal)`
     background-color: rgba(6, 20, 30, .94);
+    &.confirmation-modal{
+        backdrop-filter: blur(3.4667301177978516px);
+        background-color: transparent;
+        .modal-dialog{
+            width: 100%;
+            max-width: 100%;
+            .modal-content{
+                width: 900px;
+                max-width: 90%;
+                margin: auto;
+            }
+        }
+    }
     .modal-dialog{
         width: 900px;
         max-height: calc(100vh - 60px);
@@ -1882,6 +1902,46 @@ export const ModalItem = styled(Modal)`
         }
         .modal-body{
             padding: 0;
+            .bloc-default-modal {
+                border-radius: 13px;
+                background: linear-gradient(#2d7fc3 0%,#579be9 100%);
+                width: 550px;
+                max-width: 100%;
+                margin: auto;
+                padding: 30px 20px 20px;
+                text-align: center;
+                color: #FFF;
+                .qst-confirm{
+                    font-size: 16px;
+                    line-height: 27px;
+                    font-family: "ProximaNovaSoftW03-Semibold";
+                    margin-bottom: 30px;
+                }
+                .bloc-btns-confirm{
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    flex-wrap: wrap;
+                    button{
+                         background-color: #FFF;
+                         color: ${OrangeColor};
+                         font-family: "ProximaNovaSoftW03-Semibold";
+                         font-size: 15px;
+                         line-height: 1;
+                         border-radius: 40px;
+                         text-transform: capitalize;
+                         height: 27px;
+                         padding: 6px 27px;
+                         transition: .3s ease-in-out;
+                         align-items: flex-start;
+                         margin: 0 4px 10px;
+                         &:hover{
+                            background-color: ${OrangeColor};
+                            color: #FFF;
+                         }
+                    }
+                }
+            }
         }
     }
     ${BarTimer}{

@@ -6,12 +6,16 @@ import MenuItem from '@mui/material/MenuItem';
 import ClickAwayListener from '@mui/material/ClickAwayListener';
 import Paper from '@mui/material/Paper';
 import Popper from '@mui/material/Popper';
-import { BlocProfileMenu } from '../assets/styles/componentStyle';
+import { BlocProfileMenu, ModalItem } from '../assets/styles/componentStyle';
 
 export default function ProfileMenu() {
+    const [modalConfirm, setModalConfirm] = useState(false);
     const [open, setOpen] = useState(false);
     const anchorRef = useRef(null);
 
+    const ToggleModalConfirm = () => {
+      setModalConfirm((modalConfirm) => !modalConfirm);
+    };
     const handleToggle = () => {
         setOpen((prevOpen) => !prevOpen);
     };
@@ -68,13 +72,24 @@ export default function ProfileMenu() {
                     className='profil-menu-options'
                   >
                     <MenuItem onClick={handleClose}>Se déconnecter</MenuItem>
-                    <MenuItem onClick={handleClose}>Supprimer son compte</MenuItem>
+                  <MenuItem onClick={ToggleModalConfirm}>Supprimer son compte</MenuItem>
                   </MenuList>
                 </ClickAwayListener>
               </Paper>
             </Grow>
           )}
         </Popper>
+      <ModalItem className="confirmation-modal" show={modalConfirm} centered backdrop="static" keyboard={false} onHide={() => setModalConfirm(false)}>
+        <ModalItem.Body>
+          <div className='bloc-default-modal'>
+            <p className='qst-confirm'>lorem ipsum</p>
+            <div className='bloc-btns-confirm'>
+              <Button onClick={() => setModalConfirm(false)}>Annuler</Button>
+              <Button >Confirmer</Button>
+            </div>
+          </div>
+        </ModalItem.Body>
+      </ModalItem>
       </BlocProfileMenu>
   )
 }
