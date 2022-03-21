@@ -12,7 +12,7 @@ import endPoints from "../config/endPoints";
 import connector from "../connector";
 import * as actionTypes from "../store/functions/actionTypes";
 
-export default function ProfileMenu() {
+export default function ProfileMenu({setMsgNotifTop = () => {}}) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const anchorRef = useRef(null);
@@ -46,7 +46,7 @@ export default function ProfileMenu() {
         dispatch({
           type: actionTypes.LOGOUT,
         });
-        handleClose();
+        setMsgNotifTop(null);
       },
       catch: (error) => {
         msg = "Erreur";
@@ -56,6 +56,13 @@ export default function ProfileMenu() {
         alert(msg);
       },
     });
+  };
+
+  const logout = () => {
+    dispatch({
+      type: actionTypes.LOGOUT,
+    });
+    setMsgNotifTop(null);
   };
 
   return (
@@ -94,7 +101,7 @@ export default function ProfileMenu() {
                   aria-labelledby="composition-button"
                   className="profil-menu-options"
                 >
-                  <MenuItem onClick={handleClose}>Se déconnecter</MenuItem>
+                  <MenuItem onClick={logout}>Se déconnecter</MenuItem>
                   <MenuItem onClick={deleteAccount}>
                     Supprimer son compte
                   </MenuItem>

@@ -12,7 +12,7 @@ export function checkDuplicateUsernameOrEmail(req, res, next) {
   }).then((user) => {
     if (user) {
       res.status(400).send({
-        message: "Nom d'utilisateur est déjà utilisé!",
+        message: "Nom d'utilisateur déjà existant. Veuillez en choisir un autre.",
       });
       return;
     }
@@ -24,7 +24,7 @@ export function checkDuplicateUsernameOrEmail(req, res, next) {
     }).then((user) => {
       if (user) {
         res.status(400).send({
-          message: "Cet email est déjà utilisé!",
+          message: "Un compte avec cette adresse email existe déjà. Veuillez vous connecter ou choisir une autre adresse courriel.",
         });
         return;
       }

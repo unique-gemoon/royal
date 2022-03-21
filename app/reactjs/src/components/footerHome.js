@@ -28,7 +28,7 @@ export default function FooterHome({
             <Row className="align-items-center">
               <Col md={3}>
                 <div className="d-md-flex">
-                  <ProfileMenu />
+                  <ProfileMenu setMsgNotifTop={setMsgNotifTop}/>
                   <SeeCounter countSee={14} />
                 </div>
               </Col>

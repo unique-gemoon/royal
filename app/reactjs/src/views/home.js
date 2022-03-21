@@ -461,7 +461,7 @@ export default function Home() {
             </div>
             <div className="d-flex">
               <SeeCounter countSee={14} />
-              <ProfileMenu />
+              <ProfileMenu setMsgNotifTop={setMsgNotifTop}/>
             </div>
           </HeaderMobile>
         )}
