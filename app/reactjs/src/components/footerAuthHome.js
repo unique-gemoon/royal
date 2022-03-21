@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Row, Col } from 'react-bootstrap';
 import { useMediaQuery } from "react-responsive";
 import { useSelector, useDispatch } from "react-redux";
+import LoadingButton from '@mui/lab/LoadingButton';
 import { Backdrop, Button, Fade } from '@mui/material';
 import KeyboardBackspaceIcon from '@mui/icons-material/KeyboardBackspace';
 import CheckCircleOutlineIcon from '@mui/icons-material/CheckCircleOutline';
@@ -12,6 +13,7 @@ import InputField from './ui-elements/inputField';
 import InscriptionForm from './inscriptionForm';
 import ErrorFormMessage from './errorFormMessage';
 import * as actionTypes from "../store/functions/actionTypes";
+import ButtonDef from './ui-elements/buttonDef';
 
 export default function FooterAuthHome({}) {
 
@@ -51,15 +53,18 @@ export default function FooterAuthHome({}) {
           required: true,
       },
   });
+  const [submitting, setSubmitting] = useState(false);
 
   const submitLogin = (e) => {
     e.preventDefault();
-    handleClose();
-    dispatch({
-        type: actionTypes.LOGIN_SUCCESS,
-        token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NDc4NTA0ODE3NTMsImV4cCI6MTY0ODEwOTY4MTc1M30.Y6M5ldfwVr3Z94ALcAqFOLbSNHn2a0TGZbB4ZhnV_0k",
-        refreshToken: "test",
-    });
+    setSubmitting(true);
+   //dispatch({
+   //    type: actionTypes.LOGIN_SUCCESS,
+   //    token: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NDc4NTA0ODE3NTMsImV4cCI6MTY0ODEwOTY4MTc1M30.Y6M5ldfwVr3Z94ALcAqFOLbSNHn2a0TGZbB4ZhnV_0k",
+   //    refreshToken: "test",
+   //});
+
+    //handleClose();
   };
 
     return (<FooterDefault>
@@ -163,7 +168,16 @@ export default function FooterAuthHome({}) {
                                               </span>
                                           </div>
                                           <div className='bloc-btn-modal'>
-                                              <Button type="submit">Se connecter</Button>
+                                              {/* <Button type="submit">Se connecter</Button> */}
+
+
+                                              <ButtonDef
+        spinner={submitting}
+        textButton={"Se connecter"}
+        className="btn-form-def"
+      />
+
+                                             
                                           </div>
                                       </form>
                                   </div>

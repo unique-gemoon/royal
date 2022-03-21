@@ -3,7 +3,7 @@ import styled from "styled-components";
 import underlineIcon from "../images/icons/underlineIcon.svg";
 import replyIcon from "../images/icons/replyIcon.svg";
 import replyIconGreen from "../images/icons/replyIconGreen.svg";
-import { Modal } from '@mui/material';
+import { Button, Modal } from '@mui/material';
 
 
 
@@ -28,6 +28,30 @@ export const ReplyIcon = styled.i`
 `;
 export const ReplyIconGreen = styled.i`
   ${mixinIcon({ urlIcon: replyIconGreen, width: 10, height: 9 })};
+`;
+export const ButtonDefault = styled(Button)`
+    min-width: 132px;
+    height: 32px;
+    transition: .3s ease-in-out;
+    font-family: "ProximaNovaSoftW03-Semibold";
+    font-size: 18px;
+    line-height: 22px;
+    border-radius: 7px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: ${OrangeColor};
+    text-transform: initial;
+    background-color: #FFF;
+    transition: .3s ease-in-out;
+    padding: 6px 20px;
+    &:hover{
+        background-color: ${OrangeColor};
+        color: #FFF;
+    }
+    .spinner-grow{
+        margin-right: 10px;
+    }
 `;
 export const DefaultMain = styled.div`
     position: relative;
@@ -402,24 +426,7 @@ export const ModalPopIn = styled(Modal) `
             text-align: center;
             margin-top: 20px;
         }
-        button{
-            min-width: 132px;
-            height: 32px;
-            transition: .3s ease-in-out;
-            font-family: "ProximaNovaSoftW03-Semibold";
-            font-size: 18px;
-            line-height: 22px;
-            border-radius: 7px;
-            color: ${OrangeColor};
-            text-transform: initial;
-            background-color: #FFF;
-            transition: .3s ease-in-out;
-            padding: 6px 26px;
-            &:hover{
-                background-color: ${OrangeColor};
-                color: #FFF;
-            }
-        }
+        
     }
     .message-modal-content {
         width: 530px;
