@@ -30,6 +30,42 @@ export const GroupInput = styled(Form.Group)`
     }
 `;
 
+export const InputForm = styled(Form.Control)`
+    background-color: transparent;
+    box-shadow: none !important;
+    border: 0;
+    color: #FFF !important;
+    padding: 0 10px;
+    border-left: 1px solid #FFF;
+    height: 18px;
+    border-radius: 0;
+    font-size: 13px;
+    &::-webkit-input-placeholder {
+        font-size: 13px;
+        color: #FFF;
+        opacity: .6;
+    }
+    &::-moz-placeholder {
+        font-size: 13px;
+        color: #FFF;
+        opacity: .6;
+    }
+    &:-ms-input-placeholder {
+        font-size: 13px;
+        color: #FFF;
+        opacity: .6;
+    }
+    &:-moz-placeholder {
+        font-size: 13px;
+        color: #FFF;
+        opacity: .6;
+    }
+    &:focus,
+    &:invalid {
+        background: none;
+        outline: none;
+    }
+`;
 export const InputDef = styled(TextField)`
     width: 100%;
     background: rgba(21, 52, 79, .5);
@@ -370,9 +406,6 @@ export const NotificationMessage = styled.div`
         right: 15px;
         top: 50%;
         transform: translateY(-50%);
-    }
-    @media(max-width: 1200px){
-        top: 50px;
     }
 `;
 export const BlocProfileMenu = styled.div`
@@ -769,6 +802,7 @@ export const ItemFolower = styled.div`
         bottom: 0;
         background: #d0eafc;
         opacity: 0;
+        pointer-events: none;
     }
     &:hover{
         &::before{
@@ -1138,6 +1172,93 @@ export const FormEmoji = styled.div`
         }
     }
 `;
+export const MessageFindFolower = styled.div`
+    height: 100%;
+    .header-messagerie{
+        justify-content: flex-start !important;
+        padding: 5px 17px;
+        .title-find-distin{
+            font-size: 15px;
+            display: flex;
+            align-items: center;
+            svg{
+                margin-right: 5px;
+                font-size: 18px;
+            }
+        }
+        .back-to-list{
+            cursor: pointer;
+            svg{
+                transition: .3s all;
+            }
+            &:hover{
+                svg{
+                    color: ${OrangeColor};
+                }
+            }
+        }
+    }
+    .header-info-search{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 8px 20px;
+        background: linear-gradient(#6eb3f1 0%, #4ea2db 100%);
+        position: relative;
+        font-family: "ProximaNovaSoftW03-Semibold";
+        font-weight: normal;
+        font-size: 13px;
+        line-height: 18px;
+        text-align: left;
+        color: #fff;
+        svg{
+            margin-right: 4px;
+            font-size: 18px;
+        }
+        &:before{
+            content: "";
+            position: absolute;
+            bottom: -6px;
+            left: 0;
+            right: 0;
+            height: 6px;
+            background: linear-gradient(#1c2135 0%, rgba(28, 33, 53, 0) 100%);
+            opacity: 0.4;
+        }
+    }
+    .bloc-search-folower{
+        background: linear-gradient(#1663a0 0%, #135d98 93.46%);
+        display: flex;
+        align-items: center;
+        padding: 10px 14px;
+        svg{
+            font-size: 18px;
+        }
+        .search-input{
+            margin-left: 10px;
+            input{
+                border-left: 1px solid #ffffff59;
+                padding-left: 5px;
+            }
+        }
+    }
+    .content-search-results {
+        height: calc(100% - 120px);
+    }
+    .list-result-search{
+        height: 100%;
+        overflow-y: auto;
+        & > div{
+            padding: 0 14px 0 0;
+            & > span{
+                    cursor: pointer;
+                    display: block;
+                    width: 100%;
+                    padding: 13px 14px;
+            }
+        }
+    }
+`;
 export const BlocMessagerie = styled.div`
     width: 310px;
     .bloc-lists-messagerie{
@@ -1277,8 +1398,9 @@ export const BlocMessagerie = styled.div`
                     textarea{
                         height: 28px !important;
                         color: #fff;
-                        padding: 4px 6px 0;
+                        padding: 8px 6px 0;
                         margin-top: 6px;
+                        width: 100%;
                         &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
                             color: #7fa2d6;
                         }
@@ -1392,7 +1514,7 @@ export const MasonryItem = styled.div`
         margin-bottom: 15px;
     }
     .Bloc-NV2{
-        max-height: ${({ height }) => (height ? `calc(700px - ${height}px)`: 0)};
+        max-height: ${({ height }) => (height ? `calc(700px - ${height}px)` : 0)};
         overflow-y: scroll;
         border-radius: 0 0 20px 20px;
     }

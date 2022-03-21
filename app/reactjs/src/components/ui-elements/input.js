@@ -1,5 +1,6 @@
 import React from "react";
 import { Form } from "react-bootstrap";
+import { InputForm } from "../../assets/styles/componentStyle";
 
 export default function Input({
   label,
@@ -19,7 +20,7 @@ export default function Input({
     <Form.Group className={className}>
       {label ? <label>{label}</label> : null}
 
-      <Form.Control
+      <InputForm
         as={as}
         type={type}
         placeholder={placeholder}

@@ -6,7 +6,7 @@ import { Button } from '@mui/material';
 import { ItemFolower } from '../assets/styles/componentStyle';
 
 
-export default function ItemListFolower({item}) {
+export default function ItemListFolower({ state, setState= () =>{}, item, onClick, shwoButtonMessage = true}) {
     const [statutFolower, setStatutFolower] = useState(item.statut);
     const toggleFolower = () => {
         if(statutFolower === 0){
@@ -17,9 +17,9 @@ export default function ItemListFolower({item}) {
     }
     return (
         <ItemFolower key={item.id}>
-            <span>{item.name}</span>
+            <span onClick={() => { console.log(state); setState({ ...state, activeItem: item }); }}>{item.name}</span>
             <div className='option-item-folower'>
-                <Button className='toggle-item-message'><MailOutlineRoundedIcon /></Button>
+                {shwoButtonMessage && (<Button className='toggle-item-message'><MailOutlineRoundedIcon /></Button>)}
                 <Button onClick={toggleFolower} className='btn-switch-folowers'>{ statutFolower === 1 ? <PersonAddAltOutlinedIcon /> : <PersonRemoveOutlinedIcon />}</Button>
             </div>
         </ItemFolower>
