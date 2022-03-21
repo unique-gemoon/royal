@@ -7,7 +7,7 @@ import MenuItem from "@mui/material/MenuItem";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
-import { BlocProfileMenu } from "../assets/styles/componentStyle";
+import { BlocProfileMenu, ModalItem } from '../assets/styles/componentStyle';
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import * as actionTypes from "../store/functions/actionTypes";
@@ -15,6 +15,7 @@ import * as actionTypes from "../store/functions/actionTypes";
 export default function ProfileMenu({setMsgNotifTop = () => {}}) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
+  const [modalConfirm, setModalConfirm] = useState(false);
   const anchorRef = useRef(null);
 
   const handleToggle = () => {
@@ -102,7 +103,7 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
                   className="profil-menu-options"
                 >
                   <MenuItem onClick={logout}>Se déconnecter</MenuItem>
-                  <MenuItem onClick={deleteAccount}>
+                  <MenuItem onClick={()=>{setModalConfirm(true)}}>
                     Supprimer son compte
                   </MenuItem>
                 </MenuList>
@@ -111,6 +112,17 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
           </Grow>
         )}
       </Popper>
+      <ModalItem className="confirmation-modal" show={modalConfirm} centered backdrop="static" keyboard={false} onHide={() => setModalConfirm(false)}>
+        <ModalItem.Body>
+          <div className='bloc-default-modal'>
+            <p className='qst-confirm'>lorem ipsum</p>
+            <div className='bloc-btns-confirm'>
+              <Button onClick={() => setModalConfirm(false)}>Annuler</Button>
+              <Button onClick={deleteAccount }>Confirmer</Button>
+            </div>
+          </div>
+        </ModalItem.Body>
+      </ModalItem>
     </BlocProfileMenu>
   );
 }
