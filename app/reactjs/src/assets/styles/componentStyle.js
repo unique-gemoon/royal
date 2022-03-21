@@ -10,13 +10,12 @@ export const GroupInput = styled(Form.Group)`
     .error-message{
         font-family: "ProximaNovaSoftW03-Semibold";
             font-size: 15px;
-            line-height: 19px;
             background: #d87a73;
             color: #FFF;
             padding: 5px 10px;
             border-radius: 0 0 6px 6px;
             display: flex;
-            justify-content: space-between;
+            justify-content: flex-start;
             margin-bottom: 16px;
             svg{
                 margin-right: 10px;

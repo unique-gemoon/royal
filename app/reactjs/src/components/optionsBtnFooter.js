@@ -12,7 +12,7 @@ export default function OptionsBtnFooter({
   action,
   setAction = () => {},
   dataNotifs,
-  setShowMessage = () => {},
+  setMsgNotifTop = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -34,7 +34,7 @@ export default function OptionsBtnFooter({
     if (!cpAction[name]) return;
     cpAction[name].isOpen = e.isOpen;
     setAction(cpAction);
-    setShowMessage(false);
+    setMsgNotifTop(null);
   };
 
   return (
@@ -64,7 +64,7 @@ export default function OptionsBtnFooter({
         <NewPli
           action={action}
           setAction={setAction}
-          setShowMessage={setShowMessage}
+          setMsgNotifTop={setMsgNotifTop}
         />
       )}
       <ButtonAction

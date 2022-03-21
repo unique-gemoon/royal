@@ -5,5 +5,6 @@ const endPoints = {
   FORGOT_PASSWORD: "/auth/forgot-password",
   REST_PASSWORD: "/auth/rest-password",
   PROFILE: "/auth/profile",
+  DELETE_ACCOUNT : "/auth/delete-account",
 };
 export default endPoints;

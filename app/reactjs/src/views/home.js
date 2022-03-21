@@ -26,8 +26,6 @@ import FooterAuthHome from "../components/footerAuthHome";
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
-  const [showMessage, setShowMessage] = useState(true);
-
   const [dataMasonry, setDataMasonry] = useState([
     {
       id: 1,
@@ -46,7 +44,7 @@ export default function Home() {
       },
       nv2: {
         description:
-          "Voici mon nouveau son du moment, qu’est ce que vous en pensez ?",
+          "Voici mon nouveau son du moment, qu'est ce que vous en pensez ?",
         music: {
           id: 1,
           name: "Plants",
@@ -65,25 +63,25 @@ export default function Home() {
         {
           id: 1,
           user: "Dan",
-          subject: "J’aime bien cette citation !",
+          subject: "J'aime bien cette citation !",
           time: "il y a 3mn",
           reponses: [
             {
               id: 1,
               user: "Dan",
-              subject: "J’aime bien cette citation !",
+              subject: "J'aime bien cette citation !",
               time: "il y a 2mn",
             },
             {
               id: 2,
               user: "Jacquou",
-              subject: "J’aime bien cette citation !",
+              subject: "J'aime bien cette citation !",
               time: "il y a 2mn",
             },
             {
               id: 3,
               user: "Dan",
-              subject: "J’aime bien cette citation !",
+              subject: "J'aime bien cette citation !",
               time: "il y a 2mn",
             },
           ],
@@ -91,13 +89,13 @@ export default function Home() {
         {
           id: 2,
           user: "Dan",
-          subject: "J’aime bien cette citation !",
+          subject: "J'aime bien cette citation !",
           time: "il y a 3mn",
           reponses: [
             {
               id: 1,
               user: "Dan",
-              subject: "J’aime bien cette citation !",
+              subject: "J'aime bien cette citation !",
               time: "il y a 2mn",
             },
           ],
@@ -420,10 +418,9 @@ export default function Home() {
     },
   ]);
 
-  const newPliAdded = false;
+  const [msgNotifTop, setMsgNotifTop] = useState(null);
 
   const auth = useSelector((store) => store.auth);
-  const dispatch = useDispatch();
 
   const setItem = (item) => {
     const cpDataMasonry = [...dataMasonry];
@@ -469,17 +466,12 @@ export default function Home() {
           </HeaderMobile>
         )}
         <ContainerDef>
-          {newPliAdded && (
+          {msgNotifTop && (
             <MessageNotif
-              showMessage={showMessage}
-              setShowMessage={setShowMessage}
-              textNotif={
-                <>
-                  Votre pli a bien été publié sur la page universelle ! <br />{" "}
-                  Il reste 1 minute avant qu'il ne disparaisse si aucun délai
-                  supplémentaire ne lui est ajouté par les utilisateurs.
-                </>
-              }
+              setMessage={() => {
+                setMsgNotifTop(null);
+              }}
+              message={msgNotifTop}
             />
           )}
           <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
@@ -502,10 +494,10 @@ export default function Home() {
             action={action}
             setAction={setAction}
             dataNotifs={dataNotifs}
-            setShowMessage={setShowMessage}
+            setMsgNotifTop={setMsgNotifTop}
           />
         ) : (
-          <FooterAuthHome />
+          <FooterAuthHome setMsgNotifTop={setMsgNotifTop} />
         )}
       </StyledEngineProvider>
     </DefaultMain>

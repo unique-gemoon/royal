@@ -49,7 +49,7 @@ const goOn = (params) => {
     .then(params.success)
     .catch((error) => {
       params.catch(error);
-      console.log(error.response);
+      console.log("connector : ", error.response);
       if (error.response !== undefined && error.response.status === 403) {
         NotificationManager.error(
           "Mauvaise Demande",
@@ -63,7 +63,6 @@ const goOn = (params) => {
         );
       }
       if (error.response !== undefined && error.response.status === 500) {
-        //TODO décommente notification after install mercure in dev
         NotificationManager.error(
           "Erreur 500",
           "Une erreur de serveur inconnue s'est produite."
