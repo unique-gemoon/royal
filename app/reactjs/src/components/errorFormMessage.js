@@ -6,7 +6,7 @@ export default function ErrorFormMessage({text, onClick}) {
   return (
       <ErroreMessageForm>
           <AddCircleOutlinedIcon onClick={onClick} />
-          <span>Le nom d’utilisateur ou le mot de passe est incorrect</span>
+          <span>{text}</span>
       </ErroreMessageForm>
   )
 }

@@ -21,7 +21,7 @@ passport.use(
       return User.findByPk(jwtPayload.sub)
         .then((user) => {
           if(!user){return done('user not existe');}
-          return done(null, { id: user.id, username: user.username, email: user.email });
+          return done(null, user);
         })
         .catch((err) => {
           return done(err);

@@ -22,7 +22,6 @@ export default function InputField({
     setState = () =>{},
     ...props
 }) {
-    console.log(props.state)
     return (
         <GroupInput className={error ? `form-error ${className}` : `${className}`}>
 

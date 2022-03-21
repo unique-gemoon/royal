@@ -18,7 +18,10 @@ function generateTokens(user) {
     exp: new Date().setDate(new Date().getDate() + 3),
   };
   const token = jwt.sign(payload, process.env.SECRET_KEY);
-  const refreshToken = jwt.sign({ ...payload, exp: new Date().setDate(new Date().getDate() + 7) },process.env.REFRESH_SECRET_KEY);
+  const refreshToken = jwt.sign(
+    { ...payload, exp: new Date().setDate(new Date().getDate() + 7) },
+    process.env.REFRESH_SECRET_KEY
+  );
   return { token, refreshToken };
 }
 
@@ -32,15 +35,22 @@ export function signin(req, res) {
       if (!user) {
         return res
           .status(404)
-          .send({ message: "E-mail ou nom d'utilisateur incorrect." });
+          .send({
+            message:
+              "Nous sommes désolés, nous ne trouvons pas votre compte. Veuillez vérifier les informations de connexion.",
+          });
       }
 
       if (!user.validPassword(req.body.password)) {
-        return res.status(401).send({ message: "Mot de passe incorrect." });
+        return res
+          .status(401)
+          .send({ message: "Le mot de passe est incorrect." });
       }
 
       if (!user.enabled) {
-        return res.status(401).send({ message: "Ce compte est désactivé" });
+        return res
+          .status(401)
+          .send({ message: "Nous sommes désolés, Ce compte est désactivé." });
       }
 
       User.update({ lastLogin: new Date() }, { where: { id: user.id } })
@@ -59,6 +69,7 @@ export function signin(req, res) {
 }
 
 export function signup(req, res) {
+
   // Save User to Database
   User.create({
     username: req.body.username,

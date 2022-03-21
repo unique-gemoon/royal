@@ -17,7 +17,7 @@ import { useMediaQuery } from "react-responsive";
 import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import ErrorFormMessage from './errorFormMessage';
 
-export default function NewPli({ action, setAction = () => { } , setShowMessage = () => { }}) {
+export default function NewPli({ action, setAction = () => { } , setMsgNotifTop = () => { }}) {
 
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [stateTextarea, setStateTextarea] = useState({
@@ -105,7 +105,7 @@ export default function NewPli({ action, setAction = () => { } , setShowMessage 
         : null}
       {isDesktopOrLaptop ?
         <div onClick={() => {
-          setShowMessage(false);
+          setMsgNotifTop(null);
           handleToggle();
           const cpAction = {
             ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
@@ -116,7 +116,7 @@ export default function NewPli({ action, setAction = () => { } , setShowMessage 
           <KeyboardArrowUpIcon />
         </div> :
         <div onClick={() => {
-          setShowMessage(false);
+          setMsgNotifTop(null);
           handleToggle();
           const cpAction = {
             ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
