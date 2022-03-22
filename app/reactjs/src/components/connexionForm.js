@@ -12,14 +12,14 @@ import ButtonDef from "./ui-elements/buttonDef";
 import { clearErrors, validateEmail } from "../helper/form";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
+import { getMsgError } from "../helper/fonctions";
 
 export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
-
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [linkForgot, setLinkForgot] = useState("");
+  const [showModal, setShowModal] = useState(null);
   const [message, setMessage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [state, setState] = useState({
@@ -59,7 +59,6 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
       const cpState = { ...state };
       let email = state.email.value;
       let password = state.password.value;
-      let msg = "";
 
       if (!email && !password) {
         msgErrors({
@@ -106,11 +105,7 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
               handleClose();
             },
             catch: (error) => {
-              msg = "Vos identifiants sont incorrects";
-              if (error.response.data.message !== undefined) {
-                msg = error.response.data.message;
-              }
-              msgErrors({ msg, submit: false });
+              msgErrors({ msg: getMsgError(error), submit: false });
             },
           });
         } else {
@@ -120,11 +115,47 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
     }
   };
 
+  const submitForgotPassword = (e) => {
+    e.preventDefault();
+    if (!submitting) {
+      setState(clearErrors(state));
+      const cpState = { ...state };
+      let emailForgot = state.emailForgot.value;
+
+      if (!emailForgot || !validateEmail(emailForgot)) {
+        emailForgot = false;
+        cpState.emailForgot = {
+          ...cpState.emailForgot,
+          error: true,
+          errorMessage: "Votre email n'est pas correctement renseigné.",
+        };
+      }
+
+      if (emailForgot) {
+        msgErrors({ submit: true });
+        connector({
+          method: "post",
+          url: endPoints.FORGOT_PASSWORD,
+          data: { email: emailForgot },
+          success: (response) => {
+            msgErrors({ submit: false });
+            setShowModal("messageForgotPassword");
+          },
+          catch: (error) => {
+            msgErrors({ msg: getMsgError(error), submit: false });
+          },
+        });
+      } else {
+        setState({ ...cpState });
+      }
+    }
+  };
+
   const msgErrors = (e) => {
     if (e.msg !== undefined) setMessage(e.msg);
     const cpState = { ...state };
     if (e.email !== undefined) cpState.email.error = e.email;
-    if (e.username !== undefined) cpState.username.error = e.username;
+    if (e.emailForgot !== undefined) cpState.emailForgot.error = e.emailForgot;
     if (e.password !== undefined) cpState.password.error = e.password;
     if (e.submit !== undefined) setSubmitting(e.submit);
     setState(cpState);
@@ -147,36 +178,51 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
       >
         <Fade in={open}>
           <div className="content-modal">
-            {linkForgot === "forgotPass" ? (
+            {showModal === "forgotPassword" && (
               <div className="connection-content">
                 <div className="header-modal">
-                  <KeyboardBackspaceIcon onClick={() => setLinkForgot(null)} />
+                  <KeyboardBackspaceIcon onClick={() => setShowModal(null)} />
                   <h2 className="titre-modal">Mot de passe oublié ?</h2>
                 </div>
-                <form className="form-forgot-pass">
+                <form
+                  className="form-forgot-pass"
+                  onSubmit={submitForgotPassword}
+                >
+                  {message ? (
+                    <ErrorFormMessage
+                      text={message}
+                      onClick={() => setMessage(null)}
+                    />
+                  ) : null}
                   <div className="content-form">
                     <InputField
                       {...state.emailForgot}
+                      state={state.emailForgot}
+                      setState={(e) => {
+                        setState({ ...state, emailForgot: e });
+                      }}
                       onChange={(e) => {
                         const cpState = { ...state };
                         cpState.emailForgot.value = e.target.value;
+                        cpState.emailForgot.error = false;
+                        cpState.emailForgot.errorMessage = null;
                         setState(cpState);
                         setMessage(null);
                       }}
                     />
                   </div>
                   <div className="bloc-btn-modal">
-                    <Button
-                      onClick={() => {
-                        setLinkForgot("messageForgotPass");
-                      }}
-                    >
-                      Envoyer
-                    </Button>
+                    <ButtonDef
+                      spinner={submitting}
+                      textButton={"Envoyer"}
+                      className="btn-form-def"
+                    />
                   </div>
                 </form>
               </div>
-            ) : linkForgot === "messageForgotPass" ? (
+            )}
+
+            {showModal === "messageForgotPassword" && (
               <div className="message-modal-content">
                 <CheckCircleOutlineIcon />
                 <p className="titre-message-modal">
@@ -189,18 +235,19 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
                     passe.
                   </p>
                 </div>
-                <Button
+                <ButtonDef
                   onClick={() => {
                     handleClose();
                     setTimeout(() => {
-                      setLinkForgot(null);
+                      setShowModal(null);
                     }, 100);
                   }}
-                >
-                  Ok
-                </Button>
+                  textButton={"Ok"}
+               />
               </div>
-            ) : (
+            )}
+
+            {!showModal && (
               <div className="connection-content">
                 <div className="header-modal">
                   <KeyboardBackspaceIcon onClick={() => handleClose()} />
@@ -248,7 +295,7 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
                     <span
                       className="pass-oublier"
                       onClick={() => {
-                        setLinkForgot("forgotPass");
+                        setShowModal("forgotPassword");
                       }}
                     >
                       Mot de passe oublié ?

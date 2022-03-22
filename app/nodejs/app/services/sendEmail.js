@@ -1,16 +1,18 @@
 import nodemailer from "nodemailer";
 import AWS from "aws-sdk";
+import ejs from "ejs";
 
 export default function sendEmail({
   from = "",
   to = "",
   subject = "",
-  text = "",
+  tmp = "",
+  params = {},
 }) {
   if (!from) from = process.env.MAILER_ADMIN;
   if (!to) to = process.env.MAILER_ADMIN;
 
-  if (!from || !to || !subject || !text) {
+  if (!from || !to || !subject || !tmp) {
     return false;
   }
 
@@ -25,14 +27,26 @@ export default function sendEmail({
     });
   }
 
-  const mailOptions = { from, to, subject, text };
-
-  mailer
-    .sendMail(mailOptions)
-    .then(() => {
-      return true;
-    })
-    .catch((err) => {
+  return ejs.renderFile( process.cwd() + "/app/templates/" + tmp, params, function (err, data) {
+    if (err) {
+      console.log(err);
       return false;
-    });
+    } else {
+      const mainOptions = {
+        from,
+        to,
+        subject,
+        html: data,
+      };
+      return mailer
+        .sendMail(mainOptions)
+        .then(() => {
+          return true;
+        })
+        .catch((err) => {
+          console.log(err);
+          return false;
+        });
+    }
+  });
 }
