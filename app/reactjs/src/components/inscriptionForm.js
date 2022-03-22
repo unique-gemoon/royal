@@ -71,7 +71,6 @@ export default function InscriptionForm({}) {
       let username = state.username.value;
       let email = state.email.value;
       let password = state.password.value;
-      let msg = "";
 
       if (!username && !email && !password) {
         msgErrors({

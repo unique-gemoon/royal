@@ -33,12 +33,10 @@ export function signin(req, res) {
   })
     .then((user) => {
       if (!user) {
-        return res
-          .status(404)
-          .send({
-            message:
-              "Nous sommes désolés, nous ne trouvons pas votre compte. Veuillez vérifier les informations de connexion.",
-          });
+        return res.status(404).send({
+          message:
+            "Nous sommes désolés, nous ne trouvons pas votre compte. Veuillez vérifier les informations de connexion.",
+        });
       }
 
       if (!user.validPassword(req.body.password)) {
@@ -69,7 +67,6 @@ export function signin(req, res) {
 }
 
 export function signup(req, res) {
-
   // Save User to Database
   User.create({
     username: req.body.username,
@@ -101,14 +98,18 @@ export function forgotPassword(req, res) {
     { where: { email: req.body.email } }
   )
     .then((d) => {
+      const username = "ayoub";
+      const url = "http://localhost.com";
+
       const response = sendEmail({
         from: "",
         to: req.body.email,
         subject: "Mot de passe oublié",
-        text: "Vous avez demandé à réinitialiser votre mot de passe.",
+        tmp: "emails/forgot_password.ejs",
+        params: { user: { username }, url },
       });
 
-      res.status(200).json({ message: "ok", email: response });
+      res.status(200).json({ message: "ok", email : response });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

@@ -51,7 +51,7 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
       },
       catch: (error) => {
         msg = "Erreur";
-        if (error.response.data.message !== undefined) {
+        if (error.response?.data?.message !== undefined) {
           msg = error.response.data.message;
         }
         alert(msg);
