@@ -1,17 +1,17 @@
 import React from "react";
-import { Row, Col } from "react-bootstrap";
+import { Col, Row } from "react-bootstrap";
 import { useMediaQuery } from "react-responsive";
 import {
   ContainerDef,
-  FooterDefault,
+  FooterDefault
 } from "../assets/styles/globalStyle";
-import SeeCounter from "./ui-elements/seeCounter";
-import InscriptionForm from "./inscriptionForm";
 import ConnexionForm from "./connexionForm";
+import InscriptionForm from "./inscriptionForm";
+import SeeCounter from "./ui-elements/seeCounter";
 
 export default function FooterAuthHome({ setMsgNotifTop = () => {} }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
-
+  
   return (
     <FooterDefault>
       <ContainerDef>

@@ -1,4 +1,5 @@
 import React from "react";
+import { useSelector } from 'react-redux';
 import { useMediaQuery } from "react-responsive";
 import { Row, Col } from "react-bootstrap";
 import OptionsBtnFooter from "./optionsBtnFooter";
@@ -9,6 +10,7 @@ import {
 import NewPli from "./newPli";
 import SeeCounter from "./ui-elements/seeCounter";
 import ProfileMenu from "./profileMenu";
+import { ROLES } from "../config/vars";
 
 
 export default function FooterHome({
@@ -19,8 +21,8 @@ export default function FooterHome({
   }) {
 
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
-
     const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
+    const auth = useSelector((store) => store.auth);
 
     return (<FooterDefault>
         {isDesktopOrLaptop && (
@@ -28,7 +30,7 @@ export default function FooterHome({
             <Row className="align-items-center">
               <Col md={3}>
                 <div className="d-md-flex">
-                  <ProfileMenu setMsgNotifTop={setMsgNotifTop}/>
+                {auth.roles.includes(ROLES.ROLE_USER) && <ProfileMenu setMsgNotifTop={setMsgNotifTop}/>}
                   <SeeCounter countSee={14} />
                 </div>
               </Col>

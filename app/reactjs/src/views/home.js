@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Masonry from "@mui/lab/Masonry";
 import ItemMasonry from "../components/itemMasonry/itemMasonry";
 import { StyledEngineProvider } from "@mui/material/styles";
@@ -461,7 +461,7 @@ export default function Home() {
             </div>
             <div className="d-flex">
               <SeeCounter countSee={14} />
-              <ProfileMenu setMsgNotifTop={setMsgNotifTop}/>
+              {auth.roles.includes(ROLES.ROLE_USER) && (<ProfileMenu setMsgNotifTop={setMsgNotifTop}/>)}
             </div>
           </HeaderMobile>
         )}

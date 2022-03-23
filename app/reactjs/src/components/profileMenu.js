@@ -17,6 +17,7 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
   const [open, setOpen] = useState(false);
   const [modalConfirm, setModalConfirm] = useState(false);
   const anchorRef = useRef(null);
+  const auth = useSelector((store) => store.auth);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -76,7 +77,7 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <i></i> Lys<span>#3094</span>
+        <i></i> {auth?.user?.username}
       </Button>
       <Popper
         open={open}

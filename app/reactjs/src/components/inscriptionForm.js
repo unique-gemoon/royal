@@ -10,7 +10,7 @@ import InputField from "./ui-elements/inputField";
 import ErrorFormMessage from "./errorFormMessage";
 import ButtonDef from "./ui-elements/buttonDef";
 import * as actionTypes from "../store/functions/actionTypes";
-import { clearErrors, validateEmail } from "../helper/form";
+import { clearValues, clearErrors, validateEmail } from "../helper/form";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { getMsgError } from "../helper/fonctions";
@@ -122,6 +122,7 @@ export default function InscriptionForm({}) {
                 token: response.data.token,
                 refreshToken: response.data.refreshToken,
               });
+              setState(clearValues(state));
             },
             catch: (error) => {
               msgErrors({ msg: getMsgError(error), submit: false });
