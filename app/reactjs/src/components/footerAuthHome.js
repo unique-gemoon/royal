@@ -9,7 +9,7 @@ import ConnexionForm from "./connexionForm";
 import InscriptionForm from "./inscriptionForm";
 import SeeCounter from "./ui-elements/seeCounter";
 
-export default function FooterAuthHome({ setMsgNotifTop = () => {} }) {
+export default function FooterAuthHome({ setMsgNotifTopTime = () => {} }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
   
   return (
@@ -26,7 +26,7 @@ export default function FooterAuthHome({ setMsgNotifTop = () => {} }) {
           <Col md={6}>
             <div className="d-flex justify-content-center">
               <InscriptionForm/>
-              <ConnexionForm setMsgNotifTop={setMsgNotifTop}/>
+              <ConnexionForm setMsgNotifTopTime={setMsgNotifTopTime}/>
             </div>
           </Col>
           {isDesktopOrLaptop && <Col md={3}></Col>}

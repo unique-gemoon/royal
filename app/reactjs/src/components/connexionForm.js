@@ -8,14 +8,14 @@ import { ModalDefault } from "../assets/styles/componentStyle";
 import { ModalPopIn } from "../assets/styles/globalStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
-import {  getMsgError } from "../helper/fonctions";
+import { getMsgError } from "../helper/fonctions";
 import { clearValues, clearErrors, validateEmail } from "../helper/form";
 import * as actionTypes from "../store/functions/actionTypes";
 import ErrorFormMessage from "./errorFormMessage";
 import ButtonDef from "./ui-elements/buttonDef";
 import InputField from "./ui-elements/inputField";
 
-export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
+export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
   const dispatch = useDispatch();
   const history = useHistory();
   const [open, setOpen] = useState(false);
@@ -114,8 +114,9 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
             data: { email, password },
             success: (response) => {
               msgErrors({ submit: false });
-              setMsgNotifTop(
-                "Bonjour, vous êtes désormais connecté à votre compte."
+              setMsgNotifTopTime(
+                "Bonjour, vous êtes désormais connecté à votre compte.",
+                5000
               );
               dispatch({
                 type: actionTypes.LOGIN_SUCCESS,
@@ -216,7 +217,7 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
             success: (response) => {
               msgErrors({ submit: false });
               setShowModal("messageRestPassword");
-              history.push('/');
+              history.push("/");
               setState(clearValues(state));
             },
             catch: (error) => {
