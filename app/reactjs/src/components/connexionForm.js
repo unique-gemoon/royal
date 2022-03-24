@@ -25,11 +25,11 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
   const [message, setMessage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [state, setState] = useState({
-    email: {
+    username: {
       label: "Nom d'utilisateur ou adresse e-mail",
-      name: "email",
+      name: "username",
       value: "",
-      type: "email",
+      type: "text",
       error: false,
       errorMessage: "",
       required: true,
@@ -77,23 +77,23 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
     if (!submitting) {
       setState(clearErrors(state));
       const cpState = { ...state };
-      let email = state.email.value;
+      let username = state.username.value;
       let password = state.password.value;
 
-      if (!email && !password) {
+      if (!username && !password) {
         msgErrors({
-          email: false,
+          username: false,
           password: false,
           msg: "Le nom d'utilisateur ou le mot de passe est incorrect",
           submit: false,
         });
       } else {
-        if (!validateEmail(email)) {
-          email = false;
-          cpState.email = {
-            ...cpState.email,
+        if (!username) {
+          username = false;
+          cpState.username = {
+            ...cpState.username,
             error: true,
-            errorMessage: "Votre email n'est pas correctement renseigné.",
+            errorMessage: "Votre nom d'utilisateur ou adresse e-mail n'est pas correctement renseigné.",
           };
         }
         if (String(password).length < 6) {
@@ -106,12 +106,12 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
           };
         }
 
-        if (email && password) {
+        if (username && password) {
           msgErrors({ submit: true });
           connector({
             method: "post",
             url: endPoints.LOGIN,
-            data: { email, password },
+            data: { username, password },
             success: (response) => {
               msgErrors({ submit: false });
               setMsgNotifTopTime(
@@ -144,7 +144,7 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
       const cpState = { ...state };
       let emailForgot = state.emailForgot.value;
 
-      if (!emailForgot || !validateEmail(emailForgot)) {
+      if (!emailForgot) {
         emailForgot = false;
         cpState.emailForgot = {
           ...cpState.emailForgot,
@@ -442,16 +442,16 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
 
                   <div className="content-form">
                     <InputField
-                      {...state.email}
-                      state={state.email}
+                      {...state.username}
+                      state={state.username}
                       setState={(e) => {
-                        setState({ ...state, email: e });
+                        setState({ ...state, username: e });
                       }}
                       onChange={(e) => {
                         const cpState = { ...state };
-                        cpState.email.value = e.target.value;
-                        cpState.email.error = false;
-                        cpState.email.errorMessage = null;
+                        cpState.username.value = e.target.value;
+                        cpState.username.error = false;
+                        cpState.username.errorMessage = null;
                         setState(cpState);
                         setMessage(null);
                       }}

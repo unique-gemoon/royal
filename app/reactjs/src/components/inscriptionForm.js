@@ -36,7 +36,7 @@ export default function InscriptionForm({}) {
     },
     email: {
       label: "Adresse e-mail",
-      name: "email",
+      name: "text",
       value: "",
       type: "email",
       error: false,

@@ -26,9 +26,11 @@ export default function InputEmoji({
     },
     opened,
   });
+
   useEffect(() => {
     setOpened(state.opened);
   }, [state]);
+
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
@@ -43,6 +45,7 @@ export default function InputEmoji({
       return false;
     }
   };
+
   return (
     <FormEmoji className={props.className}>
       <div className="content-form-emoji">
@@ -54,8 +57,8 @@ export default function InputEmoji({
             setState(cpState);
           }}
           onClick={() => {
-            if(!checkIsConnected()){
-               ///
+            if (!checkIsConnected()) {
+              props.setState({ ...props.state, showModal: false });
             }
           }}
         />

@@ -70,10 +70,10 @@ export function checkEmailExiste(req, res, next) {
 }
 
 export function checkDataSignin(req, res, next) {
-  if (!validateEmail(req.body.email)) {
+  if (!req.body.username) {
     res
       .status(401)
-      .send({ message: "Votre email n'est pas correctement renseigné." });
+      .send({ message: "Votre nom d'utilisateur ou adresse e-mail n'est pas correctement renseigné." });
     return;
   } else if (String(req.body.password).length < 6) {
     res.status(401).send({

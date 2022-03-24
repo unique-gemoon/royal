@@ -176,7 +176,7 @@ export default function Messagerie() {
                     <div className='bloc-view-message'>
 
                         <div className='content-view-messagerie'></div>
-                        <InputEmoji typeInput='textarea' />
+                        <InputEmoji typeInput='textarea' state={{}} setState={()=>{}}/>
                     </div>
                 </div>) : null}
             {state.showSearchFolower ? (
