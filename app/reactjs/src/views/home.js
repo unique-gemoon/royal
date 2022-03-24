@@ -1,27 +1,29 @@
-import React, { useState } from "react";
-import { useSelector } from "react-redux";
+import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
+import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
+import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Masonry from "@mui/lab/Masonry";
-import ItemMasonry from "../components/itemMasonry/itemMasonry";
 import { StyledEngineProvider } from "@mui/material/styles";
+import React, { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useMediaQuery } from "react-responsive";
+import { useLocation } from 'react-router-dom';
+import imgPli from "../assets/images/image-pli-1.png";
+import logoType from "../assets/images/Logotype.png";
+import videoPli from "../assets/images/video.mp4";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile,
+  HeaderMobile
 } from "../assets/styles/globalStyle";
-import imgPli from "../assets/images/image-pli-1.png";
-import videoPli from "../assets/images/video.mp4";
-import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
-import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
-import SeeCounter from "../components/ui-elements/seeCounter";
-import ProfileMenu from "../components/profileMenu";
-import { useMediaQuery } from "react-responsive";
-import logoType from "../assets/images/Logotype.png";
-import MessageNotif from "../components/messageNotif";
-import { ROLES } from "../config/vars";
-import FooterHome from "../components/footerHome";
 import FooterAuthHome from "../components/footerAuthHome";
+import FooterHome from "../components/footerHome";
+import ItemMasonry from "../components/itemMasonry/itemMasonry";
+import MessageNotif from "../components/messageNotif";
+import ProfileMenu from "../components/profileMenu";
+import SeeCounter from "../components/ui-elements/seeCounter";
+import { ROLES } from "../config/vars";
+import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -420,6 +422,7 @@ export default function Home() {
 
   const [msgNotifTop, setMsgNotifTop] = useState(null);
 
+  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
   const setItem = (item) => {
@@ -457,6 +460,27 @@ export default function Home() {
       setMsgNotifTop(false);
     }, time);
   };
+
+  const query = new URLSearchParams(useLocation().search);
+  const tokenRestPassword = query.get("tokenRestPassword") || null;
+
+  const checkIsConnected = () => {
+    if (auth.roles.includes(ROLES.ROLE_USER)) {
+      return true;
+    } else {
+      dispatch({
+        type: actionTypes.TO_LOGIN,
+        toLogin: true,
+      });
+      return false;
+    }
+  };
+
+  useEffect(() => {
+    if (tokenRestPassword) {
+      checkIsConnected();
+    }
+  }, [tokenRestPassword]);
 
   return (
     <DefaultMain>

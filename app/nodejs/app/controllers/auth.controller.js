@@ -28,7 +28,7 @@ function generateTokens(user) {
 export function signin(req, res) {
   User.findOne({
     where: {
-      [Op.or]: [{ email: req.body.email }, { username: req.body.email }],
+      [Op.or]: [{ email: req.body.username }, { username: req.body.username }],
     },
   })
     .then((user) => {
