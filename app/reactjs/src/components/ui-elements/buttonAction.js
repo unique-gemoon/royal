@@ -1,52 +1,79 @@
-import { Button } from '@mui/material';
-import React, { useRef, useState } from 'react';
-import { BlocActionButton , ButtonIcon} from "../../assets/styles/componentStyle";
-import { motion, useCycle } from "framer-motion";
+import { motion } from "framer-motion";
+import React, { useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  BlocActionButton,
+  ButtonIcon,
+} from "../../assets/styles/componentStyle";
+import { ROLES } from "../../config/vars";
+import * as actionTypes from "../../store/functions/actionTypes";
 
-export default function ButtonAction({ children, className = '', icon = null, setCount = null, action, setAction = () => { }}) {
+export default function ButtonAction({
+  children,
+  className = "",
+  icon = null,
+  setCount = null,
+  action,
+  setAction = () => {},
+}) {
+  const dispatch = useDispatch();
+  const auth = useSelector((store) => store.auth);
+  const [countNotif, setCountNotif] = useState(setCount);
+  const containerRef = useRef(null);
+  const sidebar = {
+    open: {
+      transition: {
+        opacity: 1,
+        duration: 0.15,
+      },
+    },
+    closed: {
+      transition: {
+        opacity: 0,
+        duration: 0.15,
+      },
+    },
+  };
 
-    const [toggleAction, setToggleAction] = useState(false);
-    const [countNotif, setCountNotif] = useState(setCount);
-    const containerRef = useRef(null);
-    const sidebar = {
-        open:{
-            transition: {
-                opacity: 1,
-                duration: 0.15
-            }
-        },
-        closed: {
-            transition: {
-                opacity: 0,
-                duration: 0.15
-            }
-        }
-    };
-    return (
-        <BlocActionButton className={className}>
-            <ButtonIcon className={`btn-white ${action.isOpen ? 'isopen' : ''}`} 
-                onClick={() => { 
-                    setAction({...action, isOpen:!action.isOpen}); 
-                    console.log(action)
-                    setTimeout(() => {
-                        setCountNotif("")
-                    }, 1000);  
-                }} >
-                {icon}
-                 {countNotif ? <span className='count-notif'>{countNotif}</span> : null} 
-            </ButtonIcon>
-            {action.isOpen ? 
-                <motion.div 
-                    initial={false}
-                    variants={sidebar}
-                    animate={action.isOpen ? "open" : "closed"}
-                    ref={containerRef}
-                className="content-button-action">
-                    {children}
-                </motion.div>
-            : null}
-            
-        </BlocActionButton>
-        
-    )
+  const checkIsConnected = () => {
+    if (auth.roles.includes(ROLES.ROLE_USER)) {
+      return true;
+    } else {
+      dispatch({
+        type: actionTypes.TO_LOGIN,
+        toLogin: true,
+      });
+      return false;
+    }
+  };
+
+  return (
+    <BlocActionButton className={className}>
+      <ButtonIcon
+        className={`btn-white ${action.isOpen ? "isopen" : ""}`}
+        onClick={() => {
+          if (checkIsConnected()) {
+            setAction({ ...action, isOpen: !action.isOpen });
+            setTimeout(() => {
+              setCountNotif("");
+            }, 1000);
+          }
+        }}
+      >
+        {icon}
+        {countNotif ? <span className="count-notif">{countNotif}</span> : null}
+      </ButtonIcon>
+      {action.isOpen ? (
+        <motion.div
+          initial={false}
+          variants={sidebar}
+          animate={action.isOpen ? "open" : "closed"}
+          ref={containerRef}
+          className="content-button-action"
+        >
+          {children}
+        </motion.div>
+      ) : null}
+    </BlocActionButton>
+  );
 }

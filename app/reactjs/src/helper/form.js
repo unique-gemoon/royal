@@ -18,6 +18,16 @@ export const clearErrors = (state) => {
   return cpState;
 };
 
+export const clearValues = (state) => {
+  const cpState = { ...state };
+  for (const key in cpState) {
+    if (cpState[key].value !== undefined) {
+      cpState[key].value = "";
+    }
+  }
+  return cpState;
+};
+
 export const validFormItem = (formItem) => {
   if (!formItem.required && (!formItem.value || formItem.value.length === 0))
     return false;

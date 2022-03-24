@@ -1,21 +1,23 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
-import { Backdrop, Button, Fade } from "@mui/material";
-import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { ModalPopIn } from "../assets/styles/globalStyle";
+import KeyboardBackspaceIcon from "@mui/icons-material/KeyboardBackspace";
+import { Backdrop, Button, Fade } from "@mui/material";
+import React, { useState, useEffect } from "react";
+import { useDispatch } from "react-redux";
+import { useLocation, useHistory } from "react-router-dom";
 import { ModalDefault } from "../assets/styles/componentStyle";
-import InputField from "./ui-elements/inputField";
-import ErrorFormMessage from "./errorFormMessage";
-import * as actionTypes from "../store/functions/actionTypes";
-import ButtonDef from "./ui-elements/buttonDef";
-import { clearErrors, validateEmail } from "../helper/form";
+import { ModalPopIn } from "../assets/styles/globalStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { getMsgError } from "../helper/fonctions";
+import { clearValues, clearErrors, validateEmail } from "../helper/form";
+import * as actionTypes from "../store/functions/actionTypes";
+import ErrorFormMessage from "./errorFormMessage";
+import ButtonDef from "./ui-elements/buttonDef";
+import InputField from "./ui-elements/inputField";
 
-export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
+export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
   const dispatch = useDispatch();
+  const history = useHistory();
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
@@ -41,6 +43,15 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
       errorMessage: "",
       required: true,
     },
+    passwordConfirmation: {
+      label: "Confirmation mot de passe",
+      name: "passwordConfirmation",
+      value: "",
+      type: "password",
+      error: false,
+      errorMessage: "",
+      required: true,
+    },
     emailForgot: {
       label: "Adresse email",
       name: "emailForgot",
@@ -51,6 +62,15 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
       required: true,
     },
   });
+  const query = new URLSearchParams(useLocation().search);
+  const tokenRestPassword = query.get("tokenRestPassword") || null;
+
+  useEffect(() => {
+    if (tokenRestPassword) {
+      setShowModal("restPassword");
+      handleOpen();
+    }
+  }, [tokenRestPassword]);
 
   const submitLogin = (e) => {
     e.preventDefault();
@@ -94,8 +114,9 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
             data: { email, password },
             success: (response) => {
               msgErrors({ submit: false });
-              setMsgNotifTop(
-                "Bonjour, vous êtes désormais connecté à votre compte."
+              setMsgNotifTopTime(
+                "Bonjour, vous êtes désormais connecté à votre compte.",
+                5000
               );
               dispatch({
                 type: actionTypes.LOGIN_SUCCESS,
@@ -103,6 +124,7 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
                 refreshToken: response.data.refreshToken,
               });
               handleClose();
+              setState(clearValues(state));
             },
             catch: (error) => {
               msgErrors({ msg: getMsgError(error), submit: false });
@@ -140,6 +162,7 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
           success: (response) => {
             msgErrors({ submit: false });
             setShowModal("messageForgotPassword");
+            setState(clearValues(state));
           },
           catch: (error) => {
             msgErrors({ msg: getMsgError(error), submit: false });
@@ -147,6 +170,63 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
         });
       } else {
         setState({ ...cpState });
+      }
+    }
+  };
+
+  const submitRestPassword = (e) => {
+    e.preventDefault();
+    if (!submitting) {
+      setState(clearErrors(state));
+      const cpState = { ...state };
+      let password = state.password.value;
+      let passwordConfirmation = state.passwordConfirmation.value;
+
+      if (!password && !passwordConfirmation) {
+        msgErrors({
+          email: false,
+          password: false,
+          msg: "Pour réinitialiser votre mot de passe, veuillez renseigner un mot de passe.",
+          submit: false,
+        });
+      } else {
+        if (String(password).length < 6) {
+          password = false;
+          cpState.password = {
+            ...cpState.password,
+            error: true,
+            errorMessage:
+              "Votre mot de passe doit contenir au moins 6 caractères.",
+          };
+        }
+        if (password != passwordConfirmation) {
+          passwordConfirmation = false;
+          cpState.passwordConfirmation = {
+            ...cpState.passwordConfirmation,
+            error: true,
+            errorMessage: "Les deux mots de passe ne sont pas identiques.",
+          };
+        }
+
+        if (password && passwordConfirmation) {
+          msgErrors({ submit: true });
+          connector({
+            method: "post",
+            url: endPoints.REST_PASSWORD,
+            data: { password, token: tokenRestPassword },
+            success: (response) => {
+              msgErrors({ submit: false });
+              setShowModal("messageRestPassword");
+              history.push("/");
+              setState(clearValues(state));
+            },
+            catch: (error) => {
+              msgErrors({ msg: getMsgError(error), submit: false });
+            },
+          });
+        } else {
+          setState({ ...cpState });
+        }
       }
     }
   };
@@ -181,7 +261,12 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
             {showModal === "forgotPassword" && (
               <div className="connection-content">
                 <div className="header-modal">
-                  <KeyboardBackspaceIcon onClick={() => setShowModal(null)} />
+                  <KeyboardBackspaceIcon
+                    onClick={() => {
+                      setShowModal(null);
+                      setMessage(null);
+                    }}
+                  />
                   <h2 className="titre-modal">Mot de passe oublié ?</h2>
                 </div>
                 <form
@@ -238,19 +323,113 @@ export default function ConnexionForm({ setMsgNotifTop = () => {} }) {
                 <ButtonDef
                   onClick={() => {
                     handleClose();
+                    setMessage(null);
                     setTimeout(() => {
                       setShowModal(null);
                     }, 100);
                   }}
                   textButton={"Ok"}
-               />
+                />
+              </div>
+            )}
+
+            {showModal === "restPassword" && (
+              <div className="connection-content">
+                <div className="header-modal">
+                  <KeyboardBackspaceIcon
+                    onClick={() => {
+                      handleClose();
+                      setMessage(null);
+                      setTimeout(() => {
+                        setShowModal(null);
+                      }, 100);
+                    }}
+                  />
+                  <h2 className="titre-modal">
+                    Réinitialisation du mot de passe
+                  </h2>
+                </div>
+                <form className="form-connexion" onSubmit={submitRestPassword}>
+                  {message ? (
+                    <ErrorFormMessage
+                      text={message}
+                      onClick={() => setMessage(null)}
+                    />
+                  ) : null}
+
+                  <div className="content-form">
+                    <InputField
+                      className="password-input"
+                      {...state.password}
+                      state={state.password}
+                      setState={(e) => {
+                        setState({ ...state, password: e });
+                      }}
+                      onChange={(e) => {
+                        const cpState = { ...state };
+                        cpState.password.value = e.target.value;
+                        cpState.password.errorMessage = null;
+                        setState(cpState);
+                        setMessage(null);
+                      }}
+                    />
+                    <InputField
+                      className="password-input"
+                      {...state.passwordConfirmation}
+                      state={state.passwordConfirmation}
+                      setState={(e) => {
+                        setState({ ...state, passwordConfirmation: e });
+                      }}
+                      onChange={(e) => {
+                        const cpState = { ...state };
+                        cpState.passwordConfirmation.value = e.target.value;
+                        cpState.passwordConfirmation.errorMessage = null;
+                        setState(cpState);
+                        setMessage(null);
+                      }}
+                    />
+                  </div>
+                  <div className="bloc-btn-modal">
+                    <ButtonDef
+                      spinner={submitting}
+                      textButton={"Soumettre"}
+                      className="btn-form-def"
+                    />
+                  </div>
+                </form>
+              </div>
+            )}
+
+            {showModal === "messageRestPassword" && (
+              <div className="message-modal-content">
+                <CheckCircleOutlineIcon />
+                <p className="titre-message-modal">
+                  Réinitialisation du mot de passe
+                </p>
+                <div className="text-message-modal">
+                  <p>Votre mot de passe a été réinitialisé.</p>
+                </div>
+                <ButtonDef
+                  onClick={() => {
+                    handleClose();
+                    setTimeout(() => {
+                      setShowModal(null);
+                    }, 100);
+                  }}
+                  textButton={"Ok"}
+                />
               </div>
             )}
 
             {!showModal && (
               <div className="connection-content">
                 <div className="header-modal">
-                  <KeyboardBackspaceIcon onClick={() => handleClose()} />
+                  <KeyboardBackspaceIcon
+                    onClick={() => {
+                      handleClose();
+                      setMessage(null);
+                    }}
+                  />
                   <h2 className="titre-modal">Connexion</h2>
                 </div>
                 <form className="form-connexion" onSubmit={submitLogin}>

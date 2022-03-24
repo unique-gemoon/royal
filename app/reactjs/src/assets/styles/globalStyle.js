@@ -359,6 +359,7 @@ export const ModalPopIn = styled(Modal) `
         min-height: 200px;
         border-radius: 12.81px;
         background: linear-gradient(#2d7fc3 0%, #579be9 100%);  
+        outline: none !important;
         @media(max-width: 767px){
             padding: 24px 15px;
         }

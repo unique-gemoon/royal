@@ -90,26 +90,27 @@ export function signup(req, res) {
 }
 
 export function forgotPassword(req, res) {
+  const token = crypto.randomBytes(20).toString("hex");
   User.update(
     {
-      passwordResetToken: crypto.randomBytes(20).toString("hex"),
+      passwordResetToken: token,
       passwordResetTokenAt: new Date(),
     },
     { where: { email: req.body.email } }
   )
     .then((d) => {
-      const username = "ayoub";
-      const url = "http://localhost.com";
-
       const response = sendEmail({
         from: "",
         to: req.body.email,
         subject: "Mot de passe oublié",
         tmp: "emails/forgot_password.ejs",
-        params: { user: { username }, url },
+        params: {
+          user: res.user,
+          url: process.env.CLIENT_ORIGIN + "?tokenRestPassword=" + token,
+        },
       });
 
-      res.status(200).json({ message: "ok", email : response });
+      res.status(200).json({ message: "ok", email: response });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

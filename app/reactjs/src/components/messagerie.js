@@ -15,7 +15,7 @@ import Input from './ui-elements/input';
 import ItemListFolower from './itemListFolower';
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 
-export default function Messagerie({ dataAbonnement }) {
+export default function Messagerie() {
     const [state, setState] = useState({
         showSearchFolower: false,
         activeItem: false,
@@ -106,7 +106,7 @@ export default function Messagerie({ dataAbonnement }) {
             statut: 0
         },
     ]);
-    console.log(state.showSearchFolower)
+    
     return (
         <BlocMessagerie>
             {!state.activeItem && !state.showSearchFolower ? (

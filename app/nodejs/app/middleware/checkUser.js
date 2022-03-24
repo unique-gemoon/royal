@@ -42,7 +42,7 @@ export function checkTokenExiste(req, res, next) {
   }).then((user) => {
     if (!user) {
       res.status(400).send({
-        message: "Token invalide.",
+        message: "Token invalide ou expiré.",
       });
       return;
     }
@@ -64,6 +64,7 @@ export function checkEmailExiste(req, res, next) {
       });
       return;
     }
+    res.user = user;
     next();
   });
 }

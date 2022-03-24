@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
 import Masonry from "@mui/lab/Masonry";
 import ItemMasonry from "../components/itemMasonry/itemMasonry";
 import { StyledEngineProvider } from "@mui/material/styles";
@@ -451,6 +451,13 @@ export default function Home() {
     },
   });
 
+  const setMsgNotifTopTime = (msg, time) => {
+    setMsgNotifTop(msg);
+    setTimeout(() => {
+      setMsgNotifTop(false);
+    }, time);
+  };
+
   return (
     <DefaultMain>
       <StyledEngineProvider injectFirst>
@@ -461,7 +468,9 @@ export default function Home() {
             </div>
             <div className="d-flex">
               <SeeCounter countSee={14} />
-              <ProfileMenu setMsgNotifTop={setMsgNotifTop}/>
+              {auth.roles.includes(ROLES.ROLE_USER) && (
+                <ProfileMenu setMsgNotifTop={setMsgNotifTop} />
+              )}
             </div>
           </HeaderMobile>
         )}
@@ -489,15 +498,15 @@ export default function Home() {
           </Masonry>
         </ContainerDef>
 
-        {auth.roles.includes(ROLES.ROLE_USER) ? (
+        {!auth.roles.includes(ROLES.ROLE_USER) && auth.toLogin ? (
+          <FooterAuthHome setMsgNotifTopTime={setMsgNotifTopTime} />
+        ) : (
           <FooterHome
             action={action}
             setAction={setAction}
             dataNotifs={dataNotifs}
             setMsgNotifTop={setMsgNotifTop}
           />
-        ) : (
-          <FooterAuthHome setMsgNotifTop={setMsgNotifTop} />
         )}
       </StyledEngineProvider>
     </DefaultMain>
