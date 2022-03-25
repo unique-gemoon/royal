@@ -481,6 +481,8 @@ export default function Home() {
       checkIsConnected();
     }
   }, [tokenRestPassword]);
+  const [activeItem, setActiveItem] = useState(null);
+
 
   return (
     <DefaultMain>
@@ -513,9 +515,10 @@ export default function Home() {
                 <ItemMasonry
                   item={item}
                   setItem={setItem}
-                  open={false}
                   action={action}
                   setAction={setAction}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
                 />
               </div>
             ))}
