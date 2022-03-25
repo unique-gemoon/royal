@@ -1,10 +1,15 @@
 import { Router } from "express";
-import authMiddleware from "../middleware/isAuthenticated.js";
+import passport from "passport";
+import { newPli } from "../controllers/pli.controller.js";
+import { checkDataPli } from "../middleware/checkPli.js";
 
 const apiRoutes = Router();
 
-apiRoutes.get("/secrets", authMiddleware, (req, res) => {
-  res.json("Talk is cheap. Show me the code. -Linus Torvalds");
-});
+apiRoutes.post(
+  "/pli/new",
+  passport.authenticate("jwt", { session: false }),
+  checkDataPli,
+  newPli
+);
 
 export default apiRoutes;

@@ -8,6 +8,7 @@ export default function ButtonDef({
   spinner = false,
   disabled = false,
   type = "", 
+  icon = "",
   ...props
 }) {
   return (
@@ -17,7 +18,7 @@ export default function ButtonDef({
       onClick={onClick}
       type={type}
     >
-      {spinner ? (
+      {spinner && (
         <Spinner
           as="span"
           animation="grow"
@@ -25,7 +26,8 @@ export default function ButtonDef({
           role="status"
           aria-hidden="true"
         />
-      ) : null}
+      ) }
+      {!spinner && icon}
       {textButton}
     </ButtonDefault>
   );

@@ -6,5 +6,6 @@ const endPoints = {
   REST_PASSWORD: "/auth/rest-password",
   PROFILE: "/auth/profile",
   DELETE_ACCOUNT : "/auth/delete-account",
+  PLI : "/pli",
 };
 export default endPoints;
