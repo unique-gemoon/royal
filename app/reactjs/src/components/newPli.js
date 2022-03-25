@@ -18,6 +18,10 @@ import ErrorFormMessage from "./errorFormMessage";
 import NewOvertureOptions from "./newOvertureOptions";
 import NewPilOptions from "./newPilOptions";
 import CountDown from "./ui-elements/countDown";
+import ButtonDef from "./ui-elements/buttonDef";
+import { getMsgError } from "../helper/fonctions";
+import connector from '../connector';
+import endPoints from '../config/endPoints';
 
 export default function NewPli({
   action,
@@ -32,6 +36,7 @@ export default function NewPli({
       value: "",
       type: "text",
       as: "textarea",
+      error: false,
     },
     openSoundage: false,
     soundageOptions: [
@@ -59,6 +64,7 @@ export default function NewPli({
 
   const [addOverture, setAddOverture] = useState(false);
   const [message, setMessage] = useState(true);
+  const [submitting, setSubmitting] = useState(false);
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
@@ -74,97 +80,140 @@ export default function NewPli({
     }
   };
 
+  const submitPli = (e) => {
+    e.preventDefault();
+    if (!submitting) {
+      console.log(stateTextarea.inputEmoji.value);
+      var content = stateTextarea.inputEmoji.value;
+
+      const ouverture = {content: "test", sondage:["option1","option2"], audio: ["test.mp3"], video: ["test.mp4"], image : ["test.png"] };
+      const data = {content: "test ouverture", sondage:["option1","option2"], audio: ["test.mp3"], video: ["test.mp4"], ouverture, duration : "00:01:00" };
+
+      connector({
+        method: "post",
+        url: `${endPoints.PLI}/new`,
+        data,
+        success: (response) => {
+          msgErrors({ submit: false });
+
+        },
+        catch: (error) => {
+          msgErrors({ msg: getMsgError(error), submit: false });
+        },
+      });
+
+      msgErrors({ submit: true });
+      //Veuillez ajouter du contenu à votre pli.
+    }
+  };
+
+  const msgErrors = (e) => {
+    if (e.msg !== undefined) setMessage(e.msg);
+    const cpState = { ...stateTextarea };
+    if (e.inputEmoji !== undefined) cpState.inputEmoji.error = e.inputEmoji;
+    if (e.submit !== undefined) setSubmitting(e.submit);
+    setStateTextarea(cpState);
+  };
+
   return (
     <BlocAddPli>
-      {togglePli ? (
+      {togglePli && (
         <div className="bloc-new-pli">
           <div className="cadre-content-new-pli">
-            <div className="content-new-pli" ref={divRef}>
-              {message ? (
-                <ErrorFormMessage
-                  text="Veuillez ajouter du contenu à votre pli."
-                  onClick={() => setMessage(null)}
-                />
-              ) : null}
-              <div className="new-pli-nv1">
-                <div className="cadre-content-pli">
-                  <TextareaAutosize
-                    {...stateTextarea.inputEmoji}
-                    onChange={(e) => {
-                      const cpState = { ...stateTextarea };
-                      if (e.target.value.length <= 280) {
-                        cpState.inputEmoji.value = e.target.value;
-                        setStateTextarea(cpState);
-                      }
-                    }}
+            <form className="form-new-pli" onSubmit={submitPli}>
+              <div className="content-new-pli" ref={divRef}>
+                {message && (
+                  <ErrorFormMessage
+                    text={message}
+                    onClick={() => setMessage(null)}
                   />
-                  {stateTextarea.openSoundage ? (
-                    <AddSoundage
-                      state={stateTextarea.soundageOptions}
-                      showSoundage={stateTextarea.openSoundage}
-                      setShowSoundage={(e) =>
-                        setStateTextarea({ ...stateTextarea, openSoundage: e })
-                      }
-                      setState={(e) =>
-                        setStateTextarea({
-                          ...stateTextarea,
-                          soundageOptions: e,
-                        })
-                      }
+                )}
+                <div className="new-pli-nv1">
+                  <div className="cadre-content-pli">
+                    <TextareaAutosize
+                      {...stateTextarea.inputEmoji}
+                      onChange={(e) => {
+                        const cpState = { ...stateTextarea };
+                        if (e.target.value.length <= 280) {
+                          cpState.inputEmoji.value = e.target.value;
+                          setStateTextarea(cpState);
+                        }
+                      }}
                     />
-                  ) : null}
-                  <div className="bloc-footer">
-                    <NewPilOptions
-                      state={stateTextarea}
-                      setState={setStateTextarea}
-                    />
-                    <div className="count-publish-pli1">
-                      <CountDown
-                        maxCount={280}
-                        setState={
-                          (stateTextarea.inputEmoji.value
-                            ? stateTextarea.inputEmoji.value
-                            : ""
-                          ).length
+                    {stateTextarea.openSoundage && (
+                      <AddSoundage
+                        state={stateTextarea.soundageOptions}
+                        showSoundage={stateTextarea.openSoundage}
+                        setShowSoundage={(e) =>
+                          {setStateTextarea({
+                            ...stateTextarea,
+                            openSoundage: e,
+                          });}
+                        }
+                        setState={(e) =>
+                          {setStateTextarea({
+                            ...stateTextarea,
+                            soundageOptions: e,
+                          });}
                         }
                       />
-                      {!addOverture ? (
-                        <div className="bloc-btn-publish">
-                          <Button className="btn-publish">
-                            Publier <SendRoundedIcon />
-                          </Button>
-                        </div>
-                      ) : null}
+                    )}
+                    <div className="bloc-footer">
+                      <NewPilOptions
+                        state={stateTextarea}
+                        setState={setStateTextarea}
+                      />
+                      <div className="count-publish-pli1">
+                        <CountDown
+                          maxCount={280}
+                          setState={
+                            (stateTextarea.inputEmoji.value
+                              ? stateTextarea.inputEmoji.value
+                              : ""
+                            ).length
+                          }
+                        />
+                        {!addOverture && (
+                          <div className="bloc-btn-publish">
+                            <ButtonDef
+                              spinner={submitting}
+                              textButton={"Publier"}
+                              className="btn-publish"
+                              icon={<SendRoundedIcon />}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <BarTemporelle />
                 </div>
-                <BarTemporelle />
-              </div>
-              {addOverture ? (
-                <div className="new-pli-nv2">
-                  <div className="cadre-content-pli">
-                    <NewOvertureOptions />
+                {addOverture && (
+                  <div className="new-pli-nv2">
+                    <div className="cadre-content-pli">
+                      <NewOvertureOptions submitting={submitting} />
+                    </div>
                   </div>
-                </div>
-              ) : null}
-              <div
-                className="toggle-open-ouverture"
-                onClick={() => setAddOverture(!addOverture)}
-              >
-                {!addOverture ? (
-                  <>
-                    Ajouter une ouverture <AddIcon />
-                  </>
-                ) : (
-                  <>
-                    Supprimer l’ouverture <RemoveIcon />
-                  </>
                 )}
+                <div
+                  className="toggle-open-ouverture"
+                  onClick={() => setAddOverture(!addOverture)}
+                >
+                  {!addOverture ? (
+                    <>
+                      Ajouter une ouverture <AddIcon />
+                    </>
+                  ) : (
+                    <>
+                      Supprimer l'ouverture <RemoveIcon />
+                    </>
+                  )}
+                </div>
               </div>
-            </div>
+            </form>
           </div>
         </div>
-      ) : null}
+      )}
 
       <div
         onClick={() => {
