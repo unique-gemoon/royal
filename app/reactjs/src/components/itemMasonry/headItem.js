@@ -193,21 +193,25 @@ export default function HeadItem({
         <div
           className="nb-message-comment"
           onClick={() => {
-            // setState({ ...state, showModal: !state.showModal });
-            // const cpAction = {
-            //     ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
-            //     , messagerie: { ...action.messagerie, isOpen: false }
-            // };
-            // setAction(cpAction);
-            setState({ ...state, showPli2: !state.showPli2 });
-            const cpAction = {
-              ...action,
-              notification: { ...action.notification, isOpen: false },
-              folower: { ...action.folower, isOpen: false },
-              search: { ...action.search, isOpen: false },
-              messagerie: { ...action.messagerie, isOpen: false },
-            };
-            setAction(cpAction);
+            if(state.showModal){
+              setState({ ...state, showPli2: true, showModal: false });
+            } else {
+              // setState({ ...state, showModal: !state.showModal });
+              // const cpAction = {
+              //     ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
+              //     , messagerie: { ...action.messagerie, isOpen: false }
+              // };
+              // setAction(cpAction);
+              setState({ ...state, showPli2: !state.showPli2 });
+              const cpAction = {
+                ...action,
+                notification: { ...action.notification, isOpen: false },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: false },
+                messagerie: { ...action.messagerie, isOpen: false },
+              };
+              setAction(cpAction);
+            }
           }}
         >
           3 <CommentOutlinedIcon /> <ArrowDownIcon />

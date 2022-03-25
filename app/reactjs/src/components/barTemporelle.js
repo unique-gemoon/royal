@@ -42,7 +42,14 @@ export default function BarTemporelle({ state, setState = () => { }, ...props })
         >
           <RemoveIcon />
         </Button>
-        <div className="content-timer-bar">
+        <div className="content-timer-bar" onClick={() => { 
+            if (state.showModal) {
+              setState({ ...state, showPli2: true })
+            }else{
+              setState({ ...state, showPli2: !state.showPli2 })
+            }
+            
+          }}>
           <span className="timer-down">320</span>
           <div className="timer-item">
             <TimerOutlinedIcon /> 04 : 12 : 06
