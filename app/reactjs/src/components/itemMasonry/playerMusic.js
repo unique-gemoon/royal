@@ -5,7 +5,7 @@ import { Button } from "@mui/material";
 import WaveSurfer from "wavesurfer.js";
 import { MusicPlayer } from "../../assets/styles/componentStyle";
 
-export default function PlayerMusic({ item, isClick = false }) {
+export default function PlayerMusic({ item, isClick = false, activeItemMusic, setActiveItemMusic = () => { } }) {
     const formWaveSurferOptions = ref => ({
         container: ref,
         waveColor: "#A0A0A0",
@@ -13,7 +13,6 @@ export default function PlayerMusic({ item, isClick = false }) {
         cursorColor: "OrangeRed",
         barWidth: 1,
         barRadius: 1,
-        responsive: true,
         height: 50,
         width: 60,
         // If true, normalize by the maximum peak instead of 1.0.
@@ -50,6 +49,10 @@ export default function PlayerMusic({ item, isClick = false }) {
                 setVolumeMusic(volumeMusic);
             }
         });
+        wavesurfer.current.on("play", function () {
+            //console.log('music read');
+            setActiveItemMusic(item);
+        });
 
         // Removes events, elements and disconnects Web Audio nodes.
         // when component unmount
@@ -60,13 +63,32 @@ export default function PlayerMusic({ item, isClick = false }) {
         if (!isClick) {
             setTimeout(() => {
                 setRefresh(true);
-            }, 1000);
+            }, 1200);
         }
     }, []);
 
+    useEffect(() => {
+
+        
+        if (wavesurfer && activeItemMusic && activeItemMusic.id !== item.id) {
+            wavesurfer.current.stop()
+            setPlayingMusic(false);
+        }
+    }, [activeItemMusic])
+
     const handlePlayPause = () => {
-        setPlayingMusic(!playingMusic);
-        wavesurfer.current.playPause();
+
+
+        if (wavesurfer && playingMusic){
+
+        setPlayingMusic(false);
+
+            wavesurfer.current.pause();
+        }else{
+            setPlayingMusic(true);
+
+            wavesurfer.current.play();
+        }
     };
 
 

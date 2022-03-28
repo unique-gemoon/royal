@@ -1,30 +1,63 @@
-// import React from 'react';
-// import { Player, ControlBar, VolumeMenuButton } from 'video-react';
-// import { VideoPlayer } from '../../assets/styles/componentStyle';
 
-// export default function PlayerVideo({ item }) {
-
-//     return (
-//         <VideoPlayer>
-//             <Player
-//                 playsInline
-//                 src={item}>
-//                     <ControlBar autoHide={true}>
-//                         <VolumeMenuButton vertical />
-//                     </ControlBar>
-//                 </Player>
-//         </VideoPlayer>
-//     );
-// }
-import React, { useRef } from 'react';
-import VideoPlayer from 'react-video-js-player';
+import React, { useEffect } from 'react';
 import { BlocVideoPlayer } from '../../assets/styles/componentStyle';
+import VideoJs from '../videoJs';
 
-export default function PlayerVideo({ item }) {
-    
+export default function PlayerVideo({ item, activeItemPlayer, setActiveItemPlayer = () => { }, }) {
+    const playerRef = React.useRef(null);
+
+    const videoJsOptions = { // lookup the options in the docs for more options
+        autoplay: false,
+        controls: true,
+        responsive: true,
+        fluid: true,
+        sources: [{
+            src: item.src,
+            type: 'video/mp4'
+        }]
+    }
+
+
+    const handlePlayerReady = (player) => {
+        playerRef.current = player;
+
+        // you can handle player events here
+        player.on('waiting', () => {
+            setActiveItemPlayer(item);
+        });
+
+        player.on('dispose', () => {
+            setActiveItemPlayer(item);
+        });
+        
+        player.on('play', () => {
+            console.log('played');
+            setActiveItemPlayer(item);
+        })
+    };
+    useEffect(() => {
+
+        if (activeItemPlayer && activeItemPlayer.src && activeItemPlayer.id != item.id) {
+            console.log(playerRef.current)
+            if (playerRef.current != null) {
+                playerRef.current.pause()
+            }
+        }
+    }, [activeItemPlayer])
+
+    // const changePlayerOptions = () => {
+    //   // you can update the player through the Video.js player instance
+    //   if (!playerRef.current) {
+    //     return;
+    //   }
+    //   // [update player through instance's api]
+    //   playerRef.current.src([{src: 'http://ex.com/video.mp4', type: 'video/mp4'}]);
+    //   playerRef.current.autoplay(false);
+    // };
+
     return (
         <BlocVideoPlayer>
-            <VideoPlayer src={item}  height="221" />
+            <VideoJs options={videoJsOptions} onReady={handlePlayerReady} />
         </BlocVideoPlayer>
     );
 }

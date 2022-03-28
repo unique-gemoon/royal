@@ -1846,12 +1846,6 @@ export const BlocVideoPlayer = styled.div`
     border-radius: 10px;
     overflow: hidden;
     margin-bottom: 15px;
-    & > .video-js{
-        width: 100%;
-        position: relative;
-        padding-bottom: 55%;
-        height: auto;
-    }
     .vjs-big-play-button{
         border: 0;
         background: transparent !important;
