@@ -38,7 +38,7 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         music: {
-          id: 1,
+          id: 12,
           name: "Plants",
           genre: "Crumb",
           lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
@@ -48,7 +48,7 @@ export default function Home() {
         description:
           "Voici mon nouveau son du moment, qu'est ce que vous en pensez ?",
         music: {
-          id: 1,
+          id: 22,
           name: "Plants",
           genre: "Crumb",
           lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
@@ -59,7 +59,10 @@ export default function Home() {
             source: imgPli,
           },
         ],
-        video: videoPli,
+        video:{
+          id:1,
+          src: videoPli
+        }
       },
       comments: [
         {
@@ -113,7 +116,7 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         music: {
-          id: 1,
+          id: 32,
           name: "Plants",
           genre: "Crumb",
           lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
@@ -239,7 +242,10 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        video: videoPli,
+        video: {
+          id: 2,
+          src: videoPli
+        },
       },
     },
     {
@@ -285,7 +291,10 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        video: videoPli,
+        video: {
+          id: 3,
+          src: videoPli
+        },
       },
     },
     {
@@ -482,6 +491,7 @@ export default function Home() {
     }
   }, [tokenRestPassword]);
   const [activeItem, setActiveItem] = useState(null);
+  const [activeItemPlayer, setActiveItemPlayer] = useState(null);
 
 
   return (
@@ -519,6 +529,8 @@ export default function Home() {
                   setAction={setAction}
                   activeItem={activeItem}
                   setActiveItem={setActiveItem}
+                  activeItemPlayer={activeItemPlayer}
+                  setActiveItemPlayer={setActiveItemPlayer}
                 />
               </div>
             ))}

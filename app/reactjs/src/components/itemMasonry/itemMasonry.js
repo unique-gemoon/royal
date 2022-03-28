@@ -19,6 +19,9 @@ export default function ItemMasonry({
   setAction = () => { },
   activeItem = null,
   setActiveItem = () => { },
+  setActiveItemPlayer = () => { },
+  activeItemPlayer = null
+
 }) {
 
   const [state, setState] = useState({
@@ -78,8 +81,8 @@ export default function ItemMasonry({
                 {item.nv1.photos ? (
                   <ImagesGallery items={item.nv1.photos} />
                 ) : null}
-                {item.nv1.video ? <PlayerVideo item={item.nv1.video} /> : null}
-                {item.nv1.music ? <PlayerMusic item={item.nv1.music} /> : null}
+                {item.nv1.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.video} /> : null}
+                {item.nv1.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv1.music} /> : null}
               </div>
               <BarTemporelle state={state} setState={setState} />
             </div>
@@ -94,7 +97,7 @@ export default function ItemMasonry({
                         </div>
                       ) : null}
                       {item.nv2.music ? (
-                        <PlayerMusic item={item.nv2.music} />
+                        <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.music} />
                       ) : null}
                       {item.nv2.soundage ? (
                         <Soundage
@@ -108,7 +111,7 @@ export default function ItemMasonry({
                         <ImagesGallery items={item.nv2.photos} />
                       ) : null}
                       {item.nv2.video ? (
-                        <PlayerVideo item={item.nv2.video} />
+                        <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.video} />
                       ) : null}
                     </div>
                     : null}
@@ -172,8 +175,8 @@ export default function ItemMasonry({
               />
             ) : null}
             {item.nv1.photos ? <ImagesGallery items={item.nv1.photos} /> : null}
-            {item.nv1.video ? <PlayerVideo item={item.nv1.video} /> : null}
-            {item.nv1.music ? <PlayerMusic item={item.nv1.music} /> : null}
+            {item.nv1.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.video}  /> : null}
+            {item.nv1.music ? <PlayerMusic setActiveItemMusic = { setActiveItemPlayer } activeItemMusic = { activeItemPlayer } item={item.nv1.music} /> : null}
           </div>
           <BarTemporelle
             item={item}
@@ -197,7 +200,7 @@ export default function ItemMasonry({
                       {item.nv2.description}
                     </div>
                   ) : null}
-                  {item.nv2.music ? <PlayerMusic item={item.nv2.music} /> : null}
+                  {item.nv2.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.music} /> : null}
                   {item.nv2.soundage ? (
                     <Soundage
                       name={`bloc_${item.id}_2`}
@@ -209,7 +212,7 @@ export default function ItemMasonry({
                   {item.nv2.photos ? (
                     <ImagesGallery items={item.nv2.photos} />
                   ) : null}
-                  {item.nv2.video ? <PlayerVideo item={item.nv2.video} /> : null}
+                  {item.nv2.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.video} /> : null}
                 </div>
                 : null}
               <div
