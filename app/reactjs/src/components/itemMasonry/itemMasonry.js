@@ -13,13 +13,15 @@ import Soundage from "./soundage";
 
 export default function ItemMasonry({
   item,
-  setItem = () => {},
+  setItem = () => { },
   open = false,
   action,
-  setAction = () => {},
+  setAction = () => { },
+  activeItem = null,
+  setActiveItem = () => { },
 }) {
+
   const [state, setState] = useState({
-    showPli2: open,
     showModal: false,
     showComment: true,
   });
@@ -33,6 +35,11 @@ export default function ItemMasonry({
       }, 1000);
     }
   }, []);
+
+  const isCheck = (item) => {
+    return activeItem && item.id == activeItem.id;
+  }
+
 
   return (
     <>
@@ -52,6 +59,7 @@ export default function ItemMasonry({
                 setState={setState}
                 action={action}
                 setAction={setAction}
+                setActiveItem={setActiveItem}
               />
               <div className="bloc-miniature">
                 {item.nv1.description ? (
@@ -76,32 +84,34 @@ export default function ItemMasonry({
               <BarTemporelle state={state} setState={setState} />
             </div>
             <div className="Bloc-NV2">
-              {item.nv2 && state.showPli2 ? (
+              {isCheck(item) ?
                 <>
-                  <div className="content-bloc-NV2">
-                    {item.nv2.description ? (
-                      <div className="descripton-miniature">
-                        {item.nv2.description}
-                      </div>
-                    ) : null}
-                    {item.nv2.music ? (
-                      <PlayerMusic item={item.nv2.music} />
-                    ) : null}
-                    {item.nv2.soundage ? (
-                      <Soundage
-                        name={`modal_${item.id}_2`}
-                        niveau={2}
-                        item={item}
-                        setItem={setItem}
-                      />
-                    ) : null}
-                    {item.nv2.photos ? (
-                      <ImagesGallery items={item.nv2.photos} />
-                    ) : null}
-                    {item.nv2.video ? (
-                      <PlayerVideo item={item.nv2.video} />
-                    ) : null}
-                  </div>
+                  {item.nv2 ?
+                    <div className="content-bloc-NV2">
+                      {item.nv2.description ? (
+                        <div className="descripton-miniature">
+                          {item.nv2.description}
+                        </div>
+                      ) : null}
+                      {item.nv2.music ? (
+                        <PlayerMusic item={item.nv2.music} />
+                      ) : null}
+                      {item.nv2.soundage ? (
+                        <Soundage
+                          name={`modal_${item.id}_2`}
+                          niveau={2}
+                          item={item}
+                          setItem={setItem}
+                        />
+                      ) : null}
+                      {item.nv2.photos ? (
+                        <ImagesGallery items={item.nv2.photos} />
+                      ) : null}
+                      {item.nv2.video ? (
+                        <PlayerVideo item={item.nv2.video} />
+                      ) : null}
+                    </div>
+                    : null}
                   <div
                     className="toggle-pli2"
                     onClick={() =>
@@ -132,7 +142,7 @@ export default function ItemMasonry({
                     />
                   ) : null}
                 </>
-              ) : null}
+                : null}
             </div>
           </MasonryItem>
         </ModalItem.Body>
@@ -146,6 +156,8 @@ export default function ItemMasonry({
             setState={setState}
             action={action}
             setAction={setAction}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
           />
           <div className="bloc-miniature">
             {item.nv1.description ? (
@@ -164,35 +176,42 @@ export default function ItemMasonry({
             {item.nv1.music ? <PlayerMusic item={item.nv1.music} /> : null}
           </div>
           <BarTemporelle
+            item={item}
             state={state}
             setState={setState}
-            className={state.showPli2 && item.nv2 ? "" : "nv-hide"}
+            action={action}
+            setAction={setAction}
+            activeItem={activeItem}
+            setActiveItem={setActiveItem}
+            className={isCheck(item) && item.nv2 ? "" : "nv-hide"}
           />
         </div>
 
         <div className="Bloc-NV2">
-          {state.showPli2 && item.nv2 ? (
+          {isCheck(item) ?
             <>
-              <div className="content-bloc-NV2">
-                {item.nv2.description ? (
-                  <div className="descripton-miniature">
-                    {item.nv2.description}
-                  </div>
-                ) : null}
-                {item.nv2.music ? <PlayerMusic item={item.nv2.music} /> : null}
-                {item.nv2.soundage ? (
-                  <Soundage
-                    name={`bloc_${item.id}_2`}
-                    niveau={2}
-                    item={item}
-                    setItem={setItem}
-                  />
-                ) : null}
-                {item.nv2.photos ? (
-                  <ImagesGallery items={item.nv2.photos} />
-                ) : null}
-                {item.nv2.video ? <PlayerVideo item={item.nv2.video} /> : null}
-              </div>
+              {item.nv2 ?
+                <div className="content-bloc-NV2">
+                  {item.nv2.description ? (
+                    <div className="descripton-miniature">
+                      {item.nv2.description}
+                    </div>
+                  ) : null}
+                  {item.nv2.music ? <PlayerMusic item={item.nv2.music} /> : null}
+                  {item.nv2.soundage ? (
+                    <Soundage
+                      name={`bloc_${item.id}_2`}
+                      niveau={2}
+                      item={item}
+                      setItem={setItem}
+                    />
+                  ) : null}
+                  {item.nv2.photos ? (
+                    <ImagesGallery items={item.nv2.photos} />
+                  ) : null}
+                  {item.nv2.video ? <PlayerVideo item={item.nv2.video} /> : null}
+                </div>
+                : null}
               <div
                 className="toggle-pli2"
                 onClick={() =>
@@ -209,7 +228,7 @@ export default function ItemMasonry({
                 </span>
               </div>
             </>
-          ) : null}
+            : null}
         </div>
       </MasonryItem>
     </>

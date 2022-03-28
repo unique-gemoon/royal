@@ -27,6 +27,8 @@ export default function HeadItem({
   setState,
   action,
   setAction = () => {},
+  activeItem,
+  setActiveItem = () => {},
 }) {
   const [toggleProfile, setToggleProfile] = useState(false);
   const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
@@ -175,7 +177,7 @@ export default function HeadItem({
           <div
             className="users-enligne-pli"
             onClick={() => {
-              state && setState({ ...state, showModal: true, showPli2: true });
+              state && setState({ ...state, showModal: true });
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -184,6 +186,7 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
+              setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
             }}
           >
             14 <VisibilityIcon />{" "}
@@ -194,15 +197,8 @@ export default function HeadItem({
           className="nb-message-comment"
           onClick={() => {
             if(state.showModal){
-              setState({ ...state, showPli2: true, showModal: false });
+              setState({ ...state, showModal: false });
             } else {
-              // setState({ ...state, showModal: !state.showModal });
-              // const cpAction = {
-              //     ...action, notification: { ...action.notification, isOpen: false }, folower: { ...action.folower, isOpen: false }, search: { ...action.search, isOpen: false }
-              //     , messagerie: { ...action.messagerie, isOpen: false }
-              // };
-              // setAction(cpAction);
-              setState({ ...state, showPli2: !state.showPli2 });
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -211,6 +207,7 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
+                setActiveItem((activeItem && activeItem.id == item.id)? null : item);
             }
           }}
         >

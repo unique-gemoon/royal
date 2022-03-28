@@ -9,7 +9,15 @@ import { BarTimer } from "../assets/styles/componentStyle";
 import { ROLES } from "../config/vars";
 import * as actionTypes from "../store/functions/actionTypes";
 
-export default function BarTemporelle({ state, setState = () => { }, ...props }) {
+export default function BarTemporelle({
+  item,
+  state,
+  setState = () => { },
+  action,
+  setAction = () => { },
+  activeItem,
+  setActiveItem = () => { },
+  ...props }) {
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
@@ -35,21 +43,36 @@ export default function BarTemporelle({ state, setState = () => { }, ...props })
       <div className="bloc-timer-Bar">
         <Button
           onClick={() => {
-            if(!checkIsConnected()){
-                setState({ ...state, showModal: false })
+            if (!checkIsConnected()) {
+              const cpAction = {
+                ...action,
+                notification: { ...action.notification, isOpen: false },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: false },
+                messagerie: { ...action.messagerie, isOpen: false },
+              };
+              setAction(cpAction);
+              setState({ ...state, showModal: false })
             }
           }}
         >
           <RemoveIcon />
         </Button>
-        <div className="content-timer-bar" onClick={() => { 
-            if (state.showModal) {
-              setState({ ...state, showPli2: true })
-            }else{
-              setState({ ...state, showPli2: !state.showPli2 })
-            }
-            
-          }}>
+        <div className="content-timer-bar" onClick={() => {
+          if (!state.showModal) {
+            const cpAction = {
+              ...action,
+              notification: { ...action.notification, isOpen: false },
+              folower: { ...action.folower, isOpen: false },
+              search: { ...action.search, isOpen: false },
+              messagerie: { ...action.messagerie, isOpen: false },
+            };
+            setAction(cpAction);
+            setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
+          }
+          
+
+        }}>
           <span className="timer-down">320</span>
           <div className="timer-item">
             <TimerOutlinedIcon /> 04 : 12 : 06
@@ -58,8 +81,16 @@ export default function BarTemporelle({ state, setState = () => { }, ...props })
         </div>
         <Button
           onClick={() => {
-            if(!checkIsConnected()){
-                setState({ ...state, showModal: false })
+            if (!checkIsConnected()) {
+              const cpAction = {
+                ...action,
+                notification: { ...action.notification, isOpen: false },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: false },
+                messagerie: { ...action.messagerie, isOpen: false },
+              };
+              setAction(cpAction);
+              setState({ ...state, showModal: false })
             }
           }}
         >
