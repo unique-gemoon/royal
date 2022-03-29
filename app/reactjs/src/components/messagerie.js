@@ -15,6 +15,7 @@ import Input from './ui-elements/input';
 import ItemListFolower from './itemListFolower';
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import ItemSingleMessage from './itemSingleMessage';
+import { useEffect } from 'react';
 
 export default function Messagerie() {
     const [state, setState] = useState({
@@ -107,7 +108,15 @@ export default function Messagerie() {
             statut: 0
         },
     ]);
-
+    const scrollChat = () => {
+        const container = document.getElementById("messages-container");
+        if (container) container.scrollTop = container.scrollHeight;
+    };
+    useEffect(() => {
+        if (state.activeItem) {
+            setTimeout(() => scrollChat(), 100);
+                }
+    }, [state.activeItem]);
     return (
         <BlocMessagerie>
             {!state.activeItem && !state.showSearchFolower ? (
