@@ -63,7 +63,7 @@ export default function PlayerMusic({ item, isClick = false, activeItemMusic, se
         if (!isClick) {
             setTimeout(() => {
                 setRefresh(true);
-            }, 1200);
+            }, 500);
         }
     }, []);
 

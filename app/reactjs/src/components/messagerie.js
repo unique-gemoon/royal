@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BlocMessagerie, MessageFindFolower } from '../assets/styles/componentStyle';
+import { BlocMessagerie, ChatSpace, LoadingMessage, MessageFindFolower } from '../assets/styles/componentStyle';
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 import ModeEditOutlineOutlinedIcon from '@mui/icons-material/ModeEditOutlineOutlined';
@@ -14,6 +14,7 @@ import SearchRoundedIcon from '@mui/icons-material/SearchRounded';
 import Input from './ui-elements/input';
 import ItemListFolower from './itemListFolower';
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
+import ItemSingleMessage from './itemSingleMessage';
 
 export default function Messagerie() {
     const [state, setState] = useState({
@@ -106,7 +107,7 @@ export default function Messagerie() {
             statut: 0
         },
     ]);
-    
+
     return (
         <BlocMessagerie>
             {!state.activeItem && !state.showSearchFolower ? (
@@ -127,7 +128,7 @@ export default function Messagerie() {
 
                     <Button className='start-new-message' onClick={() => { setState({ ...state, activeItem: false, showSearchFolower: true }) }}><ModeEditOutlineOutlinedIcon /></Button>
                 </div>) : null}
-                {state.activeItem ? (
+            {state.activeItem ? (
                 <div className='bloc-message-item'>
                     <div className='header-messagerie'>
                         <span className='back-to-list' onClick={(e) => {
@@ -175,8 +176,59 @@ export default function Messagerie() {
                     </div>
                     <div className='bloc-view-message'>
 
-                        <div className='content-view-messagerie'></div>
-                        <InputEmoji typeInput='textarea' state={{}} setState={()=>{}}/>
+                        <ChatSpace>
+                            <div
+                                className="content-space-chat show-typing"
+                                id="messages-container"
+                            >
+                                <ItemSingleMessage 
+                                    typeSend="user-send"
+                                    message="Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave." 
+                                    date="Hier . 19:20"
+                                    stautVu="vuReading"
+
+                                />
+                                <ItemSingleMessage 
+                                    message="Oui, alors ?" 
+                                    date="Hier . 19:30"
+                                />
+                                <ItemSingleMessage 
+                                    typeSend="user-send"
+                                    message="Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave." 
+                                    date="Hier . 19:20"
+                                    stautVu="vuResent"
+
+                                />
+                                <ItemSingleMessage 
+                                    message="Oui, alors ?" 
+                                    date="Hier . 19:30"
+                                />
+                                <ItemSingleMessage 
+                                    typeSend="user-send"
+                                    message="Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave." 
+                                    date="Hier . 19:20"
+                                    stautVu="vuSend"
+
+                                />
+                                <ItemSingleMessage 
+                                    message="Oui, alors ?" 
+                                    date="Hier . 19:30"
+                                />
+
+                                <div className="d-flex justify-content-start is-teyping">
+                                    <div className="msg_cotainer">
+                                        <div className="content-msg">
+                                            <LoadingMessage>
+                                                <li></li>
+                                                <li></li>
+                                                <li></li>
+                                            </LoadingMessage>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </ChatSpace>
+                        <InputEmoji typeInput='textarea' state={{}} setState={() => { }} />
                     </div>
                 </div>) : null}
             {state.showSearchFolower ? (
