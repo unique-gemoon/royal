@@ -48,9 +48,7 @@ export default function NewPli({
     ],
   });
   const [togglePli, setTogglePli] = useState(false);
-  const handleToggle = (e) => {
-    setTogglePli(true);
-  };
+
   const divRef = useRef();
   const handler = useCallback(() => setTogglePli(false), []);
   useOutsideAlerter(divRef, handler);
@@ -215,11 +213,12 @@ export default function NewPli({
         </div>
       )}
 
+     
       <div
         onClick={() => {
           if (checkIsConnected()) {
             setMsgNotifTop(null);
-            handleToggle();
+            setTogglePli(true);
             const cpAction = {
               ...action,
               notification: { ...action.notification, isOpen: false },
@@ -230,9 +229,17 @@ export default function NewPli({
             setAction(cpAction);
           }
         }}
-        className={`toggled-new-pli ${togglePli ? "open-pli" : ""}`}
-        ref={divRef}
+        className={`toggled-new-pli b ${togglePli ? "open-pli d-none" : ""}`}
       >
+        {isDesktopOrLaptop ? (
+          <KeyboardArrowUpIcon />
+        ) : (
+          <AddCircleOutlineOutlinedIcon />
+        )}
+      </div>
+      <div
+        className={`toggled-new-pli h ${!togglePli ? "open-pli d-none" : "open-pli d-block"}`}
+      > 
         {isDesktopOrLaptop ? (
           <KeyboardArrowUpIcon />
         ) : (
