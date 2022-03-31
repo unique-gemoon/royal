@@ -221,20 +221,21 @@ export default function NewOvertureOptions({ submitting }) {
         <div className="bloc-toggle-emoji">
           <div className="toggle-action-dropzone">
             <DetailsItems
-              className={`${
-                openDrop || stateWysiwyg.openSoundage
-                  ? "is-active-dropzone"
-                  : ""
-              }`}
+              // className={`${
+              //   openDrop || stateWysiwyg.openSoundage
+              //     ? "is-active-dropzone"
+              //     : ""
+              // }`}
             >
               <Button
                 onClick={() => {
                   setopenDrop(true);
                   setCurrent("images");
                 }}
-                className={`item-detail image-detail ${
-                  (!current || current === "images") && openDrop ? "active" : ""
-                }`}
+                className={`item-detail image-detail`}
+                // className={`item-detail image-detail ${
+                //   (!current || current === "images") && openDrop ? "active" : ""
+                // }`}
               >
                 <ImageIcon />
               </Button>
@@ -244,9 +245,10 @@ export default function NewOvertureOptions({ submitting }) {
                   setCurrent("video");
                   removeAll("video");
                 }}
-                className={`item-detail video-detail ${
-                  (!current || current === "video") && openDrop ? "active" : ""
-                }`}
+                className={`item-detail video-detail `}
+                // className={`item-detail video-detail ${
+                //   (!current || current === "video") && openDrop ? "active" : ""
+                // }`}
               >
                 <PlayArrowIcon />
               </Button>
@@ -255,12 +257,13 @@ export default function NewOvertureOptions({ submitting }) {
                   setCurrent("soundage");
                   setStateWysiwyg({
                     ...stateWysiwyg,
-                    openSoundage: !stateWysiwyg.openSoundage,
+                    openSoundage: true,
                   });
                 }}
-                className={`item-detail soundage-detail ${
-                  !current || current === "soundage" ? "active" : ""
-                }`}
+                className={`item-detail soundage-detail`}
+                // className={`item-detail soundage-detail ${
+                //   !current || current === "soundage" ? "active" : ""
+                // }`}
               >
                 <BallotIcon />
               </Button>
@@ -270,9 +273,10 @@ export default function NewOvertureOptions({ submitting }) {
                   setCurrent("music");
                   removeAll("music");
                 }}
-                className={`item-detail sound-detail ${
-                  (!current || current === "music") && openDrop ? "active" : ""
-                }`}
+                className={`item-detail sound-detail`}
+                // className={`item-detail sound-detail ${
+                //   (!current || current === "music") && openDrop ? "active" : ""
+                // }`}
               >
                 <GraphicEqIcon />
               </Button>

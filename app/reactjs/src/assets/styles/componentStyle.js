@@ -2332,6 +2332,7 @@ export const BlocNewPliContent = styled.div`
     &.pli2-ouverture-bloc{
         .options-new-pli{
             margin-bottom: 50px;
+            display: block;
             .bloc-item-image-file{
                 display: flex;
                 flex-wrap: wrap;
