@@ -2222,6 +2222,9 @@ export const CommentItem = styled.div`
             display: flex;
             align-items: baseline;
             cursor: pointer;
+            i{
+                margin-right: 5px;
+            }
             &.closed{
                 svg{
                     path{
