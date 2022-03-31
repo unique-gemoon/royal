@@ -18,8 +18,8 @@ export default function ItemComment({ name, time, subject, children }) {
     <CommentItem>
       <div className="head-comment">
         <span className="name-user-comment">{name}</span>
-        {time ? "." : null}
-        <span className="time-comment">{time}</span>
+        {time ? " . " : null}
+        <span className="time-comment">Il y a {time}</span>
       </div>
       <div className="content-text-comment"> {subject}</div>
 
@@ -63,8 +63,8 @@ export default function ItemComment({ name, time, subject, children }) {
                   <CommentItem key={index}>
                     <div className="head-comment">
                       <span className="name-user-comment">{rep.user}</span>
-                      {rep.time ? "." : null}
-                      <span className="time-comment">{rep.time}</span>
+                      {rep.time ? " . " : null}
+                      <span className="time-comment">Il y a {rep.time}</span>
                     </div>
                     <div className="content-text-comment"> {rep.subject}</div>
                   </CommentItem>

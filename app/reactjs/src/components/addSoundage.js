@@ -4,13 +4,12 @@ import { Button } from '@mui/material';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
 import HighlightOffIcon from '@mui/icons-material/HighlightOff';
 
-export default function AddSoundage({ state, setState = () => { }, showSoundage, setShowSoundage = () => { } }) {
+export default function AddSoundage({ state, setState = () => { }, showSoundage, maxOption, setShowSoundage = () => { } }) {
     const removeFile = file => () => {
             const newFiles = [...state];
             newFiles.splice(newFiles.indexOf(file), 1);
             setState(newFiles);
         }
-    console.log(showSoundage)
   return (
     <BlocNewSoundage>
           <p className='titre-add-soundage'>Ajouter un soundage <HighlightOffIcon onClick={() => { setShowSoundage(!showSoundage) }} /></p>
@@ -23,6 +22,7 @@ export default function AddSoundage({ state, setState = () => { }, showSoundage,
               ))}
         </div>
           <Button className='button-addiOption' onClick={(e) => {
+        if (state.length <= (maxOption - 1))
               setState([...state, {value: "", label: `option ${state.length + 1}`, name: 'option'+state.length}]);
  
           }}><AddCircleRoundedIcon /> Ajouter une option</Button>
