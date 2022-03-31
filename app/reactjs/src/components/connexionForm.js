@@ -44,7 +44,7 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
       required: true,
     },
     passwordConfirmation: {
-      label: "Confirmation mot de passe",
+      label: "Valider le nouveau mot de passe",
       name: "passwordConfirmation",
       value: "",
       type: "password",
@@ -346,7 +346,7 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
                     }}
                   />
                   <h2 className="titre-modal">
-                    Réinitialisation du mot de passe
+                    Créer un nouveau mot de passe
                   </h2>
                 </div>
                 <form className="form-connexion" onSubmit={submitRestPassword}>
@@ -392,7 +392,7 @@ export default function ConnexionForm({ setMsgNotifTopTime = () => {} }) {
                   <div className="bloc-btn-modal">
                     <ButtonDef
                       spinner={submitting}
-                      textButton={"Soumettre"}
+                      textButton={"Confirmer"}
                       className="btn-form-def"
                     />
                   </div>
