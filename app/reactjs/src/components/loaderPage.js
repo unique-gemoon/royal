@@ -1,6 +1,6 @@
 import React from "react";
 
-export default function Loader({ transparent = true, size }) {
+export default function LoaderPage({ transparent = true, size }) {
   const getsize = () => {
     switch (size) {
       case "":

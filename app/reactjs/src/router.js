@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Route, Redirect, BrowserRouter, Switch } from "react-router-dom";
-import Loader from "./components/loader";
+import LoaderPage from "./components/loaderPage";
 
 import { PUBLIC_ROUTE, PRIVATE_ROUTE } from "./config/routes";
 
@@ -18,7 +18,7 @@ const routesList = [
 export default function Router() {
 
     return (
-        <Suspense fallback={<Loader />}>
+        <Suspense fallback={<LoaderPage />}>
             <BrowserRouter>
                 <Switch>
                     {routesList.map((route, index) => (

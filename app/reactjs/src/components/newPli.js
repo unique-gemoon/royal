@@ -36,7 +36,6 @@ export default function NewPli({
       value: "",
       type: "text",
       as: "textarea",
-      error: false,
     },
     openSoundage: false,
     soundageOptions: [
@@ -46,6 +45,7 @@ export default function NewPli({
         value: "",
       },
     ],
+    maxOption: 4
   });
   const [togglePli, setTogglePli] = useState(false);
 
@@ -140,6 +140,7 @@ export default function NewPli({
                     />
                     {stateTextarea.openSoundage && (
                       <AddSoundage
+                        maxOption={stateTextarea.maxOption}
                         state={stateTextarea.soundageOptions}
                         showSoundage={stateTextarea.openSoundage}
                         setShowSoundage={(e) =>
@@ -213,8 +214,7 @@ export default function NewPli({
         </div>
       )}
 
-     
-      <div
+      {togglePli === false && <div
         onClick={() => {
           if (checkIsConnected()) {
             setMsgNotifTop(null);
@@ -229,23 +229,27 @@ export default function NewPli({
             setAction(cpAction);
           }
         }}
-        className={`toggled-new-pli b ${togglePli ? "open-pli d-none" : ""}`}
+        className="toggled-new-pli"
+
       >
         {isDesktopOrLaptop ? (
           <KeyboardArrowUpIcon />
         ) : (
           <AddCircleOutlineOutlinedIcon />
         )}
-      </div>
-      <div
-        className={`toggled-new-pli h ${!togglePli ? "open-pli d-none" : "open-pli d-block"}`}
-      > 
+      </div> }
+      
+      {togglePli && <div
+        className="toggled-new-pli open-pli"
+
+      >
         {isDesktopOrLaptop ? (
           <KeyboardArrowUpIcon />
         ) : (
           <AddCircleOutlineOutlinedIcon />
         )}
-      </div>
+      </div> }
+      
     </BlocAddPli>
   );
 }

@@ -127,6 +127,98 @@ export const InputDef = styled(TextField)`
         border-bottom: 2px solid #15344F;
     }
 `;
+export const LoadingMessage = styled.ul`
+  display: flex;
+  margin: 0;
+  padding: 0;
+  padding-top: 4px;
+  @keyframes ani {
+    0%,
+    40%,
+    100% {
+      transform: scale(0.5);
+    }
+    20% {
+      transform: scale(0.9);
+    }
+  }
+  li {
+    list-style: none;
+    width: 10px;
+    height: 10px;
+    background: #fff;
+    border-radius: 50%;
+    animation: ani 0.8s linear infinite;
+    &:nth-child(1) {
+      animation-delay: -1.3s;
+      background: #d9d9d9;
+    }
+    &:nth-child(2) {
+      animation-delay: -1.2s;
+      background: #d9d9d9;
+    }
+    &:nth-child(3) {
+      animation-delay: -1s;
+      background: #FFF;
+    }
+  }
+`;
+export const TypingLoader = styled.ul`
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    li{
+        width: 3px;
+        height: 3px;
+        background-color: #88C7FF;
+        border-radius: 100%;
+        animation: sl-bubble2 1000ms ease-in-out infinite;
+        margin: 0 1px;
+        &:nth-child(1){
+            animation-delay: calc(.8 * -350ms);
+        }
+        &:nth-child(2){
+            animation-delay: calc(.4 * -350ms);
+        }
+        &:nth-child(3){
+            animation-delay: calc(.1 * -350ms);
+        }
+    }
+
+
+    @keyframes sl-bubble2 {
+        to {
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+        }
+        50% {
+            -webkit-transform: translateY(-10px);
+            transform: translateY(-10px);
+        }
+        from {
+            -webkit-transform: translateY(0);
+            transform: translateY(0);
+        }
+    }
+`;
+export const EntrainTyping = styled.div`
+    background: linear-gradient(#12377c 7.35%, #1e52a0 100%);
+    display: flex;
+    align-items: center;
+    font-family: "ProximaNova-Semibold";
+    font-size: 13px;
+    line-height: 15.6px;
+    text-align: left;
+    color: #fff;
+    padding: 6px 20px;
+    ${TypingLoader}{
+        position: relative;
+        top: 3px;
+        margin-right: 10px;
+    }
+`;
 
 export const ModalDefault = styled.div`
     &.modal-footer{
@@ -1979,6 +2071,88 @@ export const ModalItem = styled(Modal)`
 `;
 
 
+export const SimpleComment = styled.div`
+    padding: 8px 18px;
+    position: relative;
+    border-bottom: 1px solid #f2f2f2;
+    &:last-child{
+        border-bottom: 0;
+    }
+    &.cotte-comment {
+        background: #f2f2f2;
+        width: calc(100% - 18px);
+        &:after{
+            content: "";
+            position: absolute;
+            top: -1px;
+            right: -18px;
+            bottom: -1px;
+            width: 18px;
+            background-color: #FFF;
+        }
+    }
+    .cotte-comment {
+        position: absolute;
+        top: -10px;
+        right: 24px;
+        width: 21px;
+        height: 21px;
+        border-radius: 3px;
+        background: #fff;
+        border: 1px solid #b6c6ce;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .head-comment {
+        font-family: 'ProximaNovaSoftW03-Semibold';
+        font-size: 14px;
+        line-height: 18px;
+        display: flex;
+        color: #798993;
+        margin-bottom: 5px;
+        span{
+            display: block;
+            margin: 0 5px;
+        }
+        .name-user-comment{
+            color: #070707;
+            margin-left: 0;
+        }
+    }
+    .content-text-comment{
+        font-size: 15px;
+        padding-left: 10px;
+    }
+    .citation-bloc{
+        border-radius: 3px 8px 8px 3px;
+        background: rgba(225, 230, 234, .3);
+        border: 1px solid rgba(125, 139, 147, .3);
+        padding: 5px 18px;
+        position: relative;
+        overflow: hidden;
+        margin-bottom: 5px;
+        font-size: 15px;
+        line-height: 22px;
+        &:before{
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 3px;
+            background-color: #18458F;
+            display: block;
+        }
+        .citation-user{
+            display: block;
+            line-height: 18px;
+            text-align: left;
+            color: #12377c;
+        }
+    }
+`;
+
 export const CommentItem = styled.div`
     padding: 14px 18px;
     border-bottom: 1px solid #D5DFE9;
@@ -2048,6 +2222,9 @@ export const CommentItem = styled.div`
             display: flex;
             align-items: baseline;
             cursor: pointer;
+            i{
+                margin-right: 5px;
+            }
             &.closed{
                 svg{
                     path{
@@ -2082,8 +2259,17 @@ export const CommentItem = styled.div`
     }
 `;
 export const CommentsBloc = styled.div`
+    .liste-comment-modal{
+        max-height: 260px;
+        overflow-y: auto;
+    }
     &.emoji-open{
         min-height: 250px;
+        .comment-def-modal{
+            .bloc-list-emoji{
+                bottom: 27px;
+            }
+        }
     }
 `;
 export const BlocNewPliContent = styled.div`
@@ -2220,6 +2406,9 @@ export const BlocAddPli = styled.div`
         justify-content: center;
         text-align: left;
         overflow-y: auto;
+        @media(max-width: 767px){
+            height: calc(100vh - 54px);
+        }
         &::before{
             content: "";
             position: absolute;
@@ -2676,42 +2865,7 @@ export const ItemMessage = styled.div`
     }
   }
 `;
-export const LoadingMessage = styled.ul`
-  display: flex;
-  margin: 0;
-  padding: 0;
-  padding-top: 4px;
-  @keyframes ani {
-    0%,
-    40%,
-    100% {
-      transform: scale(0.5);
-    }
-    20% {
-      transform: scale(0.9);
-    }
-  }
-  li {
-    list-style: none;
-    width: 10px;
-    height: 10px;
-    background: #fff;
-    border-radius: 50%;
-    animation: ani 0.8s linear infinite;
-    &:nth-child(1) {
-      animation-delay: -1.3s;
-      background: #d9d9d9;
-    }
-    &:nth-child(2) {
-      animation-delay: -1.2s;
-      background: #d9d9d9;
-    }
-    &:nth-child(3) {
-      animation-delay: -1s;
-      background: #FFF;
-    }
-  }
-`;
+
 export const ChatSpace = styled.div`
   
   width: 100%;

@@ -1,5 +1,6 @@
 import CloseFullscreenTwoToneIcon from "@mui/icons-material/CloseFullscreenTwoTone";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
+import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import React, { useEffect, useRef, useState } from "react";
 import { MasonryItem, ModalItem } from "../../assets/styles/componentStyle";
@@ -87,7 +88,6 @@ export default function ItemMasonry({
               <BarTemporelle state={state} setState={setState} />
             </div>
             <div className="Bloc-NV2">
-              {isCheck(item) ?
                 <>
                   {item.nv2 ?
                     <div className="content-bloc-NV2">
@@ -121,20 +121,27 @@ export default function ItemMasonry({
                       setState({ ...state, showComment: false, showModal: false })
                     }
                   >
-                    <span className="users-views">
-                      14 <VisibilityIcon />
-                    </span>{" "}
-                    .
+                    
                     {!state.showComment ? (
-                      <span className="toggle-zoom">
-                        Etendre le pli{" "}
-                        <OpenInFullOutlinedIcon className="open-zoom-icon" />
-                      </span>
+                      <>
+                        <span className="users-views">
+                          14 <VisibilityIcon />
+                        </span>{" "} .
+                        <span className="toggle-zoom">
+                          Etendre le pli{" "}
+                          <OpenInFullOutlinedIcon className="open-zoom-icon" />
+                        </span>
+                      </>
                     ) : (
-                      <span className="toggle-zoom">
-                        Retour au pli ouvert{" "}
-                        <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
-                      </span>
+                      <>
+                        <span className="users-views">
+                          14 <CommentOutlinedIcon />
+                        </span>{" "} .
+                        <span className="toggle-zoom">
+                          Retour au pli ouvert{" "}
+                          <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
+                        </span>
+                      </>
                     )}
                   </div>
                   {state.showComment ? (
@@ -145,7 +152,6 @@ export default function ItemMasonry({
                     />
                   ) : null}
                 </>
-                : null}
             </div>
           </MasonryItem>
         </ModalItem.Body>
@@ -230,6 +236,11 @@ export default function ItemMasonry({
                   <OpenInFullOutlinedIcon className="open-zoom-icon" />
                 </span>
               </div>
+              <BlocComments
+                item={item}
+                state={state}
+                setState={setState}
+              />
             </>
             : null}
         </div>

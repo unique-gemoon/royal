@@ -44,6 +44,7 @@ export default function NewOvertureOptions({ submitting }) {
         value: "",
       },
     ],
+    maxOption: 6
   });
   const [dropFile, setDropFile] = useState({
     images: {
@@ -150,6 +151,7 @@ export default function NewOvertureOptions({ submitting }) {
       <div className="options-new-pli">
         {stateWysiwyg.openSoundage && (
           <AddSoundage
+            maxOption={stateWysiwyg.maxOption}
             state={stateWysiwyg.soundageOptions}
             showSoundage={stateWysiwyg.openSoundage}
             setShowSoundage={(e) =>

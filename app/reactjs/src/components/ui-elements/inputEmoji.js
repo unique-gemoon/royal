@@ -19,7 +19,7 @@ export default function InputEmoji({
   const [state, setState] = useState({
     inputEmoji: {
       name: "message-input",
-      placeholder: "Ecrire un message",
+      placeholder: placeholder ? placeholder : "Ecrire un message",
       value: "",
       type: "text",
       as: typeInput,

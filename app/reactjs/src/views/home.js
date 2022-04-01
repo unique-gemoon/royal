@@ -69,25 +69,29 @@ export default function Home() {
           id: 1,
           user: "Dan",
           subject: "J'aime bien cette citation !",
-          time: "il y a 3mn",
+          time: "3mn",
+          citation: {
+            citationUser: "Jacquou",
+            citationText: "Voici une citation"
+          },
           reponses: [
             {
               id: 1,
               user: "Dan",
               subject: "J'aime bien cette citation !",
-              time: "il y a 2mn",
+              time: "2mn",
             },
             {
               id: 2,
               user: "Jacquou",
               subject: "J'aime bien cette citation !",
-              time: "il y a 2mn",
+              time: "2mn",
             },
             {
               id: 3,
               user: "Dan",
               subject: "J'aime bien cette citation !",
-              time: "il y a 2mn",
+              time: "2mn",
             },
           ],
         },
@@ -95,16 +99,29 @@ export default function Home() {
           id: 2,
           user: "Dan",
           subject: "J'aime bien cette citation !",
-          time: "il y a 3mn",
+          time: "3mn",
+          cotte: true,
           reponses: [
             {
               id: 1,
               user: "Dan",
               subject: "J'aime bien cette citation !",
-              time: "il y a 2mn",
+              time: "2mn",
             },
           ],
         },
+        {
+          id: 3,
+          user: "Dan",
+          subject: "J'aime bien cette citation !",
+          time: "3mn",
+        },
+        {
+          id: 4,
+          user: "Dan",
+          subject: "J'aime bien cette citation !",
+          time: "3mn",
+        }
       ],
     },
     {
