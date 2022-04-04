@@ -177,7 +177,7 @@ export default function HeadItem({
           <div
             className="users-enligne-pli"
             onClick={() => {
-              state && setState({ ...state, showModal: true });
+              state && setState({ ...state, showModal: true, showComment: true });
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
