@@ -682,6 +682,7 @@ export const ImageUpload = styled.div`
 export const VideoUpload = styled.div`
     position: relative;
     margin-right: 10px;
+    margin-bottom: 10px;
     button{
         padding: 0;
         min-width: auto;
@@ -700,6 +701,7 @@ export const SoundUpload = styled.div`
     border-radius: 10px;
     position: relative;
     margin-right: 10px;
+    margin-bottom: 10px;
     .icon-sound{
         background: linear-gradient(#fc6965 0.01%,#fc9765 92.44%);
         display: flex;
@@ -1200,7 +1202,7 @@ export const FormEmoji = styled.div`
         padding: 14px 12px 14px 18px;
         .form-control{
             font-family: 'ProximaNovaSoftW03-Semibold';
-            color: #6a7b89;
+            color: #000 !important;
             &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
                 color: #6a7b89;
             }
@@ -2293,6 +2295,17 @@ export const BlocNewPliContent = styled.div`
             width: 34px;
             min-width: 34px;
             margin-right: 9px;
+            input{
+                display: none;
+            }
+            label{
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                width: 100%;
+                height: 100%;
+                cursor: pointer;
+            }
             svg{
                 font-size: 20px;
             }
