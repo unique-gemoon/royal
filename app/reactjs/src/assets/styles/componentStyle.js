@@ -1036,6 +1036,7 @@ export const FolowerSearch = styled.div`
 export const BlocNotification = styled.div`
     width: 300px;
     .header-notif{
+        font-family: 'ProximaNovaSoftW03-Semibold';
         height: 47px;
         color: #FFF;
         position: relative;
@@ -1046,7 +1047,7 @@ export const BlocNotification = styled.div`
         flex-direction: initial;
         white-space: nowrap;
         justify-content: center;
-        font-size: 13px;
+        font-size: 15px;
         &:before {
             content: "";
             position: absolute;

@@ -17,6 +17,7 @@ export default function FooterHome({
     action,
     setAction = () => {},
     dataNotifs,
+    setDataNotifs = () => {},
     setMsgNotifTop = () => {},
   }) {
 
@@ -42,6 +43,7 @@ export default function FooterHome({
                   action={action}
                   setAction={setAction}
                   dataNotifs={dataNotifs}
+                  setDataNotifs={setDataNotifs}
                   setMsgNotifTop={setMsgNotifTop}
                 />
               </Col>
@@ -53,6 +55,7 @@ export default function FooterHome({
             action={action}
             setAction={setAction}
             dataNotifs={dataNotifs}
+            setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
           />
         )}

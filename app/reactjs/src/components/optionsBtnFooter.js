@@ -12,14 +12,15 @@ export default function OptionsBtnFooter({
   action,
   setAction = () => {},
   dataNotifs,
+  setDataNotifs = () => {},
   setMsgNotifTop = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
-  const [newNotifs, setNewNotif] = useState(
-    dataNotifs.filter((newNotif) => newNotif.statut === "new")
+  const [newNotifs, setNewNotifs] = useState(
+    dataNotifs.filter(newNotif => newNotif.isRead == false)
   );
-
+  
   const updateAction = (e, name) => {
     let cpAction = { ...action };
     if (isTabletOrMobile) {
@@ -89,7 +90,9 @@ export default function OptionsBtnFooter({
       >
         <Notifications
           items={newNotifs.length ? newNotifs : dataNotifs}
-          setNotif={setNewNotif}
+          setNewNotifs={setNewNotifs}
+          dataNotifs={dataNotifs}
+          setDataNotifs={setDataNotifs}
         />
       </ButtonAction>
     </OptionsBtnAction>

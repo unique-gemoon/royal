@@ -401,48 +401,48 @@ export default function Home() {
     },
   ]);
 
-  const [dataNotifs] = useState([
+  const [dataNotifs, setDataNotifs] = useState([
     {
       id: 1,
       title: "Création du compte",
       timer: "2mn",
-      statut: "new",
+      isRead: false,
     },
     {
       id: 2,
       title: "Création du compte1",
       timer: "21mn",
-      statut: "new",
+      isRead: false,
     },
     {
       id: 3,
       title: "Création du compte2",
       timer: "45mn",
-      statut: "old",
+      isRead: true,
     },
     {
       id: 4,
       title: "Création du compte2",
       timer: "45mn",
-      statut: "old",
+      isRead: true,
     },
     {
       id: 5,
       title: "Création du compte2",
       timer: "45mn",
-      statut: "old",
+      isRead: true,
     },
     {
       id: 6,
       title: "Création du compte2",
       timer: "45mn",
-      statut: "old",
+      isRead: true,
     },
     {
       id: 7,
       title: "Création du compte2",
       timer: "45mn",
-      statut: "old",
+      isRead: true,
     },
   ]);
 
@@ -561,6 +561,7 @@ export default function Home() {
             action={action}
             setAction={setAction}
             dataNotifs={dataNotifs}
+            setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
           />
         )}
