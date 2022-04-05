@@ -2,23 +2,48 @@ import React, { useState } from 'react';
 import { BlocNotification } from '../assets/styles/componentStyle';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
 
-export default function Notifications({items, setNotif}) {
-    const filteredItems = items.filter(element => {
-        if (element.statut === "new") {
-            return true;
-        }
+export default function Notifications({
+    items, 
+    setNewNotifs = () => {},
+    dataNotifs,
+    setDataNotifs = () => { },
+}) {
+    const filteredNotRead = items.filter(element => {
+            return !element.isRead;
     });
+    const filteredRead = dataNotifs.filter(element => {
+            return element.isRead;
+    });
+    console.log(filteredRead)
+    const isReadItem = (item) => {
+        let cpDataNotifs = [...dataNotifs];
+        for(let i=0; i< cpDataNotifs.length; i++){
+            const el = cpDataNotifs[i];
+            if(el.id == item.id){
+                cpDataNotifs[i].isRead = true;
+            }
+        }
+        setDataNotifs(cpDataNotifs);
+        console.log(cpDataNotifs)
+        setNewNotifs(cpDataNotifs.filter(newNotif => newNotif.isRead == false));
+    }
     return (
         <BlocNotification>
             <div className='header-notif'>
-                Notifications <span className='count-notif'>{filteredItems.length > 0 ? filteredItems.length : null}</span>
+                Notifications {filteredNotRead.length > 0 ? <span className='count-notif'>{filteredNotRead.length}</span> : null}
             </div>
             <div className='content-notifs'>
                 <div className='list-notifs'>
-                    {items.map((val, index)=> (
-                        <div className={`item-notif ${val.statut === 'new' ? "new-notif" : "old-notif" }`} key={index}>
-                            <span className='title-notif'>{val.title}</span>
-                            <span className='timer-notif'>{val.timer}</span>
+                    {filteredNotRead.map((item, index)=> (
+                        <div className={`item-notif ${item.isRead ? "old-notif" : "new-notif"}`} key={index} onClick={() => { isReadItem(item) }}>
+                            <span className='title-notif'>{item.title}</span>
+                            <span className='timer-notif'>{item.timer}</span>
+                        </div>
+                    ))}
+                    {filteredRead.map((item, index)=> (
+                        <div className="item-notif old-notif" key={index}>
+                            <span className='title-notif'>{item.title}</span>
+                            <span className='timer-notif'>{item.timer}</span>
                         </div>
                     ))}
                 </div>
