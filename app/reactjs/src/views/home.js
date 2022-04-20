@@ -28,6 +28,31 @@ import * as actionTypes from "../store/functions/actionTypes";
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
+
+  // const [data, setData] = useState([
+  //   {
+  //     id: 1,
+  //     content: "Voici mon nouveau son du moment, qu'est ce que vous en pensez ?",
+  //     duration: 120,
+  //     user: { id: 1, username: "Jacob" },
+  //     ouverture: "my ouverture",
+  //     media: [
+  //       {
+  //         id: 1,
+  //         type: "music",
+  //         name: "Plants",
+  //         genre: "Crumb",
+  //         path: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+  //         isOuverture: false,
+  //         createdAt: "2022-04-11 12:30:00",
+  //         sondageOptions: [{ id: 1, option: "Emmanuel Macron" }]
+  //       }
+  //     ],
+  //     createdAt: "2022-04-11 12:30:00"
+  //   }
+  // ]);
+
+
   const [dataMasonry, setDataMasonry] = useState([
     {
       id: 1,
@@ -36,33 +61,38 @@ export default function Home() {
       abonnements: 109,
       statutAbonne: false,
       etatOuvert: false,
-      nv1: {
-        music: {
-          id: 12,
-          name: "Plants",
-          genre: "Crumb",
-          lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+      nv1: { 
+        media:{
+          music: {
+            id: 12,
+            name: "Plants",
+            genre: "Crumb",
+            lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+          }
         },
       },
       nv2: {
         description:
           "Voici mon nouveau son du moment, qu'est ce que vous en pensez ?",
-        music: {
-          id: 22,
-          name: "Plants",
-          genre: "Crumb",
-          lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-        },
-        photos: [
-          {
-            id: 1,
-            source: imgPli,
+
+        media: {
+          music: {
+            id: 22,
+            name: "Plants",
+            genre: "Crumb",
+            lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
           },
-        ],
-        video:{
-          id:1,
-          src: videoPli
-        }
+          photos: [
+            {
+              id: 1,
+              source: imgPli,
+            },
+          ],
+          video: {
+            id: 1,
+            src: videoPli
+          }
+        },
       },
       comments: [
         {
@@ -132,12 +162,14 @@ export default function Home() {
       statutAbonne: false,
       etatOuvert: false,
       nv1: {
-        music: {
-          id: 32,
-          name: "Plants",
-          genre: "Crumb",
-          lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-        },
+        media: {
+          music: {
+            id: 32,
+            name: "Plants",
+            genre: "Crumb",
+            lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
+          },
+        }
       },
     },
     {
@@ -149,29 +181,31 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        soundage: [
-          {
-            id: 1,
-            label: "Emmanuel Macron",
-            countQte: "38%",
-            choix: false,
-            value: "Emmanuel-Macron0",
-          },
-          {
-            id: 2,
-            label: "Eric Zemmour",
-            countQte: "35%",
-            choix: false,
-            value: "Eric-Zemmour0",
-          },
-          {
-            id: 3,
-            label: "Marine Le Pen",
-            countQte: "27%",
-            choix: false,
-            value: "Marine-Pen0",
-          },
-        ],
+        media: {
+          soundage: [
+            {
+              id: 1,
+              label: "Emmanuel Macron",
+              countQte: "38%",
+              choix: false,
+              value: "Emmanuel-Macron0",
+            },
+            {
+              id: 2,
+              label: "Eric Zemmour",
+              countQte: "35%",
+              choix: false,
+              value: "Eric-Zemmour0",
+            },
+            {
+              id: 3,
+              label: "Marine Le Pen",
+              countQte: "27%",
+              choix: false,
+              value: "Marine-Pen0",
+            },
+          ],
+        }
       },
     },
     {
@@ -196,29 +230,31 @@ export default function Home() {
         ),
       },
       nv2: {
-        soundage: [
-          {
-            id: 1,
-            label: "Emmanuel Macron",
-            countQte: "38%",
-            choix: false,
-            value: "Emmanuel-Macron3",
-          },
-          {
-            id: 2,
-            label: "Eric Zemmour",
-            countQte: "35%",
-            choix: false,
-            value: "Eric-Zemmour3",
-          },
-          {
-            id: 3,
-            label: "Marine Le Pen",
-            countQte: "27%",
-            choix: false,
-            value: "Marine-Pen3",
-          },
-        ],
+        media: {
+          soundage: [
+            {
+              id: 1,
+              label: "Emmanuel Macron",
+              countQte: "38%",
+              choix: false,
+              value: "Emmanuel-Macron3",
+            },
+            {
+              id: 2,
+              label: "Eric Zemmour",
+              countQte: "35%",
+              choix: false,
+              value: "Eric-Zemmour3",
+            },
+            {
+              id: 3,
+              label: "Marine Le Pen",
+              countQte: "27%",
+              choix: false,
+              value: "Marine-Pen3",
+            },
+          ],
+        }
       },
     },
     {
@@ -230,24 +266,26 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        photos: [
-          {
-            id: 1,
-            source: imgPli,
-          },
-          {
-            id: 2,
-            source: imgPli,
-          },
-          {
-            id: 3,
-            source: imgPli,
-          },
-          {
-            id: 4,
-            source: imgPli,
-          },
-        ],
+        media: {
+          photos: [
+            {
+              id: 1,
+              source: imgPli,
+            },
+            {
+              id: 2,
+              source: imgPli,
+            },
+            {
+              id: 3,
+              source: imgPli,
+            },
+            {
+              id: 4,
+              source: imgPli,
+            },
+          ],
+        }
       },
     },
     {
@@ -259,10 +297,12 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        video: {
-          id: 2,
-          src: videoPli
-        },
+        media: {
+          video: {
+            id: 2,
+            src: videoPli
+          },
+        }
       },
     },
     {
@@ -274,29 +314,31 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        soundage: [
-          {
-            id: 1,
-            label: "Emmanuel Macron",
-            countQte: "38%",
-            choix: false,
-            value: "Emmanuel-Macron1",
-          },
-          {
-            id: 2,
-            label: "Eric Zemmour",
-            countQte: "35%",
-            choix: false,
-            value: "Eric-Zemmour1",
-          },
-          {
-            id: 3,
-            label: "Marine Le Pen",
-            countQte: "27%",
-            choix: false,
-            value: "Marine-Pen1",
-          },
-        ],
+        media: {
+          soundage: [
+            {
+              id: 1,
+              label: "Emmanuel Macron",
+              countQte: "38%",
+              choix: false,
+              value: "Emmanuel-Macron1",
+            },
+            {
+              id: 2,
+              label: "Eric Zemmour",
+              countQte: "35%",
+              choix: false,
+              value: "Eric-Zemmour1",
+            },
+            {
+              id: 3,
+              label: "Marine Le Pen",
+              countQte: "27%",
+              choix: false,
+              value: "Marine-Pen1",
+            },
+          ],
+        }
       },
     },
     {
@@ -308,10 +350,12 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        video: {
-          id: 3,
-          src: videoPli
-        },
+        media: {
+          video: {
+            id: 3,
+            src: videoPli
+          },
+        }
       },
     },
     {
@@ -323,16 +367,18 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        photos: [
-          {
-            id: 1,
-            source: imgPli,
-          },
-          {
-            id: 2,
-            source: imgPli,
-          },
-        ],
+        media: {
+          photos: [
+            {
+              id: 1,
+              source: imgPli,
+            },
+            {
+              id: 2,
+              source: imgPli,
+            },
+          ],
+        }
       },
     },
     {
@@ -344,20 +390,22 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        photos: [
-          {
-            id: 1,
-            source: imgPli,
-          },
-          {
-            id: 2,
-            source: imgPli,
-          },
-          {
-            id: 3,
-            source: imgPli,
-          },
-        ],
+        media: {
+          photos: [
+            {
+              id: 1,
+              source: imgPli,
+            },
+            {
+              id: 2,
+              source: imgPli,
+            },
+            {
+              id: 3,
+              source: imgPli,
+            },
+          ],
+        }
       },
     },
     {
@@ -391,12 +439,14 @@ export default function Home() {
       etatOuvert: false,
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
-        photos: [
-          {
-            id: 1,
-            source: imgPli,
-          },
-        ],
+        media: {
+          photos: [
+            {
+              id: 1,
+              source: imgPli,
+            },
+          ],
+        }
       },
     },
   ]);

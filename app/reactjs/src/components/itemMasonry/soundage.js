@@ -11,7 +11,7 @@ import * as actionTypes from "../../store/functions/actionTypes";
 
 export default function Soundage({ name, niveau, item, setItem }) {
   const [items] = useState(
-    niveau == 1 ? [...item.nv1.soundage] : [...item.nv2.soundage]
+    niveau == 1 ? [...item.nv1.media.soundage] : [...item.nv2.media.soundage]
   );
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);

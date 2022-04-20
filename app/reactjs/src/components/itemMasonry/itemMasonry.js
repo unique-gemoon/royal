@@ -71,7 +71,7 @@ export default function ItemMasonry({
                     {item.nv1.description}
                   </div>
                 ) : null}
-                {item.nv1.soundage ? (
+                {item.nv1.media && item.nv1.media.soundage ? (
                   <Soundage
                     name={`modal_${item.id}_1`}
                     niveau={1}
@@ -79,11 +79,11 @@ export default function ItemMasonry({
                     setItem={setItem}
                   />
                 ) : null}
-                {item.nv1.photos ? (
-                  <ImagesGallery items={item.nv1.photos} />
+                {item.nv1.media && item.nv1.media.photos ? (
+                  <ImagesGallery items={item.nv1.media.photos} />
                 ) : null}
-                {item.nv1.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.video} /> : null}
-                {item.nv1.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv1.music} /> : null}
+                {item.nv1.media && item.nv1.media.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.media.video} /> : null}
+                {item.nv1.media && item.nv1.media.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv1.media.music} /> : null}
               </div>
               <BarTemporelle state={state} setState={setState} />
             </div>
@@ -96,10 +96,10 @@ export default function ItemMasonry({
                           {item.nv2.description}
                         </div>
                       ) : null}
-                      {item.nv2.music ? (
-                        <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.music} />
+                      {item.nv2.media.music ? (
+                        <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.media.music} />
                       ) : null}
-                      {item.nv2.soundage ? (
+                      {item.nv2.media && item.nv2.media.soundage ? (
                         <Soundage
                           name={`modal_${item.id}_2`}
                           niveau={2}
@@ -107,11 +107,11 @@ export default function ItemMasonry({
                           setItem={setItem}
                         />
                       ) : null}
-                      {item.nv2.photos ? (
-                        <ImagesGallery items={item.nv2.photos} />
+                      {item.nv2.media && item.nv2.media.photos ? (
+                        <ImagesGallery items={item.nv2.media.photos} />
                       ) : null}
-                      {item.nv2.video ? (
-                        <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.video} />
+                      {item.nv2.media && item.nv2.media.video ? (
+                        <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.media.video} />
                       ) : null}
                     </div>
                     : null}
@@ -172,7 +172,7 @@ export default function ItemMasonry({
             {item.nv1.description ? (
               <div className="descripton-miniature">{item.nv1.description}</div>
             ) : null}
-            {item.nv1.soundage ? (
+            {item.nv1.media && item.nv1.media.soundage ? (
               <Soundage
                 name={`bloc_${item.id}_1`}
                 niveau={1}
@@ -180,9 +180,9 @@ export default function ItemMasonry({
                 setItem={setItem}
               />
             ) : null}
-            {item.nv1.photos ? <ImagesGallery items={item.nv1.photos} /> : null}
-            {item.nv1.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.video}  /> : null}
-            {item.nv1.music ? <PlayerMusic setActiveItemMusic = { setActiveItemPlayer } activeItemMusic = { activeItemPlayer } item={item.nv1.music} /> : null}
+            {item.nv1.media && item.nv1.media.photos ? <ImagesGallery items={item.nv1.media.photos} /> : null}
+            {item.nv1.media && item.nv1.media.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.media.video}  /> : null}
+            {item.nv1.media && item.nv1.media.music ? <PlayerMusic setActiveItemMusic = { setActiveItemPlayer } activeItemMusic = { activeItemPlayer } item={item.nv1.media.music} /> : null}
           </div>
           <BarTemporelle
             item={item}
@@ -206,8 +206,8 @@ export default function ItemMasonry({
                       {item.nv2.description}
                     </div>
                   ) : null}
-                  {item.nv2.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.music} /> : null}
-                  {item.nv2.soundage ? (
+                  {item.nv2.media.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.media.music} /> : null}
+                  {item.nv2.media && item.nv2.media.soundage ? (
                     <Soundage
                       name={`bloc_${item.id}_2`}
                       niveau={2}
@@ -215,10 +215,10 @@ export default function ItemMasonry({
                       setItem={setItem}
                     />
                   ) : null}
-                  {item.nv2.photos ? (
-                    <ImagesGallery items={item.nv2.photos} />
+                  {item.nv2.media && item.nv2.media.photos ? (
+                    <ImagesGallery items={item.nv2.media.photos} />
                   ) : null}
-                  {item.nv2.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.video} /> : null}
+                  {item.nv2.media && item.nv2.media.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.media.video} /> : null}
                 </div>
                 : null}
               <div
