@@ -13,11 +13,11 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Button } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip from "@mui/material/Tooltip";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import BallotIcon from "../../assets/images/icons/ballotIcon";
-import { DetailsItems, HeadContentItem } from "../../assets/styles/globalStyle";
+import { DetailsItems, HeadContentItem, PlusIcon } from "../../assets/styles/globalStyle";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
 
@@ -26,12 +26,13 @@ export default function HeadItem({
   state,
   setState,
   action,
-  setAction = () => {},
+  setAction = () => { },
   activeItem,
-  setActiveItem = () => {},
+  setActiveItem = () => { },
 }) {
   const [toggleProfile, setToggleProfile] = useState(false);
   const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
+  const [allMedia, setAllMedia] = useState([]);
   const handleTooltipClose = () => {
     setToggleProfile(false);
   };
@@ -54,36 +55,110 @@ export default function HeadItem({
     }
   };
 
+  useEffect(() => {
+    if (item) {
+      let cpAllMedia = [];
+      if ((item.nv1.description && (item.nv1.media && !item.nv1.media.soundage)) ||
+        (item.nv2 && item.nv2.description)) {
+        cpAllMedia.push("description");
+      }
+
+      if ((item.nv1.media && item.nv1.media.music) || (item.nv2 && item.nv2.media.music)) {
+        cpAllMedia.push("music");
+      }
+
+      if ((item.nv1.media && item.nv1.media.soundage) || (item.nv2 && item.nv2.media.soundage)) {
+        cpAllMedia.push("soundage");
+      }
+
+      if ((item.nv1.media && item.nv1.media.photos) || (item.nv2 && item.nv2.media.photos)) {
+        cpAllMedia.push("photos");
+      }
+
+      if ((item.nv1.media && item.nv1.media.video) || (item.nv2 && item.nv2.media.video)) {
+        cpAllMedia.push("video");
+      }
+      setAllMedia(cpAllMedia);
+    }
+  }, [item]);
+
+
+  const [showAllMedia, setShowAllMedia] = useState(false);
+
+
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
         <DetailsItems>
-          {(item.nv1.description && !item.nv1.soundage) ||
-          (item.nv2 && item.nv2.description) ? (
-            <div className="item-detail format-text-detail">
-              <FormatSizeIcon />
+          {allMedia.length && allMedia.map((media, index) => (
+            
+            <div key={index}>
+              {(index == 0) && media == "description" && (
+                <div className="item-detail format-text-detail">
+                  <FormatSizeIcon />
+                </div>
+              )}
+              {(index == 0) && media == "music" && (
+                <div className="item-detail sound-detail">
+                  <GraphicEqIcon />
+                </div>
+              )}
+              {(index == 0) && media == "soundage" && (
+                <div className="item-detail soundage-detail">
+                  <BallotIcon />
+                </div>
+              )}
+              {(index == 0) && media == "photos" && (
+                <div className="item-detail image-detail">
+                  <ImageIcon />
+                </div>
+              )}
+              {(index == 0) && media == "video" && (
+                <div className="item-detail video-detail">
+                  <PlayArrowIcon />
+                </div>
+              )}
             </div>
-          ) : null}
-          {item.nv1.music || (item.nv2 && item.nv2.music) ? (
-            <div className="item-detail sound-detail">
-              <GraphicEqIcon />
+          ))
+          }
+          <div className={`mediaDetails ${showAllMedia ? "showMedia" : ""}` }>
+          {allMedia.length && allMedia.map((media, index) => (
+
+            <div key={index}>
+              
+              {index > 0 ? (<>
+                {showAllMedia && media == "description" && (
+                  <div className="item-detail format-text-detail">
+                    <FormatSizeIcon />
+                  </div>
+                )}
+                {showAllMedia && media == "music" && (
+                  <div className="item-detail sound-detail">
+                    <GraphicEqIcon />
+                  </div>
+                )}
+                {showAllMedia && media == "soundage" && (
+                  <div className="item-detail soundage-detail">
+                    <BallotIcon />
+                  </div>
+                )}
+                {showAllMedia && media == "photos" && (
+                  <div className="item-detail image-detail">
+                    <ImageIcon />
+                  </div>
+                )}
+                {showAllMedia && media == "video" && (
+                  <div className="item-detail video-detail">
+                    <PlayArrowIcon />
+                  </div>
+                )}
+              </>):""}
             </div>
-          ) : null}
-          {item.nv1.soundage || (item.nv2 && item.nv2.soundage) ? (
-            <div className="item-detail soundage-detail">
-              <BallotIcon />
-            </div>
-          ) : null}
-          {item.nv1.photos || (item.nv2 && item.nv2.photos) ? (
-            <div className="item-detail image-detail">
-              <ImageIcon />
-            </div>
-          ) : null}
-          {item.nv1.video || (item.nv2 && item.nv2.video) ? (
-            <div className="item-detail video-detail">
-              <PlayArrowIcon />
-            </div>
-          ) : null}
+          ))
+          }
+          </div>
+          {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia) }}><PlusIcon /></div>)}
+
         </DetailsItems>
         <ClickAwayListener onClickAway={handleTooltipClose}>
           <div>
@@ -117,7 +192,7 @@ export default function HeadItem({
                       <div className="tooltip-btns-action">
                         <Button
                           onClick={() => {
-                            if(!checkIsConnected()){
+                            if (!checkIsConnected()) {
                               setState({ ...state, showModal: false });
                             }
                           }}
@@ -129,7 +204,7 @@ export default function HeadItem({
                           onClick={() => {
                             if (checkIsConnected()) {
                               setStatutFolower(!statutFolower);
-                            }else{
+                            } else {
                               setState({ ...state, showModal: false });
                             }
                           }}
@@ -196,7 +271,7 @@ export default function HeadItem({
         <div
           className="nb-message-comment"
           onClick={() => {
-            if(state.showModal){
+            if (state.showModal) {
               setState({ ...state, showModal: false });
             } else {
               const cpAction = {
@@ -207,7 +282,7 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-                setActiveItem((activeItem && activeItem.id == item.id)? null : item);
+              setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
             }
           }}
         >

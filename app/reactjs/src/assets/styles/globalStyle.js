@@ -2,6 +2,7 @@ import { Container } from 'react-bootstrap';
 import styled from "styled-components";
 import underlineIcon from "../images/icons/underlineIcon.svg";
 import replyIcon from "../images/icons/replyIcon.svg";
+import iconPlus from "../images/icons/iconPlus.svg";
 import replyIconGreen from "../images/icons/replyIconGreen.svg";
 import { Button, Modal } from '@mui/material';
 
@@ -28,6 +29,9 @@ export const ReplyIcon = styled.i`
 `;
 export const ReplyIconGreen = styled.i`
   ${mixinIcon({ urlIcon: replyIconGreen, width: 10, height: 9 })};
+`;
+export const PlusIcon = styled.i`
+  ${mixinIcon({ urlIcon: iconPlus, width: 13, height: 13 })};
 `;
 export const ButtonDefault = styled(Button)`
     min-width: 132px;
@@ -276,6 +280,21 @@ export const HeadContentItem = styled.div`
 export const DetailsItems = styled.div`
     display: flex;
     align-items: center;
+    position: relative;
+    .mediaDetails {
+        display: flex;
+        position: absolute;
+        left: calc(100% - 1px);
+        background: #FFF;
+        opacity: 0;
+        transition: .3s linear;
+        pointer-events: none;
+        
+        &.showMedia{
+            opacity: 1;
+            pointer-events: all;
+        }
+    }
     .item-detail{
         height: 23px;
         width: 23px;
@@ -303,6 +322,19 @@ export const DetailsItems = styled.div`
         }
         &.soundage-detail{
             background-color: #62c4b4;
+        }
+        &.more-media{
+            background-color: #bababa;
+            cursor: pointer;
+            i{
+                transform-origin: center;
+                transition: .3s linear;
+            }
+            &.is-showing{
+                i{
+                    transform: rotate(45deg);
+                }
+            }
         }
     }
     @media(max-width: 767px){
