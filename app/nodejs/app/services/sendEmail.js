@@ -9,6 +9,9 @@ export default function sendEmail({
   tmp = "",
   params = {},
 }) {
+  params = {
+    ...params, public: process.env.URL_PUBLIC
+  }
   if (!from) from = process.env.MAILER_ADMIN;
   if (!to) to = process.env.MAILER_ADMIN;
 
@@ -27,7 +30,7 @@ export default function sendEmail({
     });
   }
 
-  return ejs.renderFile( process.cwd() + "/app/templates/" + tmp, params, function (err, data) {
+  return ejs.renderFile(process.cwd() + "/app/templates/" + tmp, params, function (err, data) {
     if (err) {
       console.log(err);
       return false;
