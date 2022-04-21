@@ -1,4 +1,4 @@
-export default function mediaModel(sequelize, Sequelize) {
+export default function media(sequelize, Sequelize) {
   const Media = sequelize.define("media", {
     type: {
       type: Sequelize.STRING,
@@ -29,6 +29,12 @@ export default function mediaModel(sequelize, Sequelize) {
     },
 
   });
+
+  Media.associate = function(models) {
+    Media.belongsTo(models.pli, { foreignKey: 'pliId'});
+
+    Media.hasMany(models.sondageOptions, { foreignKey: 'mediaId' });
+  };
   
   return Media;
 }

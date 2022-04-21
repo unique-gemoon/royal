@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 
-export default function userModel(sequelize, Sequelize) {
+export default function user(sequelize, Sequelize) {
   const User = sequelize.define("user", {
     username: {
       type: Sequelize.STRING,
@@ -71,6 +71,14 @@ export default function userModel(sequelize, Sequelize) {
     }
     user.roles = [...user.roles, 'ROLE_USER'];
   });
+
+  User.associate = function (models) {
+    User.hasMany(models.pli, { foreignKey: "userId" });
+
+    User.belongsToMany(models.sondageOptions, { through: "sondageVotes" });
+
+    User.belongsToMany(models.pli, { through: models.appearancePli });
+  };
   
   return User;
 }

@@ -1,6 +1,6 @@
-export default function sondageOptionsModel(sequelize, Sequelize) {
+export default function sondageOptions(sequelize, Sequelize) {
   const SondageOptions = sequelize.define("sondageOptions", {
-    option: {
+    name: {
       type: Sequelize.STRING,
       notEmpty: true,
     },
@@ -14,6 +14,12 @@ export default function sondageOptionsModel(sequelize, Sequelize) {
     },
 
   });
+
+  SondageOptions.associate = function (models) {
+    SondageOptions.belongsTo(models.media, { foreignKey: "mediaId" });
+
+    SondageOptions.belongsToMany(models.user, { through: "sondageVotes" });
+  };
   
   return SondageOptions;
 }

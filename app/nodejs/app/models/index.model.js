@@ -1,13 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 import { Sequelize } from "sequelize";
-import userModel from "./user.model.js";
-import pliModel from './pli.model.js';
-import mediaModel from './media.model.js';
-import sondageOptionsModel from "./sondageOptions.model.js";
-import appearancePliModel from "./appearancePli.model.js";
+import user from "./user.model.js";
+import pli from './pli.model.js';
+import media from './media.model.js';
+import sondageOptions from "./sondageOptions.model.js";
+import appearancePli from "./appearancePli.model.js";
 
-const db = {};
+let db = {};
 
 const sequelize = new Sequelize(
   process.env.DB_NAME,
@@ -27,29 +27,19 @@ const sequelize = new Sequelize(
   }
 );
 
+db.user = user(sequelize, Sequelize);
+db.pli = pli(sequelize, Sequelize);
+db.media = media(sequelize, Sequelize);
+db.sondageOptions = sondageOptions(sequelize, Sequelize);
+db.appearancePli = appearancePli(sequelize, Sequelize);
+
+Object.keys(db).forEach(modelName => {
+  if (db[modelName].associate) {
+    db[modelName].associate(db);
+  }
+});
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
-
-db.user = userModel(sequelize, Sequelize);
-db.pli = pliModel(sequelize, Sequelize);
-db.media = mediaModel(sequelize, Sequelize);
-db.sondageOptions = sondageOptionsModel(sequelize, Sequelize);
-db.appearancePliModel = appearancePliModel(sequelize, Sequelize);
-
-db.user.hasMany(db.pli);
-db.pli.belongsTo(db.user, {foreignKey: 'userId'});
-
-db.pli.hasMany(db.media);
-db.media.belongsTo(db.pli);
-
-db.media.hasMany(db.sondageOptions, {foreignKey: 'mediaId'});
-db.sondageOptions.belongsTo(db.media, {foreignKey: 'mediaId'});
-
-db.sondageOptions.belongsToMany(db.user, { through: 'sondageVotes' });
-db.user.belongsToMany(db.sondageOptions, { through: 'sondageVotes' });
-
-db.pli.belongsToMany(db.user, { through: db.appearancePliModel });
-db.user.belongsToMany(db.pli, { through: db.appearancePliModel });
-
 
 export default db;
