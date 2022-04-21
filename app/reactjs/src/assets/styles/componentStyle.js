@@ -2244,18 +2244,18 @@ export const CommentItem = styled.div`
             padding: 0;
             margin-bottom: 12px;
                 .form-control{
-                    color: #6a7b89;
+                    color: #000 !important;
                     &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                     &::-moz-placeholder { /* Firefox 19+ */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                     &:-ms-input-placeholder { /* IE 10+ */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                     &:-moz-placeholder { /* Firefox 18- */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                 }
         }
