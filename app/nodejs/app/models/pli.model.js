@@ -1,4 +1,4 @@
-export default function pliModel(sequelize, Sequelize) {
+export default function pli(sequelize, Sequelize) {
   const Pli = sequelize.define("pli", {
     content: {
       type: Sequelize.STRING,
@@ -24,6 +24,14 @@ export default function pliModel(sequelize, Sequelize) {
     },
 
   });
+
+  Pli.associate = function (models) {
+    Pli.hasMany(models.media, { foreignKey: "pliId" });
+
+    Pli.belongsTo(models.user, { foreignKey: "userId" });
+
+    Pli.belongsToMany(models.user, { through: models.appearancePli });
+  };
   
   return Pli;
 }
