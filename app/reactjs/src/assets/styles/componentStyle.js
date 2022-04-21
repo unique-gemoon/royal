@@ -2244,18 +2244,18 @@ export const CommentItem = styled.div`
             padding: 0;
             margin-bottom: 12px;
                 .form-control{
-                    color: #6a7b89;
+                    color: #000 !important;
                     &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                     &::-moz-placeholder { /* Firefox 19+ */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                     &:-ms-input-placeholder { /* IE 10+ */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                     &:-moz-placeholder { /* Firefox 18- */
-                        color: #6a7b89;
+                        color: #6a7b89 !important;
                     }
                 }
         }
@@ -2351,6 +2351,10 @@ export const BlocNewPliContent = styled.div`
                 display: flex;
                 flex-wrap: wrap;
                 margin-top: 15px;
+                @media(max-width: 767px){
+                    justify-content: center;
+                    width: 100%;
+                }
             }
         }
     }
@@ -2521,6 +2525,7 @@ export const BlocAddPli = styled.div`
     .bloc-footer{
         display: flex;
         align-items: center;
+        flex-wrap: wrap;
         & > div{
             margin-bottom: 10px;
         }
@@ -2632,13 +2637,22 @@ export const BlocAddPli = styled.div`
             }
         }
         .liste-files{
-            order: 3;
-            margin: 0 5px;
             display: flex;
             align-items: center;
-            max-width: 264px;
+            flex-wrap: wrap;
             overflow-x: auto;
             padding: 10px 6px;
+            width: 100%;
+            & > div{
+                margin-right: 20px;
+                display: flex;
+                flex-wrap: wrap;
+            }
+            .bloc-item-video-file, .bloc-item-sound-file{
+                & > div{
+                    margin-bottom: 0px;
+                }
+            }
         }
         .toggle-action-dropzone{
             order: 1;
@@ -2650,11 +2664,12 @@ export const BlocAddPli = styled.div`
         }
         @media(max-width: 767px){
             .liste-files{
-                order: 1;
-                flex-wrap: wrap;
-                justify-content: center;
-                overflow-x: initial;
-                width: auto;
+                & > div{
+                    margin-right: 0;
+                    width: 100%;
+                    justify-content: center;
+                    margin-bottom: 12px;
+                }
             }
             .count-publish-pli1{
                 margin-left: initial;
@@ -2677,6 +2692,9 @@ export const BlocAddPli = styled.div`
                 height: 100%;
                 svg{
                     font-size: 18px;
+                }
+                @media(max-width: 575px){
+                    width: 80px;
                 }
             }
         }

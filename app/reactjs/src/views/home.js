@@ -107,21 +107,31 @@ export default function Home() {
           reponses: [
             {
               id: 1,
-              user: "Dan",
+              user: "Lys",
               subject: "J'aime bien cette citation !",
               time: "2mn",
+              userRep: "Dan"
             },
             {
               id: 2,
-              user: "Jacquou",
-              subject: "J'aime bien cette citation !",
-              time: "2mn",
-            },
-            {
-              id: 3,
               user: "Dan",
               subject: "J'aime bien cette citation !",
               time: "2mn",
+              userRep: "Lys"
+            },
+            {
+              id: 3,
+              user: "Jacquou",
+              subject: "J'aime bien cette citation !",
+              time: "2mn",
+              userRep: "Dan"
+            },
+            {
+              id: 4,
+              user: "Dan",
+              subject: "J'aime bien cette citation !",
+              time: "2mn",
+              userRep: "Jacquou"
             },
           ],
         },
@@ -134,9 +144,10 @@ export default function Home() {
           reponses: [
             {
               id: 1,
-              user: "Dan",
+              user: "Lys",
               subject: "J'aime bien cette citation !",
               time: "2mn",
+              userRep: "Dan"
             },
           ],
         },
