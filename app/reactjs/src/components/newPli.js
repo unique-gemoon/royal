@@ -161,6 +161,7 @@ export default function NewPli({
                       <NewPilOptions
                         state={stateTextarea}
                         setState={setStateTextarea}
+                        message={message} setMessage={setMessage}
                       />
                       <div className="count-publish-pli1">
                         <CountDown
@@ -190,7 +191,7 @@ export default function NewPli({
                 {addOverture && (
                   <div className="new-pli-nv2">
                     <div className="cadre-content-pli">
-                      <NewOvertureOptions submitting={submitting} />
+                      <NewOvertureOptions message={message} setMessage={setMessage} submitting={submitting} />
                     </div>
                   </div>
                 )}

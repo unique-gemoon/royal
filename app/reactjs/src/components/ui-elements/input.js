@@ -14,6 +14,7 @@ export default function Input({
   className = "form-group",
   children,
   as,
+  accept,
   ...props
 }) {
   return (
