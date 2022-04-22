@@ -6,7 +6,7 @@ import HighlightOffIcon from "@mui/icons-material/HighlightOff";
 
 export default function AddSoundage({
   soundage,
-  setSoundage = () => {},
+  setSoundage,
   maxOption,
   showSoundage,
   setShowSoundage = () => {},
@@ -18,7 +18,7 @@ export default function AddSoundage({
     setSoundage({ ...soundage, value: options });
   };
 
-  console.log(soundage);
+  //console.log(soundage);
 
   return (
     <BlocNewSoundage>
@@ -40,7 +40,7 @@ export default function AddSoundage({
                 label={option.label}
                 variant="outlined"
               />
-              <Button onClick={removeOption(option)}>
+              <Button onClick={(e)=>removeOption(option)}>
                 <HighlightOffIcon />
               </Button>
             </div>
@@ -50,18 +50,16 @@ export default function AddSoundage({
         className="button-addiOption"
         onClick={(e) => {
           const size = soundage.value.length;
-          if (size <= maxOption - 1)
-            setSoundage({
-              ...soundage,
-              value: [
-                ...soundage.value,
-                {
-                  value: "",
-                  label: `option ${size + 1}`,
-                  name: "option" + size,
-                },
-              ],
-            });
+          if (size <= maxOption - 1){
+            const cpSoundage = {...soundage};
+            const newOption = {
+              value: "",
+              label: `option ${size + 1}`,
+              name: "option" + size,
+            };
+            cpSoundage.value = [...cpSoundage.value, newOption];
+            setSoundage(cpSoundage);
+          }
         }}
       >
         <AddCircleRoundedIcon /> Ajouter une option

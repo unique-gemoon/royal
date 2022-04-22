@@ -103,7 +103,7 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
                   aria-labelledby="composition-button"
                   className="profil-menu-options"
                 >
-                  <MenuItem onClick={logout}>Se déconnecter</MenuItem>
+                  <MenuItem onClick={()=>logout()}>Se déconnecter</MenuItem>
                   <MenuItem onClick={()=>{setModalConfirm(true)}}>
                     Supprimer son compte
                   </MenuItem>
@@ -119,7 +119,7 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
             <p className='qst-confirm'>lorem ipsum</p>
             <div className='bloc-btns-confirm'>
               <Button onClick={() => setModalConfirm(false)}>Annuler</Button>
-              <Button onClick={deleteAccount }>Confirmer</Button>
+              <Button onClick={()=>deleteAccount()}>Confirmer</Button>
             </div>
           </div>
         </ModalItem.Body>

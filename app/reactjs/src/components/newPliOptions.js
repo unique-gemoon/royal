@@ -113,20 +113,20 @@ export default function NewPliOptions({
                                 {current === "images" ?
                                     <ImageUpload>
                                         <img src={URL.createObjectURL(file)} alt={file.name} />
-                                        <Button onClick={removeFile(file)}><RemoveFile /></Button>
+                                        <Button onClick={()=>removeFile(file)}><RemoveFile /></Button>
                                     </ImageUpload>
                                     : null}
                                 {current === "video" ?
                                     <VideoUpload>
                                         <img src={iconVideo} alt={file.name}   />
-                                        <Button onClick={removeFile(file)}><RemoveFile /></Button>
+                                        <Button onClick={()=>removeFile(file)}><RemoveFile /></Button>
                                     </VideoUpload>
                                     : null}
                                 {current === "music" ?
                                     <SoundUpload>
                                         <span className='icon-sound'><GraphicEqIcon /></span>
                                         <p className='name-sound'><span>{file.name.substring(0, file.name.lastIndexOf('.'))}</span><span>.{file.name.substring(file.name.indexOf('.') + 1)}</span></p>
-                                        <Button onClick={removeFile(file)}><RemoveFile /></Button>
+                                        <Button onClick={()=>removeFile(file)}><RemoveFile /></Button>
                                     </SoundUpload>
                                     : null}
 
@@ -138,7 +138,7 @@ export default function NewPliOptions({
             {Array.from(state.media.images.file).map((file, i) => (
               <ImageUpload key={i}>
                 <img src={URL.createObjectURL(file)} alt={file.name} />
-                <Button onClick={removeFile(file, "images")}>
+                <Button onClick={()=>removeFile(file, "images")}>
                   <RemoveFile />
                 </Button>
               </ImageUpload>
@@ -150,7 +150,7 @@ export default function NewPliOptions({
             {Array.from(state.media.video.file).map((file, i) => (
               <VideoUpload key={i}>
                 <img src={iconVideo} alt={file.name} />
-                <Button onClick={removeFile(file, "video")}>
+                <Button onClick={()=>removeFile(file, "video")}>
                   <RemoveFile />
                 </Button>
               </VideoUpload>
@@ -172,7 +172,7 @@ export default function NewPliOptions({
                     .{file.name.substring(file.name.indexOf(".") + 1)}
                   </span>
                 </p>
-                <Button onClick={removeFile(file, "music")}>
+                <Button onClick={()=>removeFile(file, "music")}>
                   <RemoveFile />
                 </Button>
               </SoundUpload>
@@ -189,11 +189,7 @@ export default function NewPliOptions({
         )}
         <div className="options-new-pli">
           <div className="toggle-action-dropzone">
-            <DetailsItems
-              className={`${
-                openDrop || state.soundage.open ? "is-active-dropzone" : ""
-              }`}
-            >
+            <DetailsItems>
               {/* TODO : Drag and drop file
                         <Button onClick={() => { setopenDrop(true); setCurrent('images') }} className={`item-detail image-detail ${(!current || current === "images") && openDrop ? "active" : ''}`}>
                             <ImageIcon />
@@ -207,9 +203,9 @@ export default function NewPliOptions({
                         e.currentTarget.files.length <=
                       4
                     ) {
-                      const cpState = { ...state.media };
-                      cpState.images.file = [
-                        ...cpState.images.file,
+                      const cpState = { ...state };
+                      cpState.media.images.file = [
+                        ...cpState.media.images.file,
                         ...e.currentTarget.files,
                       ];
                       setState(cpState);
@@ -238,9 +234,9 @@ export default function NewPliOptions({
                       1
                     ) {
                       console.log("df");
-                      const cpState = { ...state.media };
-                      cpState.video.file = [
-                        ...cpState.video.file,
+                      const cpState = { ...state };
+                      cpState.media.video.file = [
+                        ...cpState.media.video.file,
                         ...e.currentTarget.files,
                       ];
                       setState(cpState);
@@ -278,9 +274,9 @@ export default function NewPliOptions({
                         e.currentTarget.files.length <=
                       1
                     ) {
-                      const cpState = { ...state.media };
-                      cpState.music.file = [
-                        ...cpState.music.file,
+                      const cpState = { ...state };
+                      cpState.media.music.file = [
+                        ...cpState.media.music.file,
                         ...e.currentTarget.files,
                       ];
                       setState(cpState);
