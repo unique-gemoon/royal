@@ -14,7 +14,7 @@ export default function ItemComment({ item }) {
 
   const [activeItemComment, setActiveItemComment] = useState(null);
   const auth = useSelector((store) => store.auth);
-  console.log(activeItemComment)
+  console.log(activeItemComment);
   return (
     <CommentItem>
       <div className="head-comment">
@@ -33,12 +33,7 @@ export default function ItemComment({ item }) {
             {state.repondre ? <ReplyIcon /> : <ReplyIconGreen />} Répondre
           </p>
           {state.repondre ? (
-            <InputEmoji
-              name="comment-pli"
-              placeholder="Mon commentaire"
-              state={{}}
-              setState={() => {}}
-            />
+            <InputEmoji name="comment-pli" placeholder="Mon commentaire" />
           ) : null}
         </div>
       )}
@@ -50,7 +45,7 @@ export default function ItemComment({ item }) {
               className={`toggle-reponces ${!state.openReponces ? "open" : ""}`}
               onClick={() => {
                 setState({ ...state, openReponces: !state.openReponces });
-                setActiveItemComment(null)
+                setActiveItemComment(null);
               }}
             >
               <ArrowDownIcon />
@@ -64,7 +59,9 @@ export default function ItemComment({ item }) {
                 item.reponses.map((rep, index) => (
                   <CommentItem key={index}>
                     <div className="head-comment">
-                      <span className="name-user-comment">{rep.user} {">"} {rep.userRep}</span>
+                      <span className="name-user-comment">
+                        {rep.user} {">"} {rep.userRep}
+                      </span>
                       {rep.time ? " . " : null}
                       <span className="time-comment">Il y a {rep.time}</span>
                     </div>
@@ -72,17 +69,32 @@ export default function ItemComment({ item }) {
                     {auth.roles.includes(ROLES.ROLE_USER) && (
                       <div className="bloc-repondre">
                         <p
-                          className={`repondre-comment ${activeItemComment && activeItemComment.id == rep.id ? "" : "closed"}`}
-                          onClick={() => setActiveItemComment((activeItemComment && activeItemComment.id == rep.id) ? null : rep) }
+                          className={`repondre-comment ${
+                            activeItemComment && activeItemComment.id == rep.id
+                              ? ""
+                              : "closed"
+                          }`}
+                          onClick={() =>
+                            setActiveItemComment(
+                              activeItemComment &&
+                                activeItemComment.id == rep.id
+                                ? null
+                                : rep
+                            )
+                          }
                         >
-                          {activeItemComment && activeItemComment.id == rep.id ? <ReplyIcon /> : <ReplyIconGreen />} Répondre
+                          {activeItemComment &&
+                          activeItemComment.id == rep.id ? (
+                            <ReplyIcon />
+                          ) : (
+                            <ReplyIconGreen />
+                          )}{" "}
+                          Répondre
                         </p>
                         {activeItemComment && activeItemComment.id == rep.id ? (
                           <InputEmoji
                             name="comment-pli"
                             placeholder="Mon commentaire"
-                            state={{}}
-                            setState={() => { }}
                           />
                         ) : null}
                       </div>

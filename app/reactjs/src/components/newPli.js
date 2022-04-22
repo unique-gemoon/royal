@@ -7,21 +7,21 @@ import { Button } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
-import TextareaAutosize from "react-textarea-autosize";
 import { BlocAddPli } from "../assets/styles/componentStyle";
+import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
+import connector from "../connector";
 import { useOutsideAlerter } from "../helper/events";
+import { getMsgError } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 import AddSoundage from "./addSoundage";
 import BarTemporelle from "./barTemporelle";
 import ErrorFormMessage from "./errorFormMessage";
-import NewOvertureOptions from "./newOvertureOptions";
-import NewPilOptions from "./newPilOptions";
-import CountDown from "./ui-elements/countDown";
+import NewOuvertureOptions from "./newOuvertureOptions";
+import NewPliOptions from "./newPliOptions";
 import ButtonDef from "./ui-elements/buttonDef";
-import { getMsgError } from "../helper/fonctions";
-import connector from '../connector';
-import endPoints from '../config/endPoints';
+import CountDown from "./ui-elements/countDown";
+import InputTextareaAutosize from "./ui-elements/inputTextareaAutosize";
 
 export default function NewPli({
   action,
@@ -29,24 +29,120 @@ export default function NewPli({
   setMsgNotifTop = () => {},
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
-  const [stateTextarea, setStateTextarea] = useState({
+  const [state, setState] = useState({
     inputEmoji: {
       name: "message-input",
       placeholder: "Que veux-tu dire, Lys ?",
-      value: "",
+      value: localStorage.getItem("inputEmoji") || "",
       type: "text",
       as: "textarea",
+      open: false,
+      error: false,
     },
-    openSoundage: false,
-    soundageOptions: [
-      {
-        name: "option-1",
-        label: "Option 1",
-        value: "",
+    inputEmojiOuverture: {
+      name: "content-pli2",
+      placeholder: "Que veux-tu dire, Lys ?",
+      value: localStorage.getItem("inputEmojiOuverture") || "",
+      open: false,
+      error: false,
+    },
+    soundage: {
+      name: "soundage",
+      value: [
+        {
+          name: "option-1",
+          label: "Option 1",
+          value: "",
+        },
+      ],
+      maxOptions: 4,
+      open: false,
+      error: false,
+    },
+    soundageOuverture: {
+      name: "soundage",
+      value: [
+        {
+          name: "option-1",
+          label: "Option 1",
+          value: "",
+        },
+      ],
+      maxOptions: 6,
+      open: false,
+      error: false,
+    },
+    media: {
+      images: {
+        name: "image",
+        id: "file-images-nv1",
+        type: "file",
+        accept: "image/jpeg, image/png",
+        multiple: true,
+        value: [],
+        file: [],
       },
-    ],
-    maxOption: 4
+      video: {
+        name: "video",
+        id: "file-video-nv1",
+        type: "file",
+        accept: "video/mp4,video/x-m4v,video/*",
+        multiple: true,
+        value: [],
+        file: [],
+      },
+      music: {
+        name: "music",
+        id: "file-music-nv1",
+        type: "file",
+        accept: "audio/mpeg",
+        multiple: true,
+        value: [],
+        file: [],
+      },
+    },
+    ouvertureMedia: {
+      images: {
+        name: "image",
+        id: "file-images-nv2",
+        accept: "image/jpeg, image/png",
+        icon: "img",
+        multiple: true,
+        value: [],
+        file: [],
+      },
+      video: {
+        name: "video",
+        id: "file-video-nv2",
+        accept: "video/mp4,video/x-m4v,video/*",
+        icon: "mp4",
+        multiple: false,
+        value: [],
+        file: [],
+      },
+      music: {
+        name: "music",
+        id: "file-music-nv2",
+        accept: "audio/mpeg",
+        icon: "mp3",
+        multiple: false,
+        value: [],
+        file: [],
+      },
+    },
   });
+
+  useEffect(() => {
+    localStorage.setItem("inputEmoji", state.inputEmoji.value);
+  }, [state.inputEmoji]);
+
+  useEffect(() => {
+    localStorage.setItem(
+      "inputEmojiOuverture",
+      state.inputEmojiOuverture.value
+    );
+  }, [state.inputEmojiOuverture]);
+
   const [togglePli, setTogglePli] = useState(false);
 
   const divRef = useRef();
@@ -60,7 +156,7 @@ export default function NewPli({
     }
   }, [togglePli]);
 
-  const [addOverture, setAddOverture] = useState(false);
+  const [addOuverture, setAddOuverture] = useState(false);
   const [message, setMessage] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const dispatch = useDispatch();
@@ -81,11 +177,24 @@ export default function NewPli({
   const submitPli = (e) => {
     e.preventDefault();
     if (!submitting) {
-      console.log(stateTextarea.inputEmoji.value);
-      var content = stateTextarea.inputEmoji.value;
+      console.log(state.inputEmoji.value);
+      var content = state.inputEmoji.value;
 
-      const ouverture = {content: "test", sondage:["option1","option2"], audio: ["test.mp3"], video: ["test.mp4"], image : ["test.png"] };
-      const data = {content: "test ouverture", sondage:["option1","option2"], audio: ["test.mp3"], video: ["test.mp4"], ouverture, duration : "00:01:00" };
+      const ouverture = {
+        content: "test",
+        sondage: ["option1", "option2"],
+        audio: ["test.mp3"],
+        video: ["test.mp4"],
+        image: ["test.png"],
+      };
+      const data = {
+        content: "test ouverture",
+        sondage: ["option1", "option2"],
+        audio: ["test.mp3"],
+        video: ["test.mp4"],
+        ouverture,
+        duration: "00:01:00",
+      };
 
       connector({
         method: "post",
@@ -93,7 +202,6 @@ export default function NewPli({
         data,
         success: (response) => {
           msgErrors({ submit: false });
-
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -107,10 +215,10 @@ export default function NewPli({
 
   const msgErrors = (e) => {
     if (e.msg !== undefined) setMessage(e.msg);
-    const cpState = { ...stateTextarea };
+    const cpState = { ...state };
     if (e.inputEmoji !== undefined) cpState.inputEmoji.error = e.inputEmoji;
     if (e.submit !== undefined) setSubmitting(e.submit);
-    setStateTextarea(cpState);
+    setState(cpState);
   };
 
   return (
@@ -128,52 +236,52 @@ export default function NewPli({
                 )}
                 <div className="new-pli-nv1">
                   <div className="cadre-content-pli">
-                    <TextareaAutosize
-                      {...stateTextarea.inputEmoji}
+                    <InputTextareaAutosize
+                      {...state.inputEmoji}
                       onChange={(e) => {
-                        const cpState = { ...stateTextarea };
+                        const cpState = { ...state };
                         if (e.target.value.length <= 280) {
                           cpState.inputEmoji.value = e.target.value;
-                          setStateTextarea(cpState);
+                          setState(cpState);
                         }
                       }}
-                    />
-                    {stateTextarea.openSoundage && (
+                    /> 
+                    {state.soundage.open && (
                       <AddSoundage
-                        maxOption={stateTextarea.maxOption}
-                        state={stateTextarea.soundageOptions}
-                        showSoundage={stateTextarea.openSoundage}
-                        setShowSoundage={(e) =>
-                          {setStateTextarea({
-                            ...stateTextarea,
-                            openSoundage: e,
-                          });}
-                        }
-                        setState={(e) =>
-                          {setStateTextarea({
-                            ...stateTextarea,
-                            soundageOptions: e,
-                          });}
-                        }
+                        maxOption={state.soundage.maxOptions}
+                        soundage={state.soundage}
+                        showSoundage={state.soundage.open}
+                        setShowSoundage={(e) => {
+                          setState({
+                            ...state,
+                            soundage: { ...state.soundage, open: e },
+                          });
+                        }}
+                        setSoundage={(e) => {
+                          setState({
+                            ...state,
+                            soundage: e,
+                          });
+                        }}
                       />
                     )}
                     <div className="bloc-footer">
-                      <NewPilOptions
-                        state={stateTextarea}
-                        setState={setStateTextarea}
-                        message={message} setMessage={setMessage}
+                      <NewPliOptions
+                        state={state}
+                        setState={setState}
+                        setMessage={setMessage}
                       />
                       <div className="count-publish-pli1">
                         <CountDown
                           maxCount={280}
                           setState={
-                            (stateTextarea.inputEmoji.value
-                              ? stateTextarea.inputEmoji.value
+                            (state.inputEmoji.value
+                              ? state.inputEmoji.value
                               : ""
                             ).length
                           }
                         />
-                        {!addOverture && (
+                        {!addOuverture && (
                           <div className="bloc-btn-publish">
                             <ButtonDef
                               spinner={submitting}
@@ -188,18 +296,23 @@ export default function NewPli({
                   </div>
                   <BarTemporelle />
                 </div>
-                {addOverture && (
+                {addOuverture && (
                   <div className="new-pli-nv2">
                     <div className="cadre-content-pli">
-                      <NewOvertureOptions message={message} setMessage={setMessage} submitting={submitting} />
+                      <NewOuvertureOptions
+                        state={state}
+                        setState={setState}
+                        setMessage={setMessage}
+                        submitting={submitting}
+                      />
                     </div>
                   </div>
                 )}
                 <div
                   className="toggle-open-ouverture"
-                  onClick={() => setAddOverture(!addOverture)}
+                  onClick={() => setAddOuverture(!addOuverture)}
                 >
-                  {!addOverture ? (
+                  {!addOuverture ? (
                     <>
                       Ajouter une ouverture <AddIcon />
                     </>
@@ -215,42 +328,41 @@ export default function NewPli({
         </div>
       )}
 
-      {togglePli === false && <div
-        onClick={() => {
-          if (checkIsConnected()) {
-            setMsgNotifTop(null);
-            setTogglePli(true);
-            const cpAction = {
-              ...action,
-              notification: { ...action.notification, isOpen: false },
-              folower: { ...action.folower, isOpen: false },
-              search: { ...action.search, isOpen: false },
-              messagerie: { ...action.messagerie, isOpen: false },
-            };
-            setAction(cpAction);
-          }
-        }}
-        className="toggled-new-pli"
+      {togglePli === false && (
+        <div
+          onClick={() => {
+            if (checkIsConnected()) {
+              setMsgNotifTop(null);
+              setTogglePli(true);
+              const cpAction = {
+                ...action,
+                notification: { ...action.notification, isOpen: false },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: false },
+                messagerie: { ...action.messagerie, isOpen: false },
+              };
+              setAction(cpAction);
+            }
+          }}
+          className="toggled-new-pli"
+        >
+          {isDesktopOrLaptop ? (
+            <KeyboardArrowUpIcon />
+          ) : (
+            <AddCircleOutlineOutlinedIcon />
+          )}
+        </div>
+      )}
 
-      >
-        {isDesktopOrLaptop ? (
-          <KeyboardArrowUpIcon />
-        ) : (
-          <AddCircleOutlineOutlinedIcon />
-        )}
-      </div> }
-      
-      {togglePli && <div
-        className="toggled-new-pli open-pli"
-
-      >
-        {isDesktopOrLaptop ? (
-          <KeyboardArrowUpIcon />
-        ) : (
-          <AddCircleOutlineOutlinedIcon />
-        )}
-      </div> }
-      
+      {togglePli && (
+        <div className="toggled-new-pli open-pli">
+          {isDesktopOrLaptop ? (
+            <KeyboardArrowUpIcon />
+          ) : (
+            <AddCircleOutlineOutlinedIcon />
+          )}
+        </div>
+      )}
     </BlocAddPli>
   );
 }
