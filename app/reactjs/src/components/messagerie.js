@@ -199,7 +199,7 @@ export default function Messagerie() {
                 }}
               >
                 {" "}
-                <span className="close-drop-menu" onClick={handleClose}>
+                <span className="close-drop-menu" onClick={()=>handleClose}>
                   <MoreVertIcon />
                 </span>
                 <MenuItem onClick={handleClose}>Bloquer</MenuItem>

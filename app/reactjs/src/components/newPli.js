@@ -250,17 +250,18 @@ export default function NewPli({
                       <AddSoundage
                         maxOption={state.soundage.maxOptions}
                         soundage={state.soundage}
+                        setSoundage={(e) => {
+                          console.log("setSoundage",e);
+                          setState({
+                            ...state,
+                            soundage: e,
+                          });
+                        }}
                         showSoundage={state.soundage.open}
                         setShowSoundage={(e) => {
                           setState({
                             ...state,
                             soundage: { ...state.soundage, open: e },
-                          });
-                        }}
-                        setSoundage={(e) => {
-                          setState({
-                            ...state,
-                            soundage: e,
                           });
                         }}
                       />

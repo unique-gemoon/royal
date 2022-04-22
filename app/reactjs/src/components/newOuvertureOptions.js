@@ -143,19 +143,19 @@ export default function NewOuvertureOptions({
         {state.soundageOuverture.open && (
           <AddSoundage
             maxOption={state.soundageOuverture.maxOptions}
-            soundage={state.soundage}
+            soundage={state.soundageOuverture}
+            setSoundage={(e) => {
+              setState({
+                ...state,
+                soundageOuverture: e
+              }); 
+            }}
             showSoundage={state.soundageOuverture.open}
             setShowSoundage={(e) => {
               setState({
                 ...state,
                 soundageOuverture: { ...state.soundageOuverture, open: e },
               });
-            }}
-            setSoundage={(e) => {
-              setState({
-                ...state,
-                soundageOuverture: e
-              }); 
             }}
           />
         )}
@@ -165,7 +165,7 @@ export default function NewOuvertureOptions({
               {dropFile["images"].file.map((file, i) => (
                 <ImageUpload key={i}>
                   <img src={URL.createObjectURL(file)} alt={file.name} />
-                  <Button onClick={removeFile(file, "images")}>
+                  <Button onClick={()=>removeFile(file, "images")}>
                     <RemoveFile />
                   </Button>
                 </ImageUpload>
@@ -177,7 +177,7 @@ export default function NewOuvertureOptions({
               {Array.from(state.ouvertureMedia.images.file).map((file, i) => (
                 <ImageUpload key={i}>
                   <img src={URL.createObjectURL(file)} alt={file.name} />
-                  <Button onClick={removeFile(file, "images")}>
+                  <Button onClick={()=>removeFile(file, "images")}>
                     <RemoveFile />
                   </Button>
                 </ImageUpload>
@@ -190,7 +190,7 @@ export default function NewOuvertureOptions({
               {Array.from(state.ouvertureMedia.video.file).map((file, i) => (
                 <VideoUpload>
                   <img src={iconVideo} alt={file.name} />
-                  <Button onClick={removeFile(file, "video")}>
+                  <Button onClick={()=>removeFile(file, "video")}>
                     <RemoveFile />
                   </Button>
                 </VideoUpload>
@@ -202,7 +202,7 @@ export default function NewOuvertureOptions({
               {dropFile["video"].file.map((file, i) => (
                 <VideoUpload key={i}>
                   <img src={iconVideo} alt={file.name} />
-                  <Button onClick={removeFile(file, "video")}>
+                  <Button onClick={()=>removeFile(file, "video")}>
                     <RemoveFile />
                   </Button>
                 </VideoUpload>
@@ -225,7 +225,7 @@ export default function NewOuvertureOptions({
                       .{file.name.substring(file.name.indexOf(".") + 1)}
                     </span>
                   </p>
-                  <Button onClick={removeFile(file, "music")}>
+                  <Button onClick={()=>removeFile(file, "music")}>
                     <RemoveFile />
                   </Button>
                 </SoundUpload>
@@ -247,7 +247,7 @@ export default function NewOuvertureOptions({
                       .{file.name.substring(file.name.indexOf(".") + 1)}
                     </span>
                   </p>
-                  <Button onClick={removeFile(file, "music")}>
+                  <Button onClick={()=>removeFile(file, "music")}>
                     <RemoveFile />
                   </Button>
                 </SoundUpload>
@@ -263,13 +263,7 @@ export default function NewOuvertureOptions({
         </ToolBarEditor>
         <div className="bloc-toggle-emoji">
           <div className="toggle-action-dropzone">
-            <DetailsItems
-            // className={`${
-            //   openDrop || state.open
-            //     ? "is-active-dropzone"
-            //     : ""
-            // }`}
-            >
+            <DetailsItems>
               <div className={`item-detail image-detail`}>
                 <InputFile
                   {...state.ouvertureMedia.images}
