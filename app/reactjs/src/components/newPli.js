@@ -236,7 +236,7 @@ export default function NewPli({
                 )}
                 <div className="new-pli-nv1">
                   <div className="cadre-content-pli">
-                    {/* <InputTextareaAutosize
+                    <InputTextareaAutosize
                       {...state.inputEmoji}
                       onChange={(e) => {
                         const cpState = { ...state };
@@ -245,7 +245,7 @@ export default function NewPli({
                           setState(cpState);
                         }
                       }}
-                    /> */}
+                    /> 
                     {state.soundage.open && (
                       <AddSoundage
                         maxOption={state.soundage.maxOptions}
