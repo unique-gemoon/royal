@@ -245,7 +245,7 @@ export default function HeadItem({
               setState({ ...state, showModal: false });
             }}
           >
-            14 <VisibilityIcon />{" "}
+            13 <VisibilityIcon />{" "}
             <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
           </div>
         ) : (
@@ -261,7 +261,7 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
+              // setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
             }}
           >
             14 <VisibilityIcon />{" "}
@@ -269,7 +269,7 @@ export default function HeadItem({
           </div>
         )}
         <div
-          className="nb-message-comment"
+          className={`nb-message-comment ${(activeItem && activeItem.id == item.id) || state.showModal  ? "comment-is-open" : ""}`}
           onClick={() => {
             if (state.showModal) {
               setState({ ...state, showModal: false });

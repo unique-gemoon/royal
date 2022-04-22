@@ -76,13 +76,6 @@ export const DefaultMain = styled.div`
     }
 `;
 export const ContainerDef = styled(Container)`
-
-    @media(min-width: 1200px){
-        max-width: 1250px;
-    }
-    @media(min-width: 1430px){
-        max-width: 1380px;
-    }
     & > div{
         margin: 0;
     }
@@ -260,10 +253,23 @@ export const HeadContentItem = styled.div`
         .nb-message-comment{
             display: flex;
             align-items: center;
+            svg{
+                &:last-child{
+                    transition: none;
+                    transform-origin: center
+                }
+            }
             &:hover{
                 svg{
                     &:first-of-type{
                         color: ${OrangeColor};
+                    }
+                }
+            }
+            &.comment-is-open{
+                svg{
+                    &:last-child{
+                        transform: rotate(180deg);
                     }
                 }
             }

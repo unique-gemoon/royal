@@ -295,7 +295,7 @@ export const BlocActionButton = styled.div`
     &.messages-bloc-action{
         .content-button-action{
             bottom: 90px;
-            left: calc(50% - 625px + 24px);
+            left: 24px;
 
             @media(max-width: 1200px){
                 left: 15px;
@@ -319,15 +319,12 @@ export const BlocActionButton = styled.div`
                 overflow: hidden;
                 box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
             }
-            @media(min-width: 1430px){
-                left: calc(50% - 690px + 24px);
-            }
         }
     }
     &.search-bloc-action{
         .content-button-action{
             top: 25px;
-            left: calc(50% - 625px + 24px);
+            left: 24px;
             @media(max-width: 1200px){
                 left: 15px;
                 top: 55px;
@@ -346,15 +343,12 @@ export const BlocActionButton = styled.div`
             & > div{
                 max-height: calc(50vh - 296px + 25px + 90px);
             }
-            @media(min-width: 1430px){
-                left: calc(50% - 690px + 24px);
-            }
         }
     }
     &.abonnee-bloc-action{
         .content-button-action{
             top: 25px;
-            right: calc(50% - 625px + 24px);
+            right: 24px;
             @media(max-width: 1200px){
                 right: 15px;
                 top: 55px;
@@ -378,15 +372,12 @@ export const BlocActionButton = styled.div`
                 box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
                 width: 300px;
             }
-            @media(min-width: 1430px){
-                right: calc(50% - 690px + 24px);
-            }
         }
     }
     &.notification-bloc-action{
         .content-button-action{
             bottom: 90px;
-            right: calc(50% - 625px + 24px);
+            right: 24px;
             @media(max-width: 1200px){
                 right: 15px;
                 bottom: auto;
@@ -408,9 +399,6 @@ export const BlocActionButton = styled.div`
                 border-radius: 13px;
                 overflow: hidden;
                 box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
-            }
-            @media(min-width: 1430px){
-                right: calc(50% - 690px + 24px);
             }
         }
     }
