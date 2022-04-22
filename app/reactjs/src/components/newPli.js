@@ -101,7 +101,7 @@ export default function NewPli({
         file: [],
       },
     },
-    ouvertureMedia: {
+    mediaOuverture: {
       images: {
         name: "image",
         id: "file-images-nv2",

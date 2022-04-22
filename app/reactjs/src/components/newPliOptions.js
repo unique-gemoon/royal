@@ -69,7 +69,7 @@ export default function NewPliOptions({
     },
   });
 
-  const removeFile = (file, current) => () => {
+  const removeFile = (file, current) => {
     if (current) {
       const newFiles = [...dropFile[current].file];
       newFiles.splice(newFiles.indexOf(file), 1);
@@ -82,7 +82,7 @@ export default function NewPliOptions({
       newUpload.splice(newUpload.indexOf(file), 1);
       var element = {};
       element[current] = { ...state.media[current], file: newUpload };
-      setState({ ...state.media, ...element });
+      setState({ ...state, media:{...state.media, ...element} });
     }
   };
   const removeAll = () => {
