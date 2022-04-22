@@ -4,7 +4,6 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { Button } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { useEffect } from "react";
 import { useDropzone } from "react-dropzone";
 import ReactQuill from "react-quill";
 import BallotIcon from "../assets/images/icons/ballotIcon";
@@ -19,58 +18,39 @@ import {
   VideoUpload,
 } from "../assets/styles/componentStyle";
 import { DetailsItems } from "../assets/styles/globalStyle";
-import EditorToolbar, {
-  formats,
-  modules,
-} from "../components/ui-elements/editorToolBar";
 import { useOutsideAlerter } from "../helper/events";
 import { removeTags } from "../helper/fonctions";
 import AddSoundage from "./addSoundage";
 import Emojis from "./emojis";
 import ButtonDef from "./ui-elements/buttonDef";
 import CountDown from "./ui-elements/countDown";
-import Input from "./ui-elements/input";
+import EditorToolbar, { formats, modules } from "./ui-elements/editorToolBar";
+import InputFile from "./ui-elements/inputFile";
 
-export default function NewOvertureOptions({ submitting, message, setMessage = () => { } }) {
-  const [stateWysiwyg, setStateWysiwyg] = useState({
-    inputEmoji: {
-      name: "content-pli2",
-      placeholder: "Que veux-tu dire, Lys ?",
-      value: localStorage.getItem('stateWysiwyg')
-    },
-    openSoundage: false,
-    soundageOptions: [
-      {
-        name: "option-1",
-        label: "Option 1",
-        value: "",
-      },
-    ],
-    maxOption: 6
-  });
-  useEffect(() => {
-    localStorage.setItem('stateWysiwyg', stateWysiwyg.inputEmoji.value);
-    console.log(selectedFile)
-  }, [stateWysiwyg.inputEmoji.value]);
-
+export default function NewOuvertureOptions({
+  state,
+  setState = () => {},
+  submitting,
+  setMessage = () => {},
+}) {
   const [dropFile, setDropFile] = useState({
     images: {
       accept: "image/jpeg, image/png",
       icon: "img",
       multiple: true,
-      liste: [],
+      file: [],
     },
     video: {
       accept: "video/mp4,video/x-m4v,video/*",
       icon: "mp4",
       multiple: false,
-      liste: [],
+      file: [],
     },
     music: {
       accept: "audio/mpeg",
       icon: "mp3",
       multiple: false,
-      liste: [],
+      file: [],
     },
   });
   const [current, setCurrent] = useState("");
@@ -86,7 +66,7 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
         var element = {};
         element[current] = {
           ...dropFile[current],
-          liste: [...dropFile[current].liste, ...acceptedFiles],
+          file: [...dropFile[current].file, ...acceptedFiles],
         };
         setDropFile({ ...dropFile, ...element });
         //console.log(element);
@@ -97,87 +77,58 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
 
   const removeFile = (file, current) => () => {
     if (current) {
-      const newFiles = [...dropFile[current].liste];
+      const newFiles = [...dropFile[current].file];
       newFiles.splice(newFiles.indexOf(file), 1);
       var element = {};
-      element[current] = { ...dropFile[current], liste: newFiles };
+      element[current] = { ...dropFile[current], file: newFiles };
       setDropFile({ ...dropFile, ...element });
     }
     if (current) {
-      const newUpload = [...selectedFile[current].liste];
+      const newUpload = [...state.mediaOuverture[current].file];
       newUpload.splice(newUpload.indexOf(file), 1);
       var element = {};
-      element[current] = { ...selectedFile[current], liste: newUpload };
-      setSelectedFile({ ...dropFile, ...element });
+      element[current] = { ...state.mediaOuverture[current], file: newUpload };
+      setState({ ...dropFile, ...element });
     }
   };
   const removeAll = (val) => {
     if (current === val) {
       var element = {};
-      element[current] = { ...dropFile[current], liste: [] };
+      element[current] = { ...dropFile[current], file: [] };
       setDropFile({ ...dropFile, ...element });
     }
     if (current === val) {
       var element = {};
-      element[current] = { ...dropFile[current], liste: [] };
+      element[current] = { ...dropFile[current], file: [] };
       setDropFile({ ...dropFile, ...element });
     }
   };
 
   const ref = useRef(null);
-  
+
   useOutsideAlerter(ref, () => {
     setopenDrop(false);
   });
 
-
-
-  const [selectedFile, setSelectedFile] = useState({
-    images: {
-      id: "file-images-nv2",
-      type: 'file',
-      accept: "image/jpeg, image/png",
-      multiple: true,
-      liste: [],
-    },
-    video: {
-      id: "file-video-nv2",
-      type: 'file',
-      accept: "video/mp4,video/x-m4v,video/*",
-      multiple: true,
-      liste: [],
-    },
-    music: {
-      id: "file-music-nv2",
-      type: 'file',
-      accept: "audio/mpeg",
-      multiple: true,
-      liste: [],
-    },
-  });
-  
   return (
     <BlocNewPliContent className="pli2-ouverture-bloc" ref={ref}>
       <ReactQuill
         className="wisiwyg-pli2"
         theme="snow"
-        value={stateWysiwyg.inputEmoji.value || ""}
+        value={state.inputEmojiOuverture.value || ""}
         onChange={(e) => {
-          const cpState = { ...stateWysiwyg };
+          const cpState = { ...state };
           const value = e || "";
-
           if (removeTags(value).length > 2000) {
-            console.log("tt");
-            cpState.inputEmoji.value = value
+            cpState.inputEmojiOuverture.value = value
               .replace(/<\/?[^>]+(>|$)/g, "")
               .substring(0, 2000);
           } else {
-            cpState.inputEmoji.value = value;
+            cpState.inputEmojiOuverture.value = value;
           }
-
-          setStateWysiwyg(cpState);
+          setState(cpState);
         }}
-        placeholder={stateWysiwyg.inputEmoji.placeholder}
+        placeholder={state.inputEmojiOuverture.placeholder}
         modules={modules}
         formats={formats}
       />
@@ -189,23 +140,29 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
       )}
 
       <div className="options-new-pli">
-        {stateWysiwyg.openSoundage && (
+        {state.soundageOuverture.open && (
           <AddSoundage
-            maxOption={stateWysiwyg.maxOption}
-            state={stateWysiwyg.soundageOptions}
-            showSoundage={stateWysiwyg.openSoundage}
-            setShowSoundage={(e) =>
-              setStateWysiwyg({ ...stateWysiwyg, openSoundage: e })
-            }
-            setState={(e) =>
-              setStateWysiwyg({ ...stateWysiwyg, soundageOptions: e })
-            }
+            maxOption={state.soundageOuverture.maxOptions}
+            soundage={state.soundage}
+            showSoundage={state.soundageOuverture.open}
+            setShowSoundage={(e) => {
+              setState({
+                ...state,
+                soundageOuverture: { ...state.soundageOuverture, open: e },
+              });
+            }}
+            setSoundage={(e) => {
+              setState({
+                ...state,
+                soundageOuverture: e
+              }); 
+            }}
           />
         )}
         <div className="liste-files">
-          {dropFile["images"].liste.length > 0 && (
+          {dropFile["images"].file.length > 0 && (
             <div className="bloc-item-image-file">
-              {dropFile["images"].liste.map((file, i) => (
+              {dropFile["images"].file.map((file, i) => (
                 <ImageUpload key={i}>
                   <img src={URL.createObjectURL(file)} alt={file.name} />
                   <Button onClick={removeFile(file, "images")}>
@@ -215,9 +172,9 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
               ))}
             </div>
           )}
-          {selectedFile.images.liste.length > 0 && (
+          {state.ouvertureMedia.images.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {Array.from(selectedFile.images.liste).map((file, i) => (
+              {Array.from(state.ouvertureMedia.images.file).map((file, i) => (
                 <ImageUpload key={i}>
                   <img src={URL.createObjectURL(file)} alt={file.name} />
                   <Button onClick={removeFile(file, "images")}>
@@ -228,9 +185,9 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
             </div>
           )}
 
-          {selectedFile.video.liste.length > 0 && (
+          {state.ouvertureMedia.video.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {Array.from(selectedFile.video.liste).map((file, i) => (
+              {Array.from(state.ouvertureMedia.video.file).map((file, i) => (
                 <VideoUpload>
                   <img src={iconVideo} alt={file.name} />
                   <Button onClick={removeFile(file, "video")}>
@@ -240,9 +197,9 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
               ))}
             </div>
           )}
-          {dropFile["video"].liste.length > 0 && (
+          {dropFile["video"].file.length > 0 && (
             <div className="bloc-item-image-file">
-              {dropFile["video"].liste.map((file, i) => (
+              {dropFile["video"].file.map((file, i) => (
                 <VideoUpload key={i}>
                   <img src={iconVideo} alt={file.name} />
                   <Button onClick={removeFile(file, "video")}>
@@ -253,9 +210,9 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
             </div>
           )}
 
-          {dropFile["music"].liste.length < 2 && (
+          {dropFile["music"].file.length < 2 && (
             <div className="bloc-item-image-file">
-              {dropFile["music"].liste.map((file, i) => (
+              {dropFile["music"].file.map((file, i) => (
                 <SoundUpload key={i}>
                   <span className="icon-sound">
                     <GraphicEqIcon />
@@ -275,9 +232,9 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
               ))}
             </div>
           )}
-          {selectedFile.music.liste.length > 0 && (
+          {state.ouvertureMedia.music.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {selectedFile.music.liste.map((file, i) => (
+              {state.ouvertureMedia.music.file.map((file, i) => (
                 <SoundUpload>
                   <span className="icon-sound">
                     <GraphicEqIcon />
@@ -307,26 +264,30 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
         <div className="bloc-toggle-emoji">
           <div className="toggle-action-dropzone">
             <DetailsItems
-              // className={`${
-              //   openDrop || stateWysiwyg.openSoundage
-              //     ? "is-active-dropzone"
-              //     : ""
-              // }`}
+            // className={`${
+            //   openDrop || state.open
+            //     ? "is-active-dropzone"
+            //     : ""
+            // }`}
             >
-              
-              
-              
               <div className={`item-detail image-detail`}>
-                <input
-                  {...selectedFile.images}
+                <InputFile
+                  {...state.ouvertureMedia.images}
                   onChange={(e) => {
-                    if ((selectedFile.images.liste.length + e.currentTarget.files.length) <= 40) { 
-                      const cpState = { ...selectedFile };
-                      cpState.images.liste = [...cpState.images.liste, ...e.currentTarget.files]; 
-                      setSelectedFile(cpState);
+                    if (
+                      state.ouvertureMedia.images.file.length +
+                        e.currentTarget.files.length <=
+                      40
+                    ) {
+                      const cpState = { ...state };
+                      cpState.ouvertureMedia.images.file = [
+                        ...cpState.ouvertureMedia.images.file,
+                        ...e.currentTarget.files,
+                      ];
+                      setState(cpState);
                       setMessage(null);
-                    }else{
-                      setMessage('Error Max Images');
+                    } else {
+                      setMessage("Error Max Images");
                     }
                   }}
                 />
@@ -335,17 +296,23 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
                 </label>
               </div>
               <div className={`item-detail video-detail`}>
-                <input
-                  {...selectedFile.video}
+                <InputFile
+                  {...state.ouvertureMedia.video}
                   onChange={(e) => {
-                    if ((selectedFile.video.liste.length + e.currentTarget.files.length) <= 10) {
-                      console.log('df');
-                      const cpState = { ...selectedFile };
-                      cpState.video.liste = [...cpState.video.liste, ...e.currentTarget.files];
-                      setSelectedFile(cpState);
+                    if (
+                      state.ouvertureMedia.video.file.length +
+                        e.currentTarget.files.length <=
+                      10
+                    ) {
+                      const cpState = { ...state };
+                      cpState.ouvertureMedia.video.file = [
+                        ...cpState.ouvertureMedia.video.file,
+                        ...e.currentTarget.files,
+                      ];
+                      setState(cpState);
                       setMessage(null);
                     } else {
-                      setMessage('Error Max Video');
+                      setMessage("Error Max Video");
                     }
                   }}
                 />
@@ -356,9 +323,12 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
               <Button
                 onClick={() => {
                   setCurrent("soundage");
-                  setStateWysiwyg({
-                    ...stateWysiwyg,
-                    openSoundage: true,
+                  setState({
+                    ...state,
+                    soundageOuverture: {
+                      ...state.soundageOuverture,
+                      open: true,
+                    },
                   });
                 }}
                 className={`item-detail soundage-detail`}
@@ -369,15 +339,23 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
                 <BallotIcon />
               </Button>
               <div className={`item-detail sound-detail`}>
-                <input
-                  {...selectedFile.music}
+                <InputFile
+                  {...state.ouvertureMedia.music}
                   onChange={(e) => {
-                    if ((selectedFile.music.liste.length + e.currentTarget.files.length) <= 10) {
-                      const cpState = { ...selectedFile };
-                      cpState.music.liste = [...cpState.music.liste, ...e.currentTarget.files];
-                      setSelectedFile(cpState);
+                    if (
+                      state.ouvertureMedia.music.file.length +
+                        e.currentTarget.files.length <=
+                      10
+                    ) {
+                      const cpState = { ...state };
+                      cpState.ouvertureMedia.music.file = [
+                        ...cpState.ouvertureMedia.music.file,
+                        ...e.currentTarget.files,
+                      ];
+                      setState(cpState);
+                      setMessage(null);
                     } else {
-                      setMessage('Error Max Music');
+                      setMessage("Error Max Music");
                     }
                   }}
                 />
@@ -387,15 +365,20 @@ export default function NewOvertureOptions({ submitting, message, setMessage = (
               </div>
             </DetailsItems>
           </div>
-          <Emojis setState={setStateWysiwyg} state={stateWysiwyg} />
+          <Emojis
+            inputEmoji={state.inputEmojiOuverture}
+            setInputEmoji={(e) =>
+              setState({ ...state, inputEmojiOuverture: e })
+            }
+          />
         </div>
         <div className="count-publish-pli2">
           <CountDown
             maxCount={2000}
             setState={
               removeTags(
-                stateWysiwyg.inputEmoji.value
-                  ? stateWysiwyg.inputEmoji.value
+                state.inputEmojiOuverture.value
+                  ? state.inputEmojiOuverture.value
                   : ""
               ).length
             }

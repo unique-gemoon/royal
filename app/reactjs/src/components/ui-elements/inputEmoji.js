@@ -12,8 +12,8 @@ export default function InputEmoji({
   name,
   placeholder,
   typeInput,
-  opened,
-  setOpened = () => {},
+  open,
+  setOpen = () => {},
   ...props
 }) {
   const [state, setState] = useState({
@@ -23,12 +23,12 @@ export default function InputEmoji({
       value: "",
       type: "text",
       as: typeInput,
+      open: false,
     },
-    opened,
   });
 
   useEffect(() => {
-    setOpened(state.opened);
+    setOpen(state.inputEmoji.open);
   }, [state]);
 
   const dispatch = useDispatch();
@@ -62,7 +62,10 @@ export default function InputEmoji({
             }
           }}
         />
-        <Emojis setState={setState} state={state} />
+        <Emojis
+          inputEmoji={state.inputEmoji}
+          setInputEmoji={(e) => setState({ ...state, inputEmoji: e })}
+        />
       </div>
 
       <Button className="btn-send-emoji">
