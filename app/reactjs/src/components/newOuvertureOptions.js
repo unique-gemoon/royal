@@ -75,7 +75,7 @@ export default function NewOuvertureOptions({
     },
   });
 
-  const removeFile = (file, current) => () => {
+  const removeFile = (file, current) => {
     if (current) {
       const newFiles = [...dropFile[current].file];
       newFiles.splice(newFiles.indexOf(file), 1);
@@ -84,11 +84,11 @@ export default function NewOuvertureOptions({
       setDropFile({ ...dropFile, ...element });
     }
     if (current) {
-      const newUpload = [...state.mediaOuverture[current].file];
+       const newUpload = [...state.mediaOuverture[current].file];
       newUpload.splice(newUpload.indexOf(file), 1);
       var element = {};
       element[current] = { ...state.mediaOuverture[current], file: newUpload };
-      setState({ ...dropFile, ...element });
+      setState({ ...state, mediaOuverture:{...state.mediaOuverture, ...element} });
     }
   };
   const removeAll = (val) => {
@@ -172,9 +172,9 @@ export default function NewOuvertureOptions({
               ))}
             </div>
           )}
-          {state.ouvertureMedia.images.file.length > 0 && (
+          {state.mediaOuverture.images.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {Array.from(state.ouvertureMedia.images.file).map((file, i) => (
+              {Array.from(state.mediaOuverture.images.file).map((file, i) => (
                 <ImageUpload key={i}>
                   <img src={URL.createObjectURL(file)} alt={file.name} />
                   <Button onClick={()=>removeFile(file, "images")}>
@@ -185,9 +185,9 @@ export default function NewOuvertureOptions({
             </div>
           )}
 
-          {state.ouvertureMedia.video.file.length > 0 && (
+          {state.mediaOuverture.video.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {Array.from(state.ouvertureMedia.video.file).map((file, i) => (
+              {Array.from(state.mediaOuverture.video.file).map((file, i) => (
                 <VideoUpload>
                   <img src={iconVideo} alt={file.name} />
                   <Button onClick={()=>removeFile(file, "video")}>
@@ -232,9 +232,9 @@ export default function NewOuvertureOptions({
               ))}
             </div>
           )}
-          {state.ouvertureMedia.music.file.length > 0 && (
+          {state.mediaOuverture.music.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {state.ouvertureMedia.music.file.map((file, i) => (
+              {state.mediaOuverture.music.file.map((file, i) => (
                 <SoundUpload>
                   <span className="icon-sound">
                     <GraphicEqIcon />
@@ -266,16 +266,16 @@ export default function NewOuvertureOptions({
             <DetailsItems>
               <div className={`item-detail image-detail`}>
                 <InputFile
-                  {...state.ouvertureMedia.images}
+                  {...state.mediaOuverture.images}
                   onChange={(e) => {
                     if (
-                      state.ouvertureMedia.images.file.length +
+                      state.mediaOuverture.images.file.length +
                         e.currentTarget.files.length <=
                       40
                     ) {
                       const cpState = { ...state };
-                      cpState.ouvertureMedia.images.file = [
-                        ...cpState.ouvertureMedia.images.file,
+                      cpState.mediaOuverture.images.file = [
+                        ...cpState.mediaOuverture.images.file,
                         ...e.currentTarget.files,
                       ];
                       setState(cpState);
@@ -291,16 +291,16 @@ export default function NewOuvertureOptions({
               </div>
               <div className={`item-detail video-detail`}>
                 <InputFile
-                  {...state.ouvertureMedia.video}
+                  {...state.mediaOuverture.video}
                   onChange={(e) => {
                     if (
-                      state.ouvertureMedia.video.file.length +
+                      state.mediaOuverture.video.file.length +
                         e.currentTarget.files.length <=
                       10
                     ) {
                       const cpState = { ...state };
-                      cpState.ouvertureMedia.video.file = [
-                        ...cpState.ouvertureMedia.video.file,
+                      cpState.mediaOuverture.video.file = [
+                        ...cpState.mediaOuverture.video.file,
                         ...e.currentTarget.files,
                       ];
                       setState(cpState);
@@ -334,16 +334,16 @@ export default function NewOuvertureOptions({
               </Button>
               <div className={`item-detail sound-detail`}>
                 <InputFile
-                  {...state.ouvertureMedia.music}
+                  {...state.mediaOuverture.music}
                   onChange={(e) => {
                     if (
-                      state.ouvertureMedia.music.file.length +
+                      state.mediaOuverture.music.file.length +
                         e.currentTarget.files.length <=
                       10
                     ) {
                       const cpState = { ...state };
-                      cpState.ouvertureMedia.music.file = [
-                        ...cpState.ouvertureMedia.music.file,
+                      cpState.mediaOuverture.music.file = [
+                        ...cpState.mediaOuverture.music.file,
                         ...e.currentTarget.files,
                       ];
                       setState(cpState);
