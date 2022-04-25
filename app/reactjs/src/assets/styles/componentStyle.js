@@ -1171,6 +1171,7 @@ export const BlocEmojis = styled.div`
     .bloc-list-emoji{
         position: absolute;
         right: 0;
+        z-index: 11;
         .emoji-picker-react {
             height: 200px;
             .content-wrapper, .emoji-group{
@@ -2364,6 +2365,9 @@ export const BlocNewSoundage = styled.div`
         color: #fff;
         opacity: .8;
         margin-bottom: 12px;
+        svg{
+            cursor: pointer;
+        }
     }
     .items-soundage{
         margin-bottom: 14px;

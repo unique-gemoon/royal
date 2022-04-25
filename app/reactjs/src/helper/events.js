@@ -20,3 +20,23 @@ export function useOutsideAlerter(ref, handler) {
     };
   }, [ref, handler]);
 }
+
+/**
+ * Hook that alerts clicks outside of the passed ref
+ */
+export function useDragover(ref, handler) {
+  useEffect(() => {
+    const listener = event => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+
+    document.addEventListener("dragover", listener);
+
+    return () => {
+      document.removeEventListener("dragover", listener);
+    };
+  }, [ref, handler]);
+}

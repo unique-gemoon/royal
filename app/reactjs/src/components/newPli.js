@@ -81,6 +81,7 @@ export default function NewPli({
         multiple: true,
         value: [],
         file: [],
+        maxFiles:4,
       },
       video: {
         name: "video",
@@ -90,6 +91,7 @@ export default function NewPli({
         multiple: true,
         value: [],
         file: [],
+        maxFiles: 1,
       },
       music: {
         name: "music",
