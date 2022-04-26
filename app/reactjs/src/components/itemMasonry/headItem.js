@@ -86,12 +86,20 @@ export default function HeadItem({
   const [showAllMedia, setShowAllMedia] = useState(false);
 
 
+  const [CopyOpen, setCopyOpen] = useState(false);
+  const handleCopyClose = () => {
+    setCopyOpen(false);
+  };
+
+  const handleCopyOpen = () => {
+    setCopyOpen(true);
+  };
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
         <DetailsItems>
           {allMedia.length && allMedia.map((media, index) => (
-            
+
             <div key={index}>
               {(index == 0) && media == "description" && (
                 <div className="item-detail format-text-detail">
@@ -121,47 +129,47 @@ export default function HeadItem({
             </div>
           ))
           }
-          <div className={`mediaDetails ${showAllMedia ? "showMedia" : ""}` }>
-          {allMedia.length && allMedia.map((media, index) => (
+          <div className={`mediaDetails ${showAllMedia ? "showMedia" : ""}`}>
+            {allMedia.length && allMedia.map((media, index) => (
 
-            <div key={index}>
-              
-              {index > 0 ? (<>
-                {showAllMedia && media == "description" && (
-                  <div className="item-detail format-text-detail">
-                    <FormatSizeIcon />
-                  </div>
-                )}
-                {showAllMedia && media == "music" && (
-                  <div className="item-detail sound-detail">
-                    <GraphicEqIcon />
-                  </div>
-                )}
-                {showAllMedia && media == "soundage" && (
-                  <div className="item-detail soundage-detail">
-                    <BallotIcon />
-                  </div>
-                )}
-                {showAllMedia && media == "photos" && (
-                  <div className="item-detail image-detail">
-                    <ImageIcon />
-                  </div>
-                )}
-                {showAllMedia && media == "video" && (
-                  <div className="item-detail video-detail">
-                    <PlayArrowIcon />
-                  </div>
-                )}
-              </>):""}
-            </div>
-          ))
-          }
+              <div key={index}>
+
+                {index > 0 ? (<>
+                  {showAllMedia && media == "description" && (
+                    <div className="item-detail format-text-detail">
+                      <FormatSizeIcon />
+                    </div>
+                  )}
+                  {showAllMedia && media == "music" && (
+                    <div className="item-detail sound-detail">
+                      <GraphicEqIcon />
+                    </div>
+                  )}
+                  {showAllMedia && media == "soundage" && (
+                    <div className="item-detail soundage-detail">
+                      <BallotIcon />
+                    </div>
+                  )}
+                  {showAllMedia && media == "photos" && (
+                    <div className="item-detail image-detail">
+                      <ImageIcon />
+                    </div>
+                  )}
+                  {showAllMedia && media == "video" && (
+                    <div className="item-detail video-detail">
+                      <PlayArrowIcon />
+                    </div>
+                  )}
+                </>) : ""}
+              </div>
+            ))
+            }
           </div>
           {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia) }}><PlusIcon /></div>)}
 
         </DetailsItems>
         <ClickAwayListener onClickAway={handleTooltipClose}>
-          <div>
+          <div className="user-info-tooltip">
             <Tooltip
               PopperProps={{
                 disablePortal: true,
@@ -269,7 +277,7 @@ export default function HeadItem({
           </div>
         )}
         <div
-          className={`nb-message-comment ${(activeItem && activeItem.id == item.id) || state.showModal  ? "comment-is-open" : ""}`}
+          className={`nb-message-comment ${(activeItem && activeItem.id == item.id) || state.showModal ? "comment-is-open" : ""}`}
           onClick={() => {
             if (state.showModal) {
               setState({ ...state, showModal: false });
@@ -289,7 +297,22 @@ export default function HeadItem({
           3 <CommentOutlinedIcon /> <ArrowDownIcon />
         </div>
         <div className="btn-copy">
-          <InsertLinkIcon />
+          <ClickAwayListener onClickAway={handleCopyClose}>
+            <div className="default-tooltip">
+              <Tooltip
+                PopperProps={{
+                  disablePortal: true,
+                }}
+                onClose={handleCopyClose}
+                open={CopyOpen}
+                arrow
+                leaveDelay={1000}
+                title="Copier Pli"
+              >
+                <InsertLinkIcon onClick={handleCopyOpen} />
+              </Tooltip>
+            </div>
+            </ClickAwayListener>
         </div>
       </div>
       {/* <HeadOptionItem item={item} setItem={setItem} />  */}

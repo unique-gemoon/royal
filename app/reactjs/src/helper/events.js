@@ -40,3 +40,20 @@ export function useDragover(ref, handler) {
     };
   }, [ref, handler]);
 }
+export function useDrop(ref, handler) {
+  useEffect(() => {
+    const listener = event => {
+      if (!ref.current || ref.current.contains(event.target)) {
+        return;
+      }
+      handler(event);
+    };
+
+    document.addEventListener("drop", listener);
+
+    return () => {
+      document.removeEventListener("drop", listener);
+    };
+  }, [ref, handler]);
+}
+

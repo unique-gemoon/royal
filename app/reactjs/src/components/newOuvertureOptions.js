@@ -18,7 +18,7 @@ import {
   VideoUpload,
 } from "../assets/styles/componentStyle";
 import { DetailsItems } from "../assets/styles/globalStyle";
-import { useOutsideAlerter } from "../helper/events";
+import { useDragover, useDrop, useOutsideAlerter } from "../helper/events";
 import { removeTags } from "../helper/fonctions";
 import AddSoundage from "./addSoundage";
 import Emojis from "./emojis";
@@ -33,56 +33,38 @@ export default function NewOuvertureOptions({
   submitting,
   setMessage = () => {},
 }) {
-  const [dropFile, setDropFile] = useState({
-    images: {
-      accept: "image/jpeg, image/png",
-      icon: "img",
-      multiple: true,
-      file: [],
-    },
-    video: {
-      accept: "video/mp4,video/x-m4v,video/*",
-      icon: "mp4",
-      multiple: false,
-      file: [],
-    },
-    music: {
-      accept: "audio/mpeg",
-      icon: "mp3",
-      multiple: false,
-      file: [],
-    },
-  });
   const [current, setCurrent] = useState("");
   const [openDrop, setopenDrop] = useState(false);
-  const [files, setFiles] = useState([]);
 
-  const { getRootProps, getInputProps } = useDropzone({
-    accept: current && dropFile[current] ? dropFile[current].accept : "",
-    multiple: current && dropFile[current] ? dropFile[current].multiple : "",
+  const { getRootProps} = useDropzone({
+    accept: "image/jpeg, image/png, video/mp4,video/x-m4v,video/*, audio/mpeg",
+    multiple: true,
     onDrop: (acceptedFiles) => {
-      setFiles([...files, ...acceptedFiles]);
-      if (current && dropFile[current]) {
-        var element = {};
-        element[current] = {
-          ...dropFile[current],
-          file: [...dropFile[current].file, ...acceptedFiles],
-        };
-        setDropFile({ ...dropFile, ...element });
-        //console.log(element);
-      }
+      acceptedFiles.map((file) => {
+        console.log(file);
+        for (const key in state.mediaOuverture) {
+          console.log(state.mediaOuverture[key]);
+          console.log(state.mediaOuverture[key].file.length);
+          console.log(state.mediaOuverture[key].maxFiles);
+          if (state.mediaOuverture[key].accept.indexOf(file.type) !== -1) {
+            if (state.mediaOuverture[key].file.length < state.mediaOuverture[key].maxFiles) {
+              const cpState = { ...state };
+              cpState.mediaOuverture[key].file = [...cpState.mediaOuverture[key].file, file];
+              console.log(cpState);
+              setState(cpState);
+            }
+            else {
+              setMessage(<>Veuillez sélectionner maximun {state.mediaOuverture[key].maxFiles} {state.mediaOuverture[key].name} </>);
+            }
+            break;
+          }
+        }
+      });
       setopenDrop(false);
     },
   });
 
   const removeFile = (file, current) => {
-    if (current) {
-      const newFiles = [...dropFile[current].file];
-      newFiles.splice(newFiles.indexOf(file), 1);
-      var element = {};
-      element[current] = { ...dropFile[current], file: newFiles };
-      setDropFile({ ...dropFile, ...element });
-    }
     if (current) {
        const newUpload = [...state.mediaOuverture[current].file];
       newUpload.splice(newUpload.indexOf(file), 1);
@@ -91,24 +73,20 @@ export default function NewOuvertureOptions({
       setState({ ...state, mediaOuverture:{...state.mediaOuverture, ...element} });
     }
   };
-  const removeAll = (val) => {
-    if (current === val) {
-      var element = {};
-      element[current] = { ...dropFile[current], file: [] };
-      setDropFile({ ...dropFile, ...element });
-    }
-    if (current === val) {
-      var element = {};
-      element[current] = { ...dropFile[current], file: [] };
-      setDropFile({ ...dropFile, ...element });
-    }
-  };
 
   const ref = useRef(null);
 
   useOutsideAlerter(ref, () => {
     setopenDrop(false);
   });
+
+  useDragover(ref, () => {
+    setopenDrop(true);
+  });
+  useDrop(ref, () => {
+    setopenDrop(false);
+  });
+
 
   return (
     <BlocNewPliContent className="pli2-ouverture-bloc" ref={ref}>
@@ -134,7 +112,6 @@ export default function NewOuvertureOptions({
       />
       {openDrop && (
         <DropZoneBloc {...getRootProps({ className: "dropzone" })}>
-          <input {...getInputProps()} />
           <p>Déposez les fichiers ici</p>
         </DropZoneBloc>
       )}
@@ -160,18 +137,6 @@ export default function NewOuvertureOptions({
           />
         )}
         <div className="liste-files">
-          {dropFile["images"].file.length > 0 && (
-            <div className="bloc-item-image-file">
-              {dropFile["images"].file.map((file, i) => (
-                <ImageUpload key={i}>
-                  <img src={URL.createObjectURL(file)} alt={file.name} />
-                  <Button onClick={()=>removeFile(file, "images")}>
-                    <RemoveFile />
-                  </Button>
-                </ImageUpload>
-              ))}
-            </div>
-          )}
           {state.mediaOuverture.images.file.length > 0 && (
             <div className="bloc-item-image-file">
               {Array.from(state.mediaOuverture.images.file).map((file, i) => (
@@ -188,18 +153,6 @@ export default function NewOuvertureOptions({
           {state.mediaOuverture.video.file.length > 0 && (
             <div className="bloc-item-image-file">
               {Array.from(state.mediaOuverture.video.file).map((file, i) => (
-                <VideoUpload>
-                  <img src={iconVideo} alt={file.name} />
-                  <Button onClick={()=>removeFile(file, "video")}>
-                    <RemoveFile />
-                  </Button>
-                </VideoUpload>
-              ))}
-            </div>
-          )}
-          {dropFile["video"].file.length > 0 && (
-            <div className="bloc-item-image-file">
-              {dropFile["video"].file.map((file, i) => (
                 <VideoUpload key={i}>
                   <img src={iconVideo} alt={file.name} />
                   <Button onClick={()=>removeFile(file, "video")}>
@@ -210,32 +163,10 @@ export default function NewOuvertureOptions({
             </div>
           )}
 
-          {dropFile["music"].file.length < 2 && (
-            <div className="bloc-item-image-file">
-              {dropFile["music"].file.map((file, i) => (
-                <SoundUpload key={i}>
-                  <span className="icon-sound">
-                    <GraphicEqIcon />
-                  </span>
-                  <p className="name-sound">
-                    <span>
-                      {file.name.substring(0, file.name.lastIndexOf("."))}
-                    </span>
-                    <span>
-                      .{file.name.substring(file.name.indexOf(".") + 1)}
-                    </span>
-                  </p>
-                  <Button onClick={()=>removeFile(file, "music")}>
-                    <RemoveFile />
-                  </Button>
-                </SoundUpload>
-              ))}
-            </div>
-          )}
           {state.mediaOuverture.music.file.length > 0 && (
             <div className="bloc-item-image-file">
               {state.mediaOuverture.music.file.map((file, i) => (
-                <SoundUpload>
+                <SoundUpload key={i}>
                   <span className="icon-sound">
                     <GraphicEqIcon />
                   </span>
@@ -270,8 +201,7 @@ export default function NewOuvertureOptions({
                   onChange={(e) => {
                     if (
                       state.mediaOuverture.images.file.length +
-                        e.currentTarget.files.length <=
-                      40
+                      e.currentTarget.files.length <= state.mediaOuverture.images.maxFiles
                     ) {
                       const cpState = { ...state };
                       cpState.mediaOuverture.images.file = [
@@ -281,7 +211,7 @@ export default function NewOuvertureOptions({
                       setState(cpState);
                       setMessage(null);
                     } else {
-                      setMessage("Error Max Images");
+                      setMessage(<>Veuillez sélectionner maximun {state.mediaOuverture.images.maxFiles} {state.mediaOuverture.images.name} </>);
                     }
                   }}
                 />
@@ -295,8 +225,7 @@ export default function NewOuvertureOptions({
                   onChange={(e) => {
                     if (
                       state.mediaOuverture.video.file.length +
-                        e.currentTarget.files.length <=
-                      10
+                      e.currentTarget.files.length <= state.mediaOuverture.video.maxFiles
                     ) {
                       const cpState = { ...state };
                       cpState.mediaOuverture.video.file = [
@@ -306,7 +235,7 @@ export default function NewOuvertureOptions({
                       setState(cpState);
                       setMessage(null);
                     } else {
-                      setMessage("Error Max Video");
+                      setMessage(<>Veuillez sélectionner maximun {state.mediaOuverture.video.maxFiles} {state.mediaOuverture.video.name} </>);
                     }
                   }}
                 />
@@ -326,9 +255,6 @@ export default function NewOuvertureOptions({
                   });
                 }}
                 className={`item-detail soundage-detail`}
-                // className={`item-detail soundage-detail ${
-                //   !current || current === "soundage" ? "active" : ""
-                // }`}
               >
                 <BallotIcon />
               </Button>
@@ -338,8 +264,7 @@ export default function NewOuvertureOptions({
                   onChange={(e) => {
                     if (
                       state.mediaOuverture.music.file.length +
-                        e.currentTarget.files.length <=
-                      10
+                      e.currentTarget.files.length <= state.mediaOuverture.music.maxFiles
                     ) {
                       const cpState = { ...state };
                       cpState.mediaOuverture.music.file = [
@@ -349,7 +274,7 @@ export default function NewOuvertureOptions({
                       setState(cpState);
                       setMessage(null);
                     } else {
-                      setMessage("Error Max Music");
+                      setMessage(<>Veuillez sélectionner maximun {state.mediaOuverture.music.maxFiles} {state.mediaOuverture.music.name} </>);
                     }
                   }}
                 />

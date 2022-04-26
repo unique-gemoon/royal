@@ -30,7 +30,7 @@ export default function FooterHome({
           <ContainerDef>
             <Row className="align-items-center">
               <Col md={3}>
-                <div className="d-md-flex">
+                <div className="d-md-flex align-items-center">
                 {auth.roles.includes(ROLES.ROLE_USER) && <ProfileMenu setMsgNotifTop={setMsgNotifTop}/>}
                   <SeeCounter countSee={14} />
                 </div>

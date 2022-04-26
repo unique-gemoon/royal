@@ -15,7 +15,7 @@ import {
   VideoUpload
 } from "../assets/styles/componentStyle";
 import { DetailsItems } from "../assets/styles/globalStyle";
-import { useDragover, useOutsideAlerter } from "../helper/events";
+import { useDragover, useDrop, useOutsideAlerter } from "../helper/events";
 import Emojis from "./emojis";
 import InputFile from "./ui-elements/inputFile";
 
@@ -27,19 +27,27 @@ export default function NewPliOptions({
   const [openDrop, setopenDrop] = useState(false);
   const [current, setCurrent] = useState(null);
 
-  const { getRootProps, getInputProps } = useDropzone({
+  const { getRootProps } = useDropzone({
     accept: "image/jpeg, image/png, video/mp4,video/x-m4v,video/*, audio/mpeg",
     multiple: true,
     onDrop: (acceptedFiles) => {
       acceptedFiles.map((file) => {
         console.log(file);
         for (const key in state.media) {
+          console.log(state.media[key]);
+          console.log(state.media[key].file.length);
+          console.log(state.media[key].maxFiles);
           if (state.media[key].accept.indexOf(file.type)!==-1) {
-            const cpState = {...state};
-            cpState.media[key].file = [...cpState.media[key].file, file];
-            console.log(cpState);
-            setState(cpState);
-            break;
+            if (state.media[key].file.length < state.media[key].maxFiles){
+              const cpState = { ...state };
+              cpState.media[key].file = [...cpState.media[key].file, file];
+              console.log(cpState);
+              setState(cpState);
+            }
+            else{
+              setMessage(<>Veuillez sélectionner maximun {state.media[key].maxFiles} {state.media[key].name} </>);
+            }
+              break;
           }
         }
       });
@@ -65,6 +73,11 @@ export default function NewPliOptions({
 
   useDragover(ref, () => {
     setopenDrop(true);
+  });
+
+
+  useDrop(ref, () => {
+    setopenDrop(false);
   });
 
   return (
@@ -119,7 +132,6 @@ export default function NewPliOptions({
       </div>
       <BlocNewPliContent ref={ref}>
         {openDrop && (<DropZoneBloc {...getRootProps({ className: "dropzone" })}>
-          <input {...getInputProps()} />
           <p>Déposez les fichiers ici</p>
         </DropZoneBloc>)}
         <div className="options-new-pli">
@@ -131,8 +143,7 @@ export default function NewPliOptions({
                   onChange={(e) => {
                     if (
                       state.media.images.file.length +
-                      e.currentTarget.files.length <=
-                      4
+                      e.currentTarget.files.length <= state.media.images.maxFiles
                     ) {
                       const cpState = { ...state };
                       cpState.media.images.file = [
@@ -142,7 +153,7 @@ export default function NewPliOptions({
                       setState(cpState);
                       setMessage(null);
                     } else {
-                      setMessage("Error Max Images");
+                      setMessage(<>Veuillez sélectionner maximun {state.media.images.maxFiles} {state.media.images.name} </>);
                     }
                   }}
                 />
@@ -156,8 +167,7 @@ export default function NewPliOptions({
                   onChange={(e) => {
                     if (
                       state.media.video.file.length +
-                      e.currentTarget.files.length <=
-                      1
+                      e.currentTarget.files.length <= state.media.video.maxFiles
                     ) {
                       console.log("df");
                       const cpState = { ...state };
@@ -168,7 +178,7 @@ export default function NewPliOptions({
                       setState(cpState);
                       setMessage(null);
                     } else {
-                      setMessage("Error Max Video");
+                      setMessage(<>Veuillez sélectionner maximun {state.media.video.maxFiles} {state.media.video.name} </>);
                     }
                   }}
                 />
@@ -192,8 +202,7 @@ export default function NewPliOptions({
                   onChange={(e) => {
                     if (
                       state.media.music.file.length +
-                      e.currentTarget.files.length <=
-                      1
+                      e.currentTarget.files.length <= state.media.music.maxFiles
                     ) {
                       const cpState = { ...state };
                       cpState.media.music.file = [
@@ -202,7 +211,7 @@ export default function NewPliOptions({
                       ];
                       setState(cpState);
                     } else {
-                      setMessage("Error Max Music");
+                      setMessage(<>Veuillez sélectionner maximun {state.media.music.maxFiles} {state.media.music.name} </>);
                     }
                   }}
                 />
