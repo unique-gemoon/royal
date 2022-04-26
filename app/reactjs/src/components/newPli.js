@@ -74,7 +74,7 @@ export default function NewPli({
     },
     media: {
       images: {
-        name: "image",
+        name: "images",
         id: "file-images-nv1",
         type: "file",
         accept: "image/jpeg, image/png",
@@ -101,17 +101,19 @@ export default function NewPli({
         multiple: true,
         value: [],
         file: [],
+        maxFiles: 1,
       },
     },
     mediaOuverture: {
       images: {
-        name: "image",
+        name: "images",
         id: "file-images-nv2",
         accept: "image/jpeg, image/png",
         icon: "img",
         multiple: true,
         value: [],
         file: [],
+        maxFiles: 40,
       },
       video: {
         name: "video",
@@ -121,6 +123,7 @@ export default function NewPli({
         multiple: false,
         value: [],
         file: [],
+        maxFiles: 10,
       },
       music: {
         name: "music",
@@ -129,9 +132,11 @@ export default function NewPli({
         icon: "mp3",
         multiple: false,
         value: [],
-        file: [],
+        file: [],        
+        maxFiles: 10,
       },
     },
+    dragOpen: true,
   });
 
   useEffect(() => {
@@ -242,8 +247,7 @@ export default function NewPli({
 
   return (
     <BlocAddPli>
-      {togglePli && (
-        <div className="bloc-new-pli">
+        <div className={`bloc-new-pli ${togglePli ? "showing-new-pli" : ""}`}>
           <div className="cadre-content-new-pli">
             <form className="form-new-pli" onSubmit={submitPli}>
               <div className="content-new-pli" ref={divRef}>
@@ -346,7 +350,7 @@ export default function NewPli({
             </form>
           </div>
         </div>
-      )}
+      
 
       {togglePli === false && (
         <div

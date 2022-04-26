@@ -91,122 +91,136 @@ export const HeadContentItem = styled.div`
         font-family: 'ProximaNovaSoftW03-Semibold';
         cursor: pointer;
     }
-    .MuiTooltip-popper{
-        .MuiTooltip-tooltip{
-            width: 172px;
-            height: 172px;
-            border-radius: 50%;
-            background-color: #225282;
-            color: #FFF;
-            margin: 10px 0;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-        }
-        &[data-popper-placement*="top"] {
+    .default-tooltip{
+        .MuiTooltip-popper{
+            .MuiTooltip-tooltip{
+                margin-top: 3px;
+                padding: 5px 10px;
+                background-color: #1e52a0;
+            }
             .MuiTooltip-arrow{
-                margin-bottom: -1em;
-            }
-        }
-        &[data-popper-placement*="bottom"] {
-            .MuiTooltip-arrow{
-                margin-top: -1em;
-            }
-        }
-        .MuiTooltip-arrow{
-            color: #225282;
-            width: 1.6em;
-            height: 1.1em;
-        }
-        .name-post{
-            color: #FFF;
-            font-size: 15px;
-            line-height: 1;
-            padding-bottom: 10px;
-            width: calc(100% - 10px);
-            display: block;
-            margin: 0 auto 10px;
-            max-height: 40px;
-            position: relative;
-            cursor: default;
-            &::before{
-                content: '';
-                position: absolute;
-                bottom: 0;
-                left: 0;
-                right: 0;
-                border: 1px dashed #61728C;
-            }
-        }
-        .folowers-post {
-            width: 100%;
-            display: flex;
-            justify-content: center;
-            .abonnes-post {
-                margin: 0 8px;
-                font-size: 13px;
-                line-height: 13px;
-                color: #9BA7BC;
-                margin-bottom: 8px;
-                span{
-                    font-size: 14px;
-                    line-height: 14px;
-                    font-family: 'ProximaNovaSoftW03-Semibold';
-                    display: block;
-                    color: #FFF;
-                }
-            }
-        }
-        .tooltip-btns-action {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            button{
-                min-width: auto;
-                padding: 0;
-                &.toggle-item-message {
-                    color: #EDAF5D;
-                    border-radius: 50%;
-                    border: 1px solid #EDAF5D;
-                    padding: 3px;
-                    width: 28px;
-                    height: 28px;
-                    min-width: 28px;
-                    margin-right: 5px;
-                    transition: .3s ease-in-out;
-                    svg{
-                        font-size: 18px;
-                    }
-                    &:hover{
-                        color: #FFF;
-                        background-color: #edaf5d;
-                    }
-                }
-                &.btn-switch-folowers{
-                    background-color: #FFF;
-                    font-family: 'ProximaNovaSoftW03-Semibold';
-                    font-size: 13px;
-                    line-height: 14px;
-                    height: 26px;
-                    color: #edaf5d;
-                    border-radius: 24px;
-                    text-transform: capitalize;
-                    padding: 4px 10px;
-                    transition: .3s ease-in-out;
-                    svg{
-                        margin-left: 3px;
-                        font-size: 18px;
-                    }
-                    &:hover{
-                        color: #FFF;
-                        background-color: #edaf5d;
-                    }
-                }
+                color: #1e52a0;
             }
         }
     }
+    .user-info-tooltip{
+        .MuiTooltip-popper{
+            .MuiTooltip-tooltip{
+                width: 172px;
+                height: 172px;
+                border-radius: 50%;
+                background-color: #225282;
+                color: #FFF;
+                margin: 10px 0;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+            }
+            &[data-popper-placement*="top"] {
+                .MuiTooltip-arrow{
+                    margin-bottom: -1em;
+                }
+            }
+            &[data-popper-placement*="bottom"] {
+                .MuiTooltip-arrow{
+                    margin-top: -1em;
+                }
+            }
+            .MuiTooltip-arrow{
+                color: #225282;
+                width: 1.6em;
+                height: 1.1em;
+            }
+            .name-post{
+                color: #FFF;
+                font-size: 15px;
+                line-height: 1;
+                padding-bottom: 10px;
+                width: calc(100% - 10px);
+                display: block;
+                margin: 0 auto 10px;
+                max-height: 40px;
+                position: relative;
+                cursor: default;
+                &::before{
+                    content: '';
+                    position: absolute;
+                    bottom: 0;
+                    left: 0;
+                    right: 0;
+                    border: 1px dashed #61728C;
+                }
+            }
+            .folowers-post {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                .abonnes-post {
+                    margin: 0 8px;
+                    font-size: 13px;
+                    line-height: 13px;
+                    color: #9BA7BC;
+                    margin-bottom: 8px;
+                    span{
+                        font-size: 14px;
+                        line-height: 14px;
+                        font-family: 'ProximaNovaSoftW03-Semibold';
+                        display: block;
+                        color: #FFF;
+                    }
+                }
+            }
+            .tooltip-btns-action {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                button{
+                    min-width: auto;
+                    padding: 0;
+                    &.toggle-item-message {
+                        color: #EDAF5D;
+                        border-radius: 50%;
+                        border: 1px solid #EDAF5D;
+                        padding: 3px;
+                        width: 28px;
+                        height: 28px;
+                        min-width: 28px;
+                        margin-right: 5px;
+                        transition: .3s ease-in-out;
+                        svg{
+                            font-size: 18px;
+                        }
+                        &:hover{
+                            color: #FFF;
+                            background-color: #edaf5d;
+                        }
+                    }
+                    &.btn-switch-folowers{
+                        background-color: #FFF;
+                        font-family: 'ProximaNovaSoftW03-Semibold';
+                        font-size: 13px;
+                        line-height: 14px;
+                        height: 26px;
+                        color: #edaf5d;
+                        border-radius: 24px;
+                        text-transform: capitalize;
+                        padding: 4px 10px;
+                        transition: .3s ease-in-out;
+                        svg{
+                            margin-left: 3px;
+                            font-size: 18px;
+                        }
+                        &:hover{
+                            color: #FFF;
+                            background-color: #edaf5d;
+                        }
+                    }
+                }
+            }
+        }
     
+    }
     .timer-post{
         font-size: 14px;
         line-height: 24px;
@@ -384,7 +398,7 @@ export const OptionsBtnAction = styled.div`
             padding: 9px 25px;
     }
 `;
-export const ModalPopIn = styled(Modal) `
+export const ModalPopIn = styled(Modal)`
     .content-modal{
         padding: 24px 30px;
         color: #FFF;
