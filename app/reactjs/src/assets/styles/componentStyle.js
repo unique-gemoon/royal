@@ -651,6 +651,8 @@ export const ImageUpload = styled.div`
     height: 45px;
     position: relative;
     margin: 5px;
+    background-color: #145e9c;
+    border-radius: 10px;
     img {
         height: 100%;
         width: 100%;
@@ -2337,12 +2339,14 @@ export const BlocNewPliContent = styled.div`
             margin-bottom: 50px;
             display: block;
             .bloc-item-image-file{
-                display: flex;
+                display: inline-flex;
                 flex-wrap: wrap;
                 margin-top: 15px;
+                margin-right: 20px;
                 @media(max-width: 767px){
                     justify-content: center;
                     width: 100%;
+                    margin-right: 0px;
                 }
             }
         }
@@ -2417,6 +2421,10 @@ export const BlocAddPli = styled.div`
         justify-content: center;
         text-align: left;
         overflow-y: auto;
+        display: none;
+        &.showing-new-pli{
+            display: flex;
+        }
         @media(max-width: 767px){
             height: calc(100vh - 54px);
         }
@@ -2633,7 +2641,7 @@ export const BlocAddPli = styled.div`
             align-items: center;
             flex-wrap: wrap;
             overflow-x: auto;
-            padding: 10px 6px;
+            padding: 10px 0px;
             width: 100%;
             & > div{
                 margin-right: 20px;
@@ -2765,7 +2773,6 @@ export const BlocAddPli = styled.div`
     }
 
     .wisiwyg-pli2{
-        margin-bottom: 20px;
         max-height: 200px;
         overflow-y: auto;
         .ql-snow{
