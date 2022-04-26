@@ -81,7 +81,7 @@ export default function NewPli({
         multiple: true,
         value: [],
         file: [],
-        maxFiles:4,
+        maxFiles: 4,
       },
       video: {
         name: "video",
@@ -182,7 +182,23 @@ export default function NewPli({
       console.log(state.inputEmoji.value);
       var content = state.inputEmoji.value;
 
-      const ouverture = {
+      const files = state.media.images.file.filter(
+        (f) => f !== "" && f !== null
+      );
+     
+      console.log("files",files);
+
+
+      const data = new FormData();
+      if (files.length) {
+        for (let i = 0; i < files.length; i++) {
+          data.append('files', files[i]);
+        }
+      } 
+
+
+
+      /* const ouverture = {
         content: "test",
         sondage: ["option1", "option2"],
         audio: ["test.mp3"],
@@ -196,7 +212,8 @@ export default function NewPli({
         video: ["test.mp4"],
         ouverture,
         duration: "00:01:00",
-      };
+      };  */
+
 
       connector({
         method: "post",
@@ -247,13 +264,13 @@ export default function NewPli({
                           setState(cpState);
                         }
                       }}
-                    /> 
+                    />
                     {state.soundage.open && (
                       <AddSoundage
                         maxOption={state.soundage.maxOptions}
                         soundage={state.soundage}
                         setSoundage={(e) => {
-                          console.log("setSoundage",e);
+                          console.log("setSoundage", e);
                           setState({
                             ...state,
                             soundage: e,
