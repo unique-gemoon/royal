@@ -1,8 +1,7 @@
 import { Button, TextField } from "@mui/material";
 import { Form, Modal } from "react-bootstrap";
 import styled from "styled-components";
-import { BleuColor, OrangeColor } from "./globalStyle";
-
+import { BleuColor, OrangeColor,  } from "./globalStyle";
 
 
 export const GroupInput = styled(Form.Group)`
@@ -1163,26 +1162,30 @@ export const BlocEmojis = styled.div`
         svg{
             font-size: 18px;
         }
-        &:hover, &.active-emoji{
+        &.active-emoji{
             color: #EEAA67 !important;
         }
         span{
             display: none;
         }
     }
+    .emoji-group, .emoji-categories{
+        padding: 0 5px;
+    }
     .bloc-list-emoji{
         position: absolute;
         right: 0;
         z-index: 11;
         .emoji-picker-react {
-            height: 200px;
+            height: 140px;
+            width: 230px;
             .content-wrapper, .emoji-group{
                 &:before{
                     content: none;
                 }
             }
         }
-        
+
     }
 `;
 export const FormEmoji = styled.div`
@@ -2621,12 +2624,7 @@ export const BlocAddPli = styled.div`
         }
     }
     .emoji-picker-react {
-        height: 116px !important;
-        width: 174px;
         box-shadow: none;
-        .emoji-categories{
-            display: none;
-        }
     }
     .new-pli-nv1{
         .options-new-pli{
@@ -2768,6 +2766,14 @@ export const BlocAddPli = styled.div`
             @media(max-width: 993px){
                 display: inline-flex;
                 margin: initial;
+            }
+        }
+
+        ${BlocEmojis}{
+            .bloc-list-emoji{
+                bottom: 40px;
+                right: 0;
+                left: auto;
             }
         }
     }

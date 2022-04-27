@@ -118,7 +118,7 @@ export default function ItemMasonry({
                   <div
                     className="toggle-pli2"
                     onClick={() =>
-                      setState({ ...state, showComment: false, showModal: false })
+                      setState({ ...state, showModal: false })
                     }
                   >
                     
