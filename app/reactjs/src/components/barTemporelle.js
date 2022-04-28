@@ -3,23 +3,27 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { Button } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-import React from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
 import { ROLES } from "../config/vars";
 import * as actionTypes from "../store/functions/actionTypes";
 
 export default function BarTemporelle({
-  item,
-  state,
-  setState = () => { },
-  action,
-  setAction = () => { },
-  activeItem,
-  setActiveItem = () => { },
-  ...props }) {
+  item = {},
+  state = {},
+  setState = () => {},
+  showModal = false,
+  setShowModal = () => {},
+  action = {},
+  setAction = () => {},
+  activeItem = {},
+  setActiveItem = () => {},
+  ...props
+}) {
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
+  const [stateTime, setStateTime] = useState("00:00:00");
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
@@ -33,12 +37,57 @@ export default function BarTemporelle({
     }
   };
 
+  const updateTime = (cpState) => {
+    if (cpState?.duration) {
+      const h =
+        String(cpState.duration.hour).length == 1
+          ? "0" + cpState.duration.hour
+          : cpState.duration.hour;
+      const m =
+        String(cpState.duration.minute).length == 1
+          ? "0" + cpState.duration.minute
+          : cpState.duration.minute;
+      const s =
+        String(cpState.duration.second).length == 1
+          ? "0" + cpState.duration.second
+          : cpState.duration.second;
+      setStateTime(h + ":" + m + ":" + s);
+    }
+  };
+
+  const upTime = () => {
+    const cpState = { ...state };
+    cpState.duration.minute++;
+    if (cpState.duration.minute >= 60) {
+      cpState.duration.minute = 0;
+      cpState.duration.hour++;
+    }
+    cpState.duration.countUp++;
+    setState(cpState);
+    updateTime(cpState);
+  };
+
+  const downTime = () => {
+    const cpState = { ...state };
+    if (cpState.duration.minute == 0) {
+      if (cpState.duration.hour > 0) {
+        cpState.duration.hour--;
+        cpState.duration.minute = 59;
+      }
+    } else {
+      cpState.duration.minute--;
+    }
+    cpState.duration.countDown++;
+    setState(cpState);
+    updateTime(cpState);
+  };
+
   return (
     <BarTimer className={props.className}>
       <LinearProgress
         className="progressBar-item"
         variant="determinate"
-        value={93}
+        value={100}
       />
       <div className="bloc-timer-Bar">
         <Button
@@ -52,32 +101,37 @@ export default function BarTemporelle({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setState({ ...state, showModal: false })
+              setShowModal(false);
+            } else {
+              downTime();
             }
           }}
         >
           <RemoveIcon />
         </Button>
-        <div className="content-timer-bar" onClick={() => {
-          if (!state.showModal) {
-            const cpAction = {
-              ...action,
-              notification: { ...action.notification, isOpen: false },
-              folower: { ...action.folower, isOpen: false },
-              search: { ...action.search, isOpen: false },
-              messagerie: { ...action.messagerie, isOpen: false },
-            };
-            setAction(cpAction);
-            setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
-          }
-          
-
-        }}>
-          <span className="timer-down">320</span>
+        <div
+          className="content-timer-bar"
+          onClick={() => {
+            if (!showModal) {
+              const cpAction = {
+                ...action,
+                notification: { ...action.notification, isOpen: false },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: false },
+                messagerie: { ...action.messagerie, isOpen: false },
+              };
+              setAction(cpAction);
+              setActiveItem(
+                activeItem && activeItem.id == item.id ? null : item
+              );
+            }
+          }}
+        >
+          <span className="timer-down">{state?.duration?.countDown}</span>
           <div className="timer-item">
-            <TimerOutlinedIcon /> 04 : 12 : 06
+            <TimerOutlinedIcon /> <span>{stateTime}</span>
           </div>
-          <span className="timer-up">400</span>
+          <span className="timer-up">{state?.duration?.countUp}</span>
         </div>
         <Button
           onClick={() => {
@@ -90,7 +144,9 @@ export default function BarTemporelle({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setState({ ...state, showModal: false })
+              setShowModal(false);
+            } else {
+              upTime();
             }
           }}
         >

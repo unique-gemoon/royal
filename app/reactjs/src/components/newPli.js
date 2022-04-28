@@ -3,7 +3,6 @@ import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOu
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
 import RemoveIcon from "@mui/icons-material/Remove";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
-import { Button } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
@@ -33,7 +32,7 @@ export default function NewPli({
     inputEmoji: {
       name: "message-input",
       placeholder: "Que veux-tu dire, Lys ?",
-      value: localStorage.getItem("inputEmoji") || "",
+      value: "",
       type: "text",
       as: "textarea",
       open: false,
@@ -42,7 +41,7 @@ export default function NewPli({
     inputEmojiOuverture: {
       name: "content-pli2",
       placeholder: "Que veux-tu dire, Lys ?",
-      value: localStorage.getItem("inputEmojiOuverture") || "",
+      value: "",
       open: false,
       error: false,
     },
@@ -132,23 +131,19 @@ export default function NewPli({
         icon: "mp3",
         multiple: false,
         value: [],
-        file: [],        
+        file: [],
         maxFiles: 10,
       },
     },
+    duration: {
+      hour: 0,
+      minute: 1,
+      second: 0,
+      countDown: 0,
+      countUp: 0,
+    },
     dragOpen: true,
   });
-
-  useEffect(() => {
-    localStorage.setItem("inputEmoji", state.inputEmoji.value);
-  }, [state.inputEmoji]);
-
-  useEffect(() => {
-    localStorage.setItem(
-      "inputEmojiOuverture",
-      state.inputEmojiOuverture.value
-    );
-  }, [state.inputEmojiOuverture]);
 
   const [togglePli, setTogglePli] = useState(false);
 
@@ -181,44 +176,51 @@ export default function NewPli({
     }
   };
 
+  const getMediaFiles = (name) => {
+    return state.media[name].file.filter((f) => f !== "" && f !== null);
+  };
+  const getMediaOuvertureFiles = (name) => {
+    return state.mediaOuverture[name].file.filter(
+      (f) => f !== "" && f !== null
+    );
+  };
+
   const submitPli = (e) => {
     e.preventDefault();
     if (!submitting) {
-      console.log(state.inputEmoji.value);
-      var content = state.inputEmoji.value;
-
-      const files = state.media.images.file.filter(
-        (f) => f !== "" && f !== null
-      );
-     
-      console.log("files",files);
-
-
+      let files = [];
       const data = new FormData();
-      if (files.length) {
-        for (let i = 0; i < files.length; i++) {
-          data.append('files', files[i]);
-        }
-      } 
 
+      data.append("content", state.inputEmoji.value);
+      data.append("contentOuverture", state.inputEmoji.value);
+      data.append("soundage", state.soundage.value);
+      data.append("duration", state.duration.hour+":"+state.duration.minute+":"+state.duration.second);
 
+      files = getMediaFiles("images");
+      for (let i = 0; i < files.length; i++) {
+        data.append("images", files[i]);
+      }
+      files = getMediaFiles("video");
+      for (let i = 0; i < files.length; i++) {
+        data.append("video", files[i]);
+      }
+      files = getMediaFiles("music");
+      for (let i = 0; i < files.length; i++) {
+        data.append("music", files[i]);
+      }
 
-      /* const ouverture = {
-        content: "test",
-        sondage: ["option1", "option2"],
-        audio: ["test.mp3"],
-        video: ["test.mp4"],
-        image: ["test.png"],
-      };
-      const data = {
-        content: "test ouverture",
-        sondage: ["option1", "option2"],
-        audio: ["test.mp3"],
-        video: ["test.mp4"],
-        ouverture,
-        duration: "00:01:00",
-      };  */
-
+      files = getMediaOuvertureFiles("images");
+      for (let i = 0; i < files.length; i++) {
+        data.append("imagesOuverture", files[i]);
+      }
+      files = getMediaOuvertureFiles("video");
+      for (let i = 0; i < files.length; i++) {
+        data.append("videoOuverture", files[i]);
+      }
+      files = getMediaOuvertureFiles("music");
+      for (let i = 0; i < files.length; i++) {
+        data.append("musicOuverture", files[i]);
+      }
 
       connector({
         method: "post",
@@ -247,110 +249,107 @@ export default function NewPli({
 
   return (
     <BlocAddPli>
-        <div className={`bloc-new-pli ${togglePli ? "showing-new-pli" : ""}`}>
-          <div className="cadre-content-new-pli">
-            <form className="form-new-pli" onSubmit={submitPli}>
-              <div className="content-new-pli" ref={divRef}>
-                {message && (
-                  <ErrorFormMessage
-                    text={message}
-                    onClick={() => setMessage(null)}
+      <div className={`bloc-new-pli ${togglePli ? "showing-new-pli" : ""}`}>
+        <div className="cadre-content-new-pli">
+          <form className="form-new-pli" onSubmit={submitPli}>
+            <div className="content-new-pli" ref={divRef}>
+              {message && (
+                <ErrorFormMessage
+                  text={message}
+                  onClick={() => setMessage(null)}
+                />
+              )}
+              <div className="new-pli-nv1">
+                <div className="cadre-content-pli">
+                  <InputTextareaAutosize
+                    {...state.inputEmoji}
+                    onChange={(e) => {
+                      const cpState = { ...state };
+                      if (e.target.value.length <= 280) {
+                        cpState.inputEmoji.value = e.target.value;
+                        setState(cpState);
+                      }
+                    }}
                   />
-                )}
-                <div className="new-pli-nv1">
-                  <div className="cadre-content-pli">
-                    <InputTextareaAutosize
-                      {...state.inputEmoji}
-                      onChange={(e) => {
-                        const cpState = { ...state };
-                        if (e.target.value.length <= 280) {
-                          cpState.inputEmoji.value = e.target.value;
-                          setState(cpState);
-                        }
+                  {state.soundage.open && (
+                    <AddSoundage
+                      maxOption={state.soundage.maxOptions}
+                      soundage={state.soundage}
+                      setSoundage={(e) => {
+                        console.log("setSoundage", e);
+                        setState({
+                          ...state,
+                          soundage: e,
+                        });
+                      }}
+                      showSoundage={state.soundage.open}
+                      setShowSoundage={(e) => {
+                        setState({
+                          ...state,
+                          soundage: { ...state.soundage, open: e },
+                        });
                       }}
                     />
-                    {state.soundage.open && (
-                      <AddSoundage
-                        maxOption={state.soundage.maxOptions}
-                        soundage={state.soundage}
-                        setSoundage={(e) => {
-                          console.log("setSoundage", e);
-                          setState({
-                            ...state,
-                            soundage: e,
-                          });
-                        }}
-                        showSoundage={state.soundage.open}
-                        setShowSoundage={(e) => {
-                          setState({
-                            ...state,
-                            soundage: { ...state.soundage, open: e },
-                          });
-                        }}
-                      />
-                    )}
-                    <div className="bloc-footer">
-                      <NewPliOptions
-                        state={state}
-                        setState={setState}
-                        setMessage={setMessage}
-                      />
-                      <div className="count-publish-pli1">
-                        <CountDown
-                          maxCount={280}
-                          setState={
-                            (state.inputEmoji.value
-                              ? state.inputEmoji.value
-                              : ""
-                            ).length
-                          }
-                        />
-                        {!addOuverture && (
-                          <div className="bloc-btn-publish">
-                            <ButtonDef
-                              spinner={submitting}
-                              textButton={"Publier"}
-                              className="btn-publish"
-                              icon={<SendRoundedIcon />}
-                            />
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                  <BarTemporelle />
-                </div>
-                {addOuverture && (
-                  <div className="new-pli-nv2">
-                    <div className="cadre-content-pli">
-                      <NewOuvertureOptions
-                        state={state}
-                        setState={setState}
-                        setMessage={setMessage}
-                        submitting={submitting}
-                      />
-                    </div>
-                  </div>
-                )}
-                <div
-                  className="toggle-open-ouverture"
-                  onClick={() => setAddOuverture(!addOuverture)}
-                >
-                  {!addOuverture ? (
-                    <>
-                      Ajouter une ouverture <AddIcon />
-                    </>
-                  ) : (
-                    <>
-                      Supprimer l'ouverture <RemoveIcon />
-                    </>
                   )}
+                  <div className="bloc-footer">
+                    <NewPliOptions
+                      state={state}
+                      setState={setState}
+                      setMessage={setMessage}
+                    />
+                    <div className="count-publish-pli1">
+                      <CountDown
+                        maxCount={280}
+                        setState={
+                          (state.inputEmoji.value ? state.inputEmoji.value : "")
+                            .length
+                        }
+                      />
+                      {!addOuverture && (
+                        <div className="bloc-btn-publish">
+                          <ButtonDef
+                            spinner={submitting}
+                            textButton={"Publier"}
+                            className="btn-publish"
+                            icon={<SendRoundedIcon />}
+                          />
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 </div>
+                <BarTemporelle state={state} setState={setState} />
               </div>
-            </form>
-          </div>
+              {addOuverture && (
+                <div className="new-pli-nv2">
+                  <div className="cadre-content-pli">
+                    <NewOuvertureOptions
+                      state={state}
+                      setState={setState}
+                      setMessage={setMessage}
+                      submitting={submitting}
+                    />
+                  </div>
+                </div>
+              )}
+              <div
+                className="toggle-open-ouverture"
+                onClick={() => setAddOuverture(!addOuverture)}
+              >
+                {!addOuverture ? (
+                  <>
+                    Ajouter une ouverture <AddIcon />
+                  </>
+                ) : (
+                  <>
+                    Supprimer l'ouverture <RemoveIcon />
+                  </>
+                )}
+              </div>
+            </div>
+          </form>
         </div>
-      
+      </div>
 
       {togglePli === false && (
         <div

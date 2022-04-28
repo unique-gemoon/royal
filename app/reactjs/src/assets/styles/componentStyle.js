@@ -1739,6 +1739,8 @@ export const BarTimer = styled.div`
             }
             & > span{
                 color: #798993;
+                min-width: 32px;
+                width: 32px;
             }
             &::before{
                 content: "";
@@ -1770,6 +1772,10 @@ export const BarTimer = styled.div`
                     opacity: 0.5;
                     margin-bottom: 2px;
                     margin-right: 5px;
+                }
+                span{
+                    width: 58px;
+                    display: inline-block;
                 }
             }
         }

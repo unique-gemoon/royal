@@ -14,17 +14,15 @@ import Soundage from "./soundage";
 
 export default function ItemMasonry({
   item,
-  setItem = () => { },
+  setItem = () => {},
   open = false,
   action,
-  setAction = () => { },
+  setAction = () => {},
   activeItem = null,
-  setActiveItem = () => { },
-  setActiveItemPlayer = () => { },
-  activeItemPlayer = null
-
+  setActiveItem = () => {},
+  setActiveItemPlayer = () => {},
+  activeItemPlayer = null,
 }) {
-
   const [state, setState] = useState({
     showModal: false,
     showComment: true,
@@ -42,8 +40,7 @@ export default function ItemMasonry({
 
   const isCheck = (item) => {
     return activeItem && item.id == activeItem.id;
-  }
-
+  };
 
   return (
     <>
@@ -82,76 +79,98 @@ export default function ItemMasonry({
                 {item.nv1.media && item.nv1.media.photos ? (
                   <ImagesGallery items={item.nv1.media.photos} />
                 ) : null}
-                {item.nv1.media && item.nv1.media.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.media.video} /> : null}
-                {item.nv1.media && item.nv1.media.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv1.media.music} /> : null}
+                {item.nv1.media && item.nv1.media.video ? (
+                  <PlayerVideo
+                    setActiveItemPlayer={setActiveItemPlayer}
+                    activeItemPlayer={activeItemPlayer}
+                    item={item.nv1.media.video}
+                  />
+                ) : null}
+                {item.nv1.media && item.nv1.media.music ? (
+                  <PlayerMusic
+                    setActiveItemMusic={setActiveItemPlayer}
+                    activeItemMusic={activeItemPlayer}
+                    item={item.nv1.media.music}
+                  />
+                ) : null}
               </div>
-              <BarTemporelle state={state} setState={setState} />
+              <BarTemporelle
+                showModal={state.showModal}
+                setShowModal={(e) => {
+                  setState({ ...state, showModal: e });
+                }}
+              />
             </div>
             <div className="Bloc-NV2">
-                <>
-                  {item.nv2 ?
-                    <div className="content-bloc-NV2">
-                      {item.nv2.description ? (
-                        <div className="descripton-miniature">
-                          {item.nv2.description}
-                        </div>
-                      ) : null}
-                      {item.nv2.media.music ? (
-                        <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.media.music} />
-                      ) : null}
-                      {item.nv2.media && item.nv2.media.soundage ? (
-                        <Soundage
-                          name={`modal_${item.id}_2`}
-                          niveau={2}
-                          item={item}
-                          setItem={setItem}
-                        />
-                      ) : null}
-                      {item.nv2.media && item.nv2.media.photos ? (
-                        <ImagesGallery items={item.nv2.media.photos} />
-                      ) : null}
-                      {item.nv2.media && item.nv2.media.video ? (
-                        <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.media.video} />
-                      ) : null}
-                    </div>
-                    : null}
-                  <div
-                    className="toggle-pli2"
-                    onClick={() =>
-                      setState({ ...state, showComment: false, showModal: false })
-                    }
-                  >
-                    
-                    {!state.showComment ? (
-                      <>
-                        <span className="users-views">
-                          14 <VisibilityIcon />
-                        </span>{" "} .
-                        <span className="toggle-zoom">
-                          Etendre le pli{" "}
-                          <OpenInFullOutlinedIcon className="open-zoom-icon" />
-                        </span>
-                      </>
-                    ) : (
-                      <>
-                        <span className="users-views">
-                          14 <CommentOutlinedIcon />
-                        </span>{" "} .
-                        <span className="toggle-zoom">
-                          Retour au pli ouvert{" "}
-                          <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
-                        </span>
-                      </>
-                    )}
+              <>
+                {item.nv2 ? (
+                  <div className="content-bloc-NV2">
+                    {item.nv2.description ? (
+                      <div className="descripton-miniature">
+                        {item.nv2.description}
+                      </div>
+                    ) : null}
+                    {item.nv2.media.music ? (
+                      <PlayerMusic
+                        setActiveItemMusic={setActiveItemPlayer}
+                        activeItemMusic={activeItemPlayer}
+                        item={item.nv2.media.music}
+                      />
+                    ) : null}
+                    {item.nv2.media && item.nv2.media.soundage ? (
+                      <Soundage
+                        name={`modal_${item.id}_2`}
+                        niveau={2}
+                        item={item}
+                        setItem={setItem}
+                      />
+                    ) : null}
+                    {item.nv2.media && item.nv2.media.photos ? (
+                      <ImagesGallery items={item.nv2.media.photos} />
+                    ) : null}
+                    {item.nv2.media && item.nv2.media.video ? (
+                      <PlayerVideo
+                        setActiveItemPlayer={setActiveItemPlayer}
+                        activeItemPlayer={activeItemPlayer}
+                        item={item.nv2.media.video}
+                      />
+                    ) : null}
                   </div>
-                  {state.showComment ? (
-                    <BlocComments
-                      item={item}
-                      state={state}
-                      setState={setState}
-                    />
-                  ) : null}
-                </>
+                ) : null}
+                <div
+                  className="toggle-pli2"
+                  onClick={() =>
+                    setState({ ...state, showComment: false, showModal: false })
+                  }
+                >
+                  {!state.showComment ? (
+                    <>
+                      <span className="users-views">
+                        14 <VisibilityIcon />
+                      </span>{" "}
+                      .
+                      <span className="toggle-zoom">
+                        Etendre le pli{" "}
+                        <OpenInFullOutlinedIcon className="open-zoom-icon" />
+                      </span>
+                    </>
+                  ) : (
+                    <>
+                      <span className="users-views">
+                        14 <CommentOutlinedIcon />
+                      </span>{" "}
+                      .
+                      <span className="toggle-zoom">
+                        Retour au pli ouvert{" "}
+                        <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
+                      </span>
+                    </>
+                  )}
+                </div>
+                {state.showComment ? (
+                  <BlocComments item={item} state={state} setState={setState} />
+                ) : null}
+              </>
             </div>
           </MasonryItem>
         </ModalItem.Body>
@@ -180,14 +199,30 @@ export default function ItemMasonry({
                 setItem={setItem}
               />
             ) : null}
-            {item.nv1.media && item.nv1.media.photos ? <ImagesGallery items={item.nv1.media.photos} /> : null}
-            {item.nv1.media && item.nv1.media.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv1.media.video}  /> : null}
-            {item.nv1.media && item.nv1.media.music ? <PlayerMusic setActiveItemMusic = { setActiveItemPlayer } activeItemMusic = { activeItemPlayer } item={item.nv1.media.music} /> : null}
+            {item.nv1.media && item.nv1.media.photos ? (
+              <ImagesGallery items={item.nv1.media.photos} />
+            ) : null}
+            {item.nv1.media && item.nv1.media.video ? (
+              <PlayerVideo
+                setActiveItemPlayer={setActiveItemPlayer}
+                activeItemPlayer={activeItemPlayer}
+                item={item.nv1.media.video}
+              />
+            ) : null}
+            {item.nv1.media && item.nv1.media.music ? (
+              <PlayerMusic
+                setActiveItemMusic={setActiveItemPlayer}
+                activeItemMusic={activeItemPlayer}
+                item={item.nv1.media.music}
+              />
+            ) : null}
           </div>
           <BarTemporelle
             item={item}
-            state={state}
-            setState={setState}
+            showModal={state.showModal}
+            setShowModal={(e) => {
+              setState({ ...state, showModal: e });
+            }}
             action={action}
             setAction={setAction}
             activeItem={activeItem}
@@ -197,16 +232,22 @@ export default function ItemMasonry({
         </div>
 
         <div className="Bloc-NV2">
-          {isCheck(item) ?
+          {isCheck(item) ? (
             <>
-              {item.nv2 ?
+              {item.nv2 ? (
                 <div className="content-bloc-NV2">
                   {item.nv2.description ? (
                     <div className="descripton-miniature">
                       {item.nv2.description}
                     </div>
                   ) : null}
-                  {item.nv2.media.music ? <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={item.nv2.media.music} /> : null}
+                  {item.nv2.media.music ? (
+                    <PlayerMusic
+                      setActiveItemMusic={setActiveItemPlayer}
+                      activeItemMusic={activeItemPlayer}
+                      item={item.nv2.media.music}
+                    />
+                  ) : null}
                   {item.nv2.media && item.nv2.media.soundage ? (
                     <Soundage
                       name={`bloc_${item.id}_2`}
@@ -218,9 +259,15 @@ export default function ItemMasonry({
                   {item.nv2.media && item.nv2.media.photos ? (
                     <ImagesGallery items={item.nv2.media.photos} />
                   ) : null}
-                  {item.nv2.media && item.nv2.media.video ? <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={item.nv2.media.video} /> : null}
+                  {item.nv2.media && item.nv2.media.video ? (
+                    <PlayerVideo
+                      setActiveItemPlayer={setActiveItemPlayer}
+                      activeItemPlayer={activeItemPlayer}
+                      item={item.nv2.media.video}
+                    />
+                  ) : null}
                 </div>
-                : null}
+              ) : null}
               <div
                 className="toggle-pli2"
                 onClick={() =>
@@ -236,13 +283,9 @@ export default function ItemMasonry({
                   <OpenInFullOutlinedIcon className="open-zoom-icon" />
                 </span>
               </div>
-              <BlocComments
-                item={item}
-                state={state}
-                setState={setState}
-              />
+              <BlocComments item={item} state={state} setState={setState} />
             </>
-            : null}
+          ) : null}
         </div>
       </MasonryItem>
     </>

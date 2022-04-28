@@ -8,11 +8,10 @@ const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 
 export function newPli(req, res) {
 
-  console.log("Request body ---", req.body);
-  console.log("Request file ---", req.file);
+  console.log("Request", req.body.content);
 
-
-  res.status(200).json({});
+  res.status(200).json({response : req.files});
+  
   return;
 
   Pli.create(

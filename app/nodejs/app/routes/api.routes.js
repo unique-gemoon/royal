@@ -3,33 +3,17 @@ import passport from "passport";
 import { newPli } from "../controllers/pli.controller.js";
 import { checkDataPli } from "../middleware/checkPli.js";
 import path from "path";
-import multer from "multer";
+import { uploadMedia } from '../middleware/uploadMedia.js';
 const __dirname = process.cwd();
 
 const apiRoutes = Router();
 
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    console.log("test");
-    cb(null, "public/uploads/media/");
-  },
-
-  filename: function (req, file, cb) {
-    console.log("test2");
-    cb(
-      null,
-      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
-    );
-  },
-});
-
-var upload = multer({ storage: storage });
 
 apiRoutes.post(
   "/pli/new",
   passport.authenticate("jwt", { session: false }),
   checkDataPli,
-  upload.array("files"),
+  uploadMedia,
   newPli
 );
 
