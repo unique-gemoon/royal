@@ -3,36 +3,19 @@ import { Button } from "@mui/material";
 import Picker, { SKIN_TONE_NEUTRAL } from "emoji-picker-react";
 import React, { useEffect, useRef, useState } from "react";
 import { BlocEmojis } from "../assets/styles/componentStyle";
+import { useOutsideAlerter } from "../helper/events";
 
 export default function Emojis({ inputEmoji = {}, setInputEmoji = () => {} }) {
-  /**
-   * Hook that alerts clicks outside of the passed ref
-   */
-  function useOutsideAlerter(ref, action) {
-    useEffect(() => {
-      /**
-       * Alert if clicked on outside of element
-       */
-      function handleClickOutside(event) {
-        if (ref.current && !ref.current.contains(event.target)) {
-          action();
-        }
-      }
-
-      // Bind the event listener
-      document.addEventListener("mousedown", handleClickOutside);
-      return () => {
-        // Unbind the event listener on clean up
-        document.removeEventListener("mousedown", handleClickOutside);
-      };
-    }, [ref]);
-  }
+  
 
   const [toggleEmoji, setToggleEmoji] = useState(false);
   const [chosenEmoji, setChosenEmoji] = useState(null);
 
   const ref = useRef(null);
-  useOutsideAlerter(ref, () => setToggleEmoji(false));
+
+  useOutsideAlerter(ref, () => {
+    setToggleEmoji(false)
+  });
 
   const onEmojiClick = (event, emojiObject) => {
     setChosenEmoji(emojiObject);
@@ -40,31 +23,42 @@ export default function Emojis({ inputEmoji = {}, setInputEmoji = () => {} }) {
       setInputEmoji({
         ...inputEmoji,
         value: inputEmoji.value + emojiObject.emoji,
-        open: !toggleEmoji,
+        open: true,
       });
     }
     setToggleEmoji(false);
   };
   return (
     <BlocEmojis>
+      {toggleEmoji === false && (
       <Button
-        className={`btn-toggle-emoji ${toggleEmoji ? "active-emoji" : ""}`}
+        className={`btn-toggle-emoji`}
         onClick={() => {
-          setInputEmoji({ ...inputEmoji, open: !toggleEmoji });
-          setToggleEmoji(!toggleEmoji);
+          setInputEmoji({ ...inputEmoji, open: true });
+          setToggleEmoji(true);
         }}
       >
         <SentimentSatisfiedAltRoundedIcon />
       </Button>
+      )}
+      {toggleEmoji && (
+      <Button
+        className={`btn-toggle-emoji active-emoji`}
+      >
+        <SentimentSatisfiedAltRoundedIcon />
+      </Button>
+      )}
       {toggleEmoji ? (
-        <div className="bloc-list-emoji">
+        <div className="bloc-list-emoji" ref={ref}>
           <Picker
             onEmojiClick={onEmojiClick}
             skinTone={SKIN_TONE_NEUTRAL}
-            native
             unified={true}
             disableSearchBar
             disableSkinTonePicker={true}
+            groupVisibility={{
+              recently_used: false,
+            }}
           />
         </div>
       ) : null}

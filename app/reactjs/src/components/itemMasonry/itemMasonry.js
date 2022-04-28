@@ -1,6 +1,6 @@
 import CloseFullscreenTwoToneIcon from "@mui/icons-material/CloseFullscreenTwoTone";
-import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
+import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import React, { useEffect, useRef, useState } from "react";
 import { MasonryItem, ModalItem } from "../../assets/styles/componentStyle";
@@ -94,12 +94,7 @@ export default function ItemMasonry({
                   />
                 ) : null}
               </div>
-              <BarTemporelle
-                showModal={state.showModal}
-                setShowModal={(e) => {
-                  setState({ ...state, showModal: e });
-                }}
-              />
+              <BarTemporelle state={state} setState={setState} />
             </div>
             <div className="Bloc-NV2">
               <>
@@ -139,9 +134,7 @@ export default function ItemMasonry({
                 ) : null}
                 <div
                   className="toggle-pli2"
-                  onClick={() =>
-                    setState({ ...state, showComment: false, showModal: false })
-                  }
+                  onClick={() => setState({ ...state, showModal: false })}
                 >
                   {!state.showComment ? (
                     <>
@@ -219,10 +212,8 @@ export default function ItemMasonry({
           </div>
           <BarTemporelle
             item={item}
-            showModal={state.showModal}
-            setShowModal={(e) => {
-              setState({ ...state, showModal: e });
-            }}
+            state={state}
+            setState={setState}
             action={action}
             setAction={setAction}
             activeItem={activeItem}
