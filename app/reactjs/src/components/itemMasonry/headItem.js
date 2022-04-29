@@ -14,11 +14,13 @@ import { Button } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useState } from "react";
+import { useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import BallotIcon from "../../assets/images/icons/ballotIcon";
 import { DetailsItems, HeadContentItem, PlusIcon } from "../../assets/styles/globalStyle";
 import { ROLES } from "../../config/vars";
+import { useOutsideAlerter } from "../../helper/events";
 import * as actionTypes from "../../store/functions/actionTypes";
 
 export default function HeadItem({
@@ -94,6 +96,11 @@ export default function HeadItem({
   const handleCopyOpen = () => {
     setCopyOpen(true);
   };
+
+  const ref = useRef(null);
+  useOutsideAlerter(ref, () => {
+    setShowAllMedia(false);
+  });
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
@@ -129,7 +136,7 @@ export default function HeadItem({
             </div>
           ))
           }
-          <div className="bloc-more-medias">
+          <div className="bloc-more-medias" ref={ref}>
             <div className={`mediaDetails ${showAllMedia ? "showMedia" : ""}`}>
               {allMedia.length && allMedia.map((media, index) => (
 
@@ -166,7 +173,7 @@ export default function HeadItem({
               ))
               }
             </div>
-            {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia) }}><PlusIcon /></div>)}
+            {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia); }}><PlusIcon /></div>)}
           </div>
         </DetailsItems>
         <ClickAwayListener onClickAway={handleTooltipClose}>
