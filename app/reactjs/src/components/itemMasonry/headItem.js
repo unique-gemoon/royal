@@ -97,7 +97,7 @@ export default function HeadItem({
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
-        <DetailsItems>
+        <DetailsItems className={allMedia.length > 1 && "is-other-media"}>
           {allMedia.length && allMedia.map((media, index) => (
 
             <div key={index}>
@@ -129,44 +129,45 @@ export default function HeadItem({
             </div>
           ))
           }
-          <div className={`mediaDetails ${showAllMedia ? "showMedia" : ""}`}>
-            {allMedia.length && allMedia.map((media, index) => (
+          <div className="bloc-more-medias">
+            <div className={`mediaDetails ${showAllMedia ? "showMedia" : ""}`}>
+              {allMedia.length && allMedia.map((media, index) => (
 
-              <div key={index}>
+                <div key={index}>
 
-                {index > 0 ? (<>
-                  {showAllMedia && media == "description" && (
-                    <div className="item-detail format-text-detail">
-                      <FormatSizeIcon />
-                    </div>
-                  )}
-                  {showAllMedia && media == "music" && (
-                    <div className="item-detail sound-detail">
-                      <GraphicEqIcon />
-                    </div>
-                  )}
-                  {showAllMedia && media == "soundage" && (
-                    <div className="item-detail soundage-detail">
-                      <BallotIcon />
-                    </div>
-                  )}
-                  {showAllMedia && media == "photos" && (
-                    <div className="item-detail image-detail">
-                      <ImageIcon />
-                    </div>
-                  )}
-                  {showAllMedia && media == "video" && (
-                    <div className="item-detail video-detail">
-                      <PlayArrowIcon />
-                    </div>
-                  )}
-                </>) : ""}
-              </div>
-            ))
-            }
+                  {index > 0 ? (<>
+                    {showAllMedia && media == "description" && (
+                      <div className="item-detail format-text-detail">
+                        <FormatSizeIcon />
+                      </div>
+                    )}
+                    {showAllMedia && media == "music" && (
+                      <div className="item-detail sound-detail">
+                        <GraphicEqIcon />
+                      </div>
+                    )}
+                    {showAllMedia && media == "soundage" && (
+                      <div className="item-detail soundage-detail">
+                        <BallotIcon />
+                      </div>
+                    )}
+                    {showAllMedia && media == "photos" && (
+                      <div className="item-detail image-detail">
+                        <ImageIcon />
+                      </div>
+                    )}
+                    {showAllMedia && media == "video" && (
+                      <div className="item-detail video-detail">
+                        <PlayArrowIcon />
+                      </div>
+                    )}
+                  </>) : ""}
+                </div>
+              ))
+              }
+            </div>
+            {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia) }}><PlusIcon /></div>)}
           </div>
-          {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia) }}><PlusIcon /></div>)}
-
         </DetailsItems>
         <ClickAwayListener onClickAway={handleTooltipClose}>
           <div className="user-info-tooltip">
