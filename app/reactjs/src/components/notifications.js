@@ -14,7 +14,6 @@ export default function Notifications({
     const filteredRead = dataNotifs.filter(element => {
             return element.isRead;
     });
-    console.log(filteredRead)
     const isReadItem = (item) => {
         let cpDataNotifs = [...dataNotifs];
         for(let i=0; i< cpDataNotifs.length; i++){
@@ -24,7 +23,6 @@ export default function Notifications({
             }
         }
         setDataNotifs(cpDataNotifs);
-        console.log(cpDataNotifs)
         setNewNotifs(cpDataNotifs.filter(newNotif => newNotif.isRead == false));
     }
     return (

@@ -8,9 +8,7 @@ body {
   background-size: cover;
   min-height: 100vh;
 }
-body.add-pli-showing{
-  overflow: hidden;
-}
+
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;

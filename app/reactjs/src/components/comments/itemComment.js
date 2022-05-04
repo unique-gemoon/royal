@@ -14,7 +14,6 @@ export default function ItemComment({ item }) {
 
   const [activeItemComment, setActiveItemComment] = useState(null);
   const auth = useSelector((store) => store.auth);
-  console.log(activeItemComment);
   return (
     <CommentItem>
       <div className="head-comment">
