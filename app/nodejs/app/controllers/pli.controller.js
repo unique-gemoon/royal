@@ -7,31 +7,77 @@ const PliMedias = db.pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 
 export function newPli(req, res) {
+  const content = req.body.content || "";
+  const ouverture = req.body.contentOuverture || "";
+  const duration = req.body.duration || "00:00:00";
 
-  console.log("Request", req.body.content);
+  let medias = [];
+  for (const key in req.files) {
+    for (let i = 0; i < req.files[key].length; i++) {
+      const file = req.files[key][i];
+      let type;
+      let isOuverture = false;
+      if (file.fieldname === "images") {
+        type = "image";
+      } else if (file.fieldname === "imagesOuverture") {
+        type = "image";
+        isOuverture = true;
+      } else if (file.fieldname === "video") {
+        type = "image";
+      } else if (file.fieldname === "videoOuverture") {
+        type = "video";
+        isOuverture = true;
+      } else if (file.fieldname === "music") {
+        type = "image";
+      } else if (file.fieldname === "musicOuverture") {
+        type = "music";
+        isOuverture = true;
+      }
+      if (type) {
+        medias.push({
+          name: file.filename,
+          type,
+          originalname: file.originalname,
+          path: file.path,
+          isOuverture,
+        });
+      }
+    }
+  }
 
-  res.status(200).json({response : req.files});
-  
-  return;
+  if (req.body.sondage != undefined) {
+    let options = [];
+    req.body.sondage.forEach((element) => {
+      const option = JSON.parse(element);
+      options.push({ name: option.value });
+    });
+    medias.push({
+      name: "",
+      type: "sondage",
+      options,
+    });
+  }
+
+  if (req.body.sondageOuverture != undefined) {
+    let options = [];
+    req.body.sondageOuverture.forEach((element) => {
+      const option = JSON.parse(element);
+      options.push({ name: option.value });
+    });
+    medias.push({
+      name: "",
+      type: "sondage",
+      options,
+      isOuverture: true,
+    });
+  }
 
   Pli.create(
     {
-      content: req.body.content,
-      medias: [
-        {
-          name: "test1",
-          type: "image",
-        },
-        {
-          name: "test2",
-          type: "video",
-        },
-        {
-          name: "test3",
-          type: "sondage",
-          options: [{ name: "option1" }, { name: "option2" }],
-        },
-      ],
+      content,
+      ouverture,
+      duration,
+      medias,
     },
     {
       include: [

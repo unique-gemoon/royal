@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import {
-  SoundageBloc,
-  ItemResultSoundage,
+  SondageBloc,
+  ItemResultSondage,
 } from "../../assets/styles/componentStyle";
 import RadioButton from "../ui-elements/radioButton";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
@@ -9,9 +9,9 @@ import { useDispatch, useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
 
-export default function Soundage({ name, niveau, item, setItem }) {
+export default function Sondage({ name, niveau, item, setItem }) {
   const [items] = useState(
-    niveau == 1 ? [...item.nv1.media.soundage] : [...item.nv2.media.soundage]
+    niveau == 1 ? [...item.nv1.media.sondage] : [...item.nv2.media.sondage]
   );
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
@@ -31,11 +31,11 @@ export default function Soundage({ name, niveau, item, setItem }) {
   return (
     <>
       {items ? (
-        <SoundageBloc>
+        <SondageBloc>
           {!item.result && (
             <>
               <RadioButton
-                className="bloc-choix-soundage"
+                className="bloc-choix-sondage"
                 options={items}
                 value={item.value}
                 name={name}
@@ -52,13 +52,13 @@ export default function Soundage({ name, niveau, item, setItem }) {
                     setItem({
                       ...item,
                       value: val.value,
-                      nv1: { ...item.nv1, soundage: items },
+                      nv1: { ...item.nv1, sondage: items },
                     });
                   } else if (niveau == 2) {
                     setItem({
                       ...item,
                       value: val.value,
-                      nv2: { ...item.nv2, soundage: items },
+                      nv2: { ...item.nv2, sondage: items },
                     });
                   }}
                 }}
@@ -75,19 +75,19 @@ export default function Soundage({ name, niveau, item, setItem }) {
           )}
 
           {item.result && (
-            <div className="bloc-result-soundage">
+            <div className="bloc-result-sondage">
               {items.map((val, index) => (
-                <ItemResultSoundage key={index} purcentage={val.countQte}>
-                  <div className="content-result-soundage">
+                <ItemResultSondage key={index} purcentage={val.countQte}>
+                  <div className="content-result-sondage">
                     <span>{val.label}</span>{" "}
                     {val.choix ? <CheckCircleOutlineIcon /> : null}
                   </div>
                   <span className="purcentage-item">{val.countQte}</span>
-                </ItemResultSoundage>
+                </ItemResultSondage>
               ))}
             </div>
           )}
-        </SoundageBloc>
+        </SondageBloc>
       ) : null}
     </>
   );

@@ -193,7 +193,7 @@ export default function Home() {
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
         media: {
-          soundage: [
+          sondage: [
             {
               id: 1,
               label: "Emmanuel Macron",
@@ -242,7 +242,7 @@ export default function Home() {
       },
       nv2: {
         media: {
-          soundage: [
+          sondage: [
             {
               id: 1,
               label: "Emmanuel Macron",
@@ -326,7 +326,7 @@ export default function Home() {
       nv1: {
         description: "On the 10th anniversary of the passage of the #CVAA10",
         media: {
-          soundage: [
+          sondage: [
             {
               id: 1,
               label: "Emmanuel Macron",

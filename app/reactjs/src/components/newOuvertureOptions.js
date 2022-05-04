@@ -20,7 +20,7 @@ import {
 import { DetailsItems } from "../assets/styles/globalStyle";
 import { useDragover, useDrop, useOutsideAlerter } from "../helper/events";
 import { removeTags } from "../helper/fonctions";
-import AddSoundage from "./addSoundage";
+import AddSondage from "./addSondage";
 import Emojis from "./emojis";
 import ButtonDef from "./ui-elements/buttonDef";
 import CountDown from "./ui-elements/countDown";
@@ -117,21 +117,21 @@ export default function NewOuvertureOptions({
       )}
 
       <div className="options-new-pli">
-        {state.soundageOuverture.open && (
-          <AddSoundage
-            maxOption={state.soundageOuverture.maxOptions}
-            soundage={state.soundageOuverture}
-            setSoundage={(e) => {
+        {state.sondageOuverture.open && (
+          <AddSondage
+            maxOption={state.sondageOuverture.maxOptions}
+            sondage={state.sondageOuverture}
+            setSondage={(e) => {
               setState({
                 ...state,
-                soundageOuverture: e
+                sondageOuverture: e
               }); 
             }}
-            showSoundage={state.soundageOuverture.open}
-            setShowSoundage={(e) => {
+            showSondage={state.sondageOuverture.open}
+            setShowSondage={(e) => {
               setState({
                 ...state,
-                soundageOuverture: { ...state.soundageOuverture, open: e },
+                sondageOuverture: { ...state.sondageOuverture, open: e },
               });
             }}
           />
@@ -245,16 +245,16 @@ export default function NewOuvertureOptions({
               </div>
               <Button
                 onClick={() => {
-                  setCurrent("soundage");
+                  setCurrent("sondage");
                   setState({
                     ...state,
-                    soundageOuverture: {
-                      ...state.soundageOuverture,
+                    sondageOuverture: {
+                      ...state.sondageOuverture,
                       open: true,
                     },
                   });
                 }}
-                className={`item-detail soundage-detail`}
+                className={`item-detail sondage-detail`}
               >
                 <BallotIcon />
               </Button>

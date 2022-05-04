@@ -13,7 +13,7 @@ import connector from "../connector";
 import { useOutsideAlerter } from "../helper/events";
 import { getMsgError } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
-import AddSoundage from "./addSoundage";
+import AddSondage from "./addSondage";
 import BarTemporelle from "./barTemporelle";
 import ErrorFormMessage from "./errorFormMessage";
 import NewOuvertureOptions from "./newOuvertureOptions";
@@ -45,28 +45,16 @@ export default function NewPli({
       open: false,
       error: false,
     },
-    soundage: {
-      name: "soundage",
-      value: [
-        {
-          name: "option-1",
-          label: "Option 1",
-          value: "",
-        },
-      ],
+    sondage: {
+      name: "sondage",
+      value: [],
       maxOptions: 4,
       open: false,
       error: false,
     },
-    soundageOuverture: {
-      name: "soundage",
-      value: [
-        {
-          name: "option-1",
-          label: "Option 1",
-          value: "",
-        },
-      ],
+    sondageOuverture: {
+      name: "sondageOuverture",
+      value: [],
       maxOptions: 6,
       open: false,
       error: false,
@@ -87,7 +75,7 @@ export default function NewPli({
         id: "file-video-nv1",
         type: "file",
         accept: "video/mp4,video/x-m4v,video/*",
-        multiple: true,
+        multiple: false,
         value: [],
         file: [],
         maxFiles: 1,
@@ -97,7 +85,7 @@ export default function NewPli({
         id: "file-music-nv1",
         type: "file",
         accept: "audio/mpeg",
-        multiple: true,
+        multiple: false,
         value: [],
         file: [],
         maxFiles: 1,
@@ -119,7 +107,7 @@ export default function NewPli({
         id: "file-video-nv2",
         accept: "video/mp4,video/x-m4v,video/*",
         icon: "mp4",
-        multiple: false,
+        multiple: true,
         value: [],
         file: [],
         maxFiles: 10,
@@ -129,7 +117,7 @@ export default function NewPli({
         id: "file-music-nv2",
         accept: "audio/mpeg",
         icon: "mp3",
-        multiple: false,
+        multiple: true,
         value: [],
         file: [],
         maxFiles: 10,
@@ -193,8 +181,25 @@ export default function NewPli({
 
       data.append("content", state.inputEmoji.value);
       data.append("contentOuverture", state.inputEmoji.value);
-      data.append("soundage", state.soundage.value);
-      data.append("duration", state.duration.hour+":"+state.duration.minute+":"+state.duration.second);
+      data.append(
+        "duration",
+        state.duration.hour +
+          ":" +
+          state.duration.minute +
+          ":" +
+          state.duration.second
+      );
+
+      for (let i = 0; i < state.sondage.value.length; i++) {
+        data.append("sondage", JSON.stringify(state.sondage.value[i]));
+      }
+
+      for (let i = 0; i < state.sondageOuverture.value.length; i++) {
+        data.append(
+          "sondageOuverture",
+          JSON.stringify(state.sondageOuverture.value[i])
+        );
+      }
 
       files = getMediaFiles("images");
       for (let i = 0; i < files.length; i++) {
@@ -227,6 +232,8 @@ export default function NewPli({
         url: `${endPoints.PLI}/new`,
         data,
         success: (response) => {
+          console.log(response);
+
           msgErrors({ submit: false });
         },
         catch: (error) => {
@@ -271,22 +278,22 @@ export default function NewPli({
                       }
                     }}
                   />
-                  {state.soundage.open && (
-                    <AddSoundage
-                      maxOption={state.soundage.maxOptions}
-                      soundage={state.soundage}
-                      setSoundage={(e) => {
-                        console.log("setSoundage", e);
+                  {state.sondage.open && (
+                    <AddSondage
+                      maxOption={state.sondage.maxOptions}
+                      sondage={state.sondage}
+                      setSondage={(e) => {
+                        console.log("setSondage", e);
                         setState({
                           ...state,
-                          soundage: e,
+                          sondage: e,
                         });
                       }}
-                      showSoundage={state.soundage.open}
-                      setShowSoundage={(e) => {
+                      showSondage={state.sondage.open}
+                      setShowSondage={(e) => {
                         setState({
                           ...state,
-                          soundage: { ...state.soundage, open: e },
+                          sondage: { ...state.sondage, open: e },
                         });
                       }}
                     />

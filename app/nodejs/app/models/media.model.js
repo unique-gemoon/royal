@@ -10,6 +10,11 @@ export default function media(sequelize, Sequelize) {
       allowNull: true,
     },
 
+    originalname: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+
     path: {
       type: Sequelize.STRING,
       allowNull: true,

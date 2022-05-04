@@ -58,7 +58,7 @@ export default function HeadItem({
   useEffect(() => {
     if (item) {
       let cpAllMedia = [];
-      if ((item.nv1.description && (item.nv1.media && !item.nv1.media.soundage)) ||
+      if ((item.nv1.description && (item.nv1.media && !item.nv1.media.sondage)) ||
         (item.nv2 && item.nv2.description)) {
         cpAllMedia.push("description");
       }
@@ -67,8 +67,8 @@ export default function HeadItem({
         cpAllMedia.push("music");
       }
 
-      if ((item.nv1.media && item.nv1.media.soundage) || (item.nv2 && item.nv2.media.soundage)) {
-        cpAllMedia.push("soundage");
+      if ((item.nv1.media && item.nv1.media.sondage) || (item.nv2 && item.nv2.media.sondage)) {
+        cpAllMedia.push("sondage");
       }
 
       if ((item.nv1.media && item.nv1.media.photos) || (item.nv2 && item.nv2.media.photos)) {
@@ -111,8 +111,8 @@ export default function HeadItem({
                   <GraphicEqIcon />
                 </div>
               )}
-              {(index == 0) && media == "soundage" && (
-                <div className="item-detail soundage-detail">
+              {(index == 0) && media == "sondage" && (
+                <div className="item-detail sondage-detail">
                   <BallotIcon />
                 </div>
               )}
@@ -145,8 +145,8 @@ export default function HeadItem({
                       <GraphicEqIcon />
                     </div>
                   )}
-                  {showAllMedia && media == "soundage" && (
-                    <div className="item-detail soundage-detail">
+                  {showAllMedia && media == "sondage" && (
+                    <div className="item-detail sondage-detail">
                       <BallotIcon />
                     </div>
                   )}

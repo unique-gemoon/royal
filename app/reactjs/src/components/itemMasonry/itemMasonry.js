@@ -10,7 +10,7 @@ import HeadItem from "./headItem";
 import ImagesGallery from "./imagesGallery";
 import PlayerMusic from "./playerMusic";
 import PlayerVideo from "./playerVideo";
-import Soundage from "./soundage";
+import Sondage from "./sondage";
 
 export default function ItemMasonry({
   item,
@@ -68,8 +68,8 @@ export default function ItemMasonry({
                     {item.nv1.description}
                   </div>
                 ) : null}
-                {item.nv1.media && item.nv1.media.soundage ? (
-                  <Soundage
+                {item.nv1.media && item.nv1.media.sondage ? (
+                  <Sondage
                     name={`modal_${item.id}_1`}
                     niveau={1}
                     item={item}
@@ -112,8 +112,8 @@ export default function ItemMasonry({
                         item={item.nv2.media.music}
                       />
                     ) : null}
-                    {item.nv2.media && item.nv2.media.soundage ? (
-                      <Soundage
+                    {item.nv2.media && item.nv2.media.sondage ? (
+                      <Sondage
                         name={`modal_${item.id}_2`}
                         niveau={2}
                         item={item}
@@ -184,8 +184,8 @@ export default function ItemMasonry({
             {item.nv1.description ? (
               <div className="descripton-miniature">{item.nv1.description}</div>
             ) : null}
-            {item.nv1.media && item.nv1.media.soundage ? (
-              <Soundage
+            {item.nv1.media && item.nv1.media.sondage ? (
+              <Sondage
                 name={`bloc_${item.id}_1`}
                 niveau={1}
                 item={item}
@@ -239,8 +239,8 @@ export default function ItemMasonry({
                       item={item.nv2.media.music}
                     />
                   ) : null}
-                  {item.nv2.media && item.nv2.media.soundage ? (
-                    <Soundage
+                  {item.nv2.media && item.nv2.media.sondage ? (
+                    <Sondage
                       name={`bloc_${item.id}_2`}
                       niveau={2}
                       item={item}

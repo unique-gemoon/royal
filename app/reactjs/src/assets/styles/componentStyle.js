@@ -1791,13 +1791,13 @@ export const BarTimer = styled.div`
     }
 `;
 
-export const ItemResultSoundage = styled.div`
+export const ItemResultSondage = styled.div`
     display: flex;
     align-items: center;
     font-family: 'ProximaNovaSoftW03-Semibold';
     font-size: 14px;
     line-height: 18px;
-    .content-result-soundage{
+    .content-result-sondage{
         position: relative;
         display: flex;
         align-items: center;
@@ -1828,8 +1828,8 @@ export const ItemResultSoundage = styled.div`
         }
     }
 `;
-export const SoundageBloc = styled.div`
-    .bloc-choix-soundage{
+export const SondageBloc = styled.div`
+    .bloc-choix-sondage{
         .titre-saoundage{
             margin-bottom: 12px;
         }
@@ -2310,7 +2310,7 @@ export const BlocNewPliContent = styled.div`
             svg{
                 font-size: 20px;
             }
-            &.soundage-detail{
+            &.sondage-detail{
                 svg{
                     width: 16px;
                     height: 16px;
@@ -2362,14 +2362,14 @@ export const BlocNewPliContent = styled.div`
     }
 `;
 
-export const BlocNewSoundage = styled.div`
+export const BlocNewSondage = styled.div`
     border-radius: 13px;
     background-color: rgba(31, 85, 119, .43);
     color: #FFF;
     padding: 20px 27px;
     margin-bottom: 26px;
     width: 100%;
-    .titre-add-soundage {
+    .titre-add-sondage {
         font-family: "ProximaNovaSoftW03-Semibold";
         font-weight: normal;
         font-size: 16px;
@@ -2382,9 +2382,9 @@ export const BlocNewSoundage = styled.div`
             cursor: pointer;
         }
     }
-    .items-soundage{
+    .items-sondage{
         margin-bottom: 14px;
-        .row-soundage {
+        .row-sondage {
             display: flex;
             align-items: center;
             margin-bottom: 12px;
