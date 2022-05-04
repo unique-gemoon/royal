@@ -405,6 +405,7 @@ export const OptionsBtnAction = styled.div`
     @media(max-width: 767px){
             background-color: #FFF;
             padding: 9px 25px;
+            width: 100%;
     }
 `;
 export const ModalPopIn = styled(Modal)`

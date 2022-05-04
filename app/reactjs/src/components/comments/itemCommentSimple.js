@@ -3,7 +3,6 @@ import CotteIcon from '../../assets/images/icons/cotteIcon'
 import { SimpleComment } from '../../assets/styles/componentStyle'
 
 export default function ItemCommentSimple({item}) {
-  console.log(item.citation)
   return (
     <SimpleComment className={`${item.cotte ? "cotte-comment" : ""}`}>
       {item.cotte ? <span className='cotte-comment'><CotteIcon /></span> : null}

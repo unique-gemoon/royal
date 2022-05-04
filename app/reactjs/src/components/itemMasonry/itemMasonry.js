@@ -14,13 +14,13 @@ import Sondage from "./sondage";
 
 export default function ItemMasonry({
   item,
-  setItem = () => {},
+  setItem = () => { },
   open = false,
   action,
-  setAction = () => {},
+  setAction = () => { },
   activeItem = null,
-  setActiveItem = () => {},
-  setActiveItemPlayer = () => {},
+  setActiveItem = () => { },
+  setActiveItemPlayer = () => { },
   activeItemPlayer = null,
 }) {
   const [state, setState] = useState({
@@ -31,7 +31,7 @@ export default function ItemMasonry({
   const refHeight = useRef(null);
 
   useEffect(() => {
-    if (refHeight.current) {
+    if (refHeight.current && (refHeight.current.clientHeight !== null || refHeight.current.clientHeight !== undefined)) {
       setTimeout(() => {
         setHeight(refHeight.current.clientHeight);
       }, 1000);

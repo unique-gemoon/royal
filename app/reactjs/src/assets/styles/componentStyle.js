@@ -1909,16 +1909,30 @@ export const BlocGalleryImages = styled.div`
             border-radius: 10px;
         }
     }
+    &.one-item{
+        .item-gallery{
+            width: 100%;
+            @media(min-width: 1600px){
+                height: 300px;
+            }
+        }
+    }
     &.tow-item{
         .item-gallery{
             width: 50%;
-            height: 106px;
+            height: 110px;
+            @media(min-width: 1600px){
+                height: 170px;
+            }
         }
     }
     &.four-item{
         .item-gallery{
             width: 50%;
             height: 110px;
+            @media(min-width: 1600px){
+                height: 170px;
+            }
         }
     }
     &.three-item{
@@ -1938,13 +1952,19 @@ export const BlocGalleryImages = styled.div`
     }
 `;
 export const BlocVideoPlayer = styled.div`
-    border-radius: 10px;
-    overflow: hidden;
     margin-bottom: 15px;
     .vjs-big-play-button{
         border: 0;
         background: transparent !important;
         font-size: 56px;
+    }
+    .video-js{
+        border-radius: 10px;
+        overflow: hidden;
+        background-color: transparent;
+        & > video, .vjs-control-bar{
+            border-radius: 10px;
+        }
     }
     .video-react {
         .video-react-big-play-button{
@@ -2429,13 +2449,13 @@ export const BlocAddPli = styled.div`
         align-items: center;
         justify-content: center;
         text-align: left;
-        overflow-y: auto;
         display: none;
+        padding-top: 40px;
         &.showing-new-pli{
             display: flex;
         }
-        @media(max-width: 767px){
-            height: calc(100vh - 54px);
+        @media(max-width: 993px){
+            padding: 70px 20px 0;
         }
         &::before{
             content: "";
@@ -2448,11 +2468,14 @@ export const BlocAddPli = styled.div`
             backdrop-filter: blur(2px);
         }
         .cadre-content-new-pli{
-            position: absolute;
-            top: 40px;
-            @media(max-width: 993px){
-                left: 0;
-                right: 0;
+            height: 100%;
+            border-radius: 13px;
+            display: flex;
+            align-items: center;
+            form{
+                max-height: 100%;
+                overflow-y: auto;
+                border-radius: 13px;
             }
         }
         .content-new-pli{
@@ -2462,12 +2485,11 @@ export const BlocAddPli = styled.div`
             max-width: 100%;
             margin: auto;
             height: auto;
-            max-height: 100%;
             border-radius: 13px;
             background: linear-gradient(#2d7fc3 0%, #579be9 100%);
             overflow: hidden;
             @media(max-width: 993px){
-                max-width: 90%;
+                width: 100%;
             }
         }
     }

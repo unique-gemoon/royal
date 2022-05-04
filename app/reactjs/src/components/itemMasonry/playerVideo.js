@@ -31,14 +31,12 @@ export default function PlayerVideo({ item, activeItemPlayer, setActiveItemPlaye
         });
         
         player.on('play', () => {
-            console.log('played');
             setActiveItemPlayer(item);
         })
     };
     useEffect(() => {
 
         if (activeItemPlayer && activeItemPlayer.src && activeItemPlayer.id != item.id) {
-            console.log(playerRef.current)
             if (playerRef.current != null) {
                 playerRef.current.pause()
             }
