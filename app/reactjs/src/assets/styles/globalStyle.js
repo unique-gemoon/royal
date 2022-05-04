@@ -301,18 +301,27 @@ export const DetailsItems = styled.div`
     display: flex;
     align-items: center;
     position: relative;
-    .mediaDetails {
+    &.is-other-media{
+        min-width: 56px;
+    }
+    .bloc-more-medias{
         display: flex;
         position: absolute;
-        left: calc(100% - 1px);
+        left: 28px;
+        background-color: #FFF;
+        z-index: 1;
+    }
+    .mediaDetails {
+        display: flex;
         background: #FFF;
         opacity: 0;
-        transition: .3s linear;
-        pointer-events: none;
-        
+        transition: .5s linear;
+        overflow: hidden;
+        max-width: 0;
+        width: auto;
         &.showMedia{
+            max-width: 400px;
             opacity: 1;
-            pointer-events: all;
         }
     }
     .item-detail{
