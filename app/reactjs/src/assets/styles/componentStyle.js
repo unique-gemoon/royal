@@ -563,6 +563,7 @@ export const ToolBarEditor = styled.div`
         border-radius: 12.81px;
         background: rgba(31, 85, 119, .45);
         border: 0 !important;
+        padding: 4px 8px;
         .ql-formats {
             display: flex;
             align-items: center;
@@ -2620,14 +2621,14 @@ export const BlocAddPli = styled.div`
             border-radius: 0;
             border-bottom: 1px solid #84bad8;
             margin-bottom: 40px;
-            min-height: 44px;
+            min-height: 36px;
            font-family: 'ProximaNovaSoftW03-Regular';
             font-weight: normal;
             font-size: 18px;
             line-height: 21px;
             color: #FFF;
             width: 100%;
-            padding-bottom: 20px;
+            padding-bottom: 10px;
             &:focus{
                 border-color: ${OrangeColor};
                 box-shadow: none;
@@ -2818,7 +2819,8 @@ export const BlocAddPli = styled.div`
             line-height: 22px;
             color: #fff;
             font-family: 'ProximaNovaSoftW03-Regular';
-            min-height: 80px;
+            min-height: 36px;
+            margin-bottom: 5px;
             &.ql-blank{
                 &::before{
                     left: 0;
@@ -2826,8 +2828,7 @@ export const BlocAddPli = styled.div`
                     font-size: 18px;
                     line-height: 22px;
                     text-align: left;
-                    color: #fff;
-                    opacity: 0.8;
+                    color: #aacff1;
                     font-style: normal;
                 }
             }
