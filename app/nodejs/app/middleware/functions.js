@@ -10,3 +10,8 @@ export function validateUrl(url) {
   const re = /^(?:\w+:)?\/\/([^\s\.]+\.\S{2}|localhost[\:?\d]*)\S*$/;
   return re.test(url);
 }
+
+export function validateTime(t) {
+  const re = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])(:[0-5]?[0-9])?$/;
+  return re.test(t);
+}

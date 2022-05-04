@@ -349,7 +349,7 @@ export const DetailsItems = styled.div`
         &.video-detail{
             background: linear-gradient(#d34b48 9.26%, #cd4b48 100%);
         }
-        &.soundage-detail{
+        &.sondage-detail{
             background-color: #62c4b4;
         }
         &.more-media{

@@ -169,7 +169,6 @@ export default function NewPliOptions({
                       state.media.video.file.length +
                       e.currentTarget.files.length <= state.media.video.maxFiles
                     ) {
-                      console.log("df");
                       const cpState = { ...state };
                       cpState.media.video.file = [
                         ...cpState.media.video.file,
@@ -188,10 +187,10 @@ export default function NewPliOptions({
               </div>
               <Button
                 onClick={() => {
-                  setCurrent("soundage");
-                  setState({ ...state, soundage: { ...state.soundage, open: !state.soundage.open } });
+                  setCurrent("sondage");
+                  setState({ ...state, sondage: { ...state.sondage, open: !state.sondage.open } });
                 }}
-                className={`item-detail soundage-detail ${!current || current === "soundage" ? "active" : ""
+                className={`item-detail sondage-detail ${!current || current === "sondage" ? "active" : ""
                   }`}
               >
                 <BallotIcon />
