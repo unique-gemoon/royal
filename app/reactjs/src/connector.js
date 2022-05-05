@@ -49,7 +49,7 @@ const goOn = (params) => {
     .then(params.success)
     .catch((error) => {
       params.catch(error);
-      console.log("connector : ", error.response);
+      console.log("connector : ", error);
       if (error.response !== undefined && error.response.status === 403) {
         NotificationManager.error(
           "Mauvaise Demande",

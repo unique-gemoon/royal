@@ -106,28 +106,26 @@ export function uploadMedia(req, res, next) {
   multi_upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
       console.log(err);
-      const msg =
+      const message =
         error.code == "LIMIT_FILE_SIZE"
           ? "La taille du fichier est trop grande. La taille de fichier autorisée est 100mo"
           :`multer uploading error: ${err.message}` ;
 
       res
-        .status(500)
-        .send({
-          error: { msg },
-        })
+        .status(400)
+        .send({ message })
         .end();
       return;
     } else if (err) {
       if (err.name == "ExtensionError" || err.name == "CountError") {
         res
-          .status(413)
-          .send({ error: { msg: `${err.message}` } })
+          .status(400)
+          .send({ message: `${err.message}` })
           .end();
       } else {
         res
-          .status(500)
-          .send({ error: { msg: `unknown uploading error: ${err.message}` } })
+          .status(400)
+          .send({ message: `unknown uploading error: ${err.message}`})
           .end();
       }
       return;
@@ -179,8 +177,8 @@ export function uploadMedia(req, res, next) {
         }
 
         res
-          .status(413)
-          .send({ error: { msg: error.message } })
+          .status(400)
+          .send({ message: error.message })
           .end();
         return;
       }

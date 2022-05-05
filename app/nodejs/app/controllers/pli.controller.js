@@ -1,3 +1,4 @@
+import { isObject } from "../middleware/functions.js";
 import db from "../models/index.model.js";
 
 const Pli = db.pli;
@@ -46,9 +47,15 @@ export function newPli(req, res) {
   }
 
   if (req.body.sondage != undefined) {
+    let sondageList = [];
+    if (Array.isArray(req.body.sondage)) {
+      sondageList = req.body.sondage;
+    } else {
+      sondageList.push(req.body.sondage);
+    }
     let options = [];
-    req.body.sondage.forEach((element) => {
-      const option = JSON.parse(element);
+    sondageList.forEach((element) => {
+      const option = isObject(element) ? element : JSON.parse(element);
       options.push({ name: option.value });
     });
     medias.push({
@@ -59,9 +66,15 @@ export function newPli(req, res) {
   }
 
   if (req.body.sondageOuverture != undefined) {
+    let sondageOuvertureList = [];
+    if (Array.isArray(req.body.sondageOuverture)) {
+      sondageOuvertureList = req.body.sondageOuverture;
+    } else {
+      sondageOuvertureList.push(req.body.sondageOuverture);
+    }
     let options = [];
-    req.body.sondageOuverture.forEach((element) => {
-      const option = JSON.parse(element);
+    sondageOuvertureList.forEach((element) => {
+      const option = isObject(element) ? element : JSON.parse(element);
       options.push({ name: option.value });
     });
     medias.push({
@@ -101,16 +114,14 @@ export function newPli(req, res) {
       res
         .status(200)
         .json({
-          response: {
             id: pli.id,
             content: pli.content,
             ouverture: pli.ouverture,
             duration: pli.duration,
-            medias: pli.medias,
-          },
+            medias: pli.medias
         });
     })
     .catch((err) => {
-      res.status(500).send({ message: err.message });
+      res.status(400).send({ message: err.message });
     });
 }

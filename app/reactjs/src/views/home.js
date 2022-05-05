@@ -624,6 +624,7 @@ export default function Home() {
             dataNotifs={dataNotifs}
             setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
+            setMsgNotifTopTime={setMsgNotifTopTime}
           />
         )}
       </StyledEngineProvider>

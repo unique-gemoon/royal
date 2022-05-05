@@ -60,6 +60,9 @@ export default function BarTemporelle({
   }, []);
 
   const upTime = () => {
+    if(state.duration.disabled){
+      return;
+    }
     const cpState = { ...state };
     cpState.duration.minute++;
     if (cpState.duration.minute >= 60) {
@@ -72,6 +75,9 @@ export default function BarTemporelle({
   };
 
   const downTime = () => {
+    if(state.duration.disabled){
+      return;
+    }
     const cpState = { ...state };
     if (cpState.duration.minute == 0) {
       if (cpState.duration.hour > 0) {

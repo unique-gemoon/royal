@@ -1,4 +1,4 @@
-import { validateTime } from "./functions.js";
+import { isObject, removeTags, validateTime } from "./functions.js";
 
 const pliOptions = {
   content: {
@@ -37,9 +37,16 @@ export function checkDataPli(req, res, next) {
   } else {
     let sondage = [];
     if (req.body.sondage != undefined) {
-      for (const key in req.body.sondage) {
-        const element = req.body.sondage[key];
-        const option = JSON.parse(element);
+      let sondageList = [];
+      if (Array.isArray(req.body.sondage)) {
+        sondageList = req.body.sondage;
+      } else {
+        sondageList.push(req.body.sondage);
+      }
+
+      for (const key in sondageList) {
+        const element = sondageList[key];
+        const option = isObject(element) ? element : JSON.parse(element);
         sondage.push(option);
         if (String(option.value).length > pliOptions.sondage.maxLength) {
           error.name = "sondage";
@@ -55,12 +62,19 @@ export function checkDataPli(req, res, next) {
 
     let sondageOuverture = [];
     if (req.body.sondageOuverture != undefined) {
-      for (const key in req.body.sondageOuverture) {
-        const element = req.body.sondageOuverture[key];
-        const option = JSON.parse(element);
-
+      let sondageOuvertureList = [];
+      if (Array.isArray(req.body.sondageOuverture)) {
+        sondageOuvertureList = req.body.sondageOuverture;
+      } else {
+        sondageOuvertureList.push(req.body.sondageOuverture);
+      }
+      for (const key in sondageOuvertureList) {
+        const element = sondageOuvertureList[key];
+        const option = isObject(element) ? element : JSON.parse(element);
         sondage.push(option);
-        if (String(option.value).length > pliOptions.sondageOuverture.maxLength) {
+        if (
+          String(option.value).length > pliOptions.sondageOuverture.maxLength
+        ) {
           error.name = "sondageOuverture";
           error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.sondageOuverture.maxLength} caractères maximum  pour le texte du option sondage de l'ouverture.`;
           break;

@@ -4,7 +4,7 @@ export function removeTags(val) {
 }
 
 export const getMsgError = (error, msg = "Quelque chose s'est mal passé.") => {
-  console.log("getMsgError : ", error);
+  console.log("getMsgError : ", error.response);
   if (error?.response?.data) {
     if (error.response.data?.message) {
       msg = error.response.data.message;
