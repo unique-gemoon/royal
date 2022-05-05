@@ -1,7 +1,7 @@
 export default function pli(sequelize, Sequelize) {
   const Pli = sequelize.define("pli", {
     content: {
-      type: Sequelize.STRING,
+      type: Sequelize.TEXT,
       allowNull: true,
     },
 

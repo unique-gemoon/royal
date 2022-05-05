@@ -3,7 +3,7 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { Button } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
 import { ROLES } from "../config/vars";
@@ -23,7 +23,7 @@ export default function BarTemporelle({
 }) {
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
-  const [stateTime, setStateTime] = useState("00:00:00");
+  const [stateTime, setStateTime] = useState();
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
@@ -54,6 +54,10 @@ export default function BarTemporelle({
       setStateTime(h + ":" + m + ":" + s);
     }
   };
+
+  useEffect(() => {
+    updateTime(state);
+  }, []);
 
   const upTime = () => {
     const cpState = { ...state };

@@ -12,6 +12,11 @@ export function validateUrl(url) {
 }
 
 export function validateTime(t) {
-  const re = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9])(:[0-5]?[0-9])?$/;
+  const re = /^([0-1]?[0-9]|2[0-4]):([0-5]?[0-9]):([0-5]?[0-9])\S?$/;
   return re.test(t);
+}
+
+export function removeTags(val) {
+  // return val.replace("/(&nbsp;|<([^>]+)>)/ig,", "")
+  return val.replace(/<(?:.|\n)*?>/gm, "");
 }

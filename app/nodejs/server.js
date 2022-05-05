@@ -20,7 +20,9 @@ passport.use(
     function (jwtPayload, done) {
       return User.findByPk(jwtPayload.sub)
         .then((user) => {
-          if(!user){return done('user not existe');}
+          if (!user) {
+            return done("user not existe");
+          }
           return done(null, user);
         })
         .catch((err) => {
@@ -78,7 +80,7 @@ app.listen(PORT, () => {
   console.log(`App listening on PORT ${PORT}`);
 });
 
-db.sequelize.sync().then(() => {
+db.sequelize.sync({ alter: true }).then(() => {
   console.log(`${process.env.DB_NAME} database connected`);
   console.log("*************************************\n");
 });

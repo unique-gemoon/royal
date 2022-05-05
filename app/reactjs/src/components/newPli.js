@@ -124,8 +124,8 @@ export default function NewPli({
       },
     },
     duration: {
-      hour: 0,
-      minute: 1,
+      hour: 1,
+      minute: 0,
       second: 0,
       countDown: 0,
       countUp: 0,
@@ -147,7 +147,7 @@ export default function NewPli({
   }, [togglePli]);
 
   const [addOuverture, setAddOuverture] = useState(false);
-  const [message, setMessage] = useState(true);
+  const [message, setMessage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
@@ -173,6 +173,25 @@ export default function NewPli({
     );
   };
 
+  const getDurationTime = () => {
+    if (state.duration) {
+      const h =
+        String(state.duration.hour).length == 1
+          ? "0" + state.duration.hour
+          : state.duration.hour;
+      const m =
+        String(state.duration.minute).length == 1
+          ? "0" + state.duration.minute
+          : state.duration.minute;
+      const s =
+        String(state.duration.second).length == 1
+          ? "0" + state.duration.second
+          : state.duration.second;
+      return h + ":" + m + ":" + s;
+    }
+    return null;
+  };
+
   const submitPli = (e) => {
     e.preventDefault();
     if (!submitting) {
@@ -180,15 +199,8 @@ export default function NewPli({
       const data = new FormData();
 
       data.append("content", state.inputEmoji.value);
-      data.append("contentOuverture", state.inputEmoji.value);
-      data.append(
-        "duration",
-        state.duration.hour +
-          ":" +
-          state.duration.minute +
-          ":" +
-          state.duration.second
-      );
+      data.append("contentOuverture", state.inputEmojiOuverture.value);
+      data.append("duration", getDurationTime());
 
       for (let i = 0; i < state.sondage.value.length; i++) {
         data.append("sondage", JSON.stringify(state.sondage.value[i]));
@@ -244,6 +256,32 @@ export default function NewPli({
       msgErrors({ submit: true });
       //Veuillez ajouter du contenu à votre pli.
     }
+  };
+
+  const clearPli = () => {
+    const cpState = {...state};
+    cpState.inputEmoji = {...cpState.inputEmoji, value:"",open: false, error: false};
+    cpState.sondage = {...cpState.sondage, value:[],open: false, error: false};
+    cpState.media.images = {...cpState.media.images, value:[],file:[], error: false};
+    cpState.media.video = {...cpState.media.video, value:[],file:[], error: false};
+    cpState.media.music = {...cpState.media.music, value:[],file:[], error: false};
+    cpState.duration = {...cpState.duration, hour: 1,minute: 0,second: 0,countDown: 0,countUp: 0};
+    cpState = clearPliOuverture(cpState);
+    setState(cpState);
+  };
+
+  const clearPliOuverture = (cpState) => {
+    cpState.inputEmojiOuverture = {...cpState.inputEmojiOuverture, value:"",open: false, error: false};
+    cpState.sondageOuverture = {...cpState.sondageOuverture, value:[],open: false, error: false};
+    cpState.mediaOuverture.images = {...cpState.mediaOuverture.images, value:[],file:[], error: false};
+    cpState.mediaOuverture.video = {...cpState.mediaOuverture.video, value:[],file:[], error: false};
+    cpState.mediaOuverture.music = {...cpState.mediaOuverture.music, value:[],file:[], error: false};
+    return cpState;
+  };
+
+  const deleteOuverture = () => {
+    setState(clearPliOuverture({...state}));
+    setAddOuverture(false);
   };
 
   const msgErrors = (e) => {
@@ -339,20 +377,24 @@ export default function NewPli({
                   </div>
                 </div>
               )}
-              <div
-                className="toggle-open-ouverture"
-                onClick={() => setAddOuverture(!addOuverture)}
-              >
-                {!addOuverture ? (
-                  <>
-                    Ajouter une ouverture <AddIcon />
-                  </>
-                ) : (
-                  <>
-                    Supprimer l'ouverture <RemoveIcon />
-                  </>
-                )}
-              </div>
+
+              {!addOuverture && (
+                <div
+                  className="toggle-open-ouverture"
+                  onClick={() => setAddOuverture(true)}
+                >
+                  Ajouter une ouverture <AddIcon />
+                </div>
+              )}
+
+              {addOuverture && (
+                <div
+                  className="toggle-open-ouverture"
+                  onClick={() => deleteOuverture()}
+                >
+                  Supprimer l'ouverture <RemoveIcon />
+                </div>
+              )}
             </div>
           </form>
         </div>
