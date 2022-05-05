@@ -31,6 +31,8 @@ export default function media(sequelize, Sequelize) {
         model: 'plis',
         key: 'id',
       },
+      allowNull: false,
+      onDelete: 'cascade',
     },
 
   });
@@ -38,7 +40,7 @@ export default function media(sequelize, Sequelize) {
   Media.associate = function(models) {
     Media.belongsTo(models.pli, { foreignKey: 'pliId'});
 
-    Media.hasMany(models.sondageOptions, { foreignKey: 'mediaId' });
+    Media.hasMany(models.sondageOptions);
   };
   
   return Media;

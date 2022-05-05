@@ -21,12 +21,14 @@ export default function pli(sequelize, Sequelize) {
         model: 'users',
         key: 'id',
       },
+      allowNull: false,
+      onDelete: 'cascade',
     },
 
   });
 
   Pli.associate = function (models) {
-    Pli.hasMany(models.media, { foreignKey: "pliId" });
+    Pli.hasMany(models.media);
 
     Pli.belongsTo(models.user, { foreignKey: "userId" });
 
