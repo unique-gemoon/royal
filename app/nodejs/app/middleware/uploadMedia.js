@@ -11,7 +11,7 @@ const mediaOptions = {
   },
   video: {
     maxSize: 200 * 1024 * 1024,
-    types: ["video/mp4", "video/x-m4v"],
+    types: ["video/mp4","video/avi", "video/x-m4v"],
     maxCount: 1,
     maxCountOuverture: 10,
   },
@@ -22,6 +22,9 @@ const mediaOptions = {
     maxCountOuverture: 10,
   },
 };
+
+//max 200mo
+const  maxSize = 200 * 1024 * 1024;
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -64,15 +67,14 @@ const fileFilter = (req, file, cb) => {
   } else {
     const err = new Error(error.message);
     err.name = error.name;
-    cb(null, false);
-    return cb(err);
+    cb(err, false);
   }
 };
 
 var multi_upload = multer({
   storage: storage,
   fileFilter: fileFilter,
-  limits: { fileSize: 100 * 1024 * 1024 },
+  limits: { fileSize: maxSize },
 }).fields([
   {
     name: "images",
@@ -106,8 +108,8 @@ export function uploadMedia(req, res, next) {
       console.log(err);
       const msg =
         error.code == "LIMIT_FILE_SIZE"
-          ? `multer uploading error: ${err.message}`
-          : "La taille du fichier est trop grande. La taille de fichier autorisée est 100mo";
+          ? "La taille du fichier est trop grande. La taille de fichier autorisée est 100mo"
+          :`multer uploading error: ${err.message}` ;
 
       res
         .status(500)
@@ -170,8 +172,8 @@ export function uploadMedia(req, res, next) {
           req.files[key].forEach((file) => {
             try {
               fs.unlinkSync(file.path);
-            } catch(err) {
-              console.error(err)
+            } catch (err) {
+              console.error(err);
             }
           });
         }

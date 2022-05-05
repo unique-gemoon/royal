@@ -23,12 +23,12 @@ export function newPli(req, res) {
         type = "image";
         isOuverture = true;
       } else if (file.fieldname === "video") {
-        type = "image";
+        type = "video";
       } else if (file.fieldname === "videoOuverture") {
         type = "video";
         isOuverture = true;
       } else if (file.fieldname === "music") {
-        type = "image";
+        type = "music";
       } else if (file.fieldname === "musicOuverture") {
         type = "music";
         isOuverture = true;
@@ -78,6 +78,7 @@ export function newPli(req, res) {
       ouverture,
       duration,
       medias,
+      userId: req.user.id,
     },
     {
       include: [
@@ -97,7 +98,17 @@ export function newPli(req, res) {
     }
   )
     .then((pli) => {
-      res.status(200).json({ response: pli });
+      res
+        .status(200)
+        .json({
+          response: {
+            id: pli.id,
+            content: pli.content,
+            ouverture: pli.ouverture,
+            duration: pli.duration,
+            medias: pli.medias,
+          },
+        });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

@@ -1,49 +1,93 @@
-import db from "../models/index.model.js";
-import { validateTime } from './functions.js';
+import { validateTime } from "./functions.js";
 
-const Pli = db.pli;
+const pliOptions = {
+  content: {
+    maxLength: 280,
+  },
+  contentOuverture: {
+    maxLength: 2000,
+  },
+  sondage: {
+    maxOptions: 4,
+    maxLength: 25,
+  },
+  sondageOuverture: {
+    maxOptions: 6,
+    maxLength: 25,
+  },
+};
 
 export function checkDataPli(req, res, next) {
+  const error = { name: "", message: "" };
 
-  let sondage = [];
-  if (req.body.sondage != undefined) {
-    req.body.sondage.forEach((element) => {
-      sondage.push(JSON.parse(element));
-    });
+  if (removeTags(req.body.content).length > pliOptions.content.maxLength) {
+    error.name = "content";
+    error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.content.maxLength} caractères maximum  pour le texte du pli.`;
+  } else if (
+    removeTags(req.body.contentOuverture).length >
+    pliOptions.contentOuverture.maxLength
+  ) {
+    error.name = "contentOuverture";
+    error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.contentOuverture.maxLength} caractères maximum  pour le texte de l’ouverture.`;
+  } else if (!String(req.body.duration) || !validateTime(req.body.duration)) {
+    error.name = "duration";
+    error.message =
+      "La durée du pli ne peut pas être vide ou format invalide." +
+      req.body.duration;
+  } else {
+    let sondage = [];
+    if (req.body.sondage != undefined) {
+      for (const key in req.body.sondage) {
+        const element = req.body.sondage[key];
+        const option = JSON.parse(element);
+        sondage.push(option);
+        if (String(option.value).length > pliOptions.sondage.maxLength) {
+          error.name = "sondage";
+          error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.sondage.maxLength} caractères maximum  pour le texte du option sondage.`;
+          break;
+        } else if (sondage.length > pliOptions.sondage.maxOptions) {
+          error.name = "sondage";
+          error.message = `Vous ne pouvez pas ajouter plus que  ${pliOptions.sondage.maxOptions} options maximum pour le sondage.`;
+          break;
+        }
+      }
+    }
+
+    let sondageOuverture = [];
+    if (req.body.sondageOuverture != undefined) {
+      for (const key in req.body.sondageOuverture) {
+        const element = req.body.sondageOuverture[key];
+        const option = JSON.parse(element);
+
+        sondage.push(option);
+        if (String(option.value).length > pliOptions.sondageOuverture.maxLength) {
+          error.name = "sondageOuverture";
+          error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.sondageOuverture.maxLength} caractères maximum  pour le texte du option sondage de l'ouverture.`;
+          break;
+        } else if (
+          sondageOuverture.length > pliOptions.sondageOuverture.maxOptions
+        ) {
+          error.name = "sondageOuverture";
+          error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.sondageOuverture.maxOptions} options maximum pour le sondage. de l’ouverture.`;
+          break;
+        }
+      }
+    }
   }
 
-  let sondageOuverture = [];
-  if (req.body.sondageOuverture != undefined) {
-    req.body.sondageOuverture.forEach((element) => {
-      sondageOuverture.push(JSON.parse(element));
-    });
-  }
-
-  if (String(req.body.content).length > 280) {
-    res.status(400).send({
-      message: "Vous ne pouvez pas ajouter plus que 280 caractères maximum  pour le texte du pli.",
-    });
-    return;
-  }else if (String(req.body.contentOuverture).length > 2000) {
-    res.status(400).send({
-      message: "Vous ne pouvez pas ajouter plus que 2000 caractères maximum  pour le texte de l’ouverture.",
-    });
-    return;
-  }else if (sondage.length > 4) {
-    res.status(400).send({
-      message: "Vous ne pouvez pas ajouter plus que 4 options maximum pour le sondage.",
-    });
-    return;
-  }else if (sondageOuverture.length > 6) {
-    res.status(400).send({
-      message: "Vous ne pouvez pas ajouter plus que 6 options maximum pour le sondage. de l’ouverture.",
-    });
-    return;
-  }else if (!String(req.body.duration)/*  || !validateTime(req.body.duration) */) {
-    res.status(400).send({
-      message: "La durée du pli ne peut pas être vide ou format invalide.",
-    });
+  if (!error.name) {
+    next();
+  } else {
+    for (let key in req.files) {
+      req.files[key].forEach((file) => {
+        try {
+          fs.unlinkSync(file.path);
+        } catch (err) {
+          console.error(err);
+        }
+      });
+    }
+    res.status(400).send({ message: error.message });
     return;
   }
-  next();
 }
