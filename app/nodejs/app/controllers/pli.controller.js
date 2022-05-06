@@ -1,11 +1,13 @@
 import { isObject } from "../middleware/functions.js";
 import db from "../models/index.model.js";
+import moment from "moment";
 
 const Pli = db.pli;
 const Media = db.media;
 const SondageOptions = db.sondageOptions;
 const PliMedias = db.pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
+const Op = db.Sequelize.Op;
 
 export function newPli(req, res) {
   const content = req.body.content || "";
@@ -111,17 +113,43 @@ export function newPli(req, res) {
     }
   )
     .then((pli) => {
-      res
-        .status(200)
-        .json({
-            id: pli.id,
-            content: pli.content,
-            ouverture: pli.ouverture,
-            duration: pli.duration,
-            medias: pli.medias
-        });
+      res.status(200).json({
+        id: pli.id,
+        content: pli.content,
+        ouverture: pli.ouverture,
+        duration: pli.duration,
+        medias: pli.medias,
+      });
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
+    });
+}
+
+export function findPliUserNotElapsed(req, res, next) {
+  Pli.findOne({
+    where: {
+      createdAt: {
+        [Op.gt]: moment().subtract(1, "h").toDate(),
+      },
+      userId: req.user.id,
+    },
+  })
+    .then((pli) => {
+      if (!pli) {
+        next();
+      } else {
+        res
+          .status(400)
+          .send({
+            message:
+              "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
+          });
+        return;
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
     });
 }
