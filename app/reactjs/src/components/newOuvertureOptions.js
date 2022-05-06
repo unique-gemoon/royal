@@ -294,12 +294,8 @@ export default function NewOuvertureOptions({
         <div className="count-publish-pli2">
           <CountDown
             maxCount={2000}
-            setState={
-              removeTags(
-                state.inputEmojiOuverture.value
-                  ? state.inputEmojiOuverture.value
-                  : ""
-              ).length
+            size={
+              removeTags(String(state.inputEmojiOuverture.value)).length
             }
           />
           <div className="bloc-btn-publish">

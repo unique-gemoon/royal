@@ -26,6 +26,7 @@ export default function NewPli({
   action,
   setAction = () => {},
   setMsgNotifTop = () => {},
+  setMsgNotifTopTime = () => {},
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [state, setState] = useState({
@@ -129,6 +130,7 @@ export default function NewPli({
       second: 0,
       countDown: 0,
       countUp: 0,
+      disabled:true
     },
     dragOpen: true,
   });
@@ -195,92 +197,157 @@ export default function NewPli({
   const submitPli = (e) => {
     e.preventDefault();
     if (!submitting) {
-      let files = [];
-      const data = new FormData();
+      msgErrors({ submit: true, msg: null });
 
-      data.append("content", state.inputEmoji.value);
-      data.append("contentOuverture", state.inputEmojiOuverture.value);
-      data.append("duration", getDurationTime());
+      if (state.inputEmoji.value || state.sondage.value.length) {
+        let files = [];
+        const data = new FormData();
 
-      for (let i = 0; i < state.sondage.value.length; i++) {
-        data.append("sondage", JSON.stringify(state.sondage.value[i]));
-      }
+        data.append("content", state.inputEmoji.value);
+        data.append("contentOuverture", state.inputEmojiOuverture.value);
+        data.append("duration", getDurationTime());
 
-      for (let i = 0; i < state.sondageOuverture.value.length; i++) {
-        data.append(
-          "sondageOuverture",
-          JSON.stringify(state.sondageOuverture.value[i])
-        );
-      }
+        for (let i = 0; i < state.sondage.value.length; i++) {
+          data.append("sondage", JSON.stringify(state.sondage.value[i]));
+        }
 
-      files = getMediaFiles("images");
-      for (let i = 0; i < files.length; i++) {
-        data.append("images", files[i]);
-      }
-      files = getMediaFiles("video");
-      for (let i = 0; i < files.length; i++) {
-        data.append("video", files[i]);
-      }
-      files = getMediaFiles("music");
-      for (let i = 0; i < files.length; i++) {
-        data.append("music", files[i]);
-      }
+        for (let i = 0; i < state.sondageOuverture.value.length; i++) {
+          data.append(
+            "sondageOuverture",
+            JSON.stringify(state.sondageOuverture.value[i])
+          );
+        }
 
-      files = getMediaOuvertureFiles("images");
-      for (let i = 0; i < files.length; i++) {
-        data.append("imagesOuverture", files[i]);
-      }
-      files = getMediaOuvertureFiles("video");
-      for (let i = 0; i < files.length; i++) {
-        data.append("videoOuverture", files[i]);
-      }
-      files = getMediaOuvertureFiles("music");
-      for (let i = 0; i < files.length; i++) {
-        data.append("musicOuverture", files[i]);
-      }
+        files = getMediaFiles("images");
+        for (let i = 0; i < files.length; i++) {
+          data.append("images", files[i]);
+        }
+        files = getMediaFiles("video");
+        for (let i = 0; i < files.length; i++) {
+          data.append("video", files[i]);
+        }
+        files = getMediaFiles("music");
+        for (let i = 0; i < files.length; i++) {
+          data.append("music", files[i]);
+        }
 
-      connector({
-        method: "post",
-        url: `${endPoints.PLI}/new`,
-        data,
-        success: (response) => {
-          console.log(response);
+        files = getMediaOuvertureFiles("images");
+        for (let i = 0; i < files.length; i++) {
+          data.append("imagesOuverture", files[i]);
+        }
+        files = getMediaOuvertureFiles("video");
+        for (let i = 0; i < files.length; i++) {
+          data.append("videoOuverture", files[i]);
+        }
+        files = getMediaOuvertureFiles("music");
+        for (let i = 0; i < files.length; i++) {
+          data.append("musicOuverture", files[i]);
+        }
 
-          msgErrors({ submit: false });
-        },
-        catch: (error) => {
-          msgErrors({ msg: getMsgError(error), submit: false });
-        },
-      });
-
-      msgErrors({ submit: true });
-      //Veuillez ajouter du contenu à votre pli.
+        connector({
+          method: "post",
+          url: `${endPoints.PLI}/new`,
+          data,
+          success: (response) => {
+            msgErrors({ submit: false });
+            clearPli();
+            setMsgNotifTopTime(
+              "Votre pli a bien été publié sur la page universelle ! Il reste 1 heure avant qu’il ne disparaisse si aucun délai supplémentaire ne lui est ajouté ou enlevé par les utilisateurs.",
+              10000
+            );
+            setTogglePli(false);
+          },
+          catch: (error) => {
+            msgErrors({ msg: getMsgError(error), submit: false });
+          },
+        });
+      } else {
+        const msg = "Veuillez ajouter du contenu à votre pli.";
+        msgErrors({ submit: false, msg });
+      }
     }
   };
 
   const clearPli = () => {
-    const cpState = {...state};
-    cpState.inputEmoji = {...cpState.inputEmoji, value:"",open: false, error: false};
-    cpState.sondage = {...cpState.sondage, value:[],open: false, error: false};
-    cpState.media.images = {...cpState.media.images, value:[],file:[], error: false};
-    cpState.media.video = {...cpState.media.video, value:[],file:[], error: false};
-    cpState.media.music = {...cpState.media.music, value:[],file:[], error: false};
-    cpState.duration = {...cpState.duration, hour: 1,minute: 0,second: 0,countDown: 0,countUp: 0};
+    let cpState = { ...state };
+    cpState.inputEmoji = {
+      ...cpState.inputEmoji,
+      value: "",
+      open: false,
+      error: false,
+    };
+    cpState.sondage = {
+      ...cpState.sondage,
+      value: [],
+      open: false,
+      error: false,
+    };
+    cpState.media.images = {
+      ...cpState.media.images,
+      value: [],
+      file: [],
+      error: false,
+    };
+    cpState.media.video = {
+      ...cpState.media.video,
+      value: [],
+      file: [],
+      error: false,
+    };
+    cpState.media.music = {
+      ...cpState.media.music,
+      value: [],
+      file: [],
+      error: false,
+    };
+    cpState.duration = {
+      ...cpState.duration,
+      hour: 1,
+      minute: 0,
+      second: 0,
+      countDown: 0,
+      countUp: 0,
+    };
     cpState = clearPliOuverture(cpState);
     setState(cpState);
   };
 
   const clearPliOuverture = (cpState) => {
-    cpState.inputEmojiOuverture = {...cpState.inputEmojiOuverture, value:"",open: false, error: false};
-    cpState.sondageOuverture = {...cpState.sondageOuverture, value:[],open: false, error: false};
-    cpState.mediaOuverture.images = {...cpState.mediaOuverture.images, value:[],file:[], error: false};
-    cpState.mediaOuverture.video = {...cpState.mediaOuverture.video, value:[],file:[], error: false};
-    cpState.mediaOuverture.music = {...cpState.mediaOuverture.music, value:[],file:[], error: false};
+    cpState.inputEmojiOuverture = {
+      ...cpState.inputEmojiOuverture,
+      value: "",
+      open: false,
+      error: false,
+    };
+    cpState.sondageOuverture = {
+      ...cpState.sondageOuverture,
+      value: [],
+      open: false,
+      error: false,
+    };
+    cpState.mediaOuverture.images = {
+      ...cpState.mediaOuverture.images,
+      value: [],
+      file: [],
+      error: false,
+    };
+    cpState.mediaOuverture.video = {
+      ...cpState.mediaOuverture.video,
+      value: [],
+      file: [],
+      error: false,
+    };
+    cpState.mediaOuverture.music = {
+      ...cpState.mediaOuverture.music,
+      value: [],
+      file: [],
+      error: false,
+    };
     return cpState;
   };
 
   const deleteOuverture = () => {
-    setState(clearPliOuverture({...state}));
+    setState(clearPliOuverture({ ...state }));
     setAddOuverture(false);
   };
 
@@ -345,10 +412,7 @@ export default function NewPli({
                     <div className="count-publish-pli1">
                       <CountDown
                         maxCount={280}
-                        setState={
-                          (state.inputEmoji.value ? state.inputEmoji.value : "")
-                            .length
-                        }
+                        size={String(state.inputEmoji.value).length}
                       />
                       {!addOuverture && (
                         <div className="bloc-btn-publish">

@@ -5,18 +5,20 @@ export default function sondageOptions(sequelize, Sequelize) {
       notEmpty: true,
     },
 
-    mediaId: {
+    mediumId: {
       type: Sequelize.INTEGER,
       references: {
         model: 'media',
         key: 'id',
       },
+      allowNull: false,
+      onDelete: 'cascade',
     },
 
   });
 
   SondageOptions.associate = function (models) {
-    SondageOptions.belongsTo(models.media, { foreignKey: "mediaId" });
+    SondageOptions.belongsTo(models.media, { foreignKey: "mediumId" });
 
     SondageOptions.belongsToMany(models.user, { through: "sondageVotes" });
   };
