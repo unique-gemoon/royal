@@ -592,7 +592,7 @@ export default function Home() {
               message={msgNotifTop}
             />
           )}
-          <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
+          <Masonry columns={{ xs: 1, md: 2, lg: dataMasonry.length >= 3 ? 3 : 2 }} spacing={3}>
 
    {/*        {plis.map((item) => (
               <div key={item.id}>
