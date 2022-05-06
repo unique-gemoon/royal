@@ -80,16 +80,33 @@ export const ContainerDef = styled(Container)`
         margin: 0;
     }
     max-width: 100%;
+    @media(max-width: 320px){
+        padding: 0;
+    }
 `;
 export const HeadContentItem = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
     padding: 7px 19px 12px 13px;
+    .user-info-tooltip{
+        display: inline-flex;
+    }
     .name-post{
         margin-right: 5px;
         font-family: 'ProximaNovaSoftW03-Semibold';
         cursor: pointer;
+        @media(max-width: 575px){
+            margin-right: 0;
+            overflow: hidden;
+            white-space: nowrap;
+            text-overflow: ellipsis;
+            max-width: 62px;
+            display: inline-block;
+        }
+        @media(max-width: 320px){
+            max-width: 48px;
+        }
     }
     .default-tooltip{
         .MuiTooltip-popper{
@@ -250,6 +267,9 @@ export const HeadContentItem = styled.div`
         & > div{
             margin-left: 15px;
             cursor: pointer;
+            @media(max-width: 320px){
+                margin-left: 8px;
+            }
         }
         
         .users-enligne-pli{
@@ -365,9 +385,6 @@ export const DetailsItems = styled.div`
                 }
             }
         }
-    }
-    @media(max-width: 767px){
-        justify-content: center;
     }
 `;
 

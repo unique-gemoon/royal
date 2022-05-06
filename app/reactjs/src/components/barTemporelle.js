@@ -139,7 +139,7 @@ export default function BarTemporelle({
         >
           <span className="timer-down">{state?.duration?.countDown}</span>
           <div className="timer-item">
-            <TimerOutlinedIcon /> <span>{stateTime}</span>
+            <TimerOutlinedIcon /> {stateTime && (<span>{stateTime}</span>)}
           </div>
           <span className="timer-up">{state?.duration?.countUp}</span>
         </div>

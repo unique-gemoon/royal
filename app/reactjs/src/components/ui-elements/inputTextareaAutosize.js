@@ -11,12 +11,13 @@ export default function InputTextareaAutosize({
 }) {
   return (
     <TextareaAutosize
+      className="form-control"
       name={name}
       value={value}
       placeholder={placeholder}
-      as={as}
       type={type}
       onChange={onChange}
+      cacheMeasurements={true}
     />
   );
 }

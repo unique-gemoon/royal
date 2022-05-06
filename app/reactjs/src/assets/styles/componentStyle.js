@@ -1245,7 +1245,11 @@ export const FormEmoji = styled.div`
     textarea{
         min-height: 20px;
         line-height: initial;
-        border: 0 !important;
+        border: 0;
+        resize: none;
+        &.form-control{
+            max-height: 30px;
+        }
     }
     .content-form-emoji{
         position: relative;
@@ -1494,9 +1498,9 @@ export const BlocMessagerie = styled.div`
                     textarea{
                         height: 28px !important;
                         color: #fff;
-                        padding: 8px 6px 0;
                         margin-top: 6px;
                         width: 100%;
+                        resize: none;
                         &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
                             color: #7fa2d6;
                         }
@@ -2229,6 +2233,7 @@ export const CommentItem = styled.div`
             & > div{
                 padding: 5px 0;
                 margin-bottom: 5px;
+                border: 0;
                 &:last-child{
                     margin-bottom: 0;
                 }
@@ -2629,6 +2634,8 @@ export const BlocAddPli = styled.div`
             color: #FFF;
             width: 100%;
             padding-bottom: 10px;
+            padding-left: 0;
+            resize: none;
             &:focus{
                 border-color: ${OrangeColor};
                 box-shadow: none;
