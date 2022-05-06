@@ -217,7 +217,7 @@ export default function ItemMasonry({
             setAction={setAction}
             activeItem={activeItem}
             setActiveItem={setActiveItem}
-            className={isCheck(item) && item.nv2 ? "" : "nv-hide"}
+            className={isCheck(item)   ? "" : "nv-hide"}
           />
         </div>
 

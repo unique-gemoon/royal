@@ -7,6 +7,7 @@ import Emojis from "../emojis";
 import { useDispatch, useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
+import InputTextareaAutosize from "./inputTextareaAutosize";
 
 export default function InputEmoji({
   name,
@@ -49,7 +50,7 @@ export default function InputEmoji({
   return (
     <FormEmoji className={props.className}>
       <div className="content-form-emoji">
-        <Input
+        <InputTextareaAutosize
           {...state.inputEmoji}
           onChange={(e) => {
             const cpState = { ...state };

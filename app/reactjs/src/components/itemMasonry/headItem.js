@@ -60,7 +60,7 @@ export default function HeadItem({
   useEffect(() => {
     if (item) {
       let cpAllMedia = [];
-      if ((item.nv1.description && (item.nv1.media && !item.nv1.media.soundage)) ||
+      if ((item.nv1 && item.nv1.description) || (item.nv1.description && (item.nv1.media && !item.nv1.media.soundage)) ||
         (item.nv2 && item.nv2.description)) {
         cpAllMedia.push("description");
       }
@@ -106,24 +106,24 @@ export default function HeadItem({
       <div className="bloc-content-item">
         <DetailsItems className={allMedia.length > 1 && "is-other-media"}>
           {allMedia.length && allMedia.map((media, index) => (
-
+            
             <div key={index}>
-              {(index == 0) && media == "description" && (
+              {(index == 0) && media === "description" && (
                 <div className="item-detail format-text-detail">
                   <FormatSizeIcon />
                 </div>
               )}
-              {(index == 0) && media == "music" && (
+              {(index == 0) && media === "music" && (
                 <div className="item-detail sound-detail">
                   <GraphicEqIcon />
                 </div>
               )}
-              {(index == 0) && media == "soundage" && (
+              {(index == 0) && media === "soundage" && (
                 <div className="item-detail soundage-detail">
                   <BallotIcon />
                 </div>
               )}
-              {(index == 0) && media == "photos" && (
+              {(index == 0) && media === "photos" && (
                 <div className="item-detail image-detail">
                   <ImageIcon />
                 </div>
@@ -176,6 +176,7 @@ export default function HeadItem({
             {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia); }}><PlusIcon /></div>)}
           </div>
         </DetailsItems>
+        <div className="d-flex">
         <ClickAwayListener onClickAway={handleTooltipClose}>
           <div className="user-info-tooltip">
             <Tooltip
@@ -252,6 +253,7 @@ export default function HeadItem({
           </div>
         </ClickAwayListener>
         <span className="timer-post"> . 12</span>
+        </div>
       </div>
       <div className="option-item">
         {state.showModal ? (
@@ -315,7 +317,7 @@ export default function HeadItem({
                 open={CopyOpen}
                 arrow
                 leaveDelay={1000}
-                title="Copier Pli"
+                title="lien du pli copié"
               >
                 <InsertLinkIcon onClick={handleCopyOpen} />
               </Tooltip>
