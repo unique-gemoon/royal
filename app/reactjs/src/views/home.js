@@ -4,10 +4,10 @@ import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import Masonry from "@mui/lab/Masonry";
 import { StyledEngineProvider } from "@mui/material/styles";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 import imgPli from "../assets/images/image-pli-1.png";
 import logoType from "../assets/images/Logotype.png";
 import videoPli from "../assets/images/video.mp4";
@@ -22,36 +22,32 @@ import ItemMasonry from "../components/itemMasonry/itemMasonry";
 import MessageNotif from "../components/messageNotif";
 import ProfileMenu from "../components/profileMenu";
 import SeeCounter from "../components/ui-elements/seeCounter";
+import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
+import connector from "../connector";
 import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
+  const [plis, setPlis] = useState([]);
 
-  // const [data, setData] = useState([
-  //   {
-  //     id: 1,
-  //     content: "Voici mon nouveau son du moment, qu'est ce que vous en pensez ?",
-  //     duration: 120,
-  //     user: { id: 1, username: "Jacob" },
-  //     ouverture: "my ouverture",
-  //     media: [
-  //       {
-  //         id: 1,
-  //         type: "music",
-  //         name: "Plants",
-  //         genre: "Crumb",
-  //         path: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-  //         isOuverture: false,
-  //         createdAt: "2022-04-11 12:30:00",
-  //         sondageOptions: [{ id: 1, option: "Emmanuel Macron" }]
-  //       }
-  //     ],
-  //     createdAt: "2022-04-11 12:30:00"
-  //   }
-  // ]);
+  useEffect(() => {
+    getPlis();
+  }, []);
 
+  const getPlis = () => {
+    connector({
+      method: "get",
+      url: `${endPoints.PLIS}`,
+      success: (response) => {
+        setPlis(response.plis || []);
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
 
   const [dataMasonry, setDataMasonry] = useState([
     {
@@ -61,14 +57,14 @@ export default function Home() {
       abonnements: 109,
       statutAbonne: false,
       etatOuvert: false,
-      nv1: { 
-        media:{
+      nv1: {
+        media: {
           music: {
             id: 12,
             name: "Plants",
             genre: "Crumb",
             lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-          }
+          },
         },
       },
       nv2: {
@@ -90,8 +86,8 @@ export default function Home() {
           ],
           video: {
             id: 1,
-            src: videoPli
-          }
+            src: videoPli,
+          },
         },
       },
       comments: [
@@ -102,7 +98,7 @@ export default function Home() {
           time: "3mn",
           citation: {
             citationUser: "Jacquou",
-            citationText: "Voici une citation"
+            citationText: "Voici une citation",
           },
           reponses: [
             {
@@ -110,28 +106,28 @@ export default function Home() {
               user: "Lys",
               subject: "J'aime bien cette citation !",
               time: "2mn",
-              userRep: "Dan"
+              userRep: "Dan",
             },
             {
               id: 2,
               user: "Dan",
               subject: "J'aime bien cette citation !",
               time: "2mn",
-              userRep: "Lys"
+              userRep: "Lys",
             },
             {
               id: 3,
               user: "Jacquou",
               subject: "J'aime bien cette citation !",
               time: "2mn",
-              userRep: "Dan"
+              userRep: "Dan",
             },
             {
               id: 4,
               user: "Dan",
               subject: "J'aime bien cette citation !",
               time: "2mn",
-              userRep: "Jacquou"
+              userRep: "Jacquou",
             },
           ],
         },
@@ -147,7 +143,7 @@ export default function Home() {
               user: "Lys",
               subject: "J'aime bien cette citation !",
               time: "2mn",
-              userRep: "Dan"
+              userRep: "Dan",
             },
           ],
         },
@@ -162,7 +158,7 @@ export default function Home() {
           user: "Dan",
           subject: "J'aime bien cette citation !",
           time: "3mn",
-        }
+        },
       ],
     },
     {
@@ -180,7 +176,7 @@ export default function Home() {
             genre: "Crumb",
             lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
           },
-        }
+        },
       },
     },
     {
@@ -216,7 +212,7 @@ export default function Home() {
               value: "Marine-Pen0",
             },
           ],
-        }
+        },
       },
     },
     {
@@ -265,7 +261,7 @@ export default function Home() {
               value: "Marine-Pen3",
             },
           ],
-        }
+        },
       },
     },
     {
@@ -296,7 +292,7 @@ export default function Home() {
               source: imgPli,
             },
           ],
-        }
+        },
       },
     },
     {
@@ -311,9 +307,9 @@ export default function Home() {
         media: {
           video: {
             id: 2,
-            src: videoPli
+            src: videoPli,
           },
-        }
+        },
       },
     },
     {
@@ -349,7 +345,7 @@ export default function Home() {
               value: "Marine-Pen1",
             },
           ],
-        }
+        },
       },
     },
     {
@@ -364,9 +360,9 @@ export default function Home() {
         media: {
           video: {
             id: 3,
-            src: videoPli
+            src: videoPli,
           },
-        }
+        },
       },
     },
     {
@@ -389,7 +385,7 @@ export default function Home() {
               source: imgPli,
             },
           ],
-        }
+        },
       },
     },
     {
@@ -416,7 +412,7 @@ export default function Home() {
               source: imgPli,
             },
           ],
-        }
+        },
       },
     },
     {
@@ -457,7 +453,7 @@ export default function Home() {
               source: imgPli,
             },
           ],
-        }
+        },
       },
     },
   ]);
@@ -571,7 +567,6 @@ export default function Home() {
   const [activeItem, setActiveItem] = useState(null);
   const [activeItemPlayer, setActiveItemPlayer] = useState(null);
 
-
   return (
     <DefaultMain>
       <StyledEngineProvider injectFirst>
@@ -598,6 +593,24 @@ export default function Home() {
             />
           )}
           <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3}>
+
+   {/*        {plis.map((item) => (
+              <div key={item.id}>
+                <ItemMasonry
+                  item={item}
+                  setItem={setItem}
+                  action={action}
+                  setAction={setAction}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                  activeItemPlayer={activeItemPlayer}
+                  setActiveItemPlayer={setActiveItemPlayer}
+                />
+              </div>
+            ))} */}
+
+
+
             {dataMasonry.map((item) => (
               <div key={item.id}>
                 <ItemMasonry

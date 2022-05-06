@@ -3,10 +3,12 @@ import db from "../models/index.model.js";
 import moment from "moment";
 
 const Pli = db.pli;
+const User = db.user;
 const Media = db.media;
 const SondageOptions = db.sondageOptions;
 const PliMedias = db.pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
+const PliUser = db.pli.belongsTo(User);
 const Op = db.Sequelize.Op;
 
 export function newPli(req, res) {
@@ -139,12 +141,63 @@ export function findPliUserNotElapsed(req, res, next) {
       if (!pli) {
         next();
       } else {
-        res
-          .status(400)
-          .send({
-            message:
-              "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
-          });
+        res.status(400).send({
+          message:
+            "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
+        });
+        return;
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
+    });
+}
+
+export function findAllPlisNotElapsed(req, res, next) {
+  Pli.findAll({
+    attributes: { exclude: ["updatedAt","userId"] },
+    include: [
+      {
+        model: Media,
+        association: PliMedias,
+        as: "medias",
+        attributes: { exclude: ['createdAt','updatedAt'] },
+        include: [
+          {
+            model: SondageOptions,
+            association: MediaSondageOptions,
+            as: "options",
+            attributes: { exclude: ['createdAt','updatedAt'] },
+          },
+        ],
+      },
+      {
+        model: User,
+        association: PliUser,
+        as: "user",
+        attributes: ["id", "username"],
+      },
+    ],
+    where: {
+      createdAt: {
+        [Op.gt]: moment().subtract(1, "h").toDate(),
+      },
+    },
+    order: [["createdAt", "DESC"]],
+  })
+    .then((plis) => {
+      if (!plis) {
+        res.status(200).send({
+          message: "no pli",
+          plis: [],
+        });
+        return;
+      } else {
+        res.status(200).send({
+          message: "pli",
+          plis,
+        });
         return;
       }
     })
