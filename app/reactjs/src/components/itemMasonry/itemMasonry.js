@@ -15,7 +15,6 @@ import Sondage from "./sondage";
 export default function ItemMasonry({
   item,
   setItem = () => { },
-  open = false,
   action,
   setAction = () => { },
   activeItem = null,

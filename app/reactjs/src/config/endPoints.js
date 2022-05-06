@@ -7,5 +7,6 @@ const endPoints = {
   PROFILE: "/auth/profile",
   DELETE_ACCOUNT : "/auth/delete-account",
   PLI : "/pli",
+  PLIS : "/pli/list",
 };
 export default endPoints;

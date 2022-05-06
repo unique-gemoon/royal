@@ -175,3 +175,12 @@ export function verifyRefreshToken(req, res) {
     });
   }
 }
+
+export function isConnectedUser(req, res, next) {
+    if(req.user){
+      next();
+      return;
+    }
+    res.status(400).json({message:"l'utilisateur n'existe pas"});
+    return;
+}

@@ -18,6 +18,7 @@ authRoutes.post("/refresh-token", controller.verifyRefreshToken);
 authRoutes.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
+  controller.isConnectedUser,
   (req, res) => {
     res.status(200).json({id : req.user.id , username : req.user.username,email : req.user.email});
   }
@@ -26,6 +27,7 @@ authRoutes.get(
 authRoutes.get(
   "/delete-account",
   passport.authenticate("jwt", { session: false }),
+  controller.isConnectedUser,
   deleteAccount
 );
 
