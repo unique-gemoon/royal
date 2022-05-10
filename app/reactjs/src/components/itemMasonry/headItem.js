@@ -20,7 +20,7 @@ import BallotIcon from "../../assets/images/icons/ballotIcon";
 import {
   DetailsItems,
   HeadContentItem,
-  PlusIcon
+  PlusIcon,
 } from "../../assets/styles/globalStyle";
 import { ROLES } from "../../config/vars";
 import { useOutsideAlerter } from "../../helper/events";
@@ -67,8 +67,8 @@ export default function HeadItem({
         cpMediaIcons.push("description");
       }
       if (item.medias.length > 0) {
-        for(let i = 0; i < item.medias.length; i++){
-          if(!cpMediaIcons.includes(item.medias[i].type)){
+        for (let i = 0; i < item.medias.length; i++) {
+          if (!cpMediaIcons.includes(item.medias[i].type)) {
             cpMediaIcons.push(item.medias[i].type);
           }
         }
@@ -130,7 +130,7 @@ export default function HeadItem({
             <div
               className={`mediaDetails ${showMediaIcons ? "showMedia" : ""}`}
             >
-              {mediaIcons.length &&
+              {mediaIcons.length > 0 &&
                 mediaIcons.map((media, index) => (
                   <div key={index}>
                     {index > 0 ? (

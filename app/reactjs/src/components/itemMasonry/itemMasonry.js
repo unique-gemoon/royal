@@ -27,6 +27,22 @@ export default function ItemMasonry({
     showModal: false,
     showComment: true,
   });
+  const [data, setData] = useState({
+    media: {
+      sondage: [],
+      image: [],
+      video: [],
+      music: [],
+      count: 0,
+    },
+    mediaOuverture: {
+      sondage: [],
+      image: [],
+      video: [],
+      music: [],
+      count: 0,
+    },
+  });
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
 
@@ -42,21 +58,29 @@ export default function ItemMasonry({
     }
   }, []);
 
-  const isCheck = (i) => {
-    return activeItem && i.id == activeItem.id;
-  };
-
-  const getMedias = (type, isOuverture = false) => {
-    let medias = [];
+  useEffect(() => {
+    const cpData = { ...data };
     for (let i = 0; i < item.medias.length; i++) {
-      if (
-        (!type || type === item.medias[i].type) &&
-        isOuverture == item.medias[i].isOuverture
-      ) {
-        medias.push(item.medias[i]);
+      const cpItem = item.medias[i];
+      if (cpItem.isOuverture) {
+        cpData.mediaOuverture[cpItem.type] = [
+          ...cpData.mediaOuverture[cpItem.type],
+          { ...cpItem },
+        ];
+        cpData.mediaOuverture.count = cpData.mediaOuverture.count + 1;
+      } else {
+        cpData.media[cpItem.type] = [
+          ...cpData.media[cpItem.type],
+          { ...cpItem },
+        ];
+        cpData.media.count = cpData.media.count + 1;
       }
     }
-    return medias;
+    setData(cpData);
+  }, [item.medias]);
+
+  const isCheck = (i) => {
+    return activeItem && i.id == activeItem.id;
   };
 
   const setMedia = (media) => {
@@ -67,6 +91,115 @@ export default function ItemMasonry({
       }
     }
     setItem({ ...item, medias: cpMedias });
+  };
+
+  const renderContentNV1 = () => {
+    return (
+      <>
+        <HeadItem
+          item={item}
+          setItem={setItem}
+          state={state}
+          setState={setState}
+          action={action}
+          setAction={setAction}
+          activeItem={activeItem}
+          setActiveItem={setActiveItem}
+        />
+        <div className="bloc-miniature">
+          {item.content ? (
+            <div className="descripton-miniature">{parse(item.content)}</div>
+          ) : null}
+
+          {data.media.count > 0 && (
+            <div>
+              {data.media.sondage.map((sondage) => (
+                <Sondage
+                  name={`bloc_${sondage.id}`}
+                  item={sondage}
+                  setItem={setMedia}
+                  key={sondage.id}
+                />
+              ))}
+              <ImagesGallery items={data.media.image} />
+              {data.media.video.map((video) => (
+                <PlayerVideo
+                  setActiveItemPlayer={setActiveItemPlayer}
+                  activeItemPlayer={activeItemPlayer}
+                  item={video}
+                  key={video.id}
+                />
+              ))}
+              {data.media.music.map((music) => (
+                <PlayerMusic
+                  setActiveItemMusic={setActiveItemPlayer}
+                  activeItemMusic={activeItemPlayer}
+                  item={music}
+                  key={music.id}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+        <BarTemporelle
+          item={item}
+          setItem={setItem}
+          state={state}
+          setState={setState}
+          action={action}
+          setAction={setAction}
+          activeItem={activeItem}
+          setActiveItem={setActiveItem}
+          className={isCheck(item) ? "" : "nv-hide"}
+        />
+      </>
+    );
+  };
+
+  const renderContentNV2 = () => {
+    return (
+      <>
+        {item.ouverture || data.mediaOuverture.count > 0 ? (
+          <div className="content-bloc-NV2">
+            {item.ouverture && (
+              <div className="descripton-miniature">
+                {parse(item.ouverture)}
+              </div>
+            )}
+
+            {data.mediaOuverture.count > 0 && (
+              <div>
+                {data.mediaOuverture.sondage.map((sondage) => (
+                  <Sondage
+                    name={`bloc_${sondage.id}`}
+                    item={sondage}
+                    setItem={setMedia}
+                    key={sondage.id}
+                  />
+                ))}
+                <ImagesGallery items={data.mediaOuverture.image} />
+                {data.mediaOuverture.video.map((video) => (
+                  <PlayerVideo
+                    setActiveItemPlayer={setActiveItemPlayer}
+                    activeItemPlayer={activeItemPlayer}
+                    item={video}
+                    key={video.id}
+                  />
+                ))}
+                {data.mediaOuverture.music.map((music) => (
+                  <PlayerMusic
+                    setActiveItemMusic={setActiveItemPlayer}
+                    activeItemMusic={activeItemPlayer}
+                    item={music}
+                    key={music.id}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : null}
+      </>
+    );
   };
 
   return (
@@ -80,107 +213,11 @@ export default function ItemMasonry({
         <ModalItem.Body>
           <MasonryItem height={height}>
             <div className="bloc-NV1" ref={refHeight}>
-              <HeadItem
-                item={item}
-                setItem={setItem}
-                state={state}
-                setState={setState}
-                action={action}
-                setAction={setAction}
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
-              />
-              <div className="bloc-miniature">
-                {item.content ? (
-                  <div className="descripton-miniature">
-                    {parse(item.content)}
-                  </div>
-                ) : null}
-
-                {getMedias("").length > 0 && (
-                  <div>
-                    {getMedias("sondage").map((sondage) => (
-                      <Sondage
-                        name={`bloc_${sondage.id}`}
-                        item={sondage}
-                        setItem={setMedia}
-                        key={sondage.id}
-                      />
-                    ))}
-                    <ImagesGallery items={getMedias("image")} />
-                    {getMedias("video").map((video) => (
-                      <PlayerVideo
-                        setActiveItemPlayer={setActiveItemPlayer}
-                        activeItemPlayer={activeItemPlayer}
-                        item={video}
-                        key={video.id}
-                      />
-                    ))}
-                    {getMedias("music").map((music) => (
-                      <PlayerMusic
-                        setActiveItemMusic={setActiveItemPlayer}
-                        activeItemMusic={activeItemPlayer}
-                        item={music}
-                        key={music.id}
-                      />
-                    ))}
-                  </div>
-                )}
-              </div>
-              <BarTemporelle
-                item={item}
-                setItem={setItem}
-                state={state}
-                setState={setState}
-                action={action}
-                setAction={setAction}
-                activeItem={activeItem}
-                setActiveItem={setActiveItem}
-                className={isCheck(item) ? "" : "nv-hide"}
-              />
+              {renderContentNV1()}
             </div>
             <div className="Bloc-NV2">
               <>
-                {item.ouverture || getMedias("", true).length > 0 ? (
-                  <div className="content-bloc-NV2">
-                    {item.ouverture && (
-                      <div className="descripton-miniature">
-                        {parse(item.ouverture)}
-                      </div>
-                    )}
-
-                    {getMedias("", true).length > 0 && (
-                      <div>
-                        {getMedias("sondage", true).map((sondage) => (
-                          <Sondage
-                            name={`bloc_${sondage.id}`}
-                            item={sondage}
-                            setItem={setMedia}
-                            key={sondage.id}
-                          />
-                        ))}
-                        <ImagesGallery items={getMedias("image", true)} />
-                        {getMedias("video", true).map((video) => (
-                          <PlayerVideo
-                            setActiveItemPlayer={setActiveItemPlayer}
-                            activeItemPlayer={activeItemPlayer}
-                            item={video}
-                            key={video.id}
-                          />
-                        ))}
-                        {getMedias("music", true).map((music) => (
-                          <PlayerMusic
-                            setActiveItemMusic={setActiveItemPlayer}
-                            activeItemMusic={activeItemPlayer}
-                            item={music}
-                            key={music.id}
-                          />
-                        ))}
-                      </div>
-                    )}
-                  </div>
-                ) : null}
-
+                {renderContentNV2()}
                 <div
                   className="toggle-pli2"
                   onClick={() => setState({ ...state, showModal: false })}
@@ -219,105 +256,12 @@ export default function ItemMasonry({
       </ModalItem>
       <MasonryItem height={height}>
         <div className="bloc-NV1" ref={refHeight}>
-          <HeadItem
-            item={item}
-            setItem={setItem}
-            state={state}
-            setState={setState}
-            action={action}
-            setAction={setAction}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-          />
-          <div className="bloc-miniature">
-            {item.content ? (
-              <div className="descripton-miniature">{parse(item.content)}</div>
-            ) : null}
-
-            {getMedias("").length > 0 && (
-              <div>
-                {getMedias("sondage").map((sondage) => (
-                  <Sondage
-                    name={`bloc_${sondage.id}`}
-                    item={sondage}
-                    setItem={setMedia}
-                    key={sondage.id}
-                  />
-                ))}
-                <ImagesGallery items={getMedias("image")} />
-                {getMedias("video").map((video) => (
-                  <PlayerVideo
-                    setActiveItemPlayer={setActiveItemPlayer}
-                    activeItemPlayer={activeItemPlayer}
-                    item={video}
-                    key={video.id}
-                  />
-                ))}
-                {getMedias("music").map((music) => (
-                  <PlayerMusic
-                    setActiveItemMusic={setActiveItemPlayer}
-                    activeItemMusic={activeItemPlayer}
-                    item={music}
-                    key={music.id}
-                  />
-                ))}
-              </div>
-            )}
-          </div>
-          <BarTemporelle
-            item={item}
-            setItem={setItem}
-            state={state}
-            setState={setState}
-            action={action}
-            setAction={setAction}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-            className={isCheck(item) ? "" : "nv-hide"}
-          />
+          {renderContentNV1()}
         </div>
         <div className="Bloc-NV2">
           {isCheck(item) && (
             <>
-              {item.ouverture || getMedias("", true).length > 0 ? (
-                <div className="content-bloc-NV2">
-                  {item.ouverture && (
-                    <div className="descripton-miniature">
-                      {parse(item.ouverture)}
-                    </div>
-                  )}
-
-                  {getMedias("", true).length > 0 && (
-                    <div>
-                      {getMedias("sondage", true).map((sondage) => (
-                        <Sondage
-                          name={`bloc_${sondage.id}`}
-                          item={sondage}
-                          setItem={setMedia}
-                          key={sondage.id}
-                        />
-                      ))}
-                      <ImagesGallery items={getMedias("image", true)} />
-                      {getMedias("video", true).map((video) => (
-                        <PlayerVideo
-                          setActiveItemPlayer={setActiveItemPlayer}
-                          activeItemPlayer={activeItemPlayer}
-                          item={video}
-                          key={video.id}
-                        />
-                      ))}
-                      {getMedias("music", true).map((music) => (
-                        <PlayerMusic
-                          setActiveItemMusic={setActiveItemPlayer}
-                          activeItemMusic={activeItemPlayer}
-                          item={music}
-                          key={music.id}
-                        />
-                      ))}
-                    </div>
-                  )}
-                </div>
-              ) : null}
+              {renderContentNV2()}
 
               <div
                 className="toggle-pli2"
