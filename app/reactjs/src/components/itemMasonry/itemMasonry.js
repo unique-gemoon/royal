@@ -2,6 +2,7 @@ import CloseFullscreenTwoToneIcon from "@mui/icons-material/CloseFullscreenTwoTo
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import parse from "html-react-parser";
 import React, { useEffect, useRef, useState } from "react";
 import { MasonryItem, ModalItem } from "../../assets/styles/componentStyle";
 import BarTemporelle from "../barTemporelle";
@@ -91,7 +92,9 @@ export default function ItemMasonry({
               />
               <div className="bloc-miniature">
                 {item.content ? (
-                  <div className="descripton-miniature">{item.content}</div>
+                  <div className="descripton-miniature">
+                    {parse(item.content)}
+                  </div>
                 ) : null}
 
                 {getMedias("").length > 0 && (
@@ -142,7 +145,7 @@ export default function ItemMasonry({
                   <div className="content-bloc-NV2">
                     {item.ouverture && (
                       <div className="descripton-miniature">
-                        {item.ouverture}
+                        {parse(item.ouverture)}
                       </div>
                     )}
 
@@ -228,7 +231,7 @@ export default function ItemMasonry({
           />
           <div className="bloc-miniature">
             {item.content ? (
-              <div className="descripton-miniature">{item.content}</div>
+              <div className="descripton-miniature">{parse(item.content)}</div>
             ) : null}
 
             {getMedias("").length > 0 && (
@@ -279,7 +282,9 @@ export default function ItemMasonry({
               {item.ouverture || getMedias("", true).length > 0 ? (
                 <div className="content-bloc-NV2">
                   {item.ouverture && (
-                    <div className="descripton-miniature">{item.ouverture}</div>
+                    <div className="descripton-miniature">
+                      {parse(item.ouverture)}
+                    </div>
                   )}
 
                   {getMedias("", true).length > 0 && (
