@@ -14,6 +14,7 @@ export default function OptionsBtnFooter({
   dataNotifs,
   setDataNotifs = () => {},
   setMsgNotifTop = () => {},
+  getPlis = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -66,6 +67,7 @@ export default function OptionsBtnFooter({
           action={action}
           setAction={setAction}
           setMsgNotifTop={setMsgNotifTop}
+          getPlis={getPlis}
         />
       )}
       <ButtonAction

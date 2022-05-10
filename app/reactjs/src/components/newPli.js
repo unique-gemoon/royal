@@ -27,6 +27,7 @@ export default function NewPli({
   setAction = () => {},
   setMsgNotifTop = () => {},
   setMsgNotifTopTime = () => {},
+  getPlis = () => {},
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [state, setState] = useState({
@@ -256,6 +257,7 @@ export default function NewPli({
               10000
             );
             setTogglePli(false);
+            getPlis();
           },
           catch: (error) => {
             msgErrors({ msg: getMsgError(error), submit: false });

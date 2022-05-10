@@ -13,6 +13,78 @@ const PliUser = db.pli.belongsTo(User);
 const PliAppearancePlis = db.pli.hasMany(AppearancePli, { as: "appearances" });
 const Op = db.Sequelize.Op;
 
+//TODO : delete demo data comments
+const comments =  [
+  {
+    id: 1,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+    citation: {
+      citationUser: "Jacquou",
+      citationText: "Voici une citation",
+    },
+    reponses: [
+      {
+        id: 1,
+        user: "Lys",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Dan",
+      },
+      {
+        id: 2,
+        user: "Dan",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Lys",
+      },
+      {
+        id: 3,
+        user: "Jacquou",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Dan",
+      },
+      {
+        id: 4,
+        user: "Dan",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Jacquou",
+      },
+    ],
+  },
+  {
+    id: 2,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+    cotte: true,
+    reponses: [
+      {
+        id: 1,
+        user: "Lys",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Dan",
+      },
+    ],
+  },
+  {
+    id: 3,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+  },
+  {
+    id: 4,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+  },
+];
+
 export function newPli(req, res) {
   const content = req.body.content || "";
   const ouverture = req.body.contentOuverture || "";
@@ -265,6 +337,7 @@ export function findAllPlisNotElapsed(req, res, next) {
               user,
               appearances,
               createdAt,
+              comments
             });
           //}
         }

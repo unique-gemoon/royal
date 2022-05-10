@@ -670,6 +670,7 @@ export default function Home() {
             setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
             setMsgNotifTopTime={setMsgNotifTopTime}
+            getPlis={getPlis}
           />
         )}
       </StyledEngineProvider>
