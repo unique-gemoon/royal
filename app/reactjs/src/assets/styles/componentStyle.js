@@ -1721,6 +1721,10 @@ export const BarTimer = styled.div`
             color: #FEB92B;
             transition: .3s ease-in-out;
             border-radius: 0;
+            &.active{
+                background-color: ${OrangeColor};
+                color: #FFF;
+            }
             svg{
                 font-size: 16px;
             }

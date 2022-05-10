@@ -21,5 +21,39 @@ export function removeTags(val) {
 }
 
 export function isObject(value) {
-  return value != null && typeof value == 'object' && !Array.isArray(value);
+  return value != null && typeof value == "object" && !Array.isArray(value);
+}
+
+export function getTime(hour, minute, second) {
+  const h = String(hour).length == 1 ? "0" + hour : hour;
+  const m = String(minute).length == 1 ? "0" + minute : minute;
+  const s = String(second).length == 1 ? "0" + second : second;
+  return h + ":" + m + ":" + s;
+}
+
+export function upTimeMinutes(value, nbMinutes) {
+  let hour, minute, second;
+  [hour, minute, second] = String(value).split(":");
+  hour = parseInt(hour);
+  minute = parseInt(minute) + nbMinutes;
+  if (minute >= 60) {
+    hour = parseInt(minute / 60);
+    minute = minute % 60;
+  }
+  return getTime(hour , minute , second);
+}
+
+export function downTimeMinutes(value, nbMinutes) {
+  let hour, minute, second;
+  [hour, minute, second] = String(value).split(":");
+  hour = parseInt(hour);
+  minute = parseInt(minute) + hour * 60 - nbMinutes;
+  if (minute < 0) {
+    hour = 0;
+    minute = 0;
+  } else {
+    hour = parseInt(minute / 60);
+    minute = minute % 60;
+  }
+  return getTime(hour , minute , second);
 }

@@ -29,10 +29,8 @@ export default function pli(sequelize, Sequelize) {
 
   Pli.associate = function (models) {
     Pli.hasMany(models.media);
-
     Pli.belongsTo(models.user, { foreignKey: "userId" });
-
-    Pli.belongsToMany(models.user, { through: models.appearancePli });
+    Pli.hasMany(models.appearancePli);
   };
   
   return Pli;

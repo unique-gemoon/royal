@@ -1,4 +1,4 @@
-import { isObject } from "../middleware/functions.js";
+import { downTimeMinutes, isObject, upTimeMinutes } from "../middleware/functions.js";
 import db from "../models/index.model.js";
 import moment from "moment";
 
@@ -6,9 +6,11 @@ const Pli = db.pli;
 const User = db.user;
 const Media = db.media;
 const SondageOptions = db.sondageOptions;
+const AppearancePli = db.appearancePli;
 const PliMedias = db.pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 const PliUser = db.pli.belongsTo(User);
+const PliAppearancePlis = db.pli.hasMany(AppearancePli, { as: "appearances" });
 const Op = db.Sequelize.Op;
 
 export function newPli(req, res) {
@@ -132,7 +134,8 @@ export function findPliUserNotElapsed(req, res, next) {
   Pli.findOne({
     where: {
       createdAt: {
-        [Op.gt]: moment().subtract(1, "h").toDate(),
+        //[Op.gt]: moment().subtract(1, "h").toDate(), //TODO: decommente la ligne
+        [Op.gt]: moment().subtract(1, "minutes").toDate(),
       },
       userId: req.user.id,
     },
@@ -156,19 +159,19 @@ export function findPliUserNotElapsed(req, res, next) {
 
 export function findAllPlisNotElapsed(req, res, next) {
   Pli.findAll({
-    attributes: { exclude: ["updatedAt","userId"] },
+    attributes: { exclude: ["updatedAt", "userId"] },
     include: [
       {
         model: Media,
         association: PliMedias,
         as: "medias",
-        attributes: { exclude: ['createdAt','updatedAt'] },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
         include: [
           {
             model: SondageOptions,
             association: MediaSondageOptions,
             as: "options",
-            attributes: { exclude: ['createdAt','updatedAt'] },
+            attributes: { exclude: ["createdAt", "updatedAt"] },
           },
         ],
       },
@@ -178,10 +181,17 @@ export function findAllPlisNotElapsed(req, res, next) {
         as: "user",
         attributes: ["id", "username"],
       },
+      {
+        model: AppearancePli,
+        association: PliAppearancePlis,
+        as: "appearances",
+        attributes: ["id", "signe", "userId"],
+      },
     ],
     where: {
       createdAt: {
-        [Op.gt]: moment().subtract(1, "h").toDate(),
+        //[Op.gt]: moment().subtract(1, "h").toDate(), TODO: decommente la ligne
+        [Op.gt]: moment().subtract(24, "h").toDate(),
       },
     },
     order: [["createdAt", "DESC"]],
@@ -194,9 +204,74 @@ export function findAllPlisNotElapsed(req, res, next) {
         });
         return;
       } else {
+        let cpPlis = [];
+        for (let i = 0; i < plis.length; i++) {
+          let cpPli = plis[i];
+
+          let [hour, minute, second] = String(cpPli.duration).split(":");
+          let dateAt = cpPli.createdAt;
+          let duration = cpPli.duration;
+          if (parseInt(hour) > 0) {
+            dateAt = moment(dateAt).add(parseInt(hour), "hours").toDate();
+          }
+          if (parseInt(minute) > 0) {
+            dateAt = moment(dateAt).add(parseInt(minute), "minutes").toDate();
+          }
+          if (parseInt(second) > 0) {
+            dateAt = moment(dateAt).add(parseInt(second), "seconds").toDate();
+          }
+
+          let countDown = 0;
+          let countUp = 0;
+          let alreadyUpdated = false;
+          let signe = false;
+
+          for (let j = 0; j < cpPli.appearances.length; j++) {
+            const cpPliAppearance = cpPli.appearances[j];
+            if (cpPliAppearance.signe) {
+              countUp++;
+            } else {
+              countDown++;
+            }
+            if (req.user && cpPliAppearance.userId == req.user.id) {
+              alreadyUpdated = true;
+              signe = cpPliAppearance.signe;
+            }
+          }
+          const total = countUp - countDown;
+          if (total > 0) {
+            dateAt = moment(dateAt).add(total, "minutes").toDate();
+            duration = upTimeMinutes(duration,total);
+          } else {
+            dateAt = moment(dateAt).subtract(total, "minutes").toDate();
+            duration = downTimeMinutes(duration,total);
+          }
+          //TODO: decommente la ligne
+          //if (dateAt > moment()) {
+            const id = cpPli.id;
+            const content = cpPli.content;
+            const ouverture = cpPli.ouverture;
+            const medias = cpPli.medias;
+            const user = cpPli.user;
+            const createdAt = cpPli.createdAt;
+            const appearances = { countDown, countUp, alreadyUpdated , signe};
+
+            cpPlis.push({
+              id,
+              content,
+              ouverture,
+              duration,
+              medias,
+              user,
+              appearances,
+              createdAt,
+            });
+          //}
+        }
+
         res.status(200).send({
           message: "pli",
-          plis,
+          plis: cpPlis,
         });
         return;
       }

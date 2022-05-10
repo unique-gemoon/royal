@@ -14,12 +14,12 @@ import Sondage from "./sondage";
 
 export default function ItemMasonry({
   item,
-  setItem = () => { },
+  setItem = () => {},
   action,
-  setAction = () => { },
+  setAction = () => {},
   activeItem = null,
-  setActiveItem = () => { },
-  setActiveItemPlayer = () => { },
+  setActiveItem = () => {},
+  setActiveItemPlayer = () => {},
   activeItemPlayer = null,
 }) {
   const [state, setState] = useState({
@@ -30,15 +30,39 @@ export default function ItemMasonry({
   const refHeight = useRef(null);
 
   useEffect(() => {
-    if (refHeight.current && (refHeight.current.clientHeight !== null || refHeight.current.clientHeight !== undefined)) {
+    if (
+      refHeight.current &&
+      (refHeight.current.clientHeight !== null ||
+        refHeight.current.clientHeight !== undefined)
+    ) {
       setTimeout(() => {
         setHeight(refHeight.current.clientHeight);
       }, 1000);
     }
   }, []);
 
-  const isCheck = (item) => {
-    return activeItem && item.id == activeItem.id;
+  const isCheck = (i) => {
+    return activeItem && i.id == activeItem.id;
+  };
+
+  const getMediasByType = (type, isOuverture = false) => {
+    let medias = [];
+    for (let i = 0; i < item.medias.length; i++) {
+      if (type === item.medias[i].type) {
+        medias.push(item.medias[i]);
+      }
+    }
+    return medias;
+  };
+
+  const setMedia = (media) => {
+    let cpMedias = [...item.medias];
+    for (var i = 0; i < cpMedias.length; i++) {
+      if (cpMedias[i].id == media.id) {
+        cpMedias[i] = media;
+      }
+    }
+    setItem({...item, medias: cpMedias});
   };
 
   return (
@@ -49,7 +73,7 @@ export default function ItemMasonry({
           setState({ ...state, showModal: false });
         }}
       >
-        <ModalItem.Body>
+        {/*   <ModalItem.Body>
           <MasonryItem height={height}>
             <div className="bloc-NV1" ref={refHeight}>
               <HeadItem
@@ -165,7 +189,7 @@ export default function ItemMasonry({
               </>
             </div>
           </MasonryItem>
-        </ModalItem.Body>
+        </ModalItem.Body> */}
       </ModalItem>
       <MasonryItem height={height}>
         <div className="bloc-NV1" ref={refHeight}>
@@ -180,37 +204,43 @@ export default function ItemMasonry({
             setActiveItem={setActiveItem}
           />
           <div className="bloc-miniature">
-            {item.nv1.description ? (
-              <div className="descripton-miniature">{item.nv1.description}</div>
+            {item.content ? (
+              <div className="descripton-miniature">{item.content}</div>
             ) : null}
-            {item.nv1.media && item.nv1.media.sondage ? (
-              <Sondage
-                name={`bloc_${item.id}_1`}
-                niveau={1}
-                item={item}
-                setItem={setItem}
-              />
-            ) : null}
-            {item.nv1.media && item.nv1.media.photos ? (
-              <ImagesGallery items={item.nv1.media.photos} />
-            ) : null}
-            {item.nv1.media && item.nv1.media.video ? (
-              <PlayerVideo
-                setActiveItemPlayer={setActiveItemPlayer}
-                activeItemPlayer={activeItemPlayer}
-                item={item.nv1.media.video}
-              />
-            ) : null}
-            {item.nv1.media && item.nv1.media.music ? (
-              <PlayerMusic
-                setActiveItemMusic={setActiveItemPlayer}
-                activeItemMusic={activeItemPlayer}
-                item={item.nv1.media.music}
-              />
-            ) : null}
+
+            {item.medias.length > 0 && (
+              <div>
+                {getMediasByType("sondage").map((sondage) => (
+                  <Sondage
+                    name={`bloc_${sondage.id}`}
+                    item={sondage}
+                    setItem={setMedia}
+                    key={sondage.id}
+                  />
+                ))}
+                <ImagesGallery items={getMediasByType("image")} />
+                {getMediasByType("video").map((video) => (
+                  <PlayerVideo
+                    setActiveItemPlayer={setActiveItemPlayer}
+                    activeItemPlayer={activeItemPlayer}
+                    item={video}
+                    key={video.id}
+                  />
+                ))}
+                {getMediasByType("music").map((music) => (
+                  <PlayerMusic
+                    setActiveItemMusic={setActiveItemPlayer}
+                    activeItemMusic={activeItemPlayer}
+                    item={music}
+                    key={music.id}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <BarTemporelle
             item={item}
+            setItem={setItem}
             state={state}
             setState={setState}
             action={action}
@@ -218,10 +248,9 @@ export default function ItemMasonry({
             activeItem={activeItem}
             setActiveItem={setActiveItem}
             className={isCheck(item)   ? "" : "nv-hide"}
-          />
+          /> 
         </div>
-
-        <div className="Bloc-NV2">
+        {/* <div className="Bloc-NV2">
           {isCheck(item) ? (
             <>
               {item.nv2 ? (
@@ -276,7 +305,7 @@ export default function ItemMasonry({
               <BlocComments item={item} state={state} setState={setState} />
             </>
           ) : null}
-        </div>
+        </div> */}
       </MasonryItem>
     </>
   );

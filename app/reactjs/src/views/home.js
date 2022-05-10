@@ -14,7 +14,7 @@ import videoPli from "../assets/images/video.mp4";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile
+  HeaderMobile,
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -25,15 +25,31 @@ import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
 import connector from "../connector";
+import { getTime } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
   const [plis, setPlis] = useState([]);
+  const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
     getPlis();
+  }, []);
+
+  useEffect(() => {
+    if (plis.length) {
+        updateDurations();
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds(seconds => seconds + 1);
+    }, 5000);
+    //TODO: replace 5000 by 1000
+    return () => clearInterval(interval);
   }, []);
 
   const getPlis = () => {
@@ -41,7 +57,7 @@ export default function Home() {
       method: "get",
       url: `${endPoints.PLIS}`,
       success: (response) => {
-        setPlis(response.plis || []);
+        setPlis(response.data.plis);
       },
       catch: (error) => {
         console.log(error);
@@ -509,13 +525,46 @@ export default function Home() {
   const auth = useSelector((store) => store.auth);
 
   const setItem = (item) => {
-    const cpDataMasonry = [...dataMasonry];
-    for (var i = 0; i < cpDataMasonry.length; i++) {
-      if (cpDataMasonry[i].id == item.id) {
-        cpDataMasonry[i] = item;
+    const cpPlis = [...plis];
+    for (var i = 0; i < cpPlis.length; i++) {
+      if (cpPlis[i].id == item.id) {
+        cpPlis[i] = item;
       }
     }
-    setDataMasonry(cpDataMasonry);
+    setPlis(cpPlis);
+  };
+
+  const updateDurations = () => {
+    if (plis.length) {
+      let hour, minute, second;
+      const cpPlis = [];
+      for (let i = 0; i < plis.length; i++) {
+        const cpPli = {...plis[i]};
+        [hour, minute, second] = String(cpPli.duration).split(":");
+        hour = parseInt(hour);
+        minute = parseInt(minute);
+        second = parseInt(second);
+        if (second == 0) {
+          if (minute == 0) {
+            if (hour > 0) {
+              hour--;
+              minute = 59;
+              second = 59;
+            }
+          } else {
+            minute--;
+            second = 59;
+          }
+        } else {
+          second--;
+        }
+        cpPli.duration = getTime(hour, minute, second);
+        if (hour > 0 || minute > 0 || second > 0) {
+          cpPlis.push(cpPli);
+        }
+      }
+      setPlis(cpPlis);
+    }
   };
 
   const [action, setAction] = useState({
@@ -592,39 +641,22 @@ export default function Home() {
               message={msgNotifTop}
             />
           )}
-          <Masonry columns={{ xs: 1, md: 2, lg: dataMasonry.length >= 3 ? 3 : 2 }} spacing={3}>
-
-   {/*        {plis.map((item) => (
-              <div key={item.id}>
-                <ItemMasonry
-                  item={item}
-                  setItem={setItem}
-                  action={action}
-                  setAction={setAction}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                  activeItemPlayer={activeItemPlayer}
-                  setActiveItemPlayer={setActiveItemPlayer}
-                />
-              </div>
-            ))} */}
-
-
-
-            {dataMasonry.map((item) => (
-              <div key={item.id}>
-                <ItemMasonry
-                  item={item}
-                  setItem={setItem}
-                  action={action}
-                  setAction={setAction}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                  activeItemPlayer={activeItemPlayer}
-                  setActiveItemPlayer={setActiveItemPlayer}
-                />
-              </div>
-            ))}
+          <Masonry columns={{ xs: 1, md: 2, lg: plis.length >= 3 ? 3 : 2 }} spacing={3}>
+            {plis &&
+              plis.map((item) => (
+                <div key={item.id}>
+                  <ItemMasonry
+                    item={item}
+                    setItem={setItem}
+                    action={action}
+                    setAction={setAction}
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                    activeItemPlayer={activeItemPlayer}
+                    setActiveItemPlayer={setActiveItemPlayer}
+                  />
+                </div>
+              ))}
           </Masonry>
         </ContainerDef>
 

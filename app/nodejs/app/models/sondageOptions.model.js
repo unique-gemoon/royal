@@ -19,7 +19,6 @@ export default function sondageOptions(sequelize, Sequelize) {
 
   SondageOptions.associate = function (models) {
     SondageOptions.belongsTo(models.media, { foreignKey: "mediumId" });
-
     SondageOptions.belongsToMany(models.user, { through: "sondageVotes" });
   };
   

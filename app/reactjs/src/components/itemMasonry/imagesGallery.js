@@ -15,7 +15,7 @@ export default function ImagesGallery({items}) {
         setCurrentIndex(0);
         setStateImage(false);
     };
-    return (
+    return items && items.length>0 && (
         <div>
             <GalerieSlide
                 children={items}
