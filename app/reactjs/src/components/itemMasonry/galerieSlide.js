@@ -10,7 +10,7 @@ export default function GalerieSlide({ children = [], onClick }) {
               <div
                 key={index}
                 className="item-gallery"
-                onClick={() => {onClick(getPathMedia(image,"image"), index);}}
+                onClick={() => {onClick(index);}}
               >
                 <img src={getPathMedia(image,"image")} alt="" />
               </div>
