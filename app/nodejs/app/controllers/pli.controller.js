@@ -273,7 +273,14 @@ export function findAllPlisNotElapsed(req, res, next) {
         ),
       },
     },
-    order: [[db.Sequelize.literal("DATE_ADD(pli.createdAt, INTERVAL pli.allottedTime MINUTE)"), "DESC"]],
+    order: [
+      [
+        db.Sequelize.literal(
+          "DATE_ADD(pli.createdAt, INTERVAL pli.allottedTime MINUTE)"
+        ),
+        "DESC",
+      ],
+    ],
   })
     .then((plis) => {
       if (!plis) {
@@ -307,7 +314,7 @@ export function findAllPlisNotElapsed(req, res, next) {
           const id = cpPli.id;
           const content = cpPli.content;
           const ouverture = cpPli.ouverture;
-          const duration = durationTime(cpPli.createdAt,cpPli.allottedTime);
+          const duration = durationTime(cpPli.createdAt, cpPli.allottedTime);
           const medias = cpPli.medias;
           const user = cpPli.user;
           const createdAt = cpPli.createdAt;
@@ -337,4 +344,89 @@ export function findAllPlisNotElapsed(req, res, next) {
       res.status(500).send({ message: err.message });
       return;
     });
+}
+
+export function findPliById(req, res, next) {
+  if (!parseInt(req.body.id)) {
+    res.status(400).send({
+      message: "Identifiant du pli non définie.",
+    });
+    return;
+  }
+  Pli.findOne({
+    include: [
+      {
+        model: AppearancePli,
+        association: PliAppearancePlis,
+        as: "appearances",
+      },
+    ],
+    where: {
+      id: req.body.id,
+    },
+  })
+    .then((pli) => {
+      if (pli) {
+        req.pli = pli;
+        next();
+      } else {
+        res.status(400).send({
+          message: "Pli non existé.",
+        });
+        return;
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
+    });
+}
+
+export function updateAppearancePli(req, res) {
+  let alreadyUpdated = false;
+  for (let i = 0; i < req.pli.appearances.length; i++) {
+    const appearance = req.pli.appearances[i];
+    if (req.user && appearance.userId == req.user.id) {
+      alreadyUpdated = true;
+      break;
+    }
+  }
+
+  if (alreadyUpdated) {
+    res
+      .status(400)
+      .json({ message: "Le temps alloué du pli est déjà modifié." });
+  } else {
+    AppearancePli.create({
+      allottedTime: req.body.allottedTime,
+      pliId: req.pli.id,
+      duration: req.body.duration,
+      signe: req.body.signe,
+      userId: req.user.id,
+    })
+      .then((response) => {
+        let allottedTime = 0;
+        if (req.pli.allottedTime > 0) {
+          allottedTime = req.body.signe
+            ? req.pli.allottedTime + req.body.allottedTime
+            : req.pli.allottedTime - req.body.allottedTime;
+        }
+
+        Pli.update(
+          {
+            allottedTime,
+          },
+          { where: { id: req.pli.id } }
+        )
+          .then((resp) => {
+            res.status(200).json({ message: "ok" });
+          })
+          .catch((err) => {
+            res.status(500).send({ message: err.message });
+          });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  }
 }

@@ -9,8 +9,8 @@ import { BarTimer } from "../assets/styles/componentStyle";
 import { ROLES } from "../config/vars";
 import { getTime } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
-import connector from '../connector';
-import endPoints from '../config/endPoints';
+import connector from "../connector";
+import endPoints from "../config/endPoints";
 
 export default function BarTemporelle({
   item = {},
@@ -27,36 +27,37 @@ export default function BarTemporelle({
   const auth = useSelector((store) => store.auth);
   const [isPending, setIsPending] = useState(false);
 
-  const saveTime = ({hour, minute ,second, signe}) => {
+  const saveTime = ({ hour, minute, second, signe }) => {
     if (!isPending) {
       setIsPending(true);
       connector({
         method: "post",
         url: endPoints.PLI_TIME,
-        data: {},
+        data: { duration: "00:01:00" , allottedTime: 1, signe, id: item.id },
         success: (response) => {
           setIsPending(false);
-          const appearances = {...item.appearances, alreadyUpdated: true, signe};
-          if(signe){
+          const appearances = {
+            ...item.appearances,
+            alreadyUpdated: true,
+            signe,
+          };
+          if (signe) {
             appearances.countUp = parseInt(item.appearances.countUp) + 1;
-          }else{
+          } else {
             appearances.countDown = parseInt(item.appearances.countDown) + 1;
           }
-
           setItem({
             ...item,
-            duration: getTime(hour, minute , second),
-            appearances
+            duration: getTime(hour, minute, second),
+            appearances,
           });
-          
         },
         catch: (error) => {
           setIsPending(false);
-
         },
       });
     }
-  }
+  };
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
@@ -83,7 +84,7 @@ export default function BarTemporelle({
       minute = 0;
       hour++;
     }
-    saveTime({hour, minute ,second, signe:true});
+    saveTime({ hour, minute, second, signe: true });
   };
 
   const downTime = () => {
@@ -102,7 +103,7 @@ export default function BarTemporelle({
     } else {
       minute--;
     }
-    saveTime({hour, minute ,second, signe:false});
+    saveTime({ hour, minute, second, signe: false });
   };
 
   return (
