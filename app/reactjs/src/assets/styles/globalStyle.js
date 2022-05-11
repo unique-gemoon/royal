@@ -78,6 +78,9 @@ export const DefaultMain = styled.div`
 export const ContainerDef = styled(Container)`
     & > div{
         margin: 0;
+        &.masonry-two-columns{
+            align-content: flex-start;
+        }
     }
     max-width: 100%;
     @media(max-width: 320px){
