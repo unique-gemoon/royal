@@ -9,6 +9,8 @@ import { BarTimer } from "../assets/styles/componentStyle";
 import { ROLES } from "../config/vars";
 import { getTime } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
+import connector from '../connector';
+import endPoints from '../config/endPoints';
 
 export default function BarTemporelle({
   item = {},
@@ -23,6 +25,38 @@ export default function BarTemporelle({
 }) {
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
+  const [isPending, setIsPending] = useState(false);
+
+  const saveTime = ({hour, minute ,second, signe}) => {
+    if (!isPending) {
+      setIsPending(true);
+      connector({
+        method: "post",
+        url: endPoints.PLI_TIME,
+        data: {},
+        success: (response) => {
+          setIsPending(false);
+          const appearances = {...item.appearances, alreadyUpdated: true, signe};
+          if(signe){
+            appearances.countUp = parseInt(item.appearances.countUp) + 1;
+          }else{
+            appearances.countDown = parseInt(item.appearances.countDown) + 1;
+          }
+
+          setItem({
+            ...item,
+            duration: getTime(hour, minute , second),
+            appearances
+          });
+          
+        },
+        catch: (error) => {
+          setIsPending(false);
+
+        },
+      });
+    }
+  }
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
@@ -49,16 +83,7 @@ export default function BarTemporelle({
       minute = 0;
       hour++;
     }
-    setItem({
-      ...item,
-      duration: getTime(hour, minute , second),
-      appearances: {
-        ...item.appearances,
-        countUp: parseInt(item.appearances.countUp) + 1,
-        alreadyUpdated: true,
-        signe: true,
-      },
-    });
+    saveTime({hour, minute ,second, signe:true});
   };
 
   const downTime = () => {
@@ -77,16 +102,7 @@ export default function BarTemporelle({
     } else {
       minute--;
     }
-    setItem({
-      ...item,
-      duration: getTime(hour, minute ,second),
-      appearances: {
-        ...item.appearances,
-        countDown: parseInt(item.appearances.countDown) + 1,
-        alreadyUpdated: true,
-        signe: false,
-      },
-    });
+    saveTime({hour, minute ,second, signe:false});
   };
 
   return (

@@ -12,7 +12,12 @@ export default function pli(sequelize, Sequelize) {
 
     duration: {
       type: Sequelize.TIME,
-      allowNull: true,
+      notEmpty: true,
+    },
+
+    allottedTime: {
+      type: Sequelize.INTEGER,
+      notEmpty: true,
     },
 
     userId: {

@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function validateEmail(email) {
   //eslint-disable-next-line
   const re =
@@ -31,29 +33,16 @@ export function getTime(hour, minute, second) {
   return h + ":" + m + ":" + s;
 }
 
-export function upTimeMinutes(value, nbMinutes) {
-  let hour, minute, second;
-  [hour, minute, second] = String(value).split(":");
-  hour = parseInt(hour);
-  minute = parseInt(minute) + nbMinutes;
-  if (minute >= 60) {
-    hour = parseInt(minute / 60);
-    minute = minute % 60;
-  }
-  return getTime(hour , minute , second);
-}
+export function durationTime(createdAt, allottedTime){
 
-export function downTimeMinutes(value, nbMinutes) {
-  let hour, minute, second;
-  [hour, minute, second] = String(value).split(":");
-  hour = parseInt(hour);
-  minute = parseInt(minute) + hour * 60 - nbMinutes;
-  if (minute < 0) {
-    hour = 0;
-    minute = 0;
-  } else {
-    hour = parseInt(minute / 60);
-    minute = minute % 60;
+  console.log("createdAt",createdAt);
+  createdAt = moment(createdAt).add(allottedTime, "minutes").toDate();
+  console.log(createdAt);
+  const minutes = moment(createdAt).diff(moment(), 'minutes');
+  if(minutes> 0){
+    const hour = parseInt(minutes / 60);
+    const minute = minutes % 60;
+    return getTime(hour, minute, 0);
   }
-  return getTime(hour , minute , second);
+  return "00:00:00";
 }

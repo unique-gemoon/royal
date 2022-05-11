@@ -1,6 +1,6 @@
-import { downTimeMinutes, isObject, upTimeMinutes } from "../middleware/functions.js";
-import db from "../models/index.model.js";
 import moment from "moment";
+import { durationTime, isObject } from "../middleware/functions.js";
+import db from "../models/index.model.js";
 
 const Pli = db.pli;
 const User = db.user;
@@ -14,7 +14,7 @@ const PliAppearancePlis = db.pli.hasMany(AppearancePli, { as: "appearances" });
 const Op = db.Sequelize.Op;
 
 //TODO : delete demo data comments
-const comments =  [
+const comments = [
   {
     id: 1,
     user: "Dan",
@@ -163,11 +163,15 @@ export function newPli(req, res) {
     });
   }
 
+  let [hour, minute] = String(duration).split(":");
+  const allottedTime = parseInt(minute) + 60 * parseInt(hour);
+
   Pli.create(
     {
       content,
       ouverture,
       duration,
+      allottedTime,
       medias,
       userId: req.user.id,
     },
@@ -206,7 +210,8 @@ export function findPliUserNotElapsed(req, res, next) {
   Pli.findOne({
     where: {
       createdAt: {
-        //[Op.gt]: moment().subtract(1, "h").toDate(), //TODO: decommente la ligne
+        //TODO decommente la ligne dessous
+        //[Op.gt]: moment().subtract(1, "h").toDate(),
         [Op.gt]: moment().subtract(1, "minutes").toDate(),
       },
       userId: req.user.id,
@@ -216,9 +221,10 @@ export function findPliUserNotElapsed(req, res, next) {
       if (!pli) {
         next();
       } else {
+        //TODO modifier message
         res.status(400).send({
           message:
-            "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
+            "(P.I. 1 minute pour le test au lieu d'une 1h) Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
         });
         return;
       }
@@ -262,11 +268,12 @@ export function findAllPlisNotElapsed(req, res, next) {
     ],
     where: {
       createdAt: {
-        //[Op.gt]: moment().subtract(1, "h").toDate(), TODO: decommente la ligne
-        [Op.gt]: moment().subtract(24, "h").toDate(),
+        [Op.gt]: db.Sequelize.literal(
+          "DATE_SUB(NOW(), INTERVAL pli.allottedTime MINUTE)"
+        ),
       },
     },
-    order: [["createdAt", "DESC"]],
+    order: [[db.Sequelize.literal("DATE_ADD(pli.createdAt, INTERVAL pli.allottedTime MINUTE)"), "DESC"]],
   })
     .then((plis) => {
       if (!plis) {
@@ -279,19 +286,6 @@ export function findAllPlisNotElapsed(req, res, next) {
         let cpPlis = [];
         for (let i = 0; i < plis.length; i++) {
           let cpPli = plis[i];
-
-          let [hour, minute, second] = String(cpPli.duration).split(":");
-          let dateAt = cpPli.createdAt;
-          let duration = cpPli.duration;
-          if (parseInt(hour) > 0) {
-            dateAt = moment(dateAt).add(parseInt(hour), "hours").toDate();
-          }
-          if (parseInt(minute) > 0) {
-            dateAt = moment(dateAt).add(parseInt(minute), "minutes").toDate();
-          }
-          if (parseInt(second) > 0) {
-            dateAt = moment(dateAt).add(parseInt(second), "seconds").toDate();
-          }
 
           let countDown = 0;
           let countUp = 0;
@@ -310,36 +304,26 @@ export function findAllPlisNotElapsed(req, res, next) {
               signe = cpPliAppearance.signe;
             }
           }
-          const total = countUp - countDown;
-          if (total > 0) {
-            dateAt = moment(dateAt).add(total, "minutes").toDate();
-            duration = upTimeMinutes(duration,total);
-          } else {
-            dateAt = moment(dateAt).subtract(total, "minutes").toDate();
-            duration = downTimeMinutes(duration,total);
-          }
-          //TODO: decommente la ligne
-          //if (dateAt > moment()) {
-            const id = cpPli.id;
-            const content = cpPli.content;
-            const ouverture = cpPli.ouverture;
-            const medias = cpPli.medias;
-            const user = cpPli.user;
-            const createdAt = cpPli.createdAt;
-            const appearances = { countDown, countUp, alreadyUpdated , signe};
+          const id = cpPli.id;
+          const content = cpPli.content;
+          const ouverture = cpPli.ouverture;
+          const duration = durationTime(cpPli.createdAt,cpPli.allottedTime);
+          const medias = cpPli.medias;
+          const user = cpPli.user;
+          const createdAt = cpPli.createdAt;
+          const appearances = { countDown, countUp, alreadyUpdated, signe };
 
-            cpPlis.push({
-              id,
-              content,
-              ouverture,
-              duration,
-              medias,
-              user,
-              appearances,
-              createdAt,
-              comments
-            });
-          //}
+          cpPlis.push({
+            id,
+            content,
+            ouverture,
+            duration,
+            medias,
+            user,
+            appearances,
+            createdAt,
+            comments,
+          });
         }
 
         res.status(200).send({

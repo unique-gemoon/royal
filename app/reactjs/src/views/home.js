@@ -47,8 +47,7 @@ export default function Home() {
   useEffect(() => {
     const interval = setInterval(() => {
       setSeconds(seconds => seconds + 1);
-    }, 5000);
-    //TODO: replace 5000 by 1000
+    }, 1000);
     return () => clearInterval(interval);
   }, []);
 

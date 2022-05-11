@@ -5,6 +5,11 @@ export default function appearancePli(sequelize, Sequelize) {
       notEmpty: true,
     },
 
+    allottedTime: {
+      type: Sequelize.INTEGER,
+      notEmpty: true,
+    },
+
     signe: {
       type: Sequelize.BOOLEAN,
       defaultValue: false,
