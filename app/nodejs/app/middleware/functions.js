@@ -1,3 +1,5 @@
+import moment from "moment";
+
 export function validateEmail(email) {
   //eslint-disable-next-line
   const re =
@@ -21,5 +23,26 @@ export function removeTags(val) {
 }
 
 export function isObject(value) {
-  return value != null && typeof value == 'object' && !Array.isArray(value);
+  return value != null && typeof value == "object" && !Array.isArray(value);
+}
+
+export function getTime(hour, minute, second) {
+  const h = String(hour).length == 1 ? "0" + hour : hour;
+  const m = String(minute).length == 1 ? "0" + minute : minute;
+  const s = String(second).length == 1 ? "0" + second : second;
+  return h + ":" + m + ":" + s;
+}
+
+export function durationTime(createdAt, allottedTime){
+
+  console.log("createdAt",createdAt);
+  createdAt = moment(createdAt).add(allottedTime, "minutes").toDate();
+  console.log(createdAt);
+  const minutes = moment(createdAt).diff(moment(), 'minutes');
+  if(minutes> 0){
+    const hour = parseInt(minutes / 60);
+    const minute = minutes % 60;
+    return getTime(hour, minute, 0);
+  }
+  return "00:00:00";
 }

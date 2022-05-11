@@ -20,6 +20,7 @@ export default function FooterHome({
     setDataNotifs = () => {},
     setMsgNotifTop = () => {},
     setMsgNotifTopTime = () => {},
+    getPlis = () => {},
   }) {
 
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -37,7 +38,7 @@ export default function FooterHome({
                 </div>
               </Col>
               <Col md={6}>
-                <NewPli action={action} setAction={setAction} setMsgNotifTop={setMsgNotifTop} setMsgNotifTopTime={setMsgNotifTopTime}/>
+                <NewPli action={action} setAction={setAction} setMsgNotifTop={setMsgNotifTop} setMsgNotifTopTime={setMsgNotifTopTime} getPlis={getPlis}/>
               </Col>
               <Col md={3}>
                 <OptionsBtnFooter
@@ -46,6 +47,7 @@ export default function FooterHome({
                   dataNotifs={dataNotifs}
                   setDataNotifs={setDataNotifs}
                   setMsgNotifTop={setMsgNotifTop}
+                  getPlis={getPlis}
                 />
               </Col>
             </Row>
@@ -58,6 +60,7 @@ export default function FooterHome({
             dataNotifs={dataNotifs}
             setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
+            getPlis={getPlis}
           />
         )}
       </FooterDefault>);

@@ -1,15 +1,89 @@
-import { isObject } from "../middleware/functions.js";
-import db from "../models/index.model.js";
 import moment from "moment";
+import { durationTime, isObject } from "../middleware/functions.js";
+import db from "../models/index.model.js";
 
 const Pli = db.pli;
 const User = db.user;
 const Media = db.media;
 const SondageOptions = db.sondageOptions;
+const AppearancePli = db.appearancePli;
 const PliMedias = db.pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 const PliUser = db.pli.belongsTo(User);
+const PliAppearancePlis = db.pli.hasMany(AppearancePli, { as: "appearances" });
 const Op = db.Sequelize.Op;
+
+//TODO : delete demo data comments
+const comments = [
+  {
+    id: 1,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+    citation: {
+      citationUser: "Jacquou",
+      citationText: "Voici une citation",
+    },
+    reponses: [
+      {
+        id: 1,
+        user: "Lys",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Dan",
+      },
+      {
+        id: 2,
+        user: "Dan",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Lys",
+      },
+      {
+        id: 3,
+        user: "Jacquou",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Dan",
+      },
+      {
+        id: 4,
+        user: "Dan",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Jacquou",
+      },
+    ],
+  },
+  {
+    id: 2,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+    cotte: true,
+    reponses: [
+      {
+        id: 1,
+        user: "Lys",
+        subject: "J'aime bien cette citation !",
+        time: "2mn",
+        userRep: "Dan",
+      },
+    ],
+  },
+  {
+    id: 3,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+  },
+  {
+    id: 4,
+    user: "Dan",
+    subject: "J'aime bien cette citation !",
+    time: "3mn",
+  },
+];
 
 export function newPli(req, res) {
   const content = req.body.content || "";
@@ -89,11 +163,15 @@ export function newPli(req, res) {
     });
   }
 
+  let [hour, minute] = String(duration).split(":");
+  const allottedTime = parseInt(minute) + 60 * parseInt(hour);
+
   Pli.create(
     {
       content,
       ouverture,
       duration,
+      allottedTime,
       medias,
       userId: req.user.id,
     },
@@ -132,7 +210,9 @@ export function findPliUserNotElapsed(req, res, next) {
   Pli.findOne({
     where: {
       createdAt: {
-        [Op.gt]: moment().subtract(1, "h").toDate(),
+        //TODO decommente la ligne dessous
+        //[Op.gt]: moment().subtract(1, "h").toDate(),
+        [Op.gt]: moment().subtract(1, "minutes").toDate(),
       },
       userId: req.user.id,
     },
@@ -141,9 +221,10 @@ export function findPliUserNotElapsed(req, res, next) {
       if (!pli) {
         next();
       } else {
+        //TODO modifier message
         res.status(400).send({
           message:
-            "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
+            "(P.I. 1 minute pour le test au lieu d'une 1h) Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
         });
         return;
       }
@@ -156,19 +237,19 @@ export function findPliUserNotElapsed(req, res, next) {
 
 export function findAllPlisNotElapsed(req, res, next) {
   Pli.findAll({
-    attributes: { exclude: ["updatedAt","userId"] },
+    attributes: { exclude: ["updatedAt", "userId"] },
     include: [
       {
         model: Media,
         association: PliMedias,
         as: "medias",
-        attributes: { exclude: ['createdAt','updatedAt'] },
+        attributes: { exclude: ["createdAt", "updatedAt"] },
         include: [
           {
             model: SondageOptions,
             association: MediaSondageOptions,
             as: "options",
-            attributes: { exclude: ['createdAt','updatedAt'] },
+            attributes: { exclude: ["createdAt", "updatedAt"] },
           },
         ],
       },
@@ -178,13 +259,21 @@ export function findAllPlisNotElapsed(req, res, next) {
         as: "user",
         attributes: ["id", "username"],
       },
+      {
+        model: AppearancePli,
+        association: PliAppearancePlis,
+        as: "appearances",
+        attributes: ["id", "signe", "userId"],
+      },
     ],
     where: {
       createdAt: {
-        [Op.gt]: moment().subtract(1, "h").toDate(),
+        [Op.gt]: db.Sequelize.literal(
+          "DATE_SUB(NOW(), INTERVAL pli.allottedTime MINUTE)"
+        ),
       },
     },
-    order: [["createdAt", "DESC"]],
+    order: [[db.Sequelize.literal("DATE_ADD(pli.createdAt, INTERVAL pli.allottedTime MINUTE)"), "DESC"]],
   })
     .then((plis) => {
       if (!plis) {
@@ -194,9 +283,52 @@ export function findAllPlisNotElapsed(req, res, next) {
         });
         return;
       } else {
+        let cpPlis = [];
+        for (let i = 0; i < plis.length; i++) {
+          let cpPli = plis[i];
+
+          let countDown = 0;
+          let countUp = 0;
+          let alreadyUpdated = false;
+          let signe = false;
+
+          for (let j = 0; j < cpPli.appearances.length; j++) {
+            const cpPliAppearance = cpPli.appearances[j];
+            if (cpPliAppearance.signe) {
+              countUp++;
+            } else {
+              countDown++;
+            }
+            if (req.user && cpPliAppearance.userId == req.user.id) {
+              alreadyUpdated = true;
+              signe = cpPliAppearance.signe;
+            }
+          }
+          const id = cpPli.id;
+          const content = cpPli.content;
+          const ouverture = cpPli.ouverture;
+          const duration = durationTime(cpPli.createdAt,cpPli.allottedTime);
+          const medias = cpPli.medias;
+          const user = cpPli.user;
+          const createdAt = cpPli.createdAt;
+          const appearances = { countDown, countUp, alreadyUpdated, signe };
+
+          cpPlis.push({
+            id,
+            content,
+            ouverture,
+            duration,
+            medias,
+            user,
+            appearances,
+            createdAt,
+            comments,
+          });
+        }
+
         res.status(200).send({
           message: "pli",
-          plis,
+          plis: cpPlis,
         });
         return;
       }

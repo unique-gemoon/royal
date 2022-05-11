@@ -74,10 +74,8 @@ export default function user(sequelize, Sequelize) {
 
   User.associate = function (models) {
     User.hasMany(models.pli);
-
+    User.hasMany(models.appearancePli);
     User.belongsToMany(models.sondageOptions, { through: "sondageVotes" });
-
-    User.belongsToMany(models.pli, { through: models.appearancePli });
   };
   
   return User;

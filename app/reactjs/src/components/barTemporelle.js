@@ -3,16 +3,18 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { Button } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
 import { ROLES } from "../config/vars";
+import { getTime } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
+import connector from '../connector';
+import endPoints from '../config/endPoints';
 
 export default function BarTemporelle({
   item = {},
-  state = {},
-  setState = () => {},
+  setItem = {},
   showModal = false,
   setShowModal = () => {},
   action = {},
@@ -23,7 +25,38 @@ export default function BarTemporelle({
 }) {
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
-  const [stateTime, setStateTime] = useState();
+  const [isPending, setIsPending] = useState(false);
+
+  const saveTime = ({hour, minute ,second, signe}) => {
+    if (!isPending) {
+      setIsPending(true);
+      connector({
+        method: "post",
+        url: endPoints.PLI_TIME,
+        data: {},
+        success: (response) => {
+          setIsPending(false);
+          const appearances = {...item.appearances, alreadyUpdated: true, signe};
+          if(signe){
+            appearances.countUp = parseInt(item.appearances.countUp) + 1;
+          }else{
+            appearances.countDown = parseInt(item.appearances.countDown) + 1;
+          }
+
+          setItem({
+            ...item,
+            duration: getTime(hour, minute , second),
+            appearances
+          });
+          
+        },
+        catch: (error) => {
+          setIsPending(false);
+
+        },
+      });
+    }
+  }
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
@@ -37,59 +70,39 @@ export default function BarTemporelle({
     }
   };
 
-  const updateTime = (cpState) => {
-    if (cpState?.duration) {
-      const h =
-        String(cpState.duration.hour).length == 1
-          ? "0" + cpState.duration.hour
-          : cpState.duration.hour;
-      const m =
-        String(cpState.duration.minute).length == 1
-          ? "0" + cpState.duration.minute
-          : cpState.duration.minute;
-      const s =
-        String(cpState.duration.second).length == 1
-          ? "0" + cpState.duration.second
-          : cpState.duration.second;
-      setStateTime(h + ":" + m + ":" + s);
-    }
-  };
-
-  useEffect(() => {
-    updateTime(state);
-  }, []);
-
   const upTime = () => {
-    if(state.duration.disabled){
+    if (item.appearances.alreadyUpdated) {
       return;
     }
-    const cpState = { ...state };
-    cpState.duration.minute++;
-    if (cpState.duration.minute >= 60) {
-      cpState.duration.minute = 0;
-      cpState.duration.hour++;
+    let hour, minute, second;
+    [hour, minute, second] = String(item.duration).split(":");
+    hour = parseInt(hour);
+    minute = parseInt(minute);
+    minute++;
+    if (minute >= 60) {
+      minute = 0;
+      hour++;
     }
-    cpState.duration.countUp++;
-    setState(cpState);
-    updateTime(cpState);
+    saveTime({hour, minute ,second, signe:true});
   };
 
   const downTime = () => {
-    if(state.duration.disabled){
+    if (item.appearances.alreadyUpdated) {
       return;
     }
-    const cpState = { ...state };
-    if (cpState.duration.minute == 0) {
-      if (cpState.duration.hour > 0) {
-        cpState.duration.hour--;
-        cpState.duration.minute = 59;
+    let hour, minute, second;
+    [hour, minute, second] = String(item.duration).split(":");
+    hour = parseInt(hour);
+    minute = parseInt(minute);
+    if (minute == 0) {
+      if (hour > 0) {
+        hour--;
+        minute = 59;
       }
     } else {
-      cpState.duration.minute--;
+      minute--;
     }
-    cpState.duration.countDown++;
-    setState(cpState);
-    updateTime(cpState);
+    saveTime({hour, minute ,second, signe:false});
   };
 
   return (
@@ -101,6 +114,11 @@ export default function BarTemporelle({
       />
       <div className="bloc-timer-Bar">
         <Button
+          className={`${
+            item.appearances.alreadyUpdated && !item.appearances.signe
+              ? "active"
+              : ""
+          }`}
           onClick={() => {
             if (!checkIsConnected()) {
               const cpAction = {
@@ -137,13 +155,18 @@ export default function BarTemporelle({
             }
           }}
         >
-          <span className="timer-down">{state?.duration?.countDown}</span>
+          <span className="timer-down">{item?.appearances?.countDown}</span>
           <div className="timer-item">
-            <TimerOutlinedIcon /> {stateTime && (<span>{stateTime}</span>)}
+            <TimerOutlinedIcon /> <span>{item?.duration}</span>
           </div>
-          <span className="timer-up">{state?.duration?.countUp}</span>
+          <span className="timer-up">{item?.appearances?.countUp}</span>
         </div>
         <Button
+          className={`${
+            item.appearances.alreadyUpdated && item.appearances.signe
+              ? "active"
+              : ""
+          }`}
           onClick={() => {
             if (!checkIsConnected()) {
               const cpAction = {

@@ -2,6 +2,7 @@ import CloseFullscreenTwoToneIcon from "@mui/icons-material/CloseFullscreenTwoTo
 import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
+import parse from "html-react-parser";
 import React, { useEffect, useRef, useState } from "react";
 import { MasonryItem, ModalItem } from "../../assets/styles/componentStyle";
 import BarTemporelle from "../barTemporelle";
@@ -14,31 +15,191 @@ import Sondage from "./sondage";
 
 export default function ItemMasonry({
   item,
-  setItem = () => { },
+  setItem = () => {},
   action,
-  setAction = () => { },
+  setAction = () => {},
   activeItem = null,
-  setActiveItem = () => { },
-  setActiveItemPlayer = () => { },
+  setActiveItem = () => {},
+  setActiveItemPlayer = () => {},
   activeItemPlayer = null,
 }) {
   const [state, setState] = useState({
     showModal: false,
     showComment: true,
   });
+  const [data, setData] = useState({
+    media: {
+      sondage: [],
+      image: [],
+      video: [],
+      music: [],
+      count: 0,
+    },
+    mediaOuverture: {
+      sondage: [],
+      image: [],
+      video: [],
+      music: [],
+      count: 0,
+    },
+  });
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
 
   useEffect(() => {
-    if (refHeight.current && (refHeight.current.clientHeight !== null || refHeight.current.clientHeight !== undefined)) {
+    if (
+      refHeight.current &&
+      (refHeight.current.clientHeight !== null ||
+        refHeight.current.clientHeight !== undefined)
+    ) {
       setTimeout(() => {
         setHeight(refHeight.current.clientHeight);
       }, 1000);
     }
   }, []);
 
-  const isCheck = (item) => {
-    return activeItem && item.id == activeItem.id;
+  useEffect(() => {
+    const cpData = { ...data };
+    for (let i = 0; i < item.medias.length; i++) {
+      const cpItem = item.medias[i];
+      if (cpItem.isOuverture) {
+        cpData.mediaOuverture[cpItem.type] = [
+          ...cpData.mediaOuverture[cpItem.type],
+          { ...cpItem },
+        ];
+        cpData.mediaOuverture.count = cpData.mediaOuverture.count + 1;
+      } else {
+        cpData.media[cpItem.type] = [
+          ...cpData.media[cpItem.type],
+          { ...cpItem },
+        ];
+        cpData.media.count = cpData.media.count + 1;
+      }
+    }
+    setData(cpData);
+  }, [item.medias]);
+
+  const isCheck = (i) => {
+    return activeItem && i.id == activeItem.id;
+  };
+
+  const setMedia = (media) => {
+    let cpMedias = [...item.medias];
+    for (var i = 0; i < cpMedias.length; i++) {
+      if (cpMedias[i].id == media.id) {
+        cpMedias[i] = media;
+      }
+    }
+    setItem({ ...item, medias: cpMedias });
+  };
+
+  const renderContentNV1 = () => {
+    return (
+      <>
+        <HeadItem
+          item={item}
+          setItem={setItem}
+          state={state}
+          setState={setState}
+          action={action}
+          setAction={setAction}
+          activeItem={activeItem}
+          setActiveItem={setActiveItem}
+        />
+        <div className="bloc-miniature">
+          {item.content ? (
+            <div className="descripton-miniature">{parse(item.content)}</div>
+          ) : null}
+
+          {data.media.count > 0 && (
+            <div>
+              {data.media.sondage.map((sondage) => (
+                <Sondage
+                  name={`bloc_${sondage.id}`}
+                  item={sondage}
+                  setItem={setMedia}
+                  key={sondage.id}
+                />
+              ))}
+              <ImagesGallery items={data.media.image} />
+              {data.media.video.map((video) => (
+                <PlayerVideo
+                  setActiveItemPlayer={setActiveItemPlayer}
+                  activeItemPlayer={activeItemPlayer}
+                  item={video}
+                  key={video.id}
+                />
+              ))}
+              {data.media.music.map((music) => (
+                <PlayerMusic
+                  setActiveItemMusic={setActiveItemPlayer}
+                  activeItemMusic={activeItemPlayer}
+                  item={music}
+                  key={music.id}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+        <BarTemporelle
+          item={item}
+          setItem={setItem}
+          state={state}
+          setState={setState}
+          action={action}
+          setAction={setAction}
+          activeItem={activeItem}
+          setActiveItem={setActiveItem}
+          className={isCheck(item) ? "" : "nv-hide"}
+        />
+      </>
+    );
+  };
+
+  const renderContentNV2 = () => {
+    return (
+      <>
+        {item.ouverture || data.mediaOuverture.count > 0 ? (
+          <div className="content-bloc-NV2">
+            {item.ouverture && (
+              <div className="descripton-miniature">
+                {parse(item.ouverture)}
+              </div>
+            )}
+
+            {data.mediaOuverture.count > 0 && (
+              <div>
+                {data.mediaOuverture.sondage.map((sondage) => (
+                  <Sondage
+                    name={`bloc_${sondage.id}`}
+                    item={sondage}
+                    setItem={setMedia}
+                    key={sondage.id}
+                  />
+                ))}
+                <ImagesGallery items={data.mediaOuverture.image} />
+                {data.mediaOuverture.video.map((video) => (
+                  <PlayerVideo
+                    setActiveItemPlayer={setActiveItemPlayer}
+                    activeItemPlayer={activeItemPlayer}
+                    item={video}
+                    key={video.id}
+                  />
+                ))}
+                {data.mediaOuverture.music.map((music) => (
+                  <PlayerMusic
+                    setActiveItemMusic={setActiveItemPlayer}
+                    activeItemMusic={activeItemPlayer}
+                    item={music}
+                    key={music.id}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        ) : null}
+      </>
+    );
   };
 
   return (
@@ -52,85 +213,11 @@ export default function ItemMasonry({
         <ModalItem.Body>
           <MasonryItem height={height}>
             <div className="bloc-NV1" ref={refHeight}>
-              <HeadItem
-                item={item}
-                setItem={setItem}
-                state={state}
-                setState={setState}
-                action={action}
-                setAction={setAction}
-                setActiveItem={setActiveItem}
-              />
-              <div className="bloc-miniature">
-                {item.nv1.description ? (
-                  <div className="descripton-miniature">
-                    {item.nv1.description}
-                  </div>
-                ) : null}
-                {item.nv1.media && item.nv1.media.sondage ? (
-                  <Sondage
-                    name={`modal_${item.id}_1`}
-                    niveau={1}
-                    item={item}
-                    setItem={setItem}
-                  />
-                ) : null}
-                {item.nv1.media && item.nv1.media.photos ? (
-                  <ImagesGallery items={item.nv1.media.photos} />
-                ) : null}
-                {item.nv1.media && item.nv1.media.video ? (
-                  <PlayerVideo
-                    setActiveItemPlayer={setActiveItemPlayer}
-                    activeItemPlayer={activeItemPlayer}
-                    item={item.nv1.media.video}
-                  />
-                ) : null}
-                {item.nv1.media && item.nv1.media.music ? (
-                  <PlayerMusic
-                    setActiveItemMusic={setActiveItemPlayer}
-                    activeItemMusic={activeItemPlayer}
-                    item={item.nv1.media.music}
-                  />
-                ) : null}
-              </div>
-              <BarTemporelle state={state} setState={setState} />
+              {renderContentNV1()}
             </div>
             <div className="Bloc-NV2">
               <>
-                {item.nv2 ? (
-                  <div className="content-bloc-NV2">
-                    {item.nv2.description ? (
-                      <div className="descripton-miniature">
-                        {item.nv2.description}
-                      </div>
-                    ) : null}
-                    {item.nv2.media.music ? (
-                      <PlayerMusic
-                        setActiveItemMusic={setActiveItemPlayer}
-                        activeItemMusic={activeItemPlayer}
-                        item={item.nv2.media.music}
-                      />
-                    ) : null}
-                    {item.nv2.media && item.nv2.media.sondage ? (
-                      <Sondage
-                        name={`modal_${item.id}_2`}
-                        niveau={2}
-                        item={item}
-                        setItem={setItem}
-                      />
-                    ) : null}
-                    {item.nv2.media && item.nv2.media.photos ? (
-                      <ImagesGallery items={item.nv2.media.photos} />
-                    ) : null}
-                    {item.nv2.media && item.nv2.media.video ? (
-                      <PlayerVideo
-                        setActiveItemPlayer={setActiveItemPlayer}
-                        activeItemPlayer={activeItemPlayer}
-                        item={item.nv2.media.video}
-                      />
-                    ) : null}
-                  </div>
-                ) : null}
+                {renderContentNV2()}
                 <div
                   className="toggle-pli2"
                   onClick={() => setState({ ...state, showModal: false })}
@@ -169,95 +256,13 @@ export default function ItemMasonry({
       </ModalItem>
       <MasonryItem height={height}>
         <div className="bloc-NV1" ref={refHeight}>
-          <HeadItem
-            item={item}
-            setItem={setItem}
-            state={state}
-            setState={setState}
-            action={action}
-            setAction={setAction}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-          />
-          <div className="bloc-miniature">
-            {item.nv1.description ? (
-              <div className="descripton-miniature">{item.nv1.description}</div>
-            ) : null}
-            {item.nv1.media && item.nv1.media.sondage ? (
-              <Sondage
-                name={`bloc_${item.id}_1`}
-                niveau={1}
-                item={item}
-                setItem={setItem}
-              />
-            ) : null}
-            {item.nv1.media && item.nv1.media.photos ? (
-              <ImagesGallery items={item.nv1.media.photos} />
-            ) : null}
-            {item.nv1.media && item.nv1.media.video ? (
-              <PlayerVideo
-                setActiveItemPlayer={setActiveItemPlayer}
-                activeItemPlayer={activeItemPlayer}
-                item={item.nv1.media.video}
-              />
-            ) : null}
-            {item.nv1.media && item.nv1.media.music ? (
-              <PlayerMusic
-                setActiveItemMusic={setActiveItemPlayer}
-                activeItemMusic={activeItemPlayer}
-                item={item.nv1.media.music}
-              />
-            ) : null}
-          </div>
-          <BarTemporelle
-            item={item}
-            state={state}
-            setState={setState}
-            action={action}
-            setAction={setAction}
-            activeItem={activeItem}
-            setActiveItem={setActiveItem}
-            className={isCheck(item)   ? "" : "nv-hide"}
-          />
+          {renderContentNV1()}
         </div>
-
         <div className="Bloc-NV2">
-          {isCheck(item) ? (
+          {isCheck(item) && (
             <>
-              {item.nv2 ? (
-                <div className="content-bloc-NV2">
-                  {item.nv2.description ? (
-                    <div className="descripton-miniature">
-                      {item.nv2.description}
-                    </div>
-                  ) : null}
-                  {item.nv2.media.music ? (
-                    <PlayerMusic
-                      setActiveItemMusic={setActiveItemPlayer}
-                      activeItemMusic={activeItemPlayer}
-                      item={item.nv2.media.music}
-                    />
-                  ) : null}
-                  {item.nv2.media && item.nv2.media.sondage ? (
-                    <Sondage
-                      name={`bloc_${item.id}_2`}
-                      niveau={2}
-                      item={item}
-                      setItem={setItem}
-                    />
-                  ) : null}
-                  {item.nv2.media && item.nv2.media.photos ? (
-                    <ImagesGallery items={item.nv2.media.photos} />
-                  ) : null}
-                  {item.nv2.media && item.nv2.media.video ? (
-                    <PlayerVideo
-                      setActiveItemPlayer={setActiveItemPlayer}
-                      activeItemPlayer={activeItemPlayer}
-                      item={item.nv2.media.video}
-                    />
-                  ) : null}
-                </div>
-              ) : null}
+              {renderContentNV2()}
+
               <div
                 className="toggle-pli2"
                 onClick={() =>
@@ -275,7 +280,7 @@ export default function ItemMasonry({
               </div>
               <BlocComments item={item} state={state} setState={setState} />
             </>
-          ) : null}
+          )}
         </div>
       </MasonryItem>
     </>

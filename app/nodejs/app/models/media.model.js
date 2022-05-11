@@ -39,7 +39,6 @@ export default function media(sequelize, Sequelize) {
 
   Media.associate = function(models) {
     Media.belongsTo(models.pli, { foreignKey: 'pliId'});
-
     Media.hasMany(models.sondageOptions);
   };
   

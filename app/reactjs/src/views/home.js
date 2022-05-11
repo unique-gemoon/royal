@@ -14,7 +14,7 @@ import videoPli from "../assets/images/video.mp4";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile
+  HeaderMobile,
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -25,15 +25,30 @@ import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
 import connector from "../connector";
+import { getTime } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
   const [plis, setPlis] = useState([]);
+  const [seconds, setSeconds] = useState(0);
 
   useEffect(() => {
     getPlis();
+  }, []);
+
+  useEffect(() => {
+    if (plis.length) {
+        updateDurations();
+    }
+  }, [seconds]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds(seconds => seconds + 1);
+    }, 1000);
+    return () => clearInterval(interval);
   }, []);
 
   const getPlis = () => {
@@ -41,422 +56,13 @@ export default function Home() {
       method: "get",
       url: `${endPoints.PLIS}`,
       success: (response) => {
-        setPlis(response.plis || []);
+        setPlis(response.data.plis);
       },
       catch: (error) => {
         console.log(error);
       },
     });
   };
-
-  const [dataMasonry, setDataMasonry] = useState([
-    {
-      id: 1,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        media: {
-          music: {
-            id: 12,
-            name: "Plants",
-            genre: "Crumb",
-            lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-          },
-        },
-      },
-      nv2: {
-        description:
-          "Voici mon nouveau son du moment, qu'est ce que vous en pensez ?",
-
-        media: {
-          music: {
-            id: 22,
-            name: "Plants",
-            genre: "Crumb",
-            lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-          },
-          photos: [
-            {
-              id: 1,
-              source: imgPli,
-            },
-          ],
-          video: {
-            id: 1,
-            src: videoPli,
-          },
-        },
-      },
-      comments: [
-        {
-          id: 1,
-          user: "Dan",
-          subject: "J'aime bien cette citation !",
-          time: "3mn",
-          citation: {
-            citationUser: "Jacquou",
-            citationText: "Voici une citation",
-          },
-          reponses: [
-            {
-              id: 1,
-              user: "Lys",
-              subject: "J'aime bien cette citation !",
-              time: "2mn",
-              userRep: "Dan",
-            },
-            {
-              id: 2,
-              user: "Dan",
-              subject: "J'aime bien cette citation !",
-              time: "2mn",
-              userRep: "Lys",
-            },
-            {
-              id: 3,
-              user: "Jacquou",
-              subject: "J'aime bien cette citation !",
-              time: "2mn",
-              userRep: "Dan",
-            },
-            {
-              id: 4,
-              user: "Dan",
-              subject: "J'aime bien cette citation !",
-              time: "2mn",
-              userRep: "Jacquou",
-            },
-          ],
-        },
-        {
-          id: 2,
-          user: "Dan",
-          subject: "J'aime bien cette citation !",
-          time: "3mn",
-          cotte: true,
-          reponses: [
-            {
-              id: 1,
-              user: "Lys",
-              subject: "J'aime bien cette citation !",
-              time: "2mn",
-              userRep: "Dan",
-            },
-          ],
-        },
-        {
-          id: 3,
-          user: "Dan",
-          subject: "J'aime bien cette citation !",
-          time: "3mn",
-        },
-        {
-          id: 4,
-          user: "Dan",
-          subject: "J'aime bien cette citation !",
-          time: "3mn",
-        },
-      ],
-    },
-    {
-      id: 2,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        media: {
-          music: {
-            id: 32,
-            name: "Plants",
-            genre: "Crumb",
-            lien: "https://www.mfiles.co.uk/mp3-downloads/brahms-st-anthony-chorale-theme-two-pianos.mp3",
-          },
-        },
-      },
-    },
-    {
-      id: 3,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: true,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          sondage: [
-            {
-              id: 1,
-              label: "Emmanuel Macron",
-              countQte: "38%",
-              choix: false,
-              value: "Emmanuel-Macron0",
-            },
-            {
-              id: 2,
-              label: "Eric Zemmour",
-              countQte: "35%",
-              choix: false,
-              value: "Eric-Zemmour0",
-            },
-            {
-              id: 3,
-              label: "Marine Le Pen",
-              countQte: "27%",
-              choix: false,
-              value: "Marine-Pen0",
-            },
-          ],
-        },
-      },
-    },
-    {
-      id: 4,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: (
-          <>
-            On the 10th anniversary of the passage of the #CVAA10, we celebrate
-            the brilliant minds and technologies that continue to build a more
-            equitable world.
-            <br />
-            On the 10th anniversary of the passage of the #CVAA10, we celebrate
-            the brilliant minds and technologies that continue to build a more
-            equitable world and technologies that continue to build a more
-            equitable world.{" "}
-          </>
-        ),
-      },
-      nv2: {
-        media: {
-          sondage: [
-            {
-              id: 1,
-              label: "Emmanuel Macron",
-              countQte: "38%",
-              choix: false,
-              value: "Emmanuel-Macron3",
-            },
-            {
-              id: 2,
-              label: "Eric Zemmour",
-              countQte: "35%",
-              choix: false,
-              value: "Eric-Zemmour3",
-            },
-            {
-              id: 3,
-              label: "Marine Le Pen",
-              countQte: "27%",
-              choix: false,
-              value: "Marine-Pen3",
-            },
-          ],
-        },
-      },
-    },
-    {
-      id: 5,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          photos: [
-            {
-              id: 1,
-              source: imgPli,
-            },
-            {
-              id: 2,
-              source: imgPli,
-            },
-            {
-              id: 3,
-              source: imgPli,
-            },
-            {
-              id: 4,
-              source: imgPli,
-            },
-          ],
-        },
-      },
-    },
-    {
-      id: 6,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          video: {
-            id: 2,
-            src: videoPli,
-          },
-        },
-      },
-    },
-    {
-      id: 7,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: true,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          sondage: [
-            {
-              id: 1,
-              label: "Emmanuel Macron",
-              countQte: "38%",
-              choix: false,
-              value: "Emmanuel-Macron1",
-            },
-            {
-              id: 2,
-              label: "Eric Zemmour",
-              countQte: "35%",
-              choix: false,
-              value: "Eric-Zemmour1",
-            },
-            {
-              id: 3,
-              label: "Marine Le Pen",
-              countQte: "27%",
-              choix: false,
-              value: "Marine-Pen1",
-            },
-          ],
-        },
-      },
-    },
-    {
-      id: 8,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          video: {
-            id: 3,
-            src: videoPli,
-          },
-        },
-      },
-    },
-    {
-      id: 9,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          photos: [
-            {
-              id: 1,
-              source: imgPli,
-            },
-            {
-              id: 2,
-              source: imgPli,
-            },
-          ],
-        },
-      },
-    },
-    {
-      id: 10,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          photos: [
-            {
-              id: 1,
-              source: imgPli,
-            },
-            {
-              id: 2,
-              source: imgPli,
-            },
-            {
-              id: 3,
-              source: imgPli,
-            },
-          ],
-        },
-      },
-    },
-    {
-      id: 11,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: (
-          <>
-            On the 10th anniversary of the passage of the #CVAA10, we celebrate
-            the brilliant minds and technologies that continue to build a more
-            equitable world.
-            <br />
-            On the 10th anniversary of the passage of the #CVAA10, we celebrate
-            the brilliant minds and technologies that continue to build a more
-            equitable world and technologies that continue to build a more
-            equitable world.{" "}
-          </>
-        ),
-      },
-    },
-    {
-      id: 12,
-      namePost: "Jacob",
-      abonnes: 109,
-      abonnements: 109,
-      statutAbonne: false,
-      etatOuvert: false,
-      nv1: {
-        description: "On the 10th anniversary of the passage of the #CVAA10",
-        media: {
-          photos: [
-            {
-              id: 1,
-              source: imgPli,
-            },
-          ],
-        },
-      },
-    },
-  ]);
 
   const [dataNotifs, setDataNotifs] = useState([
     {
@@ -509,13 +115,46 @@ export default function Home() {
   const auth = useSelector((store) => store.auth);
 
   const setItem = (item) => {
-    const cpDataMasonry = [...dataMasonry];
-    for (var i = 0; i < cpDataMasonry.length; i++) {
-      if (cpDataMasonry[i].id == item.id) {
-        cpDataMasonry[i] = item;
+    const cpPlis = [...plis];
+    for (var i = 0; i < cpPlis.length; i++) {
+      if (cpPlis[i].id == item.id) {
+        cpPlis[i] = item;
       }
     }
-    setDataMasonry(cpDataMasonry);
+    setPlis(cpPlis);
+  };
+
+  const updateDurations = () => {
+    if (plis.length) {
+      let hour, minute, second;
+      const cpPlis = [];
+      for (let i = 0; i < plis.length; i++) {
+        const cpPli = {...plis[i]};
+        [hour, minute, second] = String(cpPli.duration).split(":");
+        hour = parseInt(hour);
+        minute = parseInt(minute);
+        second = parseInt(second);
+        if (second == 0) {
+          if (minute == 0) {
+            if (hour > 0) {
+              hour--;
+              minute = 59;
+              second = 59;
+            }
+          } else {
+            minute--;
+            second = 59;
+          }
+        } else {
+          second--;
+        }
+        cpPli.duration = getTime(hour, minute, second);
+        if (hour > 0 || minute > 0 || second > 0) {
+          cpPlis.push(cpPli);
+        }
+      }
+      setPlis(cpPlis);
+    }
   };
 
   const [action, setAction] = useState({
@@ -592,39 +231,22 @@ export default function Home() {
               message={msgNotifTop}
             />
           )}
-          <Masonry columns={{ xs: 1, md: 2, lg: dataMasonry.length >= 3 ? 3 : 2 }} spacing={3}>
-
-   {/*        {plis.map((item) => (
-              <div key={item.id}>
-                <ItemMasonry
-                  item={item}
-                  setItem={setItem}
-                  action={action}
-                  setAction={setAction}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                  activeItemPlayer={activeItemPlayer}
-                  setActiveItemPlayer={setActiveItemPlayer}
-                />
-              </div>
-            ))} */}
-
-
-
-            {dataMasonry.map((item) => (
-              <div key={item.id}>
-                <ItemMasonry
-                  item={item}
-                  setItem={setItem}
-                  action={action}
-                  setAction={setAction}
-                  activeItem={activeItem}
-                  setActiveItem={setActiveItem}
-                  activeItemPlayer={activeItemPlayer}
-                  setActiveItemPlayer={setActiveItemPlayer}
-                />
-              </div>
-            ))}
+          <Masonry columns={{ xs: 1, md: 2, lg: plis.length >= 3 ? 3 : 2 }} spacing={3}>
+            {plis &&
+              plis.map((item) => (
+                <div key={item.id}>
+                  <ItemMasonry
+                    item={item}
+                    setItem={setItem}
+                    action={action}
+                    setAction={setAction}
+                    activeItem={activeItem}
+                    setActiveItem={setActiveItem}
+                    activeItemPlayer={activeItemPlayer}
+                    setActiveItemPlayer={setActiveItemPlayer}
+                  />
+                </div>
+              ))}
           </Masonry>
         </ContainerDef>
 
@@ -638,6 +260,7 @@ export default function Home() {
             setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
             setMsgNotifTopTime={setMsgNotifTopTime}
+            getPlis={getPlis}
           />
         )}
       </StyledEngineProvider>

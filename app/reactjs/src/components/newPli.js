@@ -14,7 +14,7 @@ import { useOutsideAlerter } from "../helper/events";
 import { getMsgError } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 import AddSondage from "./addSondage";
-import BarTemporelle from "./barTemporelle";
+import BarTemporellePli from "./barTemporellePli";
 import ErrorFormMessage from "./errorFormMessage";
 import NewOuvertureOptions from "./newOuvertureOptions";
 import NewPliOptions from "./newPliOptions";
@@ -27,6 +27,7 @@ export default function NewPli({
   setAction = () => {},
   setMsgNotifTop = () => {},
   setMsgNotifTopTime = () => {},
+  getPlis = () => {},
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const [state, setState] = useState({
@@ -256,6 +257,7 @@ export default function NewPli({
               10000
             );
             setTogglePli(false);
+            getPlis();
           },
           catch: (error) => {
             msgErrors({ msg: getMsgError(error), submit: false });
@@ -388,7 +390,6 @@ export default function NewPli({
                       maxOption={state.sondage.maxOptions}
                       sondage={state.sondage}
                       setSondage={(e) => {
-                        console.log("setSondage", e);
                         setState({
                           ...state,
                           sondage: e,
@@ -427,7 +428,7 @@ export default function NewPli({
                     </div>
                   </div>
                 </div>
-                <BarTemporelle state={state} setState={setState} />
+                <BarTemporellePli state={state} setState={setState} />
               </div>
               {addOuverture && (
                 <div className="new-pli-nv2">

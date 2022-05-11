@@ -9,12 +9,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
 
-export default function Sondage({ name, niveau, item, setItem }) {
-  const [items] = useState(
-    niveau == 1 ? [...item.nv1.media.sondage] : [...item.nv2.media.sondage]
-  );
+export default function Sondage({ name, item, setItem }) {
+  const [options, setOptions] = useState([]);
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
+
+  const getOptions = () => {
+    const cpOptions = [];
+    if (item.options) {
+      for (let i = 0; i < item.options.length; i++) {
+        const option = item.options[i];
+        cpOptions.push({ label: option.name, value: option.id });
+      }
+    }
+    return cpOptions;
+  };
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
@@ -30,43 +39,33 @@ export default function Sondage({ name, niveau, item, setItem }) {
 
   return (
     <>
-      {items ? (
+      {options ? (
         <SondageBloc>
           {!item.result && (
             <>
               <RadioButton
                 className="bloc-choix-sondage"
-                options={items}
-                value={item.value}
+                options={getOptions()}
+                value={item?.value ? item.value : ""}
                 name={name}
                 onChange={(val) => {
-                    if(checkIsConnected()){
-                  for (let i = 0; i < items.length; i++) {
-                    if (items[i].value == val.value) {
-                      items[i].choix = true;
-                    } else {
-                      items[i].choix = false;
+                  if (checkIsConnected()) {
+                    const cpItem = {...item};
+                    for (let i = 0; i < cpItem.options.length; i++) {
+                      const option = cpItem.options[i];
+                      const choix = option.id == val.value ? true : false;
+                      cpItem.options[i] = { ...option, choix };
                     }
+                    setItem({ ...cpItem, value: val.value });
                   }
-                  if (niveau == 1) {
-                    setItem({
-                      ...item,
-                      value: val.value,
-                      nv1: { ...item.nv1, sondage: items },
-                    });
-                  } else if (niveau == 2) {
-                    setItem({
-                      ...item,
-                      value: val.value,
-                      nv2: { ...item.nv2, sondage: items },
-                    });
-                  }}
                 }}
               />
               <p
                 className="btn-show-result"
                 onClick={() => {
-                    if(checkIsConnected()){setItem({ ...item, result: true });}
+                  if (checkIsConnected()) {
+                    setItem({ ...item, result: true });
+                  }
                 }}
               >
                 Voir les résultats
@@ -76,13 +75,18 @@ export default function Sondage({ name, niveau, item, setItem }) {
 
           {item.result && (
             <div className="bloc-result-sondage">
-              {items.map((val, index) => (
-                <ItemResultSondage key={index} purcentage={val.countQte}>
+              {item.options.map((option, index) => (
+                <ItemResultSondage
+                  key={index}
+                  purcentage={option.countQte || 0}
+                >
                   <div className="content-result-sondage">
-                    <span>{val.label}</span>{" "}
-                    {val.choix ? <CheckCircleOutlineIcon /> : null}
+                    <span>{option.name}</span>{" "}
+                    {option.choix && <CheckCircleOutlineIcon />}
                   </div>
-                  <span className="purcentage-item">{val.countQte}</span>
+                  <span className="purcentage-item">
+                    {option.countQte || 0}
+                  </span>
                 </ItemResultSondage>
               ))}
             </div>

@@ -13,12 +13,15 @@ import VisibilityIcon from "@mui/icons-material/Visibility";
 import { Button } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip from "@mui/material/Tooltip";
-import React, { useEffect, useState } from "react";
-import { useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import BallotIcon from "../../assets/images/icons/ballotIcon";
-import { DetailsItems, HeadContentItem, PlusIcon } from "../../assets/styles/globalStyle";
+import {
+  DetailsItems,
+  HeadContentItem,
+  PlusIcon,
+} from "../../assets/styles/globalStyle";
 import { ROLES } from "../../config/vars";
 import { useOutsideAlerter } from "../../helper/events";
 import * as actionTypes from "../../store/functions/actionTypes";
@@ -28,13 +31,13 @@ export default function HeadItem({
   state,
   setState,
   action,
-  setAction = () => { },
+  setAction = () => {},
   activeItem,
-  setActiveItem = () => { },
+  setActiveItem = () => {},
 }) {
   const [toggleProfile, setToggleProfile] = useState(false);
   const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
-  const [allMedia, setAllMedia] = useState([]);
+  const [mediaIcons, setMediaIcons] = useState([]);
   const handleTooltipClose = () => {
     setToggleProfile(false);
   };
@@ -59,34 +62,22 @@ export default function HeadItem({
 
   useEffect(() => {
     if (item) {
-      let cpAllMedia = [];
-      if ((item.nv1 && item.nv1.description) || (item.nv1.description && (item.nv1.media && !item.nv1.media.soundage)) ||
-        (item.nv2 && item.nv2.description)) {
-        cpAllMedia.push("description");
+      let cpMediaIcons = [];
+      if (item.content != "" || item.ouverture != "") {
+        cpMediaIcons.push("description");
       }
-
-      if ((item.nv1.media && item.nv1.media.music) || (item.nv2 && item.nv2.media.music)) {
-        cpAllMedia.push("music");
+      if (item.medias.length > 0) {
+        for (let i = 0; i < item.medias.length; i++) {
+          if (!cpMediaIcons.includes(item.medias[i].type)) {
+            cpMediaIcons.push(item.medias[i].type);
+          }
+        }
       }
-
-      if ((item.nv1.media && item.nv1.media.soundage) || (item.nv2 && item.nv2.media.soundage)) {
-        cpAllMedia.push("soundage");
-      }
-
-      if ((item.nv1.media && item.nv1.media.photos) || (item.nv2 && item.nv2.media.photos)) {
-        cpAllMedia.push("photos");
-      }
-
-      if ((item.nv1.media && item.nv1.media.video) || (item.nv2 && item.nv2.media.video)) {
-        cpAllMedia.push("video");
-      }
-      setAllMedia(cpAllMedia);
+      setMediaIcons(cpMediaIcons);
     }
   }, [item]);
 
-
-  const [showAllMedia, setShowAllMedia] = useState(false);
-
+  const [showMediaIcons, setShowMediaIcons] = useState(false);
 
   const [CopyOpen, setCopyOpen] = useState(false);
   const handleCopyClose = () => {
@@ -99,160 +90,174 @@ export default function HeadItem({
 
   const ref = useRef(null);
   useOutsideAlerter(ref, () => {
-    setShowAllMedia(false);
+    setShowMediaIcons(false);
   });
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
-        <DetailsItems className={allMedia.length > 1 && "is-other-media"}>
-          {allMedia.length && allMedia.map((media, index) => (
-            
-            <div key={index}>
-              {(index == 0) && media === "description" && (
-                <div className="item-detail format-text-detail">
-                  <FormatSizeIcon />
-                </div>
-              )}
-              {(index == 0) && media === "music" && (
-                <div className="item-detail sound-detail">
-                  <GraphicEqIcon />
-                </div>
-              )}
-              {(index == 0) && media === "soundage" && (
-                <div className="item-detail soundage-detail">
-                  <BallotIcon />
-                </div>
-              )}
-              {(index == 0) && media === "photos" && (
-                <div className="item-detail image-detail">
-                  <ImageIcon />
-                </div>
-              )}
-              {(index == 0) && media == "video" && (
-                <div className="item-detail video-detail">
-                  <PlayArrowIcon />
-                </div>
-              )}
-            </div>
-          ))
-          }
+        <DetailsItems className={mediaIcons.length > 1 && "is-other-media"}>
+          {mediaIcons.length > 0 &&
+            mediaIcons.map((media, index) => (
+              <div key={index}>
+                {index == 0 && media === "description" && (
+                  <div className="item-detail format-text-detail">
+                    <FormatSizeIcon />
+                  </div>
+                )}
+                {index == 0 && media === "music" && (
+                  <div className="item-detail sound-detail">
+                    <GraphicEqIcon />
+                  </div>
+                )}
+                {index == 0 && media === "sondage" && (
+                  <div className="item-detail sondage-detail">
+                    <BallotIcon />
+                  </div>
+                )}
+                {index == 0 && media === "image" && (
+                  <div className="item-detail image-detail">
+                    <ImageIcon />
+                  </div>
+                )}
+                {index == 0 && media == "video" && (
+                  <div className="item-detail video-detail">
+                    <PlayArrowIcon />
+                  </div>
+                )}
+              </div>
+            ))}
           <div className="bloc-more-medias" ref={ref}>
-            <div className={`mediaDetails ${showAllMedia ? "showMedia" : ""}`}>
-              {allMedia.length && allMedia.map((media, index) => (
-
-                <div key={index}>
-
-                  {index > 0 ? (<>
-                    {showAllMedia && media == "description" && (
-                      <div className="item-detail format-text-detail">
-                        <FormatSizeIcon />
-                      </div>
+            <div
+              className={`mediaDetails ${showMediaIcons ? "showMedia" : ""}`}
+            >
+              {mediaIcons.length > 0 &&
+                mediaIcons.map((media, index) => (
+                  <div key={index}>
+                    {index > 0 ? (
+                      <>
+                        {showMediaIcons && media == "description" && (
+                          <div className="item-detail format-text-detail">
+                            <FormatSizeIcon />
+                          </div>
+                        )}
+                        {showMediaIcons && media == "music" && (
+                          <div className="item-detail sound-detail">
+                            <GraphicEqIcon />
+                          </div>
+                        )}
+                        {showMediaIcons && media == "sondage" && (
+                          <div className="item-detail sondage-detail">
+                            <BallotIcon />
+                          </div>
+                        )}
+                        {showMediaIcons && media == "image" && (
+                          <div className="item-detail image-detail">
+                            <ImageIcon />
+                          </div>
+                        )}
+                        {showMediaIcons && media == "video" && (
+                          <div className="item-detail video-detail">
+                            <PlayArrowIcon />
+                          </div>
+                        )}
+                      </>
+                    ) : (
+                      ""
                     )}
-                    {showAllMedia && media == "music" && (
-                      <div className="item-detail sound-detail">
-                        <GraphicEqIcon />
-                      </div>
-                    )}
-                    {showAllMedia && media == "soundage" && (
-                      <div className="item-detail soundage-detail">
-                        <BallotIcon />
-                      </div>
-                    )}
-                    {showAllMedia && media == "photos" && (
-                      <div className="item-detail image-detail">
-                        <ImageIcon />
-                      </div>
-                    )}
-                    {showAllMedia && media == "video" && (
-                      <div className="item-detail video-detail">
-                        <PlayArrowIcon />
-                      </div>
-                    )}
-                  </>) : ""}
-                </div>
-              ))
-              }
+                  </div>
+                ))}
             </div>
-            {allMedia.length > 1 && (<div className={`item-detail more-media ${showAllMedia ? "is-showing" : ""}`} onClick={() => { setShowAllMedia(!showAllMedia); }}><PlusIcon /></div>)}
+            {mediaIcons.length > 1 && (
+              <div
+                className={`item-detail more-media ${
+                  showMediaIcons ? "is-showing" : ""
+                }`}
+                onClick={() => {
+                  setShowMediaIcons(!showMediaIcons);
+                }}
+              >
+                <PlusIcon />
+              </div>
+            )}
           </div>
         </DetailsItems>
         <div className="d-flex">
-        <ClickAwayListener onClickAway={handleTooltipClose}>
-          <div className="user-info-tooltip">
-            <Tooltip
-              PopperProps={{
-                disablePortal: true,
-              }}
-              className="tooltip-post"
-              arrow
-              onClose={handleTooltipClose}
-              open={toggleProfile}
-              disableFocusListener
-              disableHoverListener
-              disableTouchListener
-              placement="top"
-              title={
-                <>
-                  <div className="tooltip-info-post">
-                    <span className="name-post">{item.namePost}</span>
-                    <div className="detail-ifo-post">
-                      <div className="folowers-post">
-                        <p className="abonnes-post">
-                          <span>{item.abonnes}</span>
-                          abonnés
-                        </p>
-                        <p className="abonnes-post">
-                          <span>{item.abonnes}</span>
-                          abonnements
-                        </p>
+          <ClickAwayListener onClickAway={handleTooltipClose}>
+            <div className="user-info-tooltip">
+              <Tooltip
+                PopperProps={{
+                  disablePortal: true,
+                }}
+                className="tooltip-post"
+                arrow
+                onClose={handleTooltipClose}
+                open={toggleProfile}
+                disableFocusListener
+                disableHoverListener
+                disableTouchListener
+                placement="top"
+                title={
+                  <>
+                    <div className="tooltip-info-post">
+                      <span className="name-post">{item.user.username}</span>
+                      <div className="detail-ifo-post">
+                        <div className="folowers-post">
+                          <p className="abonnes-post">
+                            <span>{item.abonnes}</span>
+                            abonnés
+                          </p>
+                          <p className="abonnes-post">
+                            <span>{item.abonnes}</span>
+                            abonnements
+                          </p>
+                        </div>
+                        <div className="tooltip-btns-action">
+                          <Button
+                            onClick={() => {
+                              if (!checkIsConnected()) {
+                                setState({ ...state, showModal: false });
+                              }
+                            }}
+                            className="toggle-item-message"
+                          >
+                            <MailOutlineRoundedIcon />
+                          </Button>
+                          <Button
+                            onClick={() => {
+                              if (checkIsConnected()) {
+                                setStatutFolower(!statutFolower);
+                              } else {
+                                setState({ ...state, showModal: false });
+                              }
+                            }}
+                            className="btn-switch-folowers"
+                          >
+                            {statutFolower ? (
+                              <>
+                                S'abonner
+                                <PersonAddAltOutlinedIcon />
+                              </>
+                            ) : (
+                              <>
+                                {" "}
+                                Abonner
+                                <PersonRemoveOutlinedIcon />
+                              </>
+                            )}
+                          </Button>
+                        </div>
                       </div>
-                      <div className="tooltip-btns-action">
-                        <Button
-                          onClick={() => {
-                            if (!checkIsConnected()) {
-                              setState({ ...state, showModal: false });
-                            }
-                          }}
-                          className="toggle-item-message"
-                        >
-                          <MailOutlineRoundedIcon />
-                        </Button>
-                        <Button
-                          onClick={() => {
-                            if (checkIsConnected()) {
-                              setStatutFolower(!statutFolower);
-                            } else {
-                              setState({ ...state, showModal: false });
-                            }
-                          }}
-                          className="btn-switch-folowers"
-                        >
-                          {statutFolower ? (
-                            <>
-                              S'abonner
-                              <PersonAddAltOutlinedIcon />
-                            </>
-                          ) : (
-                            <>
-                              {" "}
-                              Abonner
-                              <PersonRemoveOutlinedIcon />
-                            </>
-                          )}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>{" "}
-                </>
-              }
-            >
-              <span className="name-post" onClick={handleTooltipOpen}>
-                {item.namePost}
-              </span>
-            </Tooltip>
-          </div>
-        </ClickAwayListener>
-        <span className="timer-post"> . 12</span>
+                    </div>{" "}
+                  </>
+                }
+              >
+                <span className="name-post" onClick={handleTooltipOpen}>
+                  {item.user.username}
+                </span>
+              </Tooltip>
+            </div>
+          </ClickAwayListener>
+          <span className="timer-post"> . 12</span>
         </div>
       </div>
       <div className="option-item">
@@ -270,7 +275,8 @@ export default function HeadItem({
           <div
             className="users-enligne-pli"
             onClick={() => {
-              state && setState({ ...state, showModal: true, showComment: true });
+              state &&
+                setState({ ...state, showModal: true, showComment: true });
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -287,7 +293,11 @@ export default function HeadItem({
           </div>
         )}
         <div
-          className={`nb-message-comment ${(activeItem && activeItem.id == item.id) || state.showModal ? "comment-is-open" : ""}`}
+          className={`nb-message-comment ${
+            (activeItem && activeItem.id == item.id) || state.showModal
+              ? "comment-is-open"
+              : ""
+          }`}
           onClick={() => {
             if (state.showModal) {
               setState({ ...state, showModal: false });
@@ -300,7 +310,9 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
+              setActiveItem(
+                activeItem && activeItem.id == item.id ? null : item
+              );
             }
           }}
         >
@@ -322,10 +334,9 @@ export default function HeadItem({
                 <InsertLinkIcon onClick={handleCopyOpen} />
               </Tooltip>
             </div>
-            </ClickAwayListener>
+          </ClickAwayListener>
         </div>
       </div>
-      {/* <HeadOptionItem item={item} setItem={setItem} />  */}
     </HeadContentItem>
   );
 }

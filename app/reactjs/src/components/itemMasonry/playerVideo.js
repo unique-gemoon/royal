@@ -2,6 +2,7 @@
 import React, { useEffect } from 'react';
 import { BlocVideoPlayer } from '../../assets/styles/componentStyle';
 import VideoJs from '../videoJs';
+import { getPathMedia } from '../../helper/fonctions';
 
 export default function PlayerVideo({ item, activeItemPlayer, setActiveItemPlayer = () => { }, }) {
     const playerRef = React.useRef(null);
@@ -12,7 +13,7 @@ export default function PlayerVideo({ item, activeItemPlayer, setActiveItemPlaye
         responsive: true,
         fluid: true,
         sources: [{
-            src: item.src,
+            src: getPathMedia(item.path,"video"),
             type: 'video/mp4'
         }]
     }
@@ -35,23 +36,12 @@ export default function PlayerVideo({ item, activeItemPlayer, setActiveItemPlaye
         })
     };
     useEffect(() => {
-
-        if (activeItemPlayer && activeItemPlayer.src && activeItemPlayer.id != item.id) {
+        if (activeItemPlayer && activeItemPlayer.path && activeItemPlayer.id != item.id) {
             if (playerRef.current != null) {
                 playerRef.current.pause()
             }
         }
     }, [activeItemPlayer])
-
-    // const changePlayerOptions = () => {
-    //   // you can update the player through the Video.js player instance
-    //   if (!playerRef.current) {
-    //     return;
-    //   }
-    //   // [update player through instance's api]
-    //   playerRef.current.src([{src: 'http://ex.com/video.mp4', type: 'video/mp4'}]);
-    //   playerRef.current.autoplay(false);
-    // };
 
     return (
         <BlocVideoPlayer>
