@@ -27,13 +27,13 @@ export default function BarTemporelle({
   const auth = useSelector((store) => store.auth);
   const [isPending, setIsPending] = useState(false);
 
-  const saveTime = ({ hour, minute, second, signe }) => {
+  const saveTime = ({ signe }) => {
     if (!isPending) {
       setIsPending(true);
       connector({
         method: "post",
         url: endPoints.PLI_TIME,
-        data: { duration: "00:01:00" , allottedTime: 1, signe, id: item.id },
+        data: { duration: "00:01:00", allottedTime: 1, signe, id: item.id },
         success: (response) => {
           setIsPending(false);
           const appearances = {
@@ -48,7 +48,8 @@ export default function BarTemporelle({
           }
           setItem({
             ...item,
-            duration: getTime(hour, minute, second),
+            duration: response.data.pli.duration,
+            allottedTime : response.data.pli.allottedTime,
             appearances,
           });
         },
@@ -84,7 +85,7 @@ export default function BarTemporelle({
       minute = 0;
       hour++;
     }
-    saveTime({ hour, minute, second, signe: true });
+    saveTime({ signe: true });
   };
 
   const downTime = () => {
@@ -103,7 +104,20 @@ export default function BarTemporelle({
     } else {
       minute--;
     }
-    saveTime({ hour, minute, second, signe: false });
+    saveTime({ signe: false });
+  };
+
+  const getPercentDuration = () => {
+    if (!item.duration || !item.allottedTime) {
+      return 0;
+    }
+    let hour, minute, second;
+    [hour, minute, second] = String(item.duration).split(":");
+    hour = parseInt(hour);
+    minute = parseInt(minute);
+    second = parseInt(second);
+    const durationSecond = hour * 3600 + minute * 60 + second;
+    return (durationSecond * 100) / (parseInt(item.allottedTime) * 60);
   };
 
   return (
@@ -111,7 +125,7 @@ export default function BarTemporelle({
       <LinearProgress
         className="progressBar-item"
         variant="determinate"
-        value={100}
+        value={getPercentDuration()}
       />
       <div className="bloc-timer-Bar">
         <Button

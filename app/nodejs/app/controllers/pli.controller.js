@@ -315,6 +315,7 @@ export function findAllPlisNotElapsed(req, res, next) {
           const content = cpPli.content;
           const ouverture = cpPli.ouverture;
           const duration = durationTime(cpPli.createdAt, cpPli.allottedTime);
+          const allottedTime = cpPli.allottedTime;
           const medias = cpPli.medias;
           const user = cpPli.user;
           const createdAt = cpPli.createdAt;
@@ -325,6 +326,7 @@ export function findAllPlisNotElapsed(req, res, next) {
             content,
             ouverture,
             duration,
+            allottedTime,
             medias,
             user,
             appearances,
@@ -419,7 +421,14 @@ export function updateAppearancePli(req, res) {
           { where: { id: req.pli.id } }
         )
           .then((resp) => {
-            res.status(200).json({ message: "ok" });
+            const duration = durationTime(req.pli.createdAt, allottedTime);
+            res.status(200).json({
+              message: "ok",
+              pli: {
+                duration,
+                allottedTime,
+              },
+            });
           })
           .catch((err) => {
             res.status(500).send({ message: err.message });

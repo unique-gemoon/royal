@@ -18,7 +18,7 @@ export const getMsgError = (error, msg = "Quelque chose s'est mal passé.") => {
   return msg;
 };
 
-export function getPathMedia(media,type="file") {
+export function getPathMedia(media, type = "file") {
   if (!media) return type == "image" ? noImage : null;
   return media.file
     ? URL.createObjectURL(media.file)
@@ -33,4 +33,3 @@ export function getTime(hour, minute, second) {
   const s = String(second).length == 1 ? "0" + second : second;
   return h + ":" + m + ":" + s;
 }
-
