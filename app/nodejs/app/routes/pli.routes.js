@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { isConnectedUser } from "../controllers/auth.controller.js";
+import { getUserAuthenticated } from "../controllers/auth.controller.js";
 import {
   findPliById,
   findAllPlisNotElapsed,
@@ -16,23 +16,17 @@ const pliRoutes = Router();
 pliRoutes.post(
   "/new",
   passport.authenticate("jwt", { session: false }),
-  isConnectedUser,
   findPliUserNotElapsed,
   uploadMedia,
   checkDataPli,
   newPli
 );
 
-pliRoutes.get(
-  "/list",
-  passport.authenticate("jwt", { session: false }),
-  findAllPlisNotElapsed
-);
+pliRoutes.get("/list", getUserAuthenticated, findAllPlisNotElapsed);
 
 pliRoutes.post(
   "/time",
   passport.authenticate("jwt", { session: false }),
-  isConnectedUser,
   checkDataPliTime,
   findPliById,
   updateAppearancePli

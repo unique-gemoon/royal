@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import {checkEmailExiste, checkDuplicateUsernameOrEmail, checkTokenExiste, checkDataSignin, checkDataSignup, deleteAccount} from "../middleware/checkUser.js";
+import {checkEmailExiste, checkDuplicateUsernameOrEmail, checkTokenExiste, checkDataSignin, checkDataSignup, deleteAccount, checkTokenConfirmEmailExiste} from "../middleware/checkUser.js";
 import * as controller from "../controllers/auth.controller.js";
 
 const authRoutes = Router();
@@ -13,12 +13,14 @@ authRoutes.post("/forgot-password", checkEmailExiste, controller.forgotPassword)
 
 authRoutes.post("/rest-password", checkTokenExiste, controller.restPassword);
 
+
+authRoutes.post("/confirm-email", checkTokenConfirmEmailExiste, controller.confirmEmail);
+
 authRoutes.post("/refresh-token", controller.verifyRefreshToken);
 
 authRoutes.get(
   "/profile",
   passport.authenticate("jwt", { session: false }),
-  controller.isConnectedUser,
   (req, res) => {
     res.status(200).json({id : req.user.id , username : req.user.username,email : req.user.email});
   }
@@ -27,7 +29,6 @@ authRoutes.get(
 authRoutes.get(
   "/delete-account",
   passport.authenticate("jwt", { session: false }),
-  controller.isConnectedUser,
   deleteAccount
 );
 

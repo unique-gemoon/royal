@@ -23,11 +23,7 @@ export default function ItemMasonry({
   setActiveItemPlayer = () => {},
   activeItemPlayer = null,
 }) {
-  const [state, setState] = useState({
-    showModal: false,
-    showComment: true,
-  });
-  const [data, setData] = useState({
+  const initData = {
     media: {
       sondage: [],
       image: [],
@@ -42,7 +38,12 @@ export default function ItemMasonry({
       music: [],
       count: 0,
     },
+  };
+  const [state, setState] = useState({
+    showModal: false,
+    showComment: true,
   });
+  const [data, setData] = useState({ ...initData });
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
 
@@ -59,7 +60,7 @@ export default function ItemMasonry({
   }, []);
 
   useEffect(() => {
-    const cpData = { ...data };
+    const cpData = { ...initData };
     for (let i = 0; i < item.medias.length; i++) {
       const cpItem = item.medias[i];
       if (cpItem.isOuverture) {

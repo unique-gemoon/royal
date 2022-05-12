@@ -38,12 +38,22 @@ export default function user(sequelize, Sequelize) {
       allowNull: true,
     },
 
+    tokenConfirmEmail: {
+      type: Sequelize.STRING,
+      allowNull: true,
+    },
+
     roles: {
       type: Sequelize.JSON,
     },
 
     lastLogin: {
       type: Sequelize.DATE,
+    },
+
+    confirmed: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
     },
 
     enabled: {
