@@ -197,7 +197,7 @@ export function newPli(req, res) {
 
       const response = sendEmail({
         from: "",
-        to: req.body.email,
+        to: req.user.email,
         subject: "Nouveau pli",
         tmp: "emails/posted_pli.ejs",
         params: {
