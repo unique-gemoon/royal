@@ -105,3 +105,25 @@ export function checkDataPli(req, res, next) {
     return;
   }
 }
+
+export function checkDataPliTime(req, res, next) {
+  const error = { name: "", message: "" };
+  if (!String(req.body.duration) || !validateTime(req.body.duration)) {
+    error.name = "duration";
+    error.message =
+      "La durée du pli ne peut pas être vide ou format invalide.";
+  } else if (req.body.signe == undefined) {
+    error.name = "action";
+    error.message = "Action non validé.";
+  } else if (!parseInt(req.body.allottedTime)) {
+    error.name = "temps";
+    error.message = "Le temps alloué est non valide.";
+  }
+
+  if (!error.name) {
+    next();
+  } else {
+    res.status(400).send({ message: error.message });
+    return;
+  }
+}

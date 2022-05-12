@@ -33,16 +33,14 @@ export function getTime(hour, minute, second) {
   return h + ":" + m + ":" + s;
 }
 
-export function durationTime(createdAt, allottedTime){
-
-  console.log("createdAt",createdAt);
+export function durationTime(createdAt, allottedTime) {
   createdAt = moment(createdAt).add(allottedTime, "minutes").toDate();
-  console.log(createdAt);
-  const minutes = moment(createdAt).diff(moment(), 'minutes');
-  if(minutes> 0){
-    const hour = parseInt(minutes / 60);
-    const minute = minutes % 60;
-    return getTime(hour, minute, 0);
+  const seconds = moment(createdAt).diff(moment(), "seconds");
+  if (seconds > 0) {
+    const hour = parseInt(seconds / 3600);
+    const minute = parseInt(parseInt(seconds % 3600) / 60);
+    const second = parseInt(seconds % 3600) % 60;
+    return getTime(hour, minute, second);
   }
   return "00:00:00";
 }

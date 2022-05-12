@@ -2,11 +2,13 @@ import { Router } from "express";
 import passport from "passport";
 import { isConnectedUser } from "../controllers/auth.controller.js";
 import {
+  findPliById,
   findAllPlisNotElapsed,
   findPliUserNotElapsed,
   newPli,
+  updateAppearancePli,
 } from "../controllers/pli.controller.js";
-import { checkDataPli } from "../middleware/checkPli.js";
+import { checkDataPli, checkDataPliTime } from "../middleware/checkPli.js";
 import { uploadMedia } from "../middleware/uploadMedia.js";
 
 const pliRoutes = Router();
@@ -31,9 +33,9 @@ pliRoutes.post(
   "/time",
   passport.authenticate("jwt", { session: false }),
   isConnectedUser,
-  (req, res) => {
-    res.status(200).json({});
-  }
+  checkDataPliTime,
+  findPliById,
+  updateAppearancePli
 );
 
 export default pliRoutes;
