@@ -48,6 +48,7 @@ export default function FooterHome({
                   setDataNotifs={setDataNotifs}
                   setMsgNotifTop={setMsgNotifTop}
                   getPlis={getPlis}
+                  setMsgNotifTopTime={setMsgNotifTopTime}
                 />
               </Col>
             </Row>
@@ -61,6 +62,7 @@ export default function FooterHome({
             setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
             getPlis={getPlis}
+            setMsgNotifTopTime={setMsgNotifTopTime}
           />
         )}
       </FooterDefault>);

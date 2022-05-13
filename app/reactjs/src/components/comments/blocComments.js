@@ -7,7 +7,12 @@ import LoaderTyping from "../../components/loaderTyping";
 import InputEmoji from "../ui-elements/inputEmoji";
 import ListComments from "./listComments";
 
-export default function BlocComments({ item, state, setState = () => {} }) {
+export default function BlocComments({
+  item,
+  state,
+  setState = () => {},
+  setMsgNotifTopTime = () => {},
+}) {
   const [open, setOpen] = useState(false);
   return (
     <CommentsBloc className={`${open ? "emoji-open" : ""} `}>
@@ -18,9 +23,15 @@ export default function BlocComments({ item, state, setState = () => {} }) {
           placeholder="Mon commentaire"
           open={open}
           setOpen={setOpen}
+          setMsgNotifTopTime={setMsgNotifTopTime}
+          setState={()=>{}}
         />
       ) : null}
-      <ListComments items={item.comments} state={state.showModal} />
+      <ListComments
+        items={item.comments}
+        state={state.showModal}
+        setMsgNotifTopTime={setMsgNotifTopTime}
+      />
       {state.showModal ? (
         <>
           <EntrainTyping>
@@ -33,6 +44,8 @@ export default function BlocComments({ item, state, setState = () => {} }) {
             placeholder="Mon commentaire"
             open={open}
             setOpen={setOpen}
+            setMsgNotifTopTime={setMsgNotifTopTime}
+            setState={setState}
           />
         </>
       ) : null}

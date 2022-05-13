@@ -69,6 +69,24 @@ export function checkEmailExiste(req, res, next) {
   });
 }
 
+export function checkTokenConfirmEmailExiste(req, res, next) {
+  User.findOne({
+    where: {
+      tokenConfirmEmail: req.body.tokenConfirmEmail,
+    },
+  }).then((user) => {
+    if (!user) {
+      res.status(400).send({
+        message: "Token invalide ou expiré.",
+      });
+      return;
+    }
+    res.user = user;
+    next();
+  });
+}
+
+
 export function checkDataSignin(req, res, next) {
   if (!req.body.username) {
     res

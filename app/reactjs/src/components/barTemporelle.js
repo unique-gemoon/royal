@@ -21,6 +21,7 @@ export default function BarTemporelle({
   setAction = () => {},
   activeItem = {},
   setActiveItem = () => {},
+  setMsgNotifTopTime = () => {},
   ...props
 }) {
   const dispatch = useDispatch();
@@ -64,6 +65,7 @@ export default function BarTemporelle({
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
+      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,

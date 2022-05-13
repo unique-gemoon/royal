@@ -1,6 +1,7 @@
 import moment from "moment";
 import { durationTime, isObject } from "../middleware/functions.js";
 import db from "../models/index.model.js";
+import sendEmail from '../services/sendEmail.js';
 
 const Pli = db.pli;
 const User = db.user;
@@ -193,13 +194,26 @@ export function newPli(req, res) {
     }
   )
     .then((pli) => {
-      res.status(200).json({
+
+      const response = sendEmail({
+        from: "",
+        to: req.user.email,
+        subject: "Nouveau pli",
+        tmp: "emails/posted_pli.ejs",
+        params: {
+          user: req.user,
+          url: process.env.CLIENT_ORIGIN + "?pli=" + pli.id,
+        },
+      });
+
+
+      res.status(200).json({pli:{
         id: pli.id,
         content: pli.content,
         ouverture: pli.ouverture,
         duration: pli.duration,
         medias: pli.medias,
-      });
+      },message:"ok", email: response});
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
@@ -410,8 +424,8 @@ export function updateAppearancePli(req, res) {
         let allottedTime = 0;
         if (req.pli.allottedTime > 0) {
           allottedTime = req.body.signe
-            ? req.pli.allottedTime + req.body.allottedTime
-            : req.pli.allottedTime - req.body.allottedTime;
+            ? parseInt(req.pli.allottedTime) + parseInt(req.body.allottedTime)
+            : parseInt(req.pli.allottedTime) - parseInt(req.body.allottedTime);
         }
 
         Pli.update(

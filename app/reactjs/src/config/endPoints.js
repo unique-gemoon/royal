@@ -4,6 +4,7 @@ const endPoints = {
   REFRESH_TOKEN: "/auth/refresh-token",
   FORGOT_PASSWORD: "/auth/forgot-password",
   REST_PASSWORD: "/auth/rest-password",
+  CONFIRM_EMAIL: "/auth/confirm-email",
   PROFILE: "/auth/profile",
   DELETE_ACCOUNT : "/auth/delete-account",
   PLI : "/pli",

@@ -22,12 +22,9 @@ export default function ItemMasonry({
   setActiveItem = () => {},
   setActiveItemPlayer = () => {},
   activeItemPlayer = null,
+  setMsgNotifTopTime = ()=>{}
 }) {
-  const [state, setState] = useState({
-    showModal: false,
-    showComment: true,
-  });
-  const [data, setData] = useState({
+  const initData = {
     media: {
       sondage: [],
       image: [],
@@ -42,7 +39,12 @@ export default function ItemMasonry({
       music: [],
       count: 0,
     },
+  };
+  const [state, setState] = useState({
+    showModal: false,
+    showComment: true,
   });
+  const [data, setData] = useState({ ...initData });
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
 
@@ -59,7 +61,7 @@ export default function ItemMasonry({
   }, []);
 
   useEffect(() => {
-    const cpData = { ...data };
+    const cpData = { ...initData };
     for (let i = 0; i < item.medias.length; i++) {
       const cpItem = item.medias[i];
       if (cpItem.isOuverture) {
@@ -105,6 +107,7 @@ export default function ItemMasonry({
           setAction={setAction}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
+          setMsgNotifTopTime={setMsgNotifTopTime}
         />
         <div className="bloc-miniature">
           {item.content ? (
@@ -151,6 +154,7 @@ export default function ItemMasonry({
           activeItem={activeItem}
           setActiveItem={setActiveItem}
           className={isCheck(item) ? "" : "nv-hide"}
+          setMsgNotifTopTime={setMsgNotifTopTime}
         />
       </>
     );
@@ -175,6 +179,7 @@ export default function ItemMasonry({
                     item={sondage}
                     setItem={setMedia}
                     key={sondage.id}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
                   />
                 ))}
                 <ImagesGallery items={data.mediaOuverture.image} />
@@ -247,7 +252,7 @@ export default function ItemMasonry({
                   )}
                 </div>
                 {state.showComment ? (
-                  <BlocComments item={item} state={state} setState={setState} />
+                  <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
                 ) : null}
               </>
             </div>
@@ -278,7 +283,7 @@ export default function ItemMasonry({
                   <OpenInFullOutlinedIcon className="open-zoom-icon" />
                 </span>
               </div>
-              <BlocComments item={item} state={state} setState={setState} />
+              <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
             </>
           )}
         </div>

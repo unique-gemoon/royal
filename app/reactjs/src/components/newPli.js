@@ -159,6 +159,7 @@ export default function NewPli({
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
+      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -428,7 +429,7 @@ export default function NewPli({
                     </div>
                   </div>
                 </div>
-                <BarTemporellePli state={state} setState={setState} />
+                <BarTemporellePli state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
               </div>
               {addOuverture && (
                 <div className="new-pli-nv2">

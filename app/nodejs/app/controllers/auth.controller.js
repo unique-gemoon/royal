@@ -67,22 +67,29 @@ export function signin(req, res) {
 }
 
 export function signup(req, res) {
-  // Save User to Database
+  const tokenConfirmEmail = crypto.randomBytes(20).toString("hex");
   User.create({
     username: req.body.username,
     email: req.body.email,
     password: req.body.password,
+    lastLogin: new Date(),
+    tokenConfirmEmail 
   })
     .then((user) => {
-      User.update({ lastLogin: new Date() }, { where: { id: user.id } })
-        .then((d) => {
-          // Generate JWT token and refresh token
-          const tokens = generateTokens(user);
-          res.status(200).json({ ...tokens });
-        })
-        .catch((err) => {
-          res.status(500).send({ message: err.message });
-        });
+      const response = sendEmail({
+        from: "",
+        to: req.body.email,
+        subject: "Vérification d'email",
+        tmp: "emails/verification_account.ejs",
+        params: {
+          user: res.user,
+          url: process.env.CLIENT_ORIGIN + "?tokenConfirmEmail=" + tokenConfirmEmail,
+        },
+      });
+
+      // Generate JWT token and refresh token
+      const tokens = generateTokens(user);
+      res.status(200).json({ ...tokens, message: "ok", email: response });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -140,6 +147,22 @@ export function restPassword(req, res) {
     });
 }
 
+export function confirmEmail(req, res) {
+  User.update(
+    {
+      tokenConfirmEmail: "",
+      confirmed: true,
+    },
+    { where: { id: res.user.id } }
+  )
+    .then((d) => {
+      res.status(200).json({ message: "ok" });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+}
+
 export function verifyRefreshToken(req, res) {
   const refreshToken = req.body.refreshToken;
   if (refreshToken) {
@@ -177,10 +200,27 @@ export function verifyRefreshToken(req, res) {
 }
 
 export function isConnectedUser(req, res, next) {
-    if(req.user){
-      next();
-      return;
-    }
-    res.status(400).json({message:"l'utilisateur n'existe pas"});
+  if (req.user) {
+    next();
     return;
+  }
+  res.status(400).json({ message: "l'utilisateur n'existe pas" });
+  return;
+}
+
+export function getUserAuthenticated(req, res, next) {
+  let bearer, token;
+  [bearer, token] = String(req.headers.authorization).split(" ");
+  if (token) {
+    jwt.verify(token, process.env.SECRET_KEY, function (err, jwtPayload) {
+      if (!err) {
+        User.findByPk(jwtPayload.sub).then((user) => {
+          if (user) {
+            req.user = user;
+          }
+        });
+      }
+    });
+  }
+  next();
 }

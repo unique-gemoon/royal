@@ -8,6 +8,7 @@ export default function InputTextareaAutosize({
   type = "text",
   as = "",
   onChange = () => {},
+  onClick = () => {},
 }) {
   return (
     <TextareaAutosize
@@ -17,6 +18,7 @@ export default function InputTextareaAutosize({
       placeholder={placeholder}
       type={type}
       onChange={onChange}
+      onClick={onClick}
       cacheMeasurements={true}
     />
   );

@@ -6,7 +6,6 @@ import {
   MessageFindFolower,
 } from "../assets/styles/componentStyle";
 import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
-import ArrowCircleDownIcon from "@mui/icons-material/ArrowCircleDown";
 import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
 import { Button } from "@mui/material";
 import Menu from "@mui/material/Menu";
@@ -22,7 +21,7 @@ import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import ItemSingleMessage from "./itemSingleMessage";
 import { useEffect } from "react";
 
-export default function Messagerie() {
+export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
   const [state, setState] = useState({
     showSearchFolower: false,
     activeItem: false,
@@ -199,7 +198,7 @@ export default function Messagerie() {
                 }}
               >
                 {" "}
-                <span className="close-drop-menu" onClick={()=>handleClose}>
+                <span className="close-drop-menu" onClick={() => handleClose}>
                   <MoreVertIcon />
                 </span>
                 <MenuItem onClick={handleClose}>Bloquer</MenuItem>
@@ -247,7 +246,11 @@ export default function Messagerie() {
                 </div>
               </div>
             </ChatSpace>
-            <InputEmoji typeInput="textarea" />
+            <InputEmoji
+              typeInput="textarea"
+              setMsgNotifTopTime={setMsgNotifTopTime}
+              setState={setState}
+            />
           </div>
         </div>
       ) : null}

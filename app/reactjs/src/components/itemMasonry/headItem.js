@@ -15,12 +15,13 @@ import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { useHistory, useLocation } from "react-router-dom";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import BallotIcon from "../../assets/images/icons/ballotIcon";
 import {
   DetailsItems,
   HeadContentItem,
-  PlusIcon,
+  PlusIcon
 } from "../../assets/styles/globalStyle";
 import { ROLES } from "../../config/vars";
 import { useOutsideAlerter } from "../../helper/events";
@@ -34,6 +35,7 @@ export default function HeadItem({
   setAction = () => {},
   activeItem,
   setActiveItem = () => {},
+  setMsgNotifTopTime = () => {},
 }) {
   const [toggleProfile, setToggleProfile] = useState(false);
   const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
@@ -48,10 +50,36 @@ export default function HeadItem({
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
+  const history = useHistory();
+
+  const query = new URLSearchParams(useLocation().search);
+  const pliId = query.get("pli") || null;
+
+  useEffect(() => {
+    if (pliId && item && item.id == pliId) {
+      if (state) {
+        setState({ ...state, showModal: true, showComment: true });
+      }
+      const cpAction = {
+        ...action,
+        notification: { ...action.notification, isOpen: false },
+        folower: { ...action.folower, isOpen: false },
+        search: { ...action.search, isOpen: false },
+        messagerie: { ...action.messagerie, isOpen: false },
+      };
+      setAction(cpAction);
+      history.push("/");
+    }
+  }, [pliId]);
+
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        10000
+      );
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -275,8 +303,9 @@ export default function HeadItem({
           <div
             className="users-enligne-pli"
             onClick={() => {
-              state &&
+              if (state) {
                 setState({ ...state, showModal: true, showComment: true });
+              }
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },

@@ -8,9 +8,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
-import imgPli from "../assets/images/image-pli-1.png";
 import logoType from "../assets/images/Logotype.png";
-import videoPli from "../assets/images/video.mp4";
 import {
   ContainerDef,
   DefaultMain,
@@ -25,14 +23,20 @@ import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
 import connector from "../connector";
-import { getTime } from "../helper/fonctions";
+import { getMsgError, getTime } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
+import ModalMessage from "../components/modalMessage";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
   const [plis, setPlis] = useState([]);
   const [seconds, setSeconds] = useState(0);
+  const [activeItem, setActiveItem] = useState(null);
+  const [activeItemPlayer, setActiveItemPlayer] = useState(null);
+  const [submitting, setSubmitting] = useState(false);
+  const [showBlocModalMessage, setShowBlocModalMessage] = useState(null);
+  const [openModalMessage, setOpenModalMessage] = useState(false);
 
   useEffect(() => {
     getPlis();
@@ -40,13 +44,13 @@ export default function Home() {
 
   useEffect(() => {
     if (plis.length) {
-        updateDurations();
+      updateDurations();
     }
   }, [seconds]);
 
   useEffect(() => {
     const interval = setInterval(() => {
-      setSeconds(seconds => seconds + 1);
+      setSeconds((seconds) => seconds + 1);
     }, 1000);
     return () => clearInterval(interval);
   }, []);
@@ -129,7 +133,7 @@ export default function Home() {
       let hour, minute, second;
       const cpPlis = [];
       for (let i = 0; i < plis.length; i++) {
-        const cpPli = {...plis[i]};
+        const cpPli = { ...plis[i] };
         [hour, minute, second] = String(cpPli.duration).split(":");
         hour = parseInt(hour);
         minute = parseInt(minute);
@@ -185,11 +189,13 @@ export default function Home() {
 
   const query = new URLSearchParams(useLocation().search);
   const tokenRestPassword = query.get("tokenRestPassword") || null;
+  const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
+      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -203,8 +209,36 @@ export default function Home() {
       checkIsConnected();
     }
   }, [tokenRestPassword]);
-  const [activeItem, setActiveItem] = useState(null);
-  const [activeItemPlayer, setActiveItemPlayer] = useState(null);
+
+  useEffect(() => {
+    if (tokenConfirmEmail) {
+      checkTokenConfirmEmail();
+    }
+  }, [tokenConfirmEmail]);
+
+  const checkTokenConfirmEmail = () => {
+    if (!submitting) {
+      msgErrors({ submit: true });
+      connector({
+        method: "post",
+        url: endPoints.CONFIRM_EMAIL,
+        data: { tokenConfirmEmail },
+        success: (response) => {
+          msgErrors({ submit: false });
+          setOpenModalMessage(true);
+          setShowBlocModalMessage("confirmEmail");
+        },
+        catch: (error) => {
+          msgErrors({ msg: getMsgError(error), submit: false });
+        },
+      });
+    }
+  };
+
+  const msgErrors = (e) => {
+    if (e.submit !== undefined) setSubmitting(e.submit);
+    if (e.msg !== undefined)  setMsgNotifTopTime(e.msg,10000);
+  };
 
   return (
     <DefaultMain>
@@ -231,7 +265,11 @@ export default function Home() {
               message={msgNotifTop}
             />
           )}
-          <Masonry columns={{ xs: 1, md: 2, lg: 3 }} spacing={3} className={plis.length < 3 && "masonry-two-columns"}>
+          <Masonry
+            columns={{ xs: 1, md: 2, lg: 3 }}
+            spacing={3}
+            className={plis.length < 3 && "masonry-two-columns"}
+          >
             {plis &&
               plis.map((item) => (
                 <div key={item.id}>
@@ -244,6 +282,7 @@ export default function Home() {
                     setActiveItem={setActiveItem}
                     activeItemPlayer={activeItemPlayer}
                     setActiveItemPlayer={setActiveItemPlayer}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
                   />
                 </div>
               ))}
@@ -263,6 +302,13 @@ export default function Home() {
             getPlis={getPlis}
           />
         )}
+        <ModalMessage
+          showBloc={showBlocModalMessage}
+          setShowBloc={setShowBlocModalMessage}
+          checkIsConnected={checkIsConnected}
+          open={openModalMessage}
+          setOpen={setOpenModalMessage}
+        />
       </StyledEngineProvider>
     </DefaultMain>
   );

@@ -9,7 +9,12 @@ import { useDispatch, useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
 
-export default function Sondage({ name, item, setItem }) {
+export default function Sondage({
+  name,
+  item,
+  setItem,
+  setMsgNotifTopTime = () => {},
+}) {
   const [options, setOptions] = useState([]);
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
@@ -29,6 +34,10 @@ export default function Sondage({ name, item, setItem }) {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        10000
+      );
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -50,7 +59,7 @@ export default function Sondage({ name, item, setItem }) {
                 name={name}
                 onChange={(val) => {
                   if (checkIsConnected()) {
-                    const cpItem = {...item};
+                    const cpItem = { ...item };
                     for (let i = 0; i < cpItem.options.length; i++) {
                       const option = cpItem.options[i];
                       const choix = option.id == val.value ? true : false;

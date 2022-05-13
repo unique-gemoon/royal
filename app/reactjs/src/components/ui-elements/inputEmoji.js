@@ -1,12 +1,11 @@
+import SendIcon from "@mui/icons-material/Send";
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { FormEmoji } from "../../assets/styles/componentStyle";
-import Input from "./input";
-import SendIcon from "@mui/icons-material/Send";
-import Emojis from "../emojis";
 import { useDispatch, useSelector } from "react-redux";
+import { FormEmoji } from "../../assets/styles/componentStyle";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
+import Emojis from "../emojis";
 import InputTextareaAutosize from "./inputTextareaAutosize";
 
 export default function InputEmoji({
@@ -15,6 +14,7 @@ export default function InputEmoji({
   typeInput,
   open,
   setOpen = () => {},
+  setMsgNotifTopTime  = () => {},
   ...props
 }) {
   const [state, setState] = useState({
@@ -39,6 +39,10 @@ export default function InputEmoji({
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        10000
+      );
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -57,7 +61,7 @@ export default function InputEmoji({
             cpState.inputEmoji.value = e.target.value;
             setState(cpState);
           }}
-          onClick={() => {
+          onClick={(e) => {
             if (!checkIsConnected()) {
               props.setState({ ...props.state, showModal: false });
             }
@@ -69,7 +73,14 @@ export default function InputEmoji({
         />
       </div>
 
-      <Button className="btn-send-emoji">
+      <Button
+        className="btn-send-emoji"
+        onClick={(e) => {
+          if (!checkIsConnected()) {
+            props.setState({ ...props.state, showModal: false });
+          }
+        }}
+      >
         <SendIcon />
       </Button>
     </FormEmoji>
