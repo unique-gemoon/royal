@@ -83,7 +83,7 @@ export const ContainerDef = styled(Container)`
         }
     }
     max-width: 100%;
-    @media(max-width: 320px){
+    @media(max-width: 400px){
         padding: 0;
     }
 `;
@@ -99,7 +99,7 @@ export const HeadContentItem = styled.div`
         margin-right: 5px;
         font-family: 'ProximaNovaSoftW03-Semibold';
         cursor: pointer;
-        @media(max-width: 575px){
+        @media(max-width: 375px){
             margin-right: 0;
             overflow: hidden;
             white-space: nowrap;
@@ -107,7 +107,7 @@ export const HeadContentItem = styled.div`
             max-width: 62px;
             display: inline-block;
         }
-        @media(max-width: 320px){
+        @media(max-width: 335px){
             max-width: 48px;
         }
     }
@@ -270,7 +270,10 @@ export const HeadContentItem = styled.div`
         & > div{
             margin-left: 15px;
             cursor: pointer;
-            @media(max-width: 320px){
+            @media(max-width: 1300px) and (min-width: 1200px){
+                margin-left: 8px;
+            }
+            @media(max-width: 575px){
                 margin-left: 8px;
             }
         }
@@ -278,6 +281,9 @@ export const HeadContentItem = styled.div`
         .users-enligne-pli{
             display: flex;
             align-items: center;
+            @media(max-width: 1300px) and (min-width: 1200px){
+                margin-left: 2px;
+            }
             &:hover{
                 svg{
                     &:first-of-type{

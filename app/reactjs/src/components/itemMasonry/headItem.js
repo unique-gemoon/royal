@@ -26,6 +26,7 @@ import {
 import { ROLES } from "../../config/vars";
 import { useOutsideAlerter } from "../../helper/events";
 import * as actionTypes from "../../store/functions/actionTypes";
+import { useMediaQuery } from "react-responsive";
 
 export default function HeadItem({
   item,
@@ -37,6 +38,8 @@ export default function HeadItem({
   setActiveItem = () => {},
   setMsgNotifTopTime = () => {},
 }) {
+
+  const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 540px)" });
   const [toggleProfile, setToggleProfile] = useState(false);
   const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
   const [mediaIcons, setMediaIcons] = useState([]);
@@ -127,27 +130,27 @@ export default function HeadItem({
           {mediaIcons.length > 0 &&
             mediaIcons.map((media, index) => (
               <div key={index}>
-                {index == 0 && media === "description" && (
+                {(index == 0 || isDesktopOrLaptop) && media === "description" && (
                   <div className="item-detail format-text-detail">
                     <FormatSizeIcon />
                   </div>
                 )}
-                {index == 0 && media === "music" && (
+                {(index == 0 || isDesktopOrLaptop) && media === "music" && (
                   <div className="item-detail sound-detail">
                     <GraphicEqIcon />
                   </div>
                 )}
-                {index == 0 && media === "sondage" && (
+                {(index == 0 || isDesktopOrLaptop) && media === "sondage" && (
                   <div className="item-detail sondage-detail">
                     <BallotIcon />
                   </div>
                 )}
-                {index == 0 && media === "image" && (
+                {(index == 0 || isDesktopOrLaptop) && media === "image" && (
                   <div className="item-detail image-detail">
                     <ImageIcon />
                   </div>
                 )}
-                {index == 0 && media == "video" && (
+                {(index == 0 || isDesktopOrLaptop) && media == "video" && (
                   <div className="item-detail video-detail">
                     <PlayArrowIcon />
                   </div>
@@ -158,7 +161,7 @@ export default function HeadItem({
             <div
               className={`mediaDetails ${showMediaIcons ? "showMedia" : ""}`}
             >
-              {mediaIcons.length > 0 &&
+              {mediaIcons.length > 0 && !isDesktopOrLaptop &&
                 mediaIcons.map((media, index) => (
                   <div key={index}>
                     {index > 0 ? (
@@ -195,7 +198,7 @@ export default function HeadItem({
                   </div>
                 ))}
             </div>
-            {mediaIcons.length > 1 && (
+            {mediaIcons.length > 1 && !isDesktopOrLaptop && (
               <div
                 className={`item-detail more-media ${
                   showMediaIcons ? "is-showing" : ""
