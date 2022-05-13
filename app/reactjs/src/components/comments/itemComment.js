@@ -6,7 +6,7 @@ import { ReplyIcon, ReplyIconGreen } from "../../assets/styles/globalStyle";
 import { ROLES } from "../../config/vars";
 import InputEmoji from "../ui-elements/inputEmoji";
 
-export default function ItemComment({ item }) {
+export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
   const [state, setState] = useState({
     openReponces: false,
     repondre: false,
@@ -32,7 +32,12 @@ export default function ItemComment({ item }) {
             {state.repondre ? <ReplyIcon /> : <ReplyIconGreen />} Répondre
           </p>
           {state.repondre ? (
-            <InputEmoji name="comment-pli" placeholder="Mon commentaire" />
+            <InputEmoji
+              name="comment-pli"
+              placeholder="Mon commentaire"
+              setMsgNotifTopTime={setMsgNotifTopTime}
+              setState={()=>{}}
+            />
           ) : null}
         </div>
       )}
@@ -94,6 +99,8 @@ export default function ItemComment({ item }) {
                           <InputEmoji
                             name="comment-pli"
                             placeholder="Mon commentaire"
+                            setMsgNotifTopTime={setMsgNotifTopTime}
+                            setState={() => {}}
                           />
                         ) : null}
                       </div>

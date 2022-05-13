@@ -34,6 +34,7 @@ export default function HeadItem({
   setAction = () => {},
   activeItem,
   setActiveItem = () => {},
+  setMsgNotifTopTime = () => {},
 }) {
   const [toggleProfile, setToggleProfile] = useState(false);
   const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
@@ -52,6 +53,7 @@ export default function HeadItem({
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
+      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,

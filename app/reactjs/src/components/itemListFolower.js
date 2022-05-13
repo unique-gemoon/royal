@@ -17,7 +17,7 @@ export default function ItemListFolower({ state, setState= () =>{}, item, onClic
     }
     return (
         <ItemFolower key={item.id}>
-            <span onClick={() => { console.log(state); setState({ ...state, activeItem: item }); }}>{item.name}</span>
+            <span onClick={() => { setState({ ...state, activeItem: item }); }}>{item.name}</span>
             <div className='option-item-folower'>
                 {shwoButtonMessage && (<Button className='toggle-item-message'><MailOutlineRoundedIcon /></Button>)}
                 <Button onClick={toggleFolower} className='btn-switch-folowers'>{ statutFolower === 1 ? <PersonAddAltOutlinedIcon /> : <PersonRemoveOutlinedIcon />}</Button>

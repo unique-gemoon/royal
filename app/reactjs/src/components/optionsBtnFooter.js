@@ -15,6 +15,7 @@ export default function OptionsBtnFooter({
   setDataNotifs = () => {},
   setMsgNotifTop = () => {},
   getPlis = () => {},
+  setMsgNotifTopTime = () => {}
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -46,16 +47,18 @@ export default function OptionsBtnFooter({
         setCount={2}
         action={action.messagerie}
         icon={action.messagerie.icon}
+        setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
           updateAction(e, "messagerie");
         }}
       >
-        <Messagerie />
+        <Messagerie setMsgNotifTopTime={setMsgNotifTopTime}/>
       </ButtonAction>
       <ButtonAction
         className="search-bloc-action"
         action={action.search}
         icon={action.search.icon}
+        setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
           updateAction(e, "search");
         }}
@@ -75,6 +78,7 @@ export default function OptionsBtnFooter({
         action={action.folower}
         setCount={2}
         icon={action.folower.icon}
+        setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
           updateAction(e, "folower");
         }}
@@ -86,6 +90,7 @@ export default function OptionsBtnFooter({
         action={action.notification}
         setCount={newNotifs.length}
         icon={action.notification.icon}
+        setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
           updateAction(e, "notification");
         }}

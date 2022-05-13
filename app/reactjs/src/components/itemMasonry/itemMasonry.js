@@ -22,6 +22,7 @@ export default function ItemMasonry({
   setActiveItem = () => {},
   setActiveItemPlayer = () => {},
   activeItemPlayer = null,
+  setMsgNotifTopTime = ()=>{}
 }) {
   const initData = {
     media: {
@@ -106,6 +107,7 @@ export default function ItemMasonry({
           setAction={setAction}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
+          setMsgNotifTopTime={setMsgNotifTopTime}
         />
         <div className="bloc-miniature">
           {item.content ? (
@@ -152,6 +154,7 @@ export default function ItemMasonry({
           activeItem={activeItem}
           setActiveItem={setActiveItem}
           className={isCheck(item) ? "" : "nv-hide"}
+          setMsgNotifTopTime={setMsgNotifTopTime}
         />
       </>
     );
@@ -176,6 +179,7 @@ export default function ItemMasonry({
                     item={sondage}
                     setItem={setMedia}
                     key={sondage.id}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
                   />
                 ))}
                 <ImagesGallery items={data.mediaOuverture.image} />
@@ -248,7 +252,7 @@ export default function ItemMasonry({
                   )}
                 </div>
                 {state.showComment ? (
-                  <BlocComments item={item} state={state} setState={setState} />
+                  <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
                 ) : null}
               </>
             </div>
@@ -279,7 +283,7 @@ export default function ItemMasonry({
                   <OpenInFullOutlinedIcon className="open-zoom-icon" />
                 </span>
               </div>
-              <BlocComments item={item} state={state} setState={setState} />
+              <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
             </>
           )}
         </div>
