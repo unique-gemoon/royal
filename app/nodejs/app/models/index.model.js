@@ -5,6 +5,7 @@ import user from "./user.model.js";
 import pli from './pli.model.js';
 import media from './media.model.js';
 import sondageOptions from "./sondageOptions.model.js";
+import sondageVotes from "./sondageVotes.model.js";
 import appearancePli from "./appearancePli.model.js";
 
 let db = {};
@@ -34,6 +35,7 @@ db.user = user(sequelize, Sequelize);
 db.pli = pli(sequelize, Sequelize);
 db.media = media(sequelize, Sequelize);
 db.sondageOptions = sondageOptions(sequelize, Sequelize);
+db.sondageVotes = sondageVotes(sequelize, Sequelize);
 db.appearancePli = appearancePli(sequelize, Sequelize);
 
 Object.keys(db).forEach(modelName => {

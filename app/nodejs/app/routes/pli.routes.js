@@ -2,13 +2,15 @@ import { Router } from "express";
 import passport from "passport";
 import { getUserAuthenticated } from "../controllers/auth.controller.js";
 import {
-  findPliById,
+  findPliAppearancesById,
   findAllPlisNotElapsed,
   findPliUserNotElapsed,
   newPli,
   updateAppearancePli,
+  addVoteSondagePli,
+  findPliSondageOptionsVotesById,
 } from "../controllers/pli.controller.js";
-import { checkDataPli, checkDataPliTime } from "../middleware/checkPli.js";
+import { checkDataPli, checkDataPliTime, checkSondagePliIsVoted } from "../middleware/checkPli.js";
 import { uploadMedia } from "../middleware/uploadMedia.js";
 
 const pliRoutes = Router();
@@ -28,8 +30,16 @@ pliRoutes.post(
   "/time",
   passport.authenticate("jwt", { session: false }),
   checkDataPliTime,
-  findPliById,
+  findPliAppearancesById,
   updateAppearancePli
+);
+
+pliRoutes.post(
+  "/sondage/vote",
+  passport.authenticate("jwt", { session: false }),
+  findPliSondageOptionsVotesById,
+  checkSondagePliIsVoted,
+  addVoteSondagePli
 );
 
 export default pliRoutes;

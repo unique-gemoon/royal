@@ -127,3 +127,46 @@ export function checkDataPliTime(req, res, next) {
     return;
   }
 }
+
+export function checkSondagePliIsVoted(req, res, next){
+  const error = { name: "", message: "" };
+  if (!req.body.optionId) {
+    error.name = "optionId";
+    error.message = "Identifiant sondage option non définie.";
+  }else {
+    let optionExiste = false;
+    let alreadyVoted = false;
+    for (let i = 0; i < req.pli.medias.length; i++) {
+      const media = req.pli.medias[i];
+      if(media.type=="sondage"){
+        for (let j = 0; j< media.options.length; j++) {
+          const option = media.options[j];
+          if(option.id==req.body.optionId){
+            optionExiste=true;
+          }
+          for (let k = 0; k< option.votes.length; j++) {
+            const vote = option.votes[k];
+            if(vote.userId == req.user.id){
+              alreadyVoted = true;
+              break;
+            }
+          }
+        }
+      }
+    }
+    if(!optionExiste){
+      error.name = "optionExiste";
+      error.message = "Sondage option non existé.";
+    }else if(alreadyVoted){
+      error.name = "alreadyVoted";
+      error.message = "Sondage déjà voté.";
+    }
+  }
+
+  if (!error.name) {
+    next();
+  } else {
+    res.status(400).send({ message: error.message });
+    return;
+  }
+}
