@@ -1,12 +1,14 @@
 import AddIcon from "@mui/icons-material/Add";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import KeyboardArrowUpIcon from "@mui/icons-material/KeyboardArrowUp";
+import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import RemoveIcon from "@mui/icons-material/Remove";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
+import { LinearProgress } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
-import { BlocAddPli } from "../assets/styles/componentStyle";
+import { BlocAddPli, BarTimerPli } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
 import connector from "../connector";
@@ -29,6 +31,7 @@ export default function NewPli({
   setMsgNotifTopTime = () => {},
   getPlis = () => {},
 }) {
+  const [publishPli, setPublishPli] = useState(true);
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
@@ -364,110 +367,129 @@ export default function NewPli({
   };
 
   return (
-    <BlocAddPli>
-      <div className={`bloc-new-pli ${togglePli ? "showing-new-pli" : ""}`}>
-        <div className="cadre-content-new-pli">
-          <form className="form-new-pli" onSubmit={submitPli}>
-            <div className="content-new-pli" ref={divRef}>
-              {message && (
-                <ErrorFormMessage
-                  text={message}
-                  onClick={() => setMessage(null)}
-                />
-              )}
-              <div className="new-pli-nv1">
-                <div className="cadre-content-pli">
-                  <InputTextareaAutosize
-                    {...state.inputEmoji}
-                    onChange={(e) => {
-                      const cpState = { ...state };
-                      if (e.target.value.length <= 280) {
-                        cpState.inputEmoji.value = e.target.value;
-                        setState(cpState);
-                      }
-                    }}
+    <BlocAddPli className={`${publishPli && "is-publish-pli"}`}>
+      {!publishPli &&
+        <div className={`bloc-new-pli ${togglePli ? "showing-new-pli" : ""}`}>
+          <div className="cadre-content-new-pli">
+            <form className="form-new-pli" onSubmit={submitPli}>
+              <div className="content-new-pli" ref={divRef}>
+                {message && (
+                  <ErrorFormMessage
+                    text={message}
+                    onClick={() => setMessage(null)}
                   />
-                  {state.sondage.open && (
-                    <AddSondage
-                      maxOption={state.sondage.maxOptions}
-                      sondage={state.sondage}
-                      setSondage={(e) => {
-                        setState({
-                          ...state,
-                          sondage: e,
-                        });
-                      }}
-                      showSondage={state.sondage.open}
-                      setShowSondage={(e) => {
-                        setState({
-                          ...state,
-                          sondage: { ...state.sondage, open: e },
-                        });
+                )}
+                <div className="new-pli-nv1">
+                  <div className="cadre-content-pli">
+                    <InputTextareaAutosize
+                      {...state.inputEmoji}
+                      onChange={(e) => {
+                        const cpState = { ...state };
+                        if (e.target.value.length <= 280) {
+                          cpState.inputEmoji.value = e.target.value;
+                          setState(cpState);
+                        }
                       }}
                     />
-                  )}
-                  <div className="bloc-footer">
-                    <NewPliOptions
-                      state={state}
-                      setState={setState}
-                      setMessage={setMessage}
-                    />
-                    <div className="count-publish-pli1">
-                      <CountDown
-                        maxCount={280}
-                        size={String(state.inputEmoji.value).length}
+                    {state.sondage.open && (
+                      <AddSondage
+                        maxOption={state.sondage.maxOptions}
+                        sondage={state.sondage}
+                        setSondage={(e) => {
+                          setState({
+                            ...state,
+                            sondage: e,
+                          });
+                        }}
+                        showSondage={state.sondage.open}
+                        setShowSondage={(e) => {
+                          setState({
+                            ...state,
+                            sondage: { ...state.sondage, open: e },
+                          });
+                        }}
                       />
-                      {!addOuverture && (
-                        <div className="bloc-btn-publish">
-                          <ButtonDef
-                            spinner={submitting}
-                            textButton={"Publier"}
-                            className="btn-publish"
-                            icon={<SendRoundedIcon />}
-                          />
-                        </div>
-                      )}
+                    )}
+                    <div className="bloc-footer">
+                      <NewPliOptions
+                        state={state}
+                        setState={setState}
+                        setMessage={setMessage}
+                      />
+                      <div className="count-publish-pli1">
+                        <CountDown
+                          maxCount={280}
+                          size={String(state.inputEmoji.value).length}
+                        />
+                        {!addOuverture && (
+                          <div className="bloc-btn-publish">
+                            <ButtonDef
+                              spinner={submitting}
+                              textButton={"Publier"}
+                              className="btn-publish"
+                              icon={<SendRoundedIcon />}
+                            />
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </div>
+                  <BarTemporellePli state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime} />
                 </div>
-                <BarTemporellePli state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
-              </div>
-              {addOuverture && (
-                <div className="new-pli-nv2">
-                  <div className="cadre-content-pli">
-                    <NewOuvertureOptions
-                      state={state}
-                      setState={setState}
-                      setMessage={setMessage}
-                      submitting={submitting}
-                    />
+                {addOuverture && (
+                  <div className="new-pli-nv2">
+                    <div className="cadre-content-pli">
+                      <NewOuvertureOptions
+                        state={state}
+                        setState={setState}
+                        setMessage={setMessage}
+                        submitting={submitting}
+                      />
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
-              {!addOuverture && (
-                <div
-                  className="toggle-open-ouverture"
-                  onClick={() => setAddOuverture(true)}
-                >
-                  Ajouter une ouverture <AddIcon />
-                </div>
-              )}
+                {!addOuverture && (
+                  <div
+                    className="toggle-open-ouverture"
+                    onClick={() => setAddOuverture(true)}
+                  >
+                    Ajouter une ouverture <AddIcon />
+                  </div>
+                )}
 
-              {addOuverture && (
-                <div
-                  className="toggle-open-ouverture"
-                  onClick={() => deleteOuverture()}
-                >
-                  Supprimer l'ouverture <RemoveIcon />
-                </div>
-              )}
-            </div>
-          </form>
+                {addOuverture && (
+                  <div
+                    className="toggle-open-ouverture"
+                    onClick={() => deleteOuverture()}
+                  >
+                    Supprimer l'ouverture <RemoveIcon />
+                  </div>
+                )}
+              </div>
+            </form>
+          </div>
         </div>
-      </div>
-
-      {togglePli === false && (
+      }
+      {publishPli &&
+        <BarTimerPli>
+          <LinearProgress
+            className="progressBar-item"
+            variant="determinate"
+            value={70}
+          />
+          <div
+            className="content-timer-bar"
+          >
+            <span className="timer-down">20</span>
+            <div className="timer-item">
+              <TimerOutlinedIcon /> <span>00:29:39</span>
+            </div>
+            <span className="timer-up">30</span>
+          </div>
+        </BarTimerPli>
+      }
+      {!publishPli && togglePli === false && (
         <div
           onClick={() => {
             if (checkIsConnected()) {
@@ -493,7 +515,7 @@ export default function NewPli({
         </div>
       )}
 
-      {togglePli && (
+      {!publishPli && togglePli && (
         <div className="toggled-new-pli open-pli">
           {isDesktopOrLaptop ? (
             <KeyboardArrowUpIcon />
