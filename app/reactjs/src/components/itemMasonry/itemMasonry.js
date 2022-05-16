@@ -122,6 +122,7 @@ export default function ItemMasonry({
                   item={sondage}
                   setItem={setMedia}
                   key={sondage.id}
+                  setMsgNotifTopTime={setMsgNotifTopTime}
                 />
               ))}
               <ImagesGallery items={data.media.image} />

@@ -48,7 +48,11 @@ export function checkDataPli(req, res, next) {
         const element = sondageList[key];
         const option = isObject(element) ? element : JSON.parse(element);
         sondage.push(option);
-        if (String(option.value).length > pliOptions.sondage.maxLength) {
+        if (String(option.value).length == 0) {
+          error.name = "sondage";
+          error.message = `Vous ne pouvez pas ajouter une option sondage vide.`;
+          break;
+        } else if (String(option.value).length > pliOptions.sondage.maxLength) {
           error.name = "sondage";
           error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.sondage.maxLength} caractères maximum  pour le texte du option sondage.`;
           break;
@@ -110,8 +114,7 @@ export function checkDataPliTime(req, res, next) {
   const error = { name: "", message: "" };
   if (!String(req.body.duration) || !validateTime(req.body.duration)) {
     error.name = "duration";
-    error.message =
-      "La durée du pli ne peut pas être vide ou format invalide.";
+    error.message = "La durée du pli ne peut pas être vide ou format invalide.";
   } else if (req.body.signe == undefined) {
     error.name = "action";
     error.message = "Action non validé.";
@@ -128,36 +131,37 @@ export function checkDataPliTime(req, res, next) {
   }
 }
 
-export function checkSondagePliIsVoted(req, res, next){
+export function checkSondagePliIsVoted(req, res, next) {
   const error = { name: "", message: "" };
   if (!req.body.optionId) {
     error.name = "optionId";
     error.message = "Identifiant sondage option non définie.";
-  }else {
+  } else {
     let optionExiste = false;
     let alreadyVoted = false;
     for (let i = 0; i < req.pli.medias.length; i++) {
       const media = req.pli.medias[i];
-      if(media.type=="sondage"){
-        for (let j = 0; j< media.options.length; j++) {
+      if (media.type == "sondage") {
+        for (let j = 0; j < media.options.length; j++) {
           const option = media.options[j];
-          if(option.id==req.body.optionId){
-            optionExiste=true;
-          }
-          for (let k = 0; k< option.votes.length; j++) {
-            const vote = option.votes[k];
-            if(vote.userId == req.user.id){
-              alreadyVoted = true;
-              break;
+          if (option.id == req.body.optionId) {
+            optionExiste = true;
+            for (let k = 0; k < option.votes.length; k++) {
+              const vote = option.votes[k];
+              if (req.user && vote.userId == req.user.id) {
+                alreadyVoted = true;
+                break;
+              }
             }
+            break;
           }
         }
       }
     }
-    if(!optionExiste){
+    if (!optionExiste) {
       error.name = "optionExiste";
       error.message = "Sondage option non existé.";
-    }else if(alreadyVoted){
+    } else if (alreadyVoted) {
       error.name = "alreadyVoted";
       error.message = "Sondage déjà voté.";
     }
