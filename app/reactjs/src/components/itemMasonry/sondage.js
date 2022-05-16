@@ -58,12 +58,9 @@ export default function Sondage({
         connector({
           method: "post",
           url: `${endPoints.PLI_SONDAGE_VOTE}`,
-          data: { id: item.id, optionId },
+          data: { sondageId: item.id, optionId },
           success: (response) => {
             msgErrors({ submit: false });
-            msgSuccess(
-              "Votre pli a bien été publié sur la page universelle ! Il reste 1 heure avant qu’il ne disparaisse si aucun délai supplémentaire ne lui est ajouté ou enlevé par les utilisateurs."
-            );
             const cpItem = { ...item };
             for (let i = 0; i < cpItem.options.length; i++) {
               const option = cpItem.options[i];
@@ -92,13 +89,36 @@ export default function Sondage({
     }
   };
 
+  const saveSondageNotVote = () => {
+    if (!submitting) {
+      msgErrors({ submit: true, msg: null });
+
+      if (item.id) {
+        connector({
+          method: "post",
+          url: `${endPoints.PLI_SONDAGE_NOTE_VOTE}`,
+          data: { sondageId: item.id },
+          success: (response) => {
+            msgErrors({ submit: false });
+            setItem({
+              ...item,
+              alreadyVoted: true,
+            });
+          },
+          catch: (error) => {
+            msgErrors({ msg: getMsgError(error), submit: false });
+          },
+        });
+      } else {
+        const msg = "Quelque chose s'est mal passé, veuillez réessayer svp.";
+        msgErrors({ submit: false, msg });
+      }
+    }
+  };
+
   const msgErrors = (e) => {
     if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
     if (e.submit !== undefined) setSubmitting(e.submit);
-  };
-
-  const msgSuccess = (msg) => {
-    setMsgNotifTopTime(msg, 10000);
   };
 
   return (
@@ -118,20 +138,17 @@ export default function Sondage({
                   }
                 }}
               />
-
-              {item.alreadyVoted && (
-                <p
-                  className="btn-show-result"
-                  onClick={() => {
-                    if (checkIsConnected()) {
-                      setItem({ ...item });
-                    }
-                  }}
-                >
-                  Voir les résultats
-                </p>
-              )}
-            </>
+              <p
+                className="btn-show-result"
+                onClick={() => {
+                  if (checkIsConnected()) {
+                    saveSondageNotVote();
+                  }
+                }}
+              >
+                Voir les résultats
+              </p>
+          </>
           )}
 
           {item.alreadyVoted && (

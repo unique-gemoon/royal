@@ -7,6 +7,7 @@ import media from './media.model.js';
 import sondageOptions from "./sondageOptions.model.js";
 import sondageVotes from "./sondageVotes.model.js";
 import appearancePli from "./appearancePli.model.js";
+import sondageNotVotes from "./sondageNotVotes.model.js";
 
 let db = {};
 
@@ -37,6 +38,7 @@ db.media = media(sequelize, Sequelize);
 db.sondageOptions = sondageOptions(sequelize, Sequelize);
 db.sondageVotes = sondageVotes(sequelize, Sequelize);
 db.appearancePli = appearancePli(sequelize, Sequelize);
+db.sondageNotVotes = sondageNotVotes(sequelize, Sequelize);
 
 Object.keys(db).forEach(modelName => {
   if (db[modelName].associate) {

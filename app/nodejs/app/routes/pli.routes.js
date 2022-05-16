@@ -8,9 +8,11 @@ import {
   newPli,
   updateAppearancePli,
   addVoteSondagePli,
-  findPliSondageOptionsVotesById,
+  findSondageOptionsVotesById,
+  findSondageNotVotesById,
+  addNotVoteSondagePli,
 } from "../controllers/pli.controller.js";
-import { checkDataPli, checkDataPliTime, checkSondagePliIsVoted } from "../middleware/checkPli.js";
+import { checkDataPli, checkDataPliTime, checkSondageNotVotes, checkSondagePliIsVoted } from "../middleware/checkPli.js";
 import { uploadMedia } from "../middleware/uploadMedia.js";
 
 const pliRoutes = Router();
@@ -37,9 +39,17 @@ pliRoutes.post(
 pliRoutes.post(
   "/sondage/vote",
   passport.authenticate("jwt", { session: false }),
-  findPliSondageOptionsVotesById,
+  findSondageOptionsVotesById,
   checkSondagePliIsVoted,
   addVoteSondagePli
+);
+
+pliRoutes.post(
+  "/sondage/not-vote",
+  passport.authenticate("jwt", { session: false }),
+  findSondageNotVotesById,
+  checkSondageNotVotes,
+  addNotVoteSondagePli
 );
 
 export default pliRoutes;

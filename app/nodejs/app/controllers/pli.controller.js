@@ -9,12 +9,16 @@ const Media = db.media;
 const SondageOptions = db.sondageOptions;
 const SondageVotes = db.sondageVotes;
 const AppearancePli = db.appearancePli;
+const SondageNotVotes = db.sondageNotVotes;
 const PliMedias = Pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 const PliUser = Pli.belongsTo(User);
 const PliAppearancePlis = Pli.hasMany(AppearancePli, { as: "appearances" });
 const SondageOptionsVotes = SondageOptions.hasMany(SondageVotes, {
   as: "votes",
+});
+const MediaSondageNotVotes = Media.hasMany(SondageNotVotes, {
+  as: "notVotes",
 });
 const Op = db.Sequelize.Op;
 
@@ -279,6 +283,12 @@ export function findAllPlisNotElapsed(req, res, next) {
               },
             ],
           },
+          {
+            model: SondageNotVotes,
+            association: MediaSondageNotVotes,
+            as: "notVotes",
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
         ],
       },
       {
@@ -347,9 +357,18 @@ export function findAllPlisNotElapsed(req, res, next) {
                   mediumId: option.mediumId,
                   numberVotes: option.votes.length,
                   votes: [],
-                  voted
+                  voted,
                 };
                 cpOptions.push(option);
+              }
+              if (!alreadyVoted) {
+                for (let k = 0; k < media.notVotes.length; k++) {
+                  const notVote = media.notVotes[k];
+                  if (req.user && notVote.userId == req.user.id) {
+                    alreadyVoted = true;
+                    break;
+                  }
+                }
               }
             }
             media = {
@@ -457,46 +476,78 @@ export function findPliAppearancesById(req, res, next) {
     });
 }
 
-export function findPliSondageOptionsVotesById(req, res, next) {
-  if (!parseInt(req.body.id)) {
+export function findSondageOptionsVotesById(req, res, next) {
+  if (!parseInt(req.body.sondageId)) {
     res.status(400).send({
-      message: "Identifiant du pli non définie.",
+      message: "Identifiant du sondage non définie.",
     });
     return;
   }
-  Pli.findOne({
+  Media.findOne({
     include: [
       {
-        model: Media,
-        association: PliMedias,
-        as: "medias",
+        model: SondageOptions,
+        association: MediaSondageOptions,
+        as: "options",
         include: [
           {
-            model: SondageOptions,
-            association: MediaSondageOptions,
-            as: "options",
-            include: [
-              {
-                model: SondageVotes,
-                association: SondageOptionsVotes,
-                as: "votes",
-              },
-            ],
+            model: SondageVotes,
+            association: SondageOptionsVotes,
+            as: "votes",
           },
         ],
       },
     ],
     where: {
-      id: req.body.id,
+      id: req.body.sondageId,
+      type: "sondage",
     },
   })
-    .then((pli) => {
-      if (pli) {
-        req.pli = pli;
+    .then((media) => {
+      if (media) {
+        req.media = media;
         next();
       } else {
         res.status(400).send({
-          message: "Pli non existé.",
+          message: "sondage non existé.",
+        });
+        return;
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
+    });
+}
+
+export function findSondageNotVotesById(req, res, next) {
+  if (!parseInt(req.body.sondageId)) {
+    res.status(400).send({
+      message: "Identifiant du sondage non définie.",
+    });
+    return;
+  }
+  Media.findOne({
+    include: [
+      {
+        model: SondageNotVotes,
+        association: MediaSondageNotVotes,
+        as: "notVotes",
+        attributes: { exclude: ["createdAt", "updatedAt"] },
+      }
+    ],
+    where: {
+      id: req.body.sondageId,
+      type: "sondage",
+    },
+  })
+    .then((media) => {
+      if (media) {
+        req.media = media;
+        next();
+      } else {
+        res.status(400).send({
+          message: "sondage non existé.",
         });
         return;
       }
@@ -572,6 +623,21 @@ export function addVoteSondagePli(req, res) {
       res
         .status(200)
         .json({ message: "ok", sondageVote: { id: sondageVote.id } });
+    })
+    .catch((err) => {
+      res.status(400).send({ message: err.message });
+    });
+}
+
+export function addNotVoteSondagePli(req, res) {
+  SondageNotVotes.create({
+    userId: req.user.id,
+    mediumId: req.body.sondageId,
+  })
+    .then((sondageNotVote) => {
+      res
+        .status(200)
+        .json({ message: "ok", sondageNotVote: { id: sondageNotVote.id } });
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
