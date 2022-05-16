@@ -1,17 +1,21 @@
 import moment from "moment";
 import { durationTime, isObject } from "../middleware/functions.js";
 import db from "../models/index.model.js";
-import sendEmail from '../services/sendEmail.js';
+import sendEmail from "../services/sendEmail.js";
 
 const Pli = db.pli;
 const User = db.user;
 const Media = db.media;
 const SondageOptions = db.sondageOptions;
+const SondageVotes = db.sondageVotes;
 const AppearancePli = db.appearancePli;
-const PliMedias = db.pli.hasMany(Media, { as: "medias" });
+const PliMedias = Pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
-const PliUser = db.pli.belongsTo(User);
-const PliAppearancePlis = db.pli.hasMany(AppearancePli, { as: "appearances" });
+const PliUser = Pli.belongsTo(User);
+const PliAppearancePlis = Pli.hasMany(AppearancePli, { as: "appearances" });
+const SondageOptionsVotes = SondageOptions.hasMany(SondageVotes, {
+  as: "votes",
+});
 const Op = db.Sequelize.Op;
 
 //TODO : delete demo data comments
@@ -194,7 +198,6 @@ export function newPli(req, res) {
     }
   )
     .then((pli) => {
-
       const response = sendEmail({
         from: "",
         to: req.user.email,
@@ -206,14 +209,17 @@ export function newPli(req, res) {
         },
       });
 
-
-      res.status(200).json({pli:{
-        id: pli.id,
-        content: pli.content,
-        ouverture: pli.ouverture,
-        duration: pli.duration,
-        medias: pli.medias,
-      },message:"ok", email: response});
+      res.status(200).json({
+        pli: {
+          id: pli.id,
+          content: pli.content,
+          ouverture: pli.ouverture,
+          duration: pli.duration,
+          medias: pli.medias,
+        },
+        message: "ok",
+        email: response,
+      });
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
@@ -264,6 +270,14 @@ export function findAllPlisNotElapsed(req, res, next) {
             association: MediaSondageOptions,
             as: "options",
             attributes: { exclude: ["createdAt", "updatedAt"] },
+            include: [
+              {
+                model: SondageVotes,
+                association: SondageOptionsVotes,
+                as: "votes",
+                attributes: { exclude: ["createdAt", "updatedAt"] },
+              },
+            ],
           },
         ],
       },
@@ -307,6 +321,51 @@ export function findAllPlisNotElapsed(req, res, next) {
         let cpPlis = [];
         for (let i = 0; i < plis.length; i++) {
           let cpPli = plis[i];
+          let cpMedias = [];
+          for (let j = 0; j < cpPli.medias.length; j++) {
+            let media = cpPli.medias[j];
+            let alreadyVoted = null;
+            let totalVotes = 0;
+            let cpOptions = [];
+            if (media.type == "sondage") {
+              alreadyVoted = false;
+              for (let k = 0; k < media.options.length; k++) {
+                let option = media.options[k];
+                totalVotes += option.votes.length;
+                let voted = false;
+                for (let m = 0; m < option.votes.length; m++) {
+                  const vote = option.votes[m];
+                  if (req.user && vote.userId == req.user.id) {
+                    alreadyVoted = true;
+                    voted = true;
+                    break;
+                  }
+                }
+                option = {
+                  id: option.id,
+                  name: option.name,
+                  mediumId: option.mediumId,
+                  numberVotes: option.votes.length,
+                  votes: [],
+                  voted
+                };
+                cpOptions.push(option);
+              }
+            }
+            media = {
+              id: media.id,
+              type: media.type,
+              name: media.name,
+              originalname: media.originalname,
+              path: media.path,
+              isOuverture: media.isOuverture,
+              pliId: media.pliId,
+              options: cpOptions,
+              alreadyVoted,
+              totalVotes,
+            };
+            cpMedias.push(media);
+          }
 
           let countDown = 0;
           let countUp = 0;
@@ -330,7 +389,7 @@ export function findAllPlisNotElapsed(req, res, next) {
           const ouverture = cpPli.ouverture;
           const duration = durationTime(cpPli.createdAt, cpPli.allottedTime);
           const allottedTime = cpPli.allottedTime;
-          const medias = cpPli.medias;
+          const medias = cpMedias;
           const user = cpPli.user;
           const createdAt = cpPli.createdAt;
           const appearances = { countDown, countUp, alreadyUpdated, signe };
@@ -362,7 +421,7 @@ export function findAllPlisNotElapsed(req, res, next) {
     });
 }
 
-export function findPliById(req, res, next) {
+export function findPliAppearancesById(req, res, next) {
   if (!parseInt(req.body.id)) {
     res.status(400).send({
       message: "Identifiant du pli non définie.",
@@ -375,6 +434,56 @@ export function findPliById(req, res, next) {
         model: AppearancePli,
         association: PliAppearancePlis,
         as: "appearances",
+      },
+    ],
+    where: {
+      id: req.body.id,
+    },
+  })
+    .then((pli) => {
+      if (pli) {
+        req.pli = pli;
+        next();
+      } else {
+        res.status(400).send({
+          message: "Pli non existé.",
+        });
+        return;
+      }
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
+    });
+}
+
+export function findPliSondageOptionsVotesById(req, res, next) {
+  if (!parseInt(req.body.id)) {
+    res.status(400).send({
+      message: "Identifiant du pli non définie.",
+    });
+    return;
+  }
+  Pli.findOne({
+    include: [
+      {
+        model: Media,
+        association: PliMedias,
+        as: "medias",
+        include: [
+          {
+            model: SondageOptions,
+            association: MediaSondageOptions,
+            as: "options",
+            include: [
+              {
+                model: SondageVotes,
+                association: SondageOptionsVotes,
+                as: "votes",
+              },
+            ],
+          },
+        ],
       },
     ],
     where: {
@@ -452,4 +561,19 @@ export function updateAppearancePli(req, res) {
         res.status(500).send({ message: err.message });
       });
   }
+}
+
+export function addVoteSondagePli(req, res) {
+  SondageVotes.create({
+    userId: req.user.id,
+    sondageOptionId: req.body.optionId,
+  })
+    .then((sondageVote) => {
+      res
+        .status(200)
+        .json({ message: "ok", sondageVote: { id: sondageVote.id } });
+    })
+    .catch((err) => {
+      res.status(400).send({ message: err.message });
+    });
 }

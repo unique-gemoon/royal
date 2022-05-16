@@ -10,5 +10,6 @@ const endPoints = {
   PLI : "/pli",
   PLI_TIME : "/pli/time",
   PLIS : "/pli/list",
+  PLI_SONDAGE_VOTE : "/pli/sondage/vote",
 };
 export default endPoints;

@@ -8,6 +8,9 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
+import { getMsgError } from "../../helper/fonctions";
+import endPoints from "../../config/endPoints";
+import connector from "../../connector";
 
 export default function Sondage({
   name,
@@ -15,11 +18,12 @@ export default function Sondage({
   setItem,
   setMsgNotifTopTime = () => {},
 }) {
-  const [options, setOptions] = useState([]);
+  const [options,setOptions] = useState([]);
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
+  const [submitting, setSubmitting] = useState(false);
 
-  const getOptions = () => {
+  useEffect(() => {
     const cpOptions = [];
     if (item.options) {
       for (let i = 0; i < item.options.length; i++) {
@@ -27,8 +31,8 @@ export default function Sondage({
         cpOptions.push({ label: option.name, value: option.id });
       }
     }
-    return cpOptions;
-  };
+    setOptions(cpOptions);
+  }, []);
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
@@ -46,55 +50,103 @@ export default function Sondage({
     }
   };
 
+  const saveSondageVote = (optionId) => {
+    if (!submitting) {
+      msgErrors({ submit: true, msg: null });
+
+      if (item.id && optionId) {
+        connector({
+          method: "post",
+          url: `${endPoints.PLI_SONDAGE_VOTE}`,
+          data: { id: item.id, optionId },
+          success: (response) => {
+            msgErrors({ submit: false });
+            msgSuccess(
+              "Votre pli a bien été publié sur la page universelle ! Il reste 1 heure avant qu’il ne disparaisse si aucun délai supplémentaire ne lui est ajouté ou enlevé par les utilisateurs."
+            );
+            const cpItem = { ...item };
+            for (let i = 0; i < cpItem.options.length; i++) {
+              const option = cpItem.options[i];
+              if (option.id == optionId) {
+                cpItem.options[i] = {
+                  ...option,
+                  voted: true,
+                  numberVotes: parseInt(option.numberVotes) + 1,
+                };
+              }
+            }
+            setItem({
+              ...cpItem,
+              alreadyVoted: true,
+              totalVotes: parseInt(item.totalVotes) + 1,
+            });
+          },
+          catch: (error) => {
+            msgErrors({ msg: getMsgError(error), submit: false });
+          },
+        });
+      } else {
+        const msg = "Quelque chose s'est mal passé, veuillez réessayer svp.";
+        msgErrors({ submit: false, msg });
+      }
+    }
+  };
+
+  const msgErrors = (e) => {
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
+    if (e.submit !== undefined) setSubmitting(e.submit);
+  };
+
+  const msgSuccess = (msg) => {
+    setMsgNotifTopTime(msg, 10000);
+  };
+
   return (
     <>
       {options ? (
         <SondageBloc>
-          {!item.result && (
+          {!item.alreadyVoted && (
             <>
               <RadioButton
                 className="bloc-choix-sondage"
-                options={getOptions()}
+                options={options}
                 value={item?.value ? item.value : ""}
                 name={name}
                 onChange={(val) => {
                   if (checkIsConnected()) {
-                    const cpItem = { ...item };
-                    for (let i = 0; i < cpItem.options.length; i++) {
-                      const option = cpItem.options[i];
-                      const choix = option.id == val.value ? true : false;
-                      cpItem.options[i] = { ...option, choix };
-                    }
-                    setItem({ ...cpItem, value: val.value });
+                    saveSondageVote(val.value);
                   }
                 }}
               />
-              <p
-                className="btn-show-result"
-                onClick={() => {
-                  if (checkIsConnected()) {
-                    setItem({ ...item, result: true });
-                  }
-                }}
-              >
-                Voir les résultats
-              </p>
+
+              {item.alreadyVoted && (
+                <p
+                  className="btn-show-result"
+                  onClick={() => {
+                    if (checkIsConnected()) {
+                      setItem({ ...item });
+                    }
+                  }}
+                >
+                  Voir les résultats
+                </p>
+              )}
             </>
           )}
 
-          {item.result && (
+          {item.alreadyVoted && (
             <div className="bloc-result-sondage">
               {item.options.map((option, index) => (
                 <ItemResultSondage
                   key={index}
-                  purcentage={option.countQte || 0}
+                  purcentage={option.numberVotes || 0}
                 >
                   <div className="content-result-sondage">
                     <span>{option.name}</span>{" "}
-                    {option.choix && <CheckCircleOutlineIcon />}
+                    {option.voted && <CheckCircleOutlineIcon />}
                   </div>
                   <span className="purcentage-item">
-                    {option.countQte || 0}
+                    {option.numberVotes || 0}
                   </span>
                 </ItemResultSondage>
               ))}
