@@ -39,10 +39,6 @@ export default function Home() {
   const [openModalMessage, setOpenModalMessage] = useState(false);
 
   useEffect(() => {
-    getPlis();
-  }, []);
-
-  useEffect(() => {
     if (plis.length) {
       updateDurations();
     }
@@ -117,6 +113,10 @@ export default function Home() {
 
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
+
+  useEffect(() => {
+    getPlis();
+  }, [auth.roles]);
 
   const setItem = (item) => {
     const cpPlis = [...plis];
