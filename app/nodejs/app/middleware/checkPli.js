@@ -139,23 +139,18 @@ export function checkSondagePliIsVoted(req, res, next) {
   } else {
     let optionExiste = false;
     let alreadyVoted = false;
-    for (let i = 0; i < req.pli.medias.length; i++) {
-      const media = req.pli.medias[i];
-      if (media.type == "sondage") {
-        for (let j = 0; j < media.options.length; j++) {
-          const option = media.options[j];
-          if (option.id == req.body.optionId) {
-            optionExiste = true;
-            for (let k = 0; k < option.votes.length; k++) {
-              const vote = option.votes[k];
-              if (req.user && vote.userId == req.user.id) {
-                alreadyVoted = true;
-                break;
-              }
-            }
+    for (let i = 0; i < req.media.options.length; i++) {
+      const option = req.media.options[i];
+      if (option.id == req.body.optionId) {
+        optionExiste = true;
+        for (let j = 0; j < option.votes.length; j++) {
+          const vote = option.votes[j];
+          if (req.user && vote.userId == req.user.id) {
+            alreadyVoted = true;
             break;
           }
         }
+        break;
       }
     }
     if (!optionExiste) {
@@ -165,6 +160,30 @@ export function checkSondagePliIsVoted(req, res, next) {
       error.name = "alreadyVoted";
       error.message = "Sondage déjà voté.";
     }
+  }
+
+  if (!error.name) {
+    next();
+  } else {
+    res.status(400).send({ message: error.message });
+    return;
+  }
+}
+
+export function checkSondageNotVotes(req, res, next) {
+  const error = { name: "", message: "" };
+
+  let alreadyVoted = false;
+  for (let i = 0; i < req.media.notVotes.length; i++) {
+    const notVote = req.media.notVotes[i];
+    if (req.user && notVote.userId == req.user.id) {
+      alreadyVoted = true;
+      break;
+    }
+  }
+  if (alreadyVoted) {
+    error.name = "alreadyVoted";
+    error.message = "Sondage déjà voté.";
   }
 
   if (!error.name) {
