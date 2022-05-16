@@ -435,7 +435,7 @@ export const ButtonIcon = styled(Button)`
     &.btn-white{
         color: #EDAF5D;
         background-color: #FFF;
-        margin-bottom: 12px;
+        margin-bottom: 8px;
         margin-left: 15px;
         @media(max-width: 1200px){
             margin-left: 0;
@@ -2478,6 +2478,14 @@ export const BlocNewSondage = styled.div`
     }
 `;
 export const BlocAddPli = styled.div`
+    &.is-publish-pli{
+        @media(max-width: 767px){
+            position: absolute;
+            top: -38px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+    }
     text-align: center;
     .bloc-new-pli {
         position: fixed;
@@ -3104,4 +3112,78 @@ export const ChatSpace = styled.div`
     }
   }
   
+`;
+export const BarTimerPli = styled.div`
+    width: 185px;
+    margin: 0 auto 25px;
+    overflow: hidden;
+    border-radius: 8px;
+    @media(max-width: 767px){
+        margin: 0;
+    }
+    .progressBar-item{
+        background-color: #324e7c;
+        height: 6px;
+        & > span{
+            background: linear-gradient(#ed9d5d 0%, #f0c27a 100%);
+            border-radius: 0 3px 3px 0;
+        }
+    }  
+        .content-timer-bar{
+            width: 100%;
+            background: rgba(26, 57, 91, .29);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            height: 26px;
+            padding: 6px 10px;
+            font-size: 13px;
+            line-height: 1;
+            transition: .3s ease;
+            &:before{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                pointer-events: none;
+                background: linear-gradient(#1c3331 0%, rgba(28, 51, 49, 0) 92.33%);
+                opacity: 0.3;
+            }
+            &:after{
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                bottom: 0;
+                right: 0;
+                pointer-events: none;
+                background: linear-gradient(#1c3331 0%, rgba(28, 51, 49, 0) 92.33%);
+                opacity: 0.15;
+            }
+            & > span{
+                color: #c7c7c7;
+                display: inline-block;
+                position: relative;
+            }
+            .timer-item{
+                display: flex;
+                align-items: center;
+                color: #FFF;
+                font-family: 'ProximaNovaSoftW03-Semibold';
+                position: relative;
+                svg{
+                    font-size: 13px;
+                    margin-bottom: 2px;
+                    margin-right: 5px;
+                    color: #edaf5d;
+                }
+                span{
+                    width: 58px;
+                    display: inline-block;
+                }
+            }
+        }
 `;
