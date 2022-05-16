@@ -30,10 +30,13 @@ export default function NewPli({
   getPlis = () => {},
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
+  const dispatch = useDispatch();
+  const auth = useSelector((store) => store.auth);
+
   const [state, setState] = useState({
     inputEmoji: {
       name: "message-input",
-      placeholder: "Que veux-tu dire, Lys ?",
+      placeholder: `Que veux-tu dire, ${auth?.user?.username} ?`,
       value: "",
       type: "text",
       as: "textarea",
@@ -42,7 +45,7 @@ export default function NewPli({
     },
     inputEmojiOuverture: {
       name: "content-pli2",
-      placeholder: "Que veux-tu dire, Lys ?",
+      placeholder: `Que veux-tu dire, ${auth?.user?.username} ?`,
       value: "",
       open: false,
       error: false,
@@ -152,8 +155,6 @@ export default function NewPli({
   const [addOuverture, setAddOuverture] = useState(false);
   const [message, setMessage] = useState(null);
   const [submitting, setSubmitting] = useState(false);
-  const dispatch = useDispatch();
-  const auth = useSelector((store) => store.auth);
 
   const checkIsConnected = () => {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
