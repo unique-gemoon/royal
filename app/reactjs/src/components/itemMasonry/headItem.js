@@ -317,7 +317,7 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              // setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
+              setActiveItem((activeItem && activeItem.id == item.id) ? item : null);
             }}
           >
             14 <VisibilityIcon />{" "}
