@@ -2,7 +2,7 @@ import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import Masonry from "@mui/lab/Masonry";
+import Masonry from 'react-masonry-css'
 import { StyledEngineProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
@@ -239,7 +239,11 @@ export default function Home() {
     if (e.submit !== undefined) setSubmitting(e.submit);
     if (e.msg !== undefined)  setMsgNotifTopTime(e.msg,10000);
   };
-
+  const breakpointColumnsObj = {
+    default: 3,
+    993: 2,
+    500: 1
+  };
   return (
     <DefaultMain>
       <StyledEngineProvider injectFirst>
@@ -266,14 +270,18 @@ export default function Home() {
             />
           )}
           <Masonry
-            columns={{ xs: 1, md: 2, lg: 3 }}
-            spacing={3}
-            className={plis.length < 3 && "masonry-two-columns"}
+            // columns={{ xs: 1, md: 2, lg: 3 }}
+            // spacing={3}
+            // className={plis.length < 3 && "masonry-two-columns"}
+            breakpointCols={breakpointColumnsObj}
+            className="my-masonry-grid"
+            columnClassName="my-masonry-grid_column"
+            
           >
             {plis &&
               plis.map((item) => (
-                <div key={item.id}>
                   <ItemMasonry
+                    key={item.id}
                     item={item}
                     setItem={setItem}
                     action={action}
@@ -284,7 +292,6 @@ export default function Home() {
                     setActiveItemPlayer={setActiveItemPlayer}
                     setMsgNotifTopTime={setMsgNotifTopTime}
                   />
-                </div>
               ))}
           </Masonry>
         </ContainerDef>
