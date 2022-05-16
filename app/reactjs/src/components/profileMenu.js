@@ -1,18 +1,18 @@
-import React, { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
 import Button from "@mui/material/Button";
-import Grow from "@mui/material/Grow";
-import MenuList from "@mui/material/MenuList";
-import MenuItem from "@mui/material/MenuItem";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
+import Grow from "@mui/material/Grow";
+import MenuItem from "@mui/material/MenuItem";
+import MenuList from "@mui/material/MenuList";
 import Paper from "@mui/material/Paper";
 import Popper from "@mui/material/Popper";
-import { BlocProfileMenu, ModalItem } from '../assets/styles/componentStyle';
+import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { BlocProfileMenu, ModalItem } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import * as actionTypes from "../store/functions/actionTypes";
 
-export default function ProfileMenu({setMsgNotifTop = () => {}}) {
+export default function ProfileMenu({ setMsgNotifTop = () => {} }) {
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const [modalConfirm, setModalConfirm] = useState(false);
@@ -103,8 +103,12 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
                   aria-labelledby="composition-button"
                   className="profil-menu-options"
                 >
-                  <MenuItem onClick={()=>logout()}>Se déconnecter</MenuItem>
-                  <MenuItem onClick={()=>{setModalConfirm(true)}}>
+                  <MenuItem onClick={() => logout()}>Se déconnecter</MenuItem>
+                  <MenuItem
+                    onClick={() => {
+                      setModalConfirm(true);
+                    }}
+                  >
                     Supprimer son compte
                   </MenuItem>
                 </MenuList>
@@ -113,13 +117,22 @@ export default function ProfileMenu({setMsgNotifTop = () => {}}) {
           </Grow>
         )}
       </Popper>
-      <ModalItem className="confirmation-modal" show={modalConfirm} centered backdrop="static" keyboard={false} onHide={() => setModalConfirm(false)}>
+      <ModalItem
+        className="confirmation-modal"
+        show={modalConfirm}
+        centered
+        backdrop="static"
+        keyboard={false}
+        onHide={() => setModalConfirm(false)}
+      >
         <ModalItem.Body>
-          <div className='bloc-default-modal'>
-            <p className='qst-confirm'>lorem ipsum</p>
-            <div className='bloc-btns-confirm'>
+          <div className="bloc-default-modal">
+            <p className="qst-confirm">
+              Êtes-vous sûr de vouloir supprimer votre compte
+            </p>
+            <div className="bloc-btns-confirm">
               <Button onClick={() => setModalConfirm(false)}>Annuler</Button>
-              <Button onClick={()=>deleteAccount()}>Confirmer</Button>
+              <Button onClick={() => deleteAccount()}>Confirmer</Button>
             </div>
           </div>
         </ModalItem.Body>
