@@ -31,7 +31,7 @@ export default function NewPli({
   setMsgNotifTopTime = () => {},
   getPlis = () => {},
 }) {
-  const [publishPli, setPublishPli] = useState(true);
+  const [publishPli, setPublishPli] = useState(false);
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
