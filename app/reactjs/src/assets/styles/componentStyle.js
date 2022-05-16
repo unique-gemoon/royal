@@ -1893,7 +1893,6 @@ export const BlocGalleryImages = styled.div`
     .item-gallery{
         padding: 2px;
         position: relative;
-        height: 220px;
         &:before{
             content: "";
             position: absolute;
@@ -1921,6 +1920,7 @@ export const BlocGalleryImages = styled.div`
     &.one-item{
         .item-gallery{
             width: 100%;
+            height: 220px;
             @media(min-width: 1600px){
                 height: 300px;
             }
@@ -1992,6 +1992,7 @@ export const BlocVideoPlayer = styled.div`
 
 export const ModalItem = styled(Modal)`
     background-color: rgba(6, 20, 30, .94);
+    overflow-y: hidden;
     &.confirmation-modal{
         backdrop-filter: blur(3.4667301177978516px);
         background-color: transparent;
@@ -2007,18 +2008,27 @@ export const ModalItem = styled(Modal)`
     }
     .modal-dialog{
         width: 900px;
-        max-height: calc(100vh - 60px);
-        overflow-y: scroll;
-        margin: 30px auto;
+        height: 100%;
+        margin: auto;
         max-width: 90%;
         border-radius: 20px;
         .modal-content{
             border-radius: 0px;
             background-color: transparent;
             border: 0;
+            height: calc(100% - 60px);
+            margin:  30px auto;
         }
         .modal-body{
             padding: 0;
+            height: 100%;
+            & > div{
+                max-height: 100%;
+                overflow-y: auto;
+            }
+            .Bloc-NV2{
+                max-height: initial;
+            }
             .bloc-default-modal {
                 border-radius: 13px;
                 background: linear-gradient(#2d7fc3 0%,#579be9 100%);
@@ -2078,24 +2088,45 @@ export const ModalItem = styled(Modal)`
             .item-gallery {
                 height: 440px;
                 margin: auto;
+                @media(max-width: 1200px){
+                    height: 300px;
+                }
+                @media(max-width: 575px){
+                    height: 220px;
+                }
             }
         }
         &.four-item{
             .item-gallery{
                 height: 220px;
+                @media(max-width: 575px){
+                    height: 110px;
+                }
             }
         }
         &.tow-item{
             .item-gallery{
                 height: 220px;
+                @media(max-width: 575px){
+                    height: 110px;
+                }
             }
         }
         &.three-item{
             height: 440px;
+            @media(max-width: 575px){
+                height: 220px;
+            }
             .item-gallery{
                 height: 220px;
+                @media(max-width: 575px){
+                    height: 110px;
+                }
                 &:first-child{
                     height: 440px;
+                    @media(max-width: 575px){
+                        height: 220px;
+                    }
                 }
             }
         }

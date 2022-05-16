@@ -154,7 +154,7 @@ export default function ItemMasonry({
           setAction={setAction}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
-          className={isCheck(item) ? "" : "nv-hide"}
+          className={state.showModal ? "" :  isCheck(item) ? "" : "nv-hide"}
           setMsgNotifTopTime={setMsgNotifTopTime}
         />
       </>
