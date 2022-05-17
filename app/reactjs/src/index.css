@@ -14,10 +14,11 @@ code {
     monospace;
 }
 ::-webkit-scrollbar {
-  width: 5px;
+  width: 3px;
 }
 ::-webkit-scrollbar-track {
   background: transparent; 
+  border-radius: 10px;
 }
 ::-webkit-scrollbar-thumb {
   background: #4D69A0; 
