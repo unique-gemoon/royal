@@ -287,12 +287,9 @@ export default function Home() {
             />
           )}
           <Masonry
-            // columns={{ xs: 1, md: 2, lg: 3 }}
-            // spacing={3}
-            // className={plis.length < 3 && "masonry-two-columns"}
             breakpointCols={breakpointColumnsObj}
-            className="my-masonry-grid"
-            columnClassName="my-masonry-grid_column"
+            className="pli-masonry-grid"
+            columnClassName="pli-masonry-grid_column"
           >
             {plis &&
               plis.map((item) => (
