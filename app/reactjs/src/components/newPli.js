@@ -13,7 +13,7 @@ import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
 import connector from "../connector";
 import { useOutsideAlerter } from "../helper/events";
-import { getMsgError } from "../helper/fonctions";
+import { getMsgError, getPercentDuration } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 import AddSondage from "./addSondage";
 import BarTemporellePli from "./barTemporellePli";
@@ -30,8 +30,9 @@ export default function NewPli({
   setMsgNotifTop = () => {},
   setMsgNotifTopTime = () => {},
   getPlis = () => {},
+  publishPli,
+  setPublishPli = () => {},
 }) {
-  const [publishPli, setPublishPli] = useState(false);
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
@@ -137,7 +138,7 @@ export default function NewPli({
       second: 0,
       countDown: 0,
       countUp: 0,
-      disabled:true
+      disabled: true,
     },
     dragOpen: true,
   });
@@ -163,7 +164,10 @@ export default function NewPli({
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
-      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        10000
+      );
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -262,6 +266,14 @@ export default function NewPli({
               10000
             );
             setTogglePli(false);
+            setPublishPli({
+              id: response.data.pli.id,
+              duration: response.data.pli.duration,
+              appearances: {
+                countDown: 0,
+                countUp: 0,
+              },
+            });
             getPlis();
           },
           catch: (error) => {
@@ -368,7 +380,7 @@ export default function NewPli({
 
   return (
     <BlocAddPli className={`${publishPli && "is-publish-pli"}`}>
-      {!publishPli &&
+      {!publishPli && (
         <div className={`bloc-new-pli ${togglePli ? "showing-new-pli" : ""}`}>
           <div className="cadre-content-new-pli">
             <form className="form-new-pli" onSubmit={submitPli}>
@@ -434,7 +446,11 @@ export default function NewPli({
                       </div>
                     </div>
                   </div>
-                  <BarTemporellePli state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime} />
+                  <BarTemporellePli
+                    state={state}
+                    setState={setState}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
+                  />
                 </div>
                 {addOuverture && (
                   <div className="new-pli-nv2">
@@ -470,25 +486,23 @@ export default function NewPli({
             </form>
           </div>
         </div>
-      }
-      {publishPli &&
+      )}
+      {publishPli && (
         <BarTimerPli>
           <LinearProgress
             className="progressBar-item"
             variant="determinate"
-            value={70}
+            value={getPercentDuration(publishPli)}
           />
-          <div
-            className="content-timer-bar"
-          >
-            <span className="timer-down">20</span>
+          <div className="content-timer-bar">
+            <span className="timer-down">{publishPli?.appearances?.countDown}</span>
             <div className="timer-item">
-              <TimerOutlinedIcon /> <span>00:29:39</span>
+              <TimerOutlinedIcon /> <span>{publishPli?.duration}</span>
             </div>
-            <span className="timer-up">30</span>
+            <span className="timer-up">{publishPli?.appearances?.countUp}</span>
           </div>
         </BarTimerPli>
-      }
+      )}
       {!publishPli && togglePli === false && (
         <div
           onClick={() => {

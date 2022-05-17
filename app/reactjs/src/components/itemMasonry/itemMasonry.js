@@ -22,7 +22,7 @@ export default function ItemMasonry({
   setActiveItem = () => {},
   setActiveItemPlayer = () => {},
   activeItemPlayer = null,
-  setMsgNotifTopTime = ()=>{}
+  setMsgNotifTopTime = () => {},
 }) {
   const initData = {
     media: {
@@ -154,7 +154,7 @@ export default function ItemMasonry({
           setAction={setAction}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
-          className={state.showModal ? "" :  isCheck(item) ? "" : "nv-hide"}
+          className={state.showModal ? "" : isCheck(item) ? "" : "nv-hide"}
           setMsgNotifTopTime={setMsgNotifTopTime}
         />
       </>
@@ -253,7 +253,12 @@ export default function ItemMasonry({
                   )}
                 </div>
                 {state.showComment ? (
-                  <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
+                  <BlocComments
+                    item={item}
+                    state={state}
+                    setState={setState}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
+                  />
                 ) : null}
               </>
             </div>
@@ -284,7 +289,12 @@ export default function ItemMasonry({
                   <OpenInFullOutlinedIcon className="open-zoom-icon" />
                 </span>
               </div>
-              <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime}/>
+              <BlocComments
+                item={item}
+                state={state}
+                setState={setState}
+                setMsgNotifTopTime={setMsgNotifTopTime}
+              />
             </>
           )}
         </div>

@@ -15,14 +15,16 @@ export default function OptionsBtnFooter({
   setDataNotifs = () => {},
   setMsgNotifTop = () => {},
   getPlis = () => {},
-  setMsgNotifTopTime = () => {}
+  setMsgNotifTopTime = () => {},
+  publishPli = null,
+  setPublishPli = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
   const [newNotifs, setNewNotifs] = useState(
-    dataNotifs.filter(newNotif => newNotif.isRead == false)
+    dataNotifs.filter((newNotif) => newNotif.isRead == false)
   );
-  
+
   const updateAction = (e, name) => {
     let cpAction = { ...action };
     if (isTabletOrMobile) {
@@ -52,7 +54,7 @@ export default function OptionsBtnFooter({
           updateAction(e, "messagerie");
         }}
       >
-        <Messagerie setMsgNotifTopTime={setMsgNotifTopTime}/>
+        <Messagerie setMsgNotifTopTime={setMsgNotifTopTime} />
       </ButtonAction>
       <ButtonAction
         className="search-bloc-action"
@@ -71,6 +73,8 @@ export default function OptionsBtnFooter({
           setAction={setAction}
           setMsgNotifTop={setMsgNotifTop}
           getPlis={getPlis}
+          publishPli={publishPli}
+          setPublishPli={setPublishPli}
         />
       )}
       <ButtonAction
