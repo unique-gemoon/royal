@@ -59,7 +59,7 @@ export const ButtonDefault = styled(Button)`
 `;
 export const DefaultMain = styled.div`
     position: relative;
-    padding: 30px 0;
+    padding: 20px 0;
     @media(max-width: 1200px){
         padding-top: 0;
     }
@@ -76,10 +76,24 @@ export const DefaultMain = styled.div`
     }
 `;
 export const ContainerDef = styled(Container)`
-    & > div{
+    .pli-masonry-grid {
+        display: flex;
+        margin-left: -24px; /* gutter size offset */
+        width: auto;
         padding: 0 12px;
         @media(max-width: 1200px){
             padding: 24px 0;
+        }
+    }
+    .pli-masonry-grid_column {
+    padding-left: 24px; /* gutter size */
+    background-clip: padding-box;
+    }
+
+    /* Style your items */
+    .pli-masonry-grid_column {
+        & > div { 
+            margin-bottom: 24px;
         }
     }
     max-width: 100%;
