@@ -7,7 +7,7 @@ import React, { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
 import { ROLES } from "../config/vars";
-import { getTime } from "../helper/fonctions";
+import { getPercentDuration, getTime } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 import connector from "../connector";
 import endPoints from "../config/endPoints";
@@ -109,25 +109,12 @@ export default function BarTemporelle({
     saveTime({ signe: false });
   };
 
-  const getPercentDuration = () => {
-    if (!item.duration || !item.allottedTime) {
-      return 0;
-    }
-    let hour, minute, second;
-    [hour, minute, second] = String(item.duration).split(":");
-    hour = parseInt(hour);
-    minute = parseInt(minute);
-    second = parseInt(second);
-    const durationSecond = hour * 3600 + minute * 60 + second;
-    return (durationSecond * 100) / (parseInt(item.allottedTime) * 60);
-  };
-
   return (
     <BarTimer className={props.className}>
       <LinearProgress
         className="progressBar-item"
         variant="determinate"
-        value={getPercentDuration()}
+        value={getPercentDuration(item)}
       />
       <div className="bloc-timer-Bar">
         <Button

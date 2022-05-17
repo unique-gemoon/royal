@@ -33,3 +33,55 @@ export function getTime(hour, minute, second) {
   const s = String(second).length == 1 ? "0" + second : second;
   return h + ":" + m + ":" + s;
 }
+
+export function sortObjects(objs, key, order = "asc") {
+  if (order.toLowerCase() == "asc") {
+    return objs.sort(function (a, b) {
+      if (a[key] < b[key]) return -1;
+      if (a[key] > b[key]) return 1;
+      return 0;
+    });
+  } else {
+    return objs.sort(function (a, b) {
+      if (a[key] > b[key]) return -1;
+      if (a[key] < b[key]) return 1;
+      return 0;
+    });
+  }
+}
+
+export function decrementDuration(duration) {
+  let hour, minute, second;
+  [hour, minute, second] = String(duration).split(":");
+  hour = parseInt(hour);
+  minute = parseInt(minute);
+  second = parseInt(second);
+  if (second == 0) {
+    if (minute == 0) {
+      if (hour > 0) {
+        hour--;
+        minute = 59;
+        second = 59;
+      }
+    } else {
+      minute--;
+      second = 59;
+    }
+  } else {
+    second--;
+  }
+  return [hour, minute, second];
+}
+
+export function getPercentDuration(item){
+  if (!item.duration || !item.allottedTime) {
+    return 0;
+  }
+  let hour, minute, second;
+  [hour, minute, second] = String(item.duration).split(":");
+  hour = parseInt(hour);
+  minute = parseInt(minute);
+  second = parseInt(second);
+  const durationSecond = hour * 3600 + minute * 60 + second;
+  return (durationSecond * 100) / (parseInt(item.allottedTime) * 60);
+};

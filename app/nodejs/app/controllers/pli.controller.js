@@ -219,7 +219,10 @@ export function newPli(req, res) {
           content: pli.content,
           ouverture: pli.ouverture,
           duration: pli.duration,
+          allottedTime,
           medias: pli.medias,
+          countDown:0,
+          countUp:0
         },
         message: "ok",
         email: response,
@@ -234,9 +237,9 @@ export function findPliUserNotElapsed(req, res, next) {
   Pli.findOne({
     where: {
       createdAt: {
-        //TODO decommente la ligne dessous
-        //[Op.gt]: moment().subtract(1, "h").toDate(),
-        [Op.gt]: moment().subtract(1, "minutes").toDate(),
+        [Op.gt]: db.Sequelize.literal(
+          "DATE_SUB(NOW(), INTERVAL pli.allottedTime MINUTE)"
+        ),
       },
       userId: req.user.id,
     },
@@ -248,7 +251,7 @@ export function findPliUserNotElapsed(req, res, next) {
         //TODO modifier message
         res.status(400).send({
           message:
-            "(P.I. 1 minute pour le test au lieu d'une 1h) Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
+            "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
         });
         return;
       }

@@ -2,9 +2,9 @@ import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
 import NotificationsNoneOutlinedIcon from "@mui/icons-material/NotificationsNoneOutlined";
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import Masonry from 'react-masonry-css'
 import { StyledEngineProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
+import Masonry from "react-masonry-css";
 import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
@@ -18,14 +18,19 @@ import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
 import ItemMasonry from "../components/itemMasonry/itemMasonry";
 import MessageNotif from "../components/messageNotif";
+import ModalMessage from "../components/modalMessage";
 import ProfileMenu from "../components/profileMenu";
 import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
 import connector from "../connector";
-import { getMsgError, getTime } from "../helper/fonctions";
+import {
+  decrementDuration,
+  getMsgError,
+  getTime,
+  sortObjects,
+} from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
-import ModalMessage from "../components/modalMessage";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -37,12 +42,24 @@ export default function Home() {
   const [submitting, setSubmitting] = useState(false);
   const [showBlocModalMessage, setShowBlocModalMessage] = useState(null);
   const [openModalMessage, setOpenModalMessage] = useState(false);
+  const [publishPli, setPublishPli] = useState(null);
 
   useEffect(() => {
-    if (plis.length) {
-      updateDurations();
-    }
+    updateDurations();
   }, [seconds]);
+
+  useEffect(() => {
+    if (localStorage.getItem("publishPli")) {
+      setPublishPli({
+        id: parseInt(localStorage.getItem("publishPli")),
+        duration: "00:00:00",
+        appearances: {
+          countDown: 0,
+          countUp: 0,
+        },
+      });
+    }
+  }, []);
 
   useEffect(() => {
     const interval = setInterval(() => {
@@ -57,6 +74,10 @@ export default function Home() {
       url: `${endPoints.PLIS}`,
       success: (response) => {
         setPlis(response.data.plis);
+        if (response.data.plis.length == 0) {
+          setPublishPli(null);
+          localStorage.removeItem("publishPli");
+        }
       },
       catch: (error) => {
         console.log(error);
@@ -119,12 +140,13 @@ export default function Home() {
   }, [auth.roles]);
 
   const setItem = (item) => {
-    const cpPlis = [...plis];
+    let cpPlis = [...plis];
     for (var i = 0; i < cpPlis.length; i++) {
       if (cpPlis[i].id == item.id) {
         cpPlis[i] = item;
       }
     }
+    cpPlis = sortObjects(cpPlis, "duration", "desc");
     setPlis(cpPlis);
   };
 
@@ -134,27 +156,19 @@ export default function Home() {
       const cpPlis = [];
       for (let i = 0; i < plis.length; i++) {
         const cpPli = { ...plis[i] };
-        [hour, minute, second] = String(cpPli.duration).split(":");
-        hour = parseInt(hour);
-        minute = parseInt(minute);
-        second = parseInt(second);
-        if (second == 0) {
-          if (minute == 0) {
-            if (hour > 0) {
-              hour--;
-              minute = 59;
-              second = 59;
-            }
-          } else {
-            minute--;
-            second = 59;
-          }
-        } else {
-          second--;
-        }
+        [hour, minute, second] = decrementDuration(cpPli.duration);
         cpPli.duration = getTime(hour, minute, second);
         if (hour > 0 || minute > 0 || second > 0) {
           cpPlis.push(cpPli);
+        }
+        if (publishPli && publishPli.id === cpPli.id) {
+          if (hour > 0 || minute > 0 || second > 0) {
+            setPublishPli(cpPli);
+            localStorage.setItem("publishPli", cpPli.id);
+          } else {
+            setPublishPli(null);
+            localStorage.removeItem("publishPli");
+          }
         }
       }
       setPlis(cpPlis);
@@ -195,7 +209,10 @@ export default function Home() {
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
-      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        10000
+      );
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -237,12 +254,12 @@ export default function Home() {
 
   const msgErrors = (e) => {
     if (e.submit !== undefined) setSubmitting(e.submit);
-    if (e.msg !== undefined)  setMsgNotifTopTime(e.msg,10000);
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
   };
   const breakpointColumnsObj = {
     default: 3,
     993: 2,
-    500: 1
+    500: 1,
   };
   return (
     <DefaultMain>
@@ -276,18 +293,18 @@ export default function Home() {
           >
             {plis &&
               plis.map((item) => (
-                  <ItemMasonry
-                    key={item.id}
-                    item={item}
-                    setItem={setItem}
-                    action={action}
-                    setAction={setAction}
-                    activeItem={activeItem}
-                    setActiveItem={setActiveItem}
-                    activeItemPlayer={activeItemPlayer}
-                    setActiveItemPlayer={setActiveItemPlayer}
-                    setMsgNotifTopTime={setMsgNotifTopTime}
-                  />
+                <ItemMasonry
+                  key={item.id}
+                  item={item}
+                  setItem={setItem}
+                  action={action}
+                  setAction={setAction}
+                  activeItem={activeItem}
+                  setActiveItem={setActiveItem}
+                  activeItemPlayer={activeItemPlayer}
+                  setActiveItemPlayer={setActiveItemPlayer}
+                  setMsgNotifTopTime={setMsgNotifTopTime}
+                />
               ))}
           </Masonry>
         </ContainerDef>
@@ -303,6 +320,8 @@ export default function Home() {
             setMsgNotifTop={setMsgNotifTop}
             setMsgNotifTopTime={setMsgNotifTopTime}
             getPlis={getPlis}
+            publishPli={publishPli}
+            setPublishPli={setPublishPli}
           />
         )}
         <ModalMessage
