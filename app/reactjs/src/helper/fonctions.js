@@ -53,9 +53,9 @@ export function sortObjects(objs, key, order = "asc") {
 export function decrementDuration(duration) {
   let hour, minute, second;
   [hour, minute, second] = String(duration).split(":");
-  hour = parseInt(hour);
-  minute = parseInt(minute);
-  second = parseInt(second);
+  hour = getInt(hour);
+  minute = getInt(minute);
+  second = getInt(second);
   if (second == 0) {
     if (minute == 0) {
       if (hour > 0) {
@@ -73,15 +73,25 @@ export function decrementDuration(duration) {
   return [hour, minute, second];
 }
 
-export function getPercentDuration(item){
+export function getPercentDuration(item) {
   if (!item.duration || !item.allottedTime) {
     return 0;
   }
   let hour, minute, second;
   [hour, minute, second] = String(item.duration).split(":");
-  hour = parseInt(hour);
-  minute = parseInt(minute);
-  second = parseInt(second);
+  hour = getInt(hour);
+  minute = getInt(minute);
+  second = getInt(second);
   const durationSecond = hour * 3600 + minute * 60 + second;
-  return (durationSecond * 100) / (parseInt(item.allottedTime) * 60);
+  return (durationSecond * 100) / (getInt(item.allottedTime) * 60);
+}
+
+export const uniqid = () => {
+  const n = Math.floor(Math.random() * 11);
+  const k = Math.floor(Math.random() * 1000000);
+  return String.fromCharCode(n) + k;
 };
+
+export function getInt(val) {
+  return parseInt(val) || 0;
+}

@@ -8,17 +8,17 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
-import { getMsgError } from "../../helper/fonctions";
+import { getInt, getMsgError } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
 
 export default function Sondage({
   name,
   item,
-  setItem,
+  setItem = () => {},
   setMsgNotifTopTime = () => {},
 }) {
-  const [options,setOptions] = useState([]);
+  const [options, setOptions] = useState([]);
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
   const [submitting, setSubmitting] = useState(false);
@@ -68,14 +68,14 @@ export default function Sondage({
                 cpItem.options[i] = {
                   ...option,
                   voted: true,
-                  numberVotes: parseInt(option.numberVotes) + 1,
+                  numberVotes: getInt(option.numberVotes) + 1,
                 };
               }
             }
             setItem({
               ...cpItem,
               alreadyVoted: true,
-              totalVotes: parseInt(item.totalVotes) + 1,
+              totalVotes: getInt(item.totalVotes) + 1,
             });
           },
           catch: (error) => {
@@ -148,7 +148,7 @@ export default function Sondage({
               >
                 Voir les résultats
               </p>
-          </>
+            </>
           )}
 
           {item.alreadyVoted && (

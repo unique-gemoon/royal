@@ -8,6 +8,8 @@ import cors from "cors";
 import db from "./app/models/index.model.js";
 import router from "./app/routes/index.routes.js";
 import { Strategy, ExtractJwt } from "passport-jwt";
+import { createServer } from "http";
+import { Server } from "socket.io";
 
 const User = db.user;
 
@@ -77,12 +79,32 @@ console.log("\n*************************************\n");
 
 // Sync sequelize models then start Express app
 // =============================================
-app.listen(PORT, () => {
+/* app.listen(PORT, () => {
   console.log("\n*************************************\n");
   console.log(`App listening on PORT ${PORT}`);
-});
+}); */
 
 db.sequelize.sync({ alter: true }).then(() => {
   console.log(`${process.env.DB_NAME} database connected`);
   console.log("*************************************\n");
 });
+
+// Socket io
+// =============================================
+const httpServer = createServer(app);
+const options = { cors: corsOptions };
+const io = new Server(httpServer, options);
+
+httpServer.listen(PORT, () => {
+  console.log(`listening on *:${PORT}`);
+});
+
+io.on("connection", (socket) => {
+  console.log("socket=", socket.id);
+  socket.on("CLIENT_PLI", (data) => {
+    console.log("Pli => ", data);
+    io.emit("SERVER_PLI", data);
+  });
+});
+
+

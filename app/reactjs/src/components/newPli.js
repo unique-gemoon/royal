@@ -10,7 +10,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { BlocAddPli, BarTimerPli } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
-import { ROLES } from "../config/vars";
+import { pathSocketIo, ROLES } from "../config/vars";
 import connector from "../connector";
 import { useOutsideAlerter } from "../helper/events";
 import { getMsgError, getPercentDuration } from "../helper/fonctions";
@@ -30,6 +30,7 @@ export default function NewPli({
   setMsgNotifTop = () => {},
   setMsgNotifTopTime = () => {},
   getPlis = () => {},
+  setItem = () => {},
   publishPli,
   setPublishPli = () => {},
 }) {
@@ -266,15 +267,8 @@ export default function NewPli({
               10000
             );
             setTogglePli(false);
-            setPublishPli({
-              id: response.data.pli.id,
-              duration: response.data.pli.duration,
-              appearances: {
-                countDown: 0,
-                countUp: 0,
-              },
-            });
-            getPlis();
+            setPublishPli(response.data.pli);
+            setItem({ ...response.data.pli, action: "create" });
           },
           catch: (error) => {
             msgErrors({ msg: getMsgError(error), submit: false });
@@ -495,7 +489,9 @@ export default function NewPli({
             value={getPercentDuration(publishPli)}
           />
           <div className="content-timer-bar">
-            <span className="timer-down">{publishPli?.appearances?.countDown}</span>
+            <span className="timer-down">
+              {publishPli?.appearances?.countDown}
+            </span>
             <div className="timer-item">
               <TimerOutlinedIcon /> <span>{publishPli?.duration}</span>
             </div>

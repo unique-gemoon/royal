@@ -92,7 +92,8 @@ export default function ItemMasonry({
         cpMedias[i] = media;
       }
     }
-    setItem({ ...item, medias: cpMedias });
+    console.log("media",media);
+    setItem({ ...item, medias: cpMedias, action: "update" });
   };
 
   const renderContentNV1 = () => {

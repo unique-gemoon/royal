@@ -3,14 +3,14 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { Button } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
-import { ROLES } from "../config/vars";
-import { getPercentDuration, getTime } from "../helper/fonctions";
-import * as actionTypes from "../store/functions/actionTypes";
-import connector from "../connector";
 import endPoints from "../config/endPoints";
+import { ROLES } from "../config/vars";
+import connector from "../connector";
+import { getInt, getPercentDuration } from "../helper/fonctions";
+import * as actionTypes from "../store/functions/actionTypes";
 
 export default function BarTemporelle({
   item = {},
@@ -43,18 +43,19 @@ export default function BarTemporelle({
             signe,
           };
           if (signe) {
-            appearances.countUp = parseInt(item.appearances.countUp) + 1;
+            appearances.countUp = getInt(item.appearances.countUp) + 1;
           } else {
-            appearances.countDown = parseInt(item.appearances.countDown) + 1;
+            appearances.countDown = getInt(item.appearances.countDown) + 1;
           }
           setItem({
             ...item,
             duration: response.data.pli.duration,
-            allottedTime : response.data.pli.allottedTime,
+            allottedTime: response.data.pli.allottedTime,
             appearances,
+            action: "update",
           });
         },
-        catch: (error) => {
+        catch: () => {
           setIsPending(false);
         },
       });
@@ -65,7 +66,10 @@ export default function BarTemporelle({
     if (auth.roles.includes(ROLES.ROLE_USER)) {
       return true;
     } else {
-      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        10000
+      );
       dispatch({
         type: actionTypes.TO_LOGIN,
         toLogin: true,
@@ -80,8 +84,8 @@ export default function BarTemporelle({
     }
     let hour, minute, second;
     [hour, minute, second] = String(item.duration).split(":");
-    hour = parseInt(hour);
-    minute = parseInt(minute);
+    hour = getInt(hour);
+    minute = getInt(minute);
     minute++;
     if (minute >= 60) {
       minute = 0;
@@ -96,8 +100,8 @@ export default function BarTemporelle({
     }
     let hour, minute, second;
     [hour, minute, second] = String(item.duration).split(":");
-    hour = parseInt(hour);
-    minute = parseInt(minute);
+    hour = getInt(hour);
+    minute = getInt(minute);
     if (minute == 0) {
       if (hour > 0) {
         hour--;
