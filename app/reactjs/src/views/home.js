@@ -12,7 +12,7 @@ import logoType from "../assets/images/Logotype.png";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile,
+  HeaderMobile
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -20,6 +20,7 @@ import ItemMasonry from "../components/itemMasonry/itemMasonry";
 import MessageNotif from "../components/messageNotif";
 import ModalMessage from "../components/modalMessage";
 import ProfileMenu from "../components/profileMenu";
+import { socket } from "../components/socket";
 import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import { ROLES } from "../config/vars";
@@ -29,6 +30,7 @@ import {
   getMsgError,
   getTime,
   sortObjects,
+  uniqid
 } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 
@@ -43,6 +45,23 @@ export default function Home() {
   const [showBlocModalMessage, setShowBlocModalMessage] = useState(null);
   const [openModalMessage, setOpenModalMessage] = useState(false);
   const [publishPli, setPublishPli] = useState(null);
+  const [channel] = useState(uniqid());
+
+  const dispatch = useDispatch();
+  const auth = useSelector((store) => store.auth);
+
+  useEffect(() => {
+    getPlis();
+  }, [auth.roles]);
+
+  useEffect(() => {
+    socket.on("SERVER_PLI", (item) => {
+      if (channel != item.channel) {
+        getPlis();
+      }
+    });
+    return () => socket.disconnect();
+  }, []);
 
   useEffect(() => {
     updateDurations();
@@ -51,7 +70,7 @@ export default function Home() {
   useEffect(() => {
     if (localStorage.getItem("publishPli")) {
       setPublishPli({
-        id: parseInt(localStorage.getItem("publishPli")),
+        id: Number(localStorage.getItem("publishPli")),
         duration: "00:00:00",
         appearances: {
           countDown: 0,
@@ -73,7 +92,7 @@ export default function Home() {
       method: "get",
       url: `${endPoints.PLIS}`,
       success: (response) => {
-        setPlis(response.data.plis);
+        setPlis(response.data.plis || []);
         if (response.data.plis.length == 0) {
           setPublishPli(null);
           localStorage.removeItem("publishPli");
@@ -132,18 +151,22 @@ export default function Home() {
 
   const [msgNotifTop, setMsgNotifTop] = useState(null);
 
-  const dispatch = useDispatch();
-  const auth = useSelector((store) => store.auth);
-
-  useEffect(() => {
-    getPlis();
-  }, [auth.roles]);
-
   const setItem = (item) => {
+    if (socket) {
+      socket.emit("CLIENT_PLI", { ...item, channel });
+    }
+    refreshItem(item);
+  };
+
+  const refreshItem = (item) => {
     let cpPlis = [...plis];
-    for (var i = 0; i < cpPlis.length; i++) {
-      if (cpPlis[i].id == item.id) {
-        cpPlis[i] = item;
+    if (item.action == "create") {
+      cpPlis.push(item);
+    } else if (item.action == "update") {
+      for (var i = 0; i < cpPlis.length; i++) {
+        if (cpPlis[i].id == item.id) {
+          cpPlis[i] = item;
+        }
       }
     }
     cpPlis = sortObjects(cpPlis, "duration", "desc");
@@ -152,6 +175,7 @@ export default function Home() {
 
   const updateDurations = () => {
     if (plis.length) {
+      let existed = false;
       let hour, minute, second;
       const cpPlis = [];
       for (let i = 0; i < plis.length; i++) {
@@ -165,13 +189,15 @@ export default function Home() {
           if (hour > 0 || minute > 0 || second > 0) {
             setPublishPli(cpPli);
             localStorage.setItem("publishPli", cpPli.id);
-          } else {
-            setPublishPli(null);
-            localStorage.removeItem("publishPli");
+            existed = true;
           }
         }
       }
       setPlis(cpPlis);
+      if(!existed){
+        setPublishPli(null);
+        localStorage.removeItem("publishPli");
+      }
     }
   };
 
@@ -252,15 +278,32 @@ export default function Home() {
     }
   };
 
+  const getPli = (id, action) => {
+    connector({
+      method: "get",
+      url: `${endPoints.PLIS}?id=${id}`,
+      success: (response) => {
+        if (response.data.plis.length == 1) {
+          refreshItem({ ...response.data.plis[0], action });
+        }
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
   const msgErrors = (e) => {
     if (e.submit !== undefined) setSubmitting(e.submit);
     if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
   };
+
   const breakpointColumnsObj = {
     default: 3,
     993: 2,
     500: 1,
   };
+
   return (
     <DefaultMain>
       <StyledEngineProvider injectFirst>
@@ -320,6 +363,7 @@ export default function Home() {
             setMsgNotifTop={setMsgNotifTop}
             setMsgNotifTopTime={setMsgNotifTopTime}
             getPlis={getPlis}
+            setItem={setItem}
             publishPli={publishPli}
             setPublishPli={setPublishPli}
           />

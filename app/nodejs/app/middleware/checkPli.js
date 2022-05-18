@@ -143,14 +143,13 @@ export function checkSondagePliIsVoted(req, res, next) {
       const option = req.media.options[i];
       if (option.id == req.body.optionId) {
         optionExiste = true;
-        for (let j = 0; j < option.votes.length; j++) {
-          const vote = option.votes[j];
-          if (req.user && vote.userId == req.user.id) {
-            alreadyVoted = true;
-            break;
-          }
+      }
+      for (let j = 0; j < option.votes.length; j++) {
+        const vote = option.votes[j];
+        if (req.user && vote.userId == req.user.id) {
+          alreadyVoted = true;
+          break;
         }
-        break;
       }
     }
     if (!optionExiste) {

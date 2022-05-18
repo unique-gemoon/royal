@@ -5,4 +5,6 @@ export const ROLES = {
 
 export const pathImage = `${process.env.REACT_APP_API_URI}/`;
 
+export const pathSocketIo = `${process.env.REACT_APP_SOCKET_IO_URI}/`;
+
 export default {};

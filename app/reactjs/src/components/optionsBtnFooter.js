@@ -15,6 +15,7 @@ export default function OptionsBtnFooter({
   setDataNotifs = () => {},
   setMsgNotifTop = () => {},
   getPlis = () => {},
+  setItem = () => {},
   setMsgNotifTopTime = () => {},
   publishPli = null,
   setPublishPli = () => {},
@@ -75,6 +76,7 @@ export default function OptionsBtnFooter({
           getPlis={getPlis}
           publishPli={publishPli}
           setPublishPli={setPublishPli}
+          setItem={setItem}
         />
       )}
       <ButtonAction

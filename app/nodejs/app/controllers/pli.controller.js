@@ -1,4 +1,3 @@
-import moment from "moment";
 import { durationTime, isObject } from "../middleware/functions.js";
 import db from "../models/index.model.js";
 import sendEmail from "../services/sendEmail.js";
@@ -221,8 +220,15 @@ export function newPli(req, res) {
           duration: pli.duration,
           allottedTime,
           medias: pli.medias,
-          countDown:0,
-          countUp:0
+          appearances: {
+            countDown: 0,
+            countUp: 0,
+            alreadyUpdated: false,
+            signe: null,
+          },
+          user: { username: req.user.username, id: req.user.id },
+          createdAt: pli.createdAt,
+          comments: [],
         },
         message: "ok",
         email: response,
@@ -263,6 +269,20 @@ export function findPliUserNotElapsed(req, res, next) {
 }
 
 export function findAllPlisNotElapsed(req, res, next) {
+  let where = {
+    createdAt: {
+      [Op.gt]: db.Sequelize.literal(
+        "DATE_SUB(NOW(), INTERVAL pli.allottedTime MINUTE)"
+      ),
+    },
+  };
+  let options = {};
+
+  if(req.query?.id && parseInt(req.query.id)){
+    where.id = parseInt(req.query.id);
+    options.limit = 1;
+  }
+
   Pli.findAll({
     attributes: { exclude: ["updatedAt", "userId"] },
     include: [
@@ -307,13 +327,7 @@ export function findAllPlisNotElapsed(req, res, next) {
         attributes: ["id", "signe", "userId"],
       },
     ],
-    where: {
-      createdAt: {
-        [Op.gt]: db.Sequelize.literal(
-          "DATE_SUB(NOW(), INTERVAL pli.allottedTime MINUTE)"
-        ),
-      },
-    },
+    where,
     order: [
       [
         db.Sequelize.literal(
@@ -322,6 +336,7 @@ export function findAllPlisNotElapsed(req, res, next) {
         "DESC",
       ],
     ],
+    ...options
   })
     .then((plis) => {
       if (!plis) {
@@ -537,7 +552,7 @@ export function findSondageNotVotesById(req, res, next) {
         association: MediaSondageNotVotes,
         as: "notVotes",
         attributes: { exclude: ["createdAt", "updatedAt"] },
-      }
+      },
     ],
     where: {
       id: req.body.sondageId,
@@ -587,8 +602,8 @@ export function updateAppearancePli(req, res) {
         let allottedTime = 0;
         if (req.pli.allottedTime > 0) {
           allottedTime = req.body.signe
-            ? parseInt(req.pli.allottedTime) + parseInt(req.body.allottedTime)
-            : parseInt(req.pli.allottedTime) - parseInt(req.body.allottedTime);
+            ? Number(req.pli.allottedTime) + Number(req.body.allottedTime)
+            : Number(req.pli.allottedTime) - Number(req.body.allottedTime);
         }
 
         Pli.update(

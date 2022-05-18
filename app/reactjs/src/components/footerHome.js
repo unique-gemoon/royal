@@ -17,6 +17,7 @@ export default function FooterHome({
   setMsgNotifTop = () => {},
   setMsgNotifTopTime = () => {},
   getPlis = () => {},
+  setItem = () => {},
   publishPli = null,
   setPublishPli = () => {},
 }) {
@@ -46,6 +47,7 @@ export default function FooterHome({
                 getPlis={getPlis}
                 publishPli={publishPli}
                 setPublishPli={setPublishPli}
+                setItem={setItem}
               />
             </Col>
             <Col md={3}>
@@ -56,6 +58,7 @@ export default function FooterHome({
                 setDataNotifs={setDataNotifs}
                 setMsgNotifTop={setMsgNotifTop}
                 getPlis={getPlis}
+                setItem={setItem}
                 setMsgNotifTopTime={setMsgNotifTopTime}
                 publishPli={publishPli}
                 setPublishPli={setPublishPli}
@@ -72,6 +75,7 @@ export default function FooterHome({
           setDataNotifs={setDataNotifs}
           setMsgNotifTop={setMsgNotifTop}
           getPlis={getPlis}
+          setItem={setItem}
           setMsgNotifTopTime={setMsgNotifTopTime}
           publishPli={publishPli}
           setPublishPli={setPublishPli}
