@@ -20,6 +20,7 @@ export default function FooterHome({
   setItem = () => {},
   publishPli = null,
   setPublishPli = () => {},
+  countConnection = 0,
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -35,7 +36,7 @@ export default function FooterHome({
                 {auth.roles.includes(ROLES.ROLE_USER) && (
                   <ProfileMenu setMsgNotifTop={setMsgNotifTop} />
                 )}
-                <SeeCounter countSee={14} />
+                <SeeCounter countSee={countConnection} />
               </div>
             </Col>
             <Col md={6}>

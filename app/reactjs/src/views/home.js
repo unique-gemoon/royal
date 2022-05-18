@@ -12,7 +12,7 @@ import logoType from "../assets/images/Logotype.png";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile
+  HeaderMobile,
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -30,7 +30,7 @@ import {
   getMsgError,
   getTime,
   sortObjects,
-  uniqid
+  uniqid,
 } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 
@@ -46,6 +46,7 @@ export default function Home() {
   const [openModalMessage, setOpenModalMessage] = useState(false);
   const [publishPli, setPublishPli] = useState(null);
   const [channel] = useState(uniqid());
+  const [countConnection, setCountConnection] = useState(0);
 
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
@@ -58,6 +59,12 @@ export default function Home() {
     socket.on("SERVER_PLI", (item) => {
       if (channel != item.channel) {
         getPlis();
+      }
+    });
+
+    socket.on("SERVER_COUNT_CONNECTION", (data) => {
+      if (data.countConnection != undefined) {
+        setCountConnection(data.countConnection);
       }
     });
     return () => socket.disconnect();
@@ -194,7 +201,7 @@ export default function Home() {
         }
       }
       setPlis(cpPlis);
-      if(!existed){
+      if (!existed) {
         setPublishPli(null);
         localStorage.removeItem("publishPli");
       }
@@ -353,7 +360,10 @@ export default function Home() {
         </ContainerDef>
 
         {!auth.roles.includes(ROLES.ROLE_USER) && auth.toLogin ? (
-          <FooterAuthHome setMsgNotifTopTime={setMsgNotifTopTime} />
+          <FooterAuthHome
+            setMsgNotifTopTime={setMsgNotifTopTime}
+            countConnection={countConnection}
+          />
         ) : (
           <FooterHome
             action={action}
@@ -366,6 +376,7 @@ export default function Home() {
             setItem={setItem}
             publishPli={publishPli}
             setPublishPli={setPublishPli}
+            countConnection={countConnection}
           />
         )}
         <ModalMessage

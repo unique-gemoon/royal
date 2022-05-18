@@ -10,6 +10,7 @@ import router from "./app/routes/index.routes.js";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { arrayRemove } from "./app/middleware/functions.js";
 
 const User = db.user;
 
@@ -99,12 +100,30 @@ httpServer.listen(PORT, () => {
   console.log(`listening on *:${PORT}`);
 });
 
+let usersConnected = []; 
+
 io.on("connection", (socket) => {
   console.log("socket=", socket.id);
+
   socket.on("CLIENT_PLI", (data) => {
-    console.log("Pli => ", data);
     io.emit("SERVER_PLI", data);
+  });
+
+  socket.on("disconnect", function () {
+    if(socket.handshake?.query?.key){
+      if(usersConnected.includes(socket.handshake.query.key)){
+        usersConnected = arrayRemove(usersConnected,socket.handshake.query.key);
+      }
+      io.emit("SERVER_COUNT_CONNECTION", { countConnection:  usersConnected.length});
+    }
   });
 });
 
-
+io.on("connect", function (socket) {
+  if(socket.handshake?.query?.key){
+    if(!usersConnected.includes(socket.handshake.query.key)){
+      usersConnected.push(socket.handshake.query.key);
+    }
+    io.emit("SERVER_COUNT_CONNECTION", { countConnection:  usersConnected.length});
+  }
+});

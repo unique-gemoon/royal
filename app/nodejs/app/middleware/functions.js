@@ -44,3 +44,9 @@ export function durationTime(createdAt, allottedTime) {
   }
   return "00:00:00";
 }
+
+export function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
