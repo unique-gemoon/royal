@@ -47,7 +47,7 @@ export default function OptionsBtnFooter({
     <OptionsBtnAction>
       <ButtonAction
         className="messages-bloc-action"
-        setCount={2}
+        setCount={0}
         action={action.messagerie}
         icon={action.messagerie.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
@@ -81,7 +81,7 @@ export default function OptionsBtnFooter({
       <ButtonAction
         className="abonnee-bloc-action"
         action={action.folower}
-        setCount={2}
+        setCount={0}
         icon={action.folower.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
@@ -93,7 +93,7 @@ export default function OptionsBtnFooter({
       <ButtonAction
         className="notification-bloc-action"
         action={action.notification}
-        setCount={newNotifs.length}
+        setCount={0}
         icon={action.notification.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
