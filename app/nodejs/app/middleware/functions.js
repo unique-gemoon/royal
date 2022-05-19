@@ -44,3 +44,20 @@ export function durationTime(createdAt, allottedTime) {
   }
   return "00:00:00";
 }
+
+export function arrayRemove(arr, value) {
+  return arr.filter(function (ele) {
+    return ele != value;
+  });
+}
+
+
+export function countPlisOpened(arr) {
+  let cpArr = [];
+  for (var i = 0; i < arr.length; i++) {
+    if(arr[i].users.length > 0) {
+      cpArr.push({id: arr[i].id, count: arr[i].users.length});
+    }
+  }
+  return cpArr;
+}

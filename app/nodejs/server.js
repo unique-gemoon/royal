@@ -10,6 +10,7 @@ import router from "./app/routes/index.routes.js";
 import { Strategy, ExtractJwt } from "passport-jwt";
 import { createServer } from "http";
 import { Server } from "socket.io";
+import { arrayRemove, countPlisOpened } from "./app/middleware/functions.js";
 
 const User = db.user;
 
@@ -99,12 +100,73 @@ httpServer.listen(PORT, () => {
   console.log(`listening on *:${PORT}`);
 });
 
+let usersConnected = [];
+let plisOpened = [];
+
 io.on("connection", (socket) => {
-  console.log("socket=", socket.id);
   socket.on("CLIENT_PLI", (data) => {
-    console.log("Pli => ", data);
     io.emit("SERVER_PLI", data);
+  });
+
+  socket.on("CLIENT_OPEN_PLI", (data) => {
+    if (
+      data.id != undefined &&
+      data.opened != undefined &&
+      socket.handshake?.query?.key
+    ) {
+      if (data.id) {
+        const keyUser = socket.handshake.query.key;
+        let existe = false;
+        for (let i = 0; i < plisOpened.length; i++) {
+          if (plisOpened[i].id == data.id) {
+            if (data.opened) {
+              if (!plisOpened[i].users.includes(keyUser)) {
+                plisOpened[i].users.push(keyUser);
+              }
+            } else {
+              if (plisOpened[i].users.includes(keyUser)) {
+                plisOpened[i].users = arrayRemove(plisOpened[i].users, keyUser);
+              }
+            }
+            existe = true;
+          }
+        }
+        if (!existe && data.opened && data.id) {
+          plisOpened.push({ id: data.id, users: [keyUser] });
+        }
+      }
+      io.emit("SERVER_OPEN_PLI", countPlisOpened(plisOpened));
+    }
+  });
+
+  socket.on("disconnect", function () {
+    if (socket.handshake?.query?.key) {
+      const keyUser = socket.handshake.query.key;
+
+      if (usersConnected.includes(keyUser)) {
+        usersConnected = arrayRemove(usersConnected, keyUser);
+      }
+      io.emit("SERVER_COUNT_CONNECTION", {
+        countConnection: usersConnected.length,
+      });
+
+      for (let i = 0; i < plisOpened.length; i++) {
+        if (plisOpened[i].users.includes(keyUser)) {
+          plisOpened[i].users = arrayRemove(plisOpened[i].users, keyUser);
+        }
+      }
+      io.emit("SERVER_OPEN_PLI", countPlisOpened(plisOpened));
+    }
   });
 });
 
-
+io.on("connect", function (socket) {
+  if (socket.handshake?.query?.key) {
+    if (!usersConnected.includes(socket.handshake.query.key)) {
+      usersConnected.push(socket.handshake.query.key);
+    }
+    io.emit("SERVER_COUNT_CONNECTION", {
+      countConnection: usersConnected.length,
+    });
+  }
+});

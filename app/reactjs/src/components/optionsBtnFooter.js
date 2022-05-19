@@ -73,7 +73,6 @@ export default function OptionsBtnFooter({
           action={action}
           setAction={setAction}
           setMsgNotifTop={setMsgNotifTop}
-          getPlis={getPlis}
           publishPli={publishPli}
           setPublishPli={setPublishPli}
           setItem={setItem}
