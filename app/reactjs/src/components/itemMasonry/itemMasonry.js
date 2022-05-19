@@ -23,6 +23,8 @@ export default function ItemMasonry({
   setActiveItemPlayer = () => {},
   activeItemPlayer = null,
   setMsgNotifTopTime = () => {},
+  state,
+  setState = () => {}
 }) {
   const initData = {
     media: {
@@ -40,10 +42,6 @@ export default function ItemMasonry({
       count: 0,
     },
   };
-  const [state, setState] = useState({
-    showModal: false,
-    showComment: true,
-  });
   const [data, setData] = useState({ ...initData });
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
@@ -214,7 +212,7 @@ export default function ItemMasonry({
       <ModalItem
         show={state.showModal}
         onHide={() => {
-          setState({ ...state, showModal: false });
+          setState({ ...state, showModal: false, item });
         }}
       >
         <ModalItem.Body>
@@ -227,7 +225,7 @@ export default function ItemMasonry({
                 {renderContentNV2()}
                 <div
                   className="toggle-pli2"
-                  onClick={() => setState({ ...state, showModal: false })}
+                  onClick={() => setState({ ...state, showModal: false, item })}
                 >
                   {!state.showComment ? (
                     <>

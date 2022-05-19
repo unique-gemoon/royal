@@ -47,28 +47,77 @@ export default function Home() {
   const [publishPli, setPublishPli] = useState(null);
   const [channel] = useState(uniqid());
   const [countConnection, setCountConnection] = useState(0);
+  const [initOpenedPlis, setInitOpenedPlis] = useState(0);
 
   const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
   useEffect(() => {
-    getPlis();
+    getPlis(true);
   }, [auth.roles]);
 
-  useEffect(() => {
-    socket.on("SERVER_PLI", (item) => {
-      if (channel != item.channel) {
-        getPlis();
-      }
-    });
 
-    socket.on("SERVER_COUNT_CONNECTION", (data) => {
+  useEffect(() => {
+    if(initOpenedPlis && socket){
+      socket.emit("CLIENT_OPEN_PLI", { id: 0, opened: false });
+    }
+  }, [initOpenedPlis]);
+
+  useEffect(() => {
+    const updatePli = (item) => {
+      if (channel != item.channel) {
+        getPli(item.id, item.action);
+      }
+    };
+    socket.on("SERVER_PLI", updatePli);
+
+    const updateCountConnection = (data) => {
       if (data.countConnection != undefined) {
         setCountConnection(data.countConnection);
       }
-    });
-    return () => socket.disconnect();
-  }, []);
+    };
+    socket.on("SERVER_COUNT_CONNECTION", updateCountConnection);
+
+    const updateOpenPlis = (data) => {
+      if (data) {
+        const cpPlis = [...plis];
+        for (var i = 0; i < cpPlis.length; i++) {
+          let countOpened = 0;
+          for (var j = 0; j < data.length; j++) {
+            if (data[j].id == cpPlis[i].id && data[j].count != undefined) {
+              countOpened = data[j].count;
+              break;
+            }
+          }
+          cpPlis[i] = { ...cpPlis[i], countOpened };
+        }
+        setPlis(cpPlis);
+      }
+    };
+    socket.on("SERVER_OPEN_PLI", updateOpenPlis);
+
+    return () => {
+      socket.off("SERVER_PLI", updatePli);
+      socket.off("SERVER_COUNT_CONNECTION", updateCountConnection);
+      socket.off("SERVER_OPEN_PLI", updateOpenPlis);
+      //socket.disconnect();
+    };
+  }, [plis]);
+
+  const [stateModal, setStateModal] = useState({
+    showModal: false,
+    showComment: true,
+    item: {},
+  });
+
+  useEffect(() => {
+    if (socket && plis.length > 0) {
+      socket.emit("CLIENT_OPEN_PLI", {
+        id: stateModal?.item?.id ? stateModal.item.id : null,
+        opened: stateModal.showModal,
+      });
+    }
+  }, [stateModal.showModal]);
 
   useEffect(() => {
     updateDurations();
@@ -94,7 +143,7 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
-  const getPlis = () => {
+  const getPlis = (refresh = false) => {
     connector({
       method: "get",
       url: `${endPoints.PLIS}`,
@@ -103,6 +152,24 @@ export default function Home() {
         if (response.data.plis.length == 0) {
           setPublishPli(null);
           localStorage.removeItem("publishPli");
+        }
+        if (refresh) {
+          setInitOpenedPlis(initOpenedPlis+1);
+        }
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const getPli = (id, action) => {
+    connector({
+      method: "get",
+      url: `${endPoints.PLIS}?id=${id}`,
+      success: (response) => {
+        if (response.data.plis.length == 1) {
+          refreshItem({ ...response.data.plis[0], action });
         }
       },
       catch: (error) => {
@@ -285,21 +352,6 @@ export default function Home() {
     }
   };
 
-  const getPli = (id, action) => {
-    connector({
-      method: "get",
-      url: `${endPoints.PLIS}?id=${id}`,
-      success: (response) => {
-        if (response.data.plis.length == 1) {
-          refreshItem({ ...response.data.plis[0], action });
-        }
-      },
-      catch: (error) => {
-        console.log(error);
-      },
-    });
-  };
-
   const msgErrors = (e) => {
     if (e.submit !== undefined) setSubmitting(e.submit);
     if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
@@ -354,6 +406,8 @@ export default function Home() {
                   activeItemPlayer={activeItemPlayer}
                   setActiveItemPlayer={setActiveItemPlayer}
                   setMsgNotifTopTime={setMsgNotifTopTime}
+                  state={stateModal}
+                  setState={setStateModal}
                 />
               ))}
           </Masonry>

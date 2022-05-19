@@ -60,9 +60,7 @@ export default function HeadItem({
 
   useEffect(() => {
     if (pliId && item && item.id == pliId) {
-      if (state) {
-        setState({ ...state, showModal: true, showComment: true });
-      }
+      setState({ ...state, showModal: true, showComment: true , item});
       const cpAction = {
         ...action,
         notification: { ...action.notification, isOpen: false },
@@ -246,7 +244,7 @@ export default function HeadItem({
                           <Button
                             onClick={() => {
                               if (!checkIsConnected()) {
-                                setState({ ...state, showModal: false });
+                                setState({ ...state, showModal: false, item });
                               }
                             }}
                             className="toggle-item-message"
@@ -258,7 +256,7 @@ export default function HeadItem({
                               if (checkIsConnected()) {
                                 setStatutFolower(!statutFolower);
                               } else {
-                                setState({ ...state, showModal: false });
+                                setState({ ...state, showModal: false, item });
                               }
                             }}
                             className="btn-switch-folowers"
@@ -296,19 +294,17 @@ export default function HeadItem({
           <div
             className="users-enligne-pli"
             onClick={() => {
-              setState({ ...state, showModal: false });
+              setState({ ...state, showModal: false, item });
             }}
           >
-            13 <VisibilityIcon />{" "}
+            {item?.countOpened ?item.countOpened: 0} <VisibilityIcon />{" "}
             <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
           </div>
         ) : (
           <div
             className="users-enligne-pli"
             onClick={() => {
-              if (state) {
-                setState({ ...state, showModal: true, showComment: true });
-              }
+              setState({ ...state, showModal: true, showComment: true, item  });
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -320,7 +316,7 @@ export default function HeadItem({
               setActiveItem((activeItem && activeItem.id == item.id) ? item : null);
             }}
           >
-            14 <VisibilityIcon />{" "}
+            {item?.countOpened ?item.countOpened: 0} <VisibilityIcon />{" "}
             <OpenInFullOutlinedIcon className="open-zoom-icon" />
           </div>
         )}
@@ -332,7 +328,7 @@ export default function HeadItem({
           }`}
           onClick={() => {
             if (state.showModal) {
-              setState({ ...state, showModal: false });
+              setState({ ...state, showModal: false, item });
             } else {
               const cpAction = {
                 ...action,

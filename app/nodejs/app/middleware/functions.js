@@ -50,3 +50,14 @@ export function arrayRemove(arr, value) {
     return ele != value;
   });
 }
+
+
+export function countPlisOpened(arr) {
+  let cpArr = [];
+  for (var i = 0; i < arr.length; i++) {
+    if(arr[i].users.length > 0) {
+      cpArr.push({id: arr[i].id, count: arr[i].users.length});
+    }
+  }
+  return cpArr;
+}

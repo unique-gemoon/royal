@@ -1822,7 +1822,7 @@ export const ItemResultSondage = styled.div`
             top: 0;
             left: 0;
             bottom: 0;
-            width: ${({ purcentage }) => (purcentage ? purcentage : 0)};
+            width: ${({ purcentage }) => (purcentage ? purcentage : 0)}%;
             border-radius: 6px;
             background: linear-gradient(to right, rgb(53, 131, 214, .39) 0%,rgb(65, 185, 214, .39) 100%);
         }

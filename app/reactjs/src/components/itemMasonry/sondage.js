@@ -8,7 +8,7 @@ import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useDispatch, useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
 import * as actionTypes from "../../store/functions/actionTypes";
-import { getInt, getMsgError } from "../../helper/fonctions";
+import { getInt, getMsgError, getPercentInt } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
 
@@ -156,7 +156,7 @@ export default function Sondage({
               {item.options.map((option, index) => (
                 <ItemResultSondage
                   key={index}
-                  purcentage={option.numberVotes || 0}
+                  purcentage={getPercentInt(option.numberVotes,item.totalVotes)}
                 >
                   <div className="content-result-sondage">
                     <span>{option.name}</span>{" "}

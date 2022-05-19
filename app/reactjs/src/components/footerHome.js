@@ -45,7 +45,6 @@ export default function FooterHome({
                 setAction={setAction}
                 setMsgNotifTop={setMsgNotifTop}
                 setMsgNotifTopTime={setMsgNotifTopTime}
-                getPlis={getPlis}
                 publishPli={publishPli}
                 setPublishPli={setPublishPli}
                 setItem={setItem}

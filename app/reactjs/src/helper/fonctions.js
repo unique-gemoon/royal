@@ -95,3 +95,7 @@ export const uniqid = () => {
 export function getInt(val) {
   return parseInt(val) || 0;
 }
+
+export function getPercentInt(val,total) {
+  return parseInt(Number(val) * 100 / total);
+}
