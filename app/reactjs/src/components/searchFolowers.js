@@ -16,6 +16,7 @@ export default function SearchFolowers() {
         placeholder: "Qui recherchez-vous ?",
         className: 'search-input'
       },
+      searching: false,
     });
     const [dataFolower, setDataFolower] = useState([
         {
@@ -77,7 +78,9 @@ export default function SearchFolowers() {
         <FolowerSearch>
             
             <div className='form-search-folower'>
-                <SearchRoundedIcon  /> 
+                <button>
+                    <SearchRoundedIcon />
+                </button> 
                 <Input
                     {...state.search} 
                     onChange={(e) => {
@@ -86,19 +89,25 @@ export default function SearchFolowers() {
                         setState(cpState);
                         if(cpState.search.value.length >= 3){
                             setShowResult(true);
+                            setState({...state, searching: true})
                         }else{
                             setShowResult(false);
+                            setState({ ...state, searching: false })
                         }
                     }}
                 />
-                <span className='reset-search' onClick={() => {
+                {state.searching && 
+                    <span className='reset-search' onClick={() => {
                         const cpState = { ...state };
                         cpState.search.value = '';
                         setState(cpState);
                         setShowResult(false);
-                        }}>
-                    <CloseOutlinedIcon />
-                </span>
+                        setState({ ...state, searching: false })
+                    }}>
+                        <CloseOutlinedIcon />
+                    </span>
+                }
+                
             </div>
             {showResult ? 
                 <div className='content-search-results'>
