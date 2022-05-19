@@ -163,7 +163,7 @@ export default function Sondage({
                     {option.voted && <CheckCircleOutlineIcon />}
                   </div>
                   <span className="purcentage-item">
-                    {option.numberVotes || 0}
+                    {option.numberVotes ? getPercentInt(option.numberVotes,item.totalVotes) : 0}%
                   </span>
                 </ItemResultSondage>
               ))}
