@@ -24,6 +24,8 @@ export default function ItemMasonry({
   activeItemPlayer = null,
   setMsgNotifTopTime = () => {},
   setStateModal = () => {},
+  stateFolowersMessage,
+  setFolowersMessage = () => { },
 }) {
   const initData = {
     media: {
@@ -115,6 +117,8 @@ export default function ItemMasonry({
           activeItem={activeItem}
           setActiveItem={setActiveItem}
           setMsgNotifTopTime={setMsgNotifTopTime}
+          stateFolowersMessage={stateFolowersMessage}
+          setFolowersMessage={setFolowersMessage}
         />
         <div className="bloc-miniature">
           {item.content ? (
@@ -273,7 +277,7 @@ export default function ItemMasonry({
         </ModalItem.Body>
       </ModalItem>
       <MasonryItem height={height}>
-        <div className="bloc-NV1" ref={refHeight}>
+        <div className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`} ref={refHeight}>
           {renderContentNV1()}
         </div>
         <div className="Bloc-NV2">

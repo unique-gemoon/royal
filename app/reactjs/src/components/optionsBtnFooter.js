@@ -19,6 +19,8 @@ export default function OptionsBtnFooter({
   setMsgNotifTopTime = () => {},
   publishPli = null,
   setPublishPli = () => {},
+  stateFolowersMessage,
+  setFolowersMessage = () => { },
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -54,8 +56,14 @@ export default function OptionsBtnFooter({
         setAction={(e) => {
           updateAction(e, "messagerie");
         }}
+        stateFolowersMessage={stateFolowersMessage}
+        setFolowersMessage={setFolowersMessage}  
       >
-        <Messagerie setMsgNotifTopTime={setMsgNotifTopTime} />
+        <Messagerie 
+          setMsgNotifTopTime={setMsgNotifTopTime} 
+          stateFolowersMessage={stateFolowersMessage}
+          setFolowersMessage={setFolowersMessage}  
+        />
       </ButtonAction>
       <ButtonAction
         className="search-bloc-action"
@@ -66,7 +74,11 @@ export default function OptionsBtnFooter({
           updateAction(e, "search");
         }}
       >
-        <SearchFolowers />
+        <SearchFolowers 
+          stateFolowersMessage={stateFolowersMessage}
+          setFolowersMessage={setFolowersMessage}
+          action={action}
+          setAction={setAction} />
       </ButtonAction>
       {isTabletOrMobile && (
         <NewPli
@@ -88,7 +100,12 @@ export default function OptionsBtnFooter({
           updateAction(e, "folower");
         }}
       >
-        <BlocFolowers />
+        <BlocFolowers 
+          stateFolowersMessage={stateFolowersMessage}
+          setFolowersMessage={setFolowersMessage}  
+          action={action}
+          setAction={setAction}
+        />
       </ButtonAction>
       <ButtonAction
         className="notification-bloc-action"

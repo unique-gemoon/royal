@@ -97,9 +97,6 @@ export const ContainerDef = styled(Container)`
         }
     }
     max-width: 100%;
-    @media(max-width: 400px){
-        padding: 0;
-    }
 `;
 export const HeadContentItem = styled.div`
     display: flex;
