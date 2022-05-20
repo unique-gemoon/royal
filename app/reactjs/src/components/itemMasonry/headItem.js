@@ -23,7 +23,6 @@ import {
   HeadContentItem,
   PlusIcon
 } from "../../assets/styles/globalStyle";
-import { ROLES } from "../../config/vars";
 import { useOutsideAlerter } from "../../helper/events";
 import { useMediaQuery } from "react-responsive";
 
@@ -72,7 +71,7 @@ export default function HeadItem({
   }, [pliId]);
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(

@@ -7,7 +7,6 @@ import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
-import { ROLES } from "../config/vars";
 import connector from "../connector";
 import { getInt, getPercentDuration } from "../helper/fonctions";
 
@@ -61,7 +60,7 @@ export default function BarTemporelle({
   };
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(

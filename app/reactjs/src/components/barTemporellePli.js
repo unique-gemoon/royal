@@ -6,7 +6,6 @@ import LinearProgress from "@mui/material/LinearProgress";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
-import { ROLES } from "../config/vars";
 
 export default function BarTemporellePli({
   state = {},
@@ -17,7 +16,7 @@ export default function BarTemporellePli({
   const [stateTime, setStateTime] = useState();
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(

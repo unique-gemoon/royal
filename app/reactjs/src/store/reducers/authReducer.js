@@ -1,11 +1,13 @@
 import jwtDecode from "jwt-decode";
 
 import * as actionTypes from "../functions/actionTypes";
+import { ROLES } from '../../config/vars';
 
 const initState = {
   token: null,
   roles: [],
   user: false,
+  isConnected: false
 };
 
 const updateObject = (oldObject, newObject) => {
@@ -33,6 +35,7 @@ const AuthReducer = (state = initState, action) => {
       return updateObject(state, {
         token: action.token,
         roles: [...decodeToken.roles],
+        isConnected: Array.isArray(decodeToken.roles) && decodeToken.roles.includes(ROLES.ROLE_USER),
         user: {
           id: decodeToken.sub,
           email: decodeToken.email,

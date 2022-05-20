@@ -5,8 +5,6 @@ import {
   BlocActionButton,
   ButtonIcon,
 } from "../../assets/styles/componentStyle";
-import { ROLES } from "../../config/vars";
-import * as actionTypes from "../../store/functions/actionTypes";
 
 export default function ButtonAction({
   children,
@@ -36,7 +34,7 @@ export default function ButtonAction({
   };
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);

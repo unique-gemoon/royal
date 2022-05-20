@@ -10,7 +10,6 @@ import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { BlocAddPli, BarTimerPli } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
-import { ROLES } from "../config/vars";
 import connector from "../connector";
 import { useOutsideAlerter } from "../helper/events";
 import { getMsgError, getPercentDuration } from "../helper/fonctions";
@@ -159,7 +158,7 @@ export default function NewPli({
   const [submitting, setSubmitting] = useState(false);
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(
@@ -369,7 +368,7 @@ export default function NewPli({
     return (
       publishPli &&
       publishPli?.user?.id &&
-      auth.roles.includes(ROLES.ROLE_USER) &&
+      auth.isConnected &&
       publishPli.user.id == auth.user.id
     );
   };

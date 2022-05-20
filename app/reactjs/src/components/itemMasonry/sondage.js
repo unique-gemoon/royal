@@ -6,7 +6,6 @@ import {
 import RadioButton from "../ui-elements/radioButton";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
 import { useSelector } from "react-redux";
-import { ROLES } from "../../config/vars";
 import { getInt, getMsgError, getPercentInt } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
@@ -33,7 +32,7 @@ export default function Sondage({
   }, []);
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(

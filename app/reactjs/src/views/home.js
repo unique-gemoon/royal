@@ -23,7 +23,6 @@ import ProfileMenu from "../components/profileMenu";
 import { socket } from "../components/socket";
 import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
-import { ROLES } from "../config/vars";
 import connector from "../connector";
 import {
   decrementDuration,
@@ -52,7 +51,7 @@ export default function Home() {
 
   useEffect(() => {
     getPlis(true);
-  }, [auth.roles]);
+  }, [auth.isConnected]);
 
 
   useEffect(() => {
@@ -304,7 +303,7 @@ export default function Home() {
   const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(
@@ -334,7 +333,7 @@ export default function Home() {
         method: "post",
         url: endPoints.CONFIRM_EMAIL,
         data: { tokenConfirmEmail },
-        success: (response) => {
+        success: () => {
           msgErrors({ submit: false });
           setOpenModalMessage(true);
           setShowBlocModalMessage("confirmEmail");
@@ -367,7 +366,7 @@ export default function Home() {
             </div>
             <div className="d-flex">
               <SeeCounter countSee={14} />
-              {auth.roles.includes(ROLES.ROLE_USER) && (
+              {auth.isConnected && (
                 <ProfileMenu setMsgNotifTop={setMsgNotifTop} />
               )}
             </div>
@@ -407,7 +406,7 @@ export default function Home() {
           </Masonry>
         </ContainerDef>
 
-        {!auth.roles.includes(ROLES.ROLE_USER) ? (
+        {!auth.isConnected ? (
           <FooterAuthHome
             setMsgNotifTopTime={setMsgNotifTopTime}
             countConnection={countConnection}

@@ -3,7 +3,6 @@ import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FormEmoji } from "../../assets/styles/componentStyle";
-import { ROLES } from "../../config/vars";
 import Emojis from "../emojis";
 import InputTextareaAutosize from "./inputTextareaAutosize";
 
@@ -34,7 +33,7 @@ export default function InputEmoji({
   const auth = useSelector((store) => store.auth);
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(
