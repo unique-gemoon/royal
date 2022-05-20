@@ -21,19 +21,11 @@ import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import ItemSingleMessage from "./itemSingleMessage";
 import { useEffect } from "react";
 
-export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
-  const [state, setState] = useState({
-    showSearchFolower: false,
-    activeItem: false,
-    resultSearch: false,
-    search: {
-      type: "text",
-      id: "search-folowers",
-      value: "",
-      placeholder: "Qui recherchez-vous ?",
-      className: "search-input",
-    },
-  });
+export default function Messagerie({ 
+  setMsgNotifTopTime = () => {},
+  stateFolowersMessage,
+  setFolowersMessage = () => { },
+ }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -118,13 +110,13 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
     if (container) container.scrollTop = container.scrollHeight;
   };
   useEffect(() => {
-    if (state.activeItem) {
+    if (stateFolowersMessage.activeItem) {
       setTimeout(() => scrollChat(), 100);
     }
-  }, [state.activeItem]);
+  }, [stateFolowersMessage.activeItem]);
   return (
     <BlocMessagerie>
-      {!state.activeItem && !state.showSearchFolower ? (
+      {!stateFolowersMessage.activeItem && !stateFolowersMessage.showSearchFolower ? (
         <div className="bloc-lists-messagerie">
           <div className="header-messagerie">
             <MailOutlineRoundedIcon /> Messages
@@ -134,8 +126,8 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
               <ListMessagerie
                 data={dataListMessage}
                 setData={setDataListMessage}
-                state={state}
-                setState={setState}
+                stateFolowersMessage={stateFolowersMessage}
+                setFolowersMessage={setFolowersMessage}
               />
             </div>
           </div>
@@ -143,8 +135,8 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
           <Button
             className="start-new-message"
             onClick={() => {
-              setState({
-                ...state,
+              setFolowersMessage({
+                ...stateFolowersMessage,
                 activeItem: false,
                 showSearchFolower: true,
               });
@@ -154,21 +146,21 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
           </Button>
         </div>
       ) : null}
-      {state.activeItem ? (
+      {stateFolowersMessage.activeItem ? (
         <div className="bloc-message-item">
           <div className="header-messagerie">
             <span
               className="back-to-list"
               onClick={(e) => {
                 e.preventDefault();
-                const cpState = { ...state };
+                const cpState = { ...stateFolowersMessage };
                 cpState.activeItem = false;
-                setState(cpState);
+                setFolowersMessage(cpState);
               }}
             >
               <KeyboardArrowLeftIcon />
             </span>
-            <span className="name-messagerie">{state.activeItem.name}</span>
+            <span className="name-messagerie">{stateFolowersMessage.activeItem.nameItem}</span>
             <div>
               <Button
                 id="demo-positioned-button"
@@ -249,21 +241,21 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
             <InputEmoji
               typeInput="textarea"
               setMsgNotifTopTime={setMsgNotifTopTime}
-              setState={setState}
+              setFolowersMessage={setFolowersMessage}
             />
           </div>
         </div>
       ) : null}
-      {state.showSearchFolower ? (
+      {stateFolowersMessage.showSearchFolower ? (
         <MessageFindFolower>
           <div className="header-messagerie">
             <span
               className="back-to-list"
               onClick={(e) => {
                 e.preventDefault();
-                const cpState = { ...state };
+                const cpState = { ...stateFolowersMessage };
                 cpState.showSearchFolower = false;
-                setState(cpState);
+                setFolowersMessage(cpState);
               }}
             >
               <KeyboardArrowLeftIcon />
@@ -275,15 +267,15 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
           <div className="bloc-search-folower">
             <SearchRoundedIcon />
             <Input
-              {...state.search}
+              {...stateFolowersMessage.search}
               onChange={(e) => {
-                const cpState = { ...state };
+                const cpState = { ...stateFolowersMessage };
                 cpState.search.value = e.target.value;
-                setState(cpState);
+                setFolowersMessage(cpState);
                 if (cpState.search.value.length >= 3) {
-                  setState({ ...state, resultSearch: true });
+                  setFolowersMessage({ ...stateFolowersMessage, resultSearch: true });
                 } else {
-                  setState({ ...state, resultSearch: false });
+                  setFolowersMessage({ ...stateFolowersMessage, resultSearch: false });
                 }
               }}
             />
@@ -291,13 +283,13 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
           <div className="header-info-search">
             <PeopleOutlineRoundedIcon /> Abonnements
           </div>
-          {state.resultSearch ? (
+          {stateFolowersMessage.resultSearch ? (
             <div className="content-search-results">
               <div className="list-result-search">
                 {dataFolower.map((item) => (
                   <ItemListFolower
-                    state={state}
-                    setState={setState}
+                    stateFolowersMessage={stateFolowersMessage}
+                    setFolowersMessage={setFolowersMessage}
                     shwoButtonMessage={false}
                     key={item.id}
                     item={item}
@@ -306,7 +298,7 @@ export default function Messagerie({ setMsgNotifTopTime = () => {} }) {
               </div>
             </div>
           ) : null}
-          <span className="name-messagerie">{state.activeItem.name}</span>
+          <span className="name-messagerie">{stateFolowersMessage.activeItem.name}</span>
         </MessageFindFolower>
       ) : (
         <p>No resultat</p>

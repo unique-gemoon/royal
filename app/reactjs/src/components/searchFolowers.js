@@ -6,7 +6,12 @@ import CloseOutlinedIcon from '@mui/icons-material/CloseOutlined';
 import Input from './ui-elements/input';
 
 
-export default function SearchFolowers() {
+export default function SearchFolowers({
+    action,
+    setAction = () => { },
+    stateFolowersMessage,
+    setFolowersMessage = () => { },
+}) {
     const [showResult, setShowResult]= useState(false);
     const [state, setState] = useState({
       search:{
@@ -113,7 +118,22 @@ export default function SearchFolowers() {
                 <div className='content-search-results'>
                     <div className='list-result-search'>
                         {dataFolower.map((item) => (
-                            <ItemListFolower key={item.id} item={item} /> 
+                            <ItemListFolower 
+                                key={item.id} 
+                                item={item}
+                                onClick={() => {
+                                    console.log("test", action)
+                                    const cpAction = {
+                                        ...action,
+                                        notification: { ...action.notification, isOpen: false },
+                                        folower: { ...action.folower, isOpen: false },
+                                        search: { ...action.search, isOpen: true },
+                                        messagerie: { ...action.messagerie, isOpen: true },
+                                    };
+                                    setAction(cpAction);
+                                    setFolowersMessage({ ...stateFolowersMessage, activeItem: { id: 4 } });
+                                }}    
+                            /> 
                         ))}
                     </div>
                 </div> 

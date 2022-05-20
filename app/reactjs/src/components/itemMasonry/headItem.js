@@ -35,7 +35,9 @@ export default function HeadItem({
   setAction = () => {},
   activeItem,
   setActiveItem = () => {},
-  setMsgNotifTopTime = () => {},
+  setMsgNotifTopTime = () => { },
+  stateFolowersMessage,
+  setFolowersMessage = () => { },
 }) {
 
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 540px)" });
@@ -241,6 +243,16 @@ export default function HeadItem({
                               if (!checkIsConnected()) {
                                 setState({ ...state, showModal: false, item });
                               }
+                              const cpAction = {
+                                ...action,
+                                notification: { ...action.notification, isOpen: false },
+                                folower: { ...action.folower, isOpen: false },
+                                search: { ...action.search, isOpen: false },
+                                messagerie: { ...action.messagerie, isOpen: true },
+                              };
+                              setAction(cpAction);
+                              setFolowersMessage({ ...stateFolowersMessage, activeItem: { id: 4} });
+                              setState({ ...state, showModal: false });
                             }}
                             className="toggle-item-message"
                           >

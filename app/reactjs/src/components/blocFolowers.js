@@ -6,7 +6,12 @@ import TabPanel from '@mui/lab/TabPanel';
 import { FolowersModal } from '../assets/styles/componentStyle';
 import ItemListFolower from './itemListFolower';
 import ArrowCircleDownIcon from '@mui/icons-material/ArrowCircleDown';
-export default function BlocFolowers() {
+export default function BlocFolowers({
+    action,
+    setAction = () => { },
+    stateFolowersMessage,
+    setFolowersMessage = () => { },
+}) {
     const [value, setValue] = React.useState('1');
 
     const handleChange = (event, newValue) => {
@@ -83,14 +88,44 @@ export default function BlocFolowers() {
                         <TabPanel value="1">
                             <div className='list-tab-modal'>
                                 {dataFolower.map((item) => (
-                                    <ItemListFolower key={item.id} item={item} /> 
+                                    <ItemListFolower 
+                                        key={item.id} 
+                                        item={item} 
+                                        onClick={() => {
+                                            console.log("test", action)
+                                            const cpAction = {
+                                                ...action,
+                                                notification: { ...action.notification, isOpen: false },
+                                                folower: { ...action.folower, isOpen: true },
+                                                search: { ...action.search, isOpen: false },
+                                                messagerie: { ...action.messagerie, isOpen: true },
+                                            };
+                                            setAction(cpAction);
+                                            setFolowersMessage({ ...stateFolowersMessage, activeItem: { id: 4 } });
+                                        }}
+                                     /> 
                                 ))}
                             </div>
                         </TabPanel>
                         <TabPanel value="2">
                             <div className='list-tab-modal'>
                                 {abonnements.map((item) => (
-                                    <ItemListFolower key={item.id} item={item} /> 
+                                    <ItemListFolower 
+                                        key={item.id}
+                                        item={item}  
+                                        onClick={() => {
+                                            console.log("test", action)
+                                            const cpAction = {
+                                                ...action,
+                                                notification: { ...action.notification, isOpen: false },
+                                                folower: { ...action.folower, isOpen: true },
+                                                search: { ...action.search, isOpen: false },
+                                                messagerie: { ...action.messagerie, isOpen: true },
+                                            };
+                                            setAction(cpAction);
+                                            setFolowersMessage({ ...stateFolowersMessage, activeItem: { id: 4 } });
+                                        }}
+                                     /> 
                                 ))}
                             </div>
                         </TabPanel>

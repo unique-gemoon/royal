@@ -355,6 +355,18 @@ export default function Home() {
     1200: 2,
     993: 1,
   };
+  const [stateFolowersMessage, setFolowersMessage] = useState({
+    showSearchFolower: false,
+    activeItem: false,
+    resultSearch: false,
+    search: {
+      type: "text",
+      id: "search-folowers",
+      value: "",
+      placeholder: "Qui recherchez-vous ?",
+      className: "search-input",
+    },
+  });
 
   return (
     <DefaultMain>
@@ -400,6 +412,8 @@ export default function Home() {
                   setActiveItemPlayer={setActiveItemPlayer}
                   setMsgNotifTopTime={setMsgNotifTopTime}
                   setStateModal={setStateModal}
+                  stateFolowersMessage={stateFolowersMessage}
+                  setFolowersMessage={setFolowersMessage}
                 />
               ))}
           </Masonry>
@@ -423,6 +437,8 @@ export default function Home() {
             publishPli={publishPli}
             setPublishPli={setPublishPli}
             countConnection={countConnection}
+            stateFolowersMessage={stateFolowersMessage}
+            setFolowersMessage={setFolowersMessage}
           />
         )}
         <ModalMessage

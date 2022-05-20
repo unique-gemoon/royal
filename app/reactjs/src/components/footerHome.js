@@ -9,6 +9,8 @@ import SeeCounter from "./ui-elements/seeCounter";
 import ProfileMenu from "./profileMenu";
 
 export default function FooterHome({
+  stateFolowersMessage,
+  setFolowersMessage = () => {},
   action,
   setAction = () => {},
   dataNotifs,
@@ -20,6 +22,7 @@ export default function FooterHome({
   publishPli = null,
   setPublishPli = () => {},
   countConnection = 0,
+  
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -61,6 +64,8 @@ export default function FooterHome({
                 setMsgNotifTopTime={setMsgNotifTopTime}
                 publishPli={publishPli}
                 setPublishPli={setPublishPli}
+                stateFolowersMessage={stateFolowersMessage}
+                setFolowersMessage={setFolowersMessage}
               />
             </Col>
           </Row>
@@ -78,6 +83,8 @@ export default function FooterHome({
           setMsgNotifTopTime={setMsgNotifTopTime}
           publishPli={publishPli}
           setPublishPli={setPublishPli}
+          stateFolowersMessage={stateFolowersMessage}
+          setFolowersMessage={setFolowersMessage}
         />
       )}
     </FooterDefault>

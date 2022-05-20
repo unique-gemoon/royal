@@ -1340,9 +1340,11 @@ export const MessageFindFolower = styled.div`
         padding: 10px 14px;
         svg{
             font-size: 18px;
+            cursor: pointer;
         }
         .search-input{
             margin-left: 10px;
+            width: 100%;
             input{
                 border-left: 1px solid #ffffff59;
                 padding-left: 5px;
@@ -1620,8 +1622,16 @@ export const MasonryItem = styled.div`
     .descripton-miniature{
         margin-bottom: 15px;
     }
+    .bloc-NV1{
+        &.is-larg-nv1{
+            .bloc-miniature{
+                max-height: 700px;
+                overflow-y: scroll;
+            }
+        }
+    }
     .Bloc-NV2{
-        max-height: ${({ height }) => (height ? `calc(700px - ${height}px)` : 0)};
+        max-height: ${({ height }) => (height < 700 ? `calc(700px - ${height}px)` : `initial`)};
         overflow-y: scroll;
         border-radius: 0 0 20px 20px;
     }
@@ -2015,24 +2025,25 @@ export const ModalItem = styled(Modal)`
     }
     .modal-dialog{
         width: 900px;
-        height: initial;
+        height: auto;
         margin: auto;
         max-width: 90%;
         border-radius: 20px;
-        max-height: calc(100% - 60px);
+        max-height: 100%;
+        padding-top: 30px;
         .modal-content{
             border-radius: 0px;
             background-color: transparent;
             border: 0;
             height: 100%;
-            margin:  30px auto;
         }
         .modal-body{
             padding: 0;
             height: 100%;
             & > div{
-                max-height: 100%;
+                max-height: calc(100vh - 60px);
                 overflow-y: auto;
+                margin: auto;
             }
             .Bloc-NV2{
                 max-height: initial;
