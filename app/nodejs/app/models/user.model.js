@@ -76,17 +76,21 @@ export default function user(sequelize, Sequelize) {
       bcrypt.genSaltSync(10),
       null
     );
-    if(!user.roles){
+    if (!user.roles) {
       user.roles = [];
     }
-    user.roles = [...user.roles, 'ROLE_USER'];
+    user.roles = [...user.roles, "ROLE_USER"];
   });
 
   User.associate = function (models) {
     User.hasMany(models.pli);
     User.hasMany(models.appearancePli);
     User.hasMany(models.sondageVotes);
+    User.hasMany(models.subscriber);
+    User.hasMany(models.comment);
+    User.hasMany(models.threadUsers);
+    User.hasMany(models.message); 
   };
-  
+
   return User;
 }

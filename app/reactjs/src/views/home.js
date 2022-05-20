@@ -103,7 +103,6 @@ export default function Home() {
 
   const [stateModal, setStateModal] = useState({
     showModal: false,
-    showComment: true,
     item: {},
   });
 
