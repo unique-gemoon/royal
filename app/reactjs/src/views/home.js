@@ -399,8 +399,7 @@ export default function Home() {
                   activeItemPlayer={activeItemPlayer}
                   setActiveItemPlayer={setActiveItemPlayer}
                   setMsgNotifTopTime={setMsgNotifTopTime}
-                  state={stateModal}
-                  setState={setStateModal}
+                  setStateModal={setStateModal}
                 />
               ))}
           </Masonry>

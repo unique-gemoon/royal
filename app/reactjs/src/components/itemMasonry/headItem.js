@@ -25,6 +25,7 @@ import {
 } from "../../assets/styles/globalStyle";
 import { useOutsideAlerter } from "../../helper/events";
 import { useMediaQuery } from "react-responsive";
+import moment from 'moment';
 
 export default function HeadItem({
   item,
@@ -114,6 +115,7 @@ export default function HeadItem({
   useOutsideAlerter(ref, () => {
     setShowMediaIcons(false);
   });
+
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
@@ -279,7 +281,7 @@ export default function HeadItem({
               </Tooltip>
             </div>
           </ClickAwayListener>
-          <span className="timer-post"> . 12</span>
+          <span className="timer-post"> {moment().diff(item.createdAt, 'hours')}h</span>
         </div>
       </div>
       <div className="option-item">
@@ -306,7 +308,7 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setActiveItem((activeItem && activeItem.id == item.id) ? item : null);
+              setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
             }}
           >
             {item?.countOpened ?item.countOpened: 0} <VisibilityIcon />{" "}
