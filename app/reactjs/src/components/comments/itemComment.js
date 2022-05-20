@@ -3,7 +3,6 @@ import { useSelector } from "react-redux";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import { CommentItem } from "../../assets/styles/componentStyle";
 import { ReplyIcon, ReplyIconGreen } from "../../assets/styles/globalStyle";
-import { ROLES } from "../../config/vars";
 import InputEmoji from "../ui-elements/inputEmoji";
 
 export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
@@ -23,7 +22,7 @@ export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
       </div>
       <div className="content-text-comment"> {item.subject}</div>
 
-      {auth.roles.includes(ROLES.ROLE_USER) && (
+      {auth.isConnected && (
         <div className="bloc-repondre">
           <p
             className={`repondre-comment ${!state.repondre ? "closed" : ""}`}
@@ -70,7 +69,7 @@ export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
                       <span className="time-comment">Il y a {rep.time}</span>
                     </div>
                     <div className="content-text-comment"> {rep.subject}</div>
-                    {auth.roles.includes(ROLES.ROLE_USER) && (
+                    {auth.isConnected && (
                       <div className="bloc-repondre">
                         <p
                           className={`repondre-comment ${

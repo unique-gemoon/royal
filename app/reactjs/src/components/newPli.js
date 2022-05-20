@@ -6,15 +6,13 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { LinearProgress } from "@mui/material";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { BlocAddPli, BarTimerPli } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
-import { pathSocketIo, ROLES } from "../config/vars";
 import connector from "../connector";
 import { useOutsideAlerter } from "../helper/events";
 import { getMsgError, getPercentDuration } from "../helper/fonctions";
-import * as actionTypes from "../store/functions/actionTypes";
 import AddSondage from "./addSondage";
 import BarTemporellePli from "./barTemporellePli";
 import ErrorFormMessage from "./errorFormMessage";
@@ -34,7 +32,6 @@ export default function NewPli({
   setPublishPli = () => {},
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
-  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
   const [state, setState] = useState({
@@ -161,17 +158,13 @@ export default function NewPli({
   const [submitting, setSubmitting] = useState(false);
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
         10000
       );
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
       return false;
     }
   };
@@ -375,7 +368,7 @@ export default function NewPli({
     return (
       publishPli &&
       publishPli?.user?.id &&
-      auth.roles.includes(ROLES.ROLE_USER) &&
+      auth.isConnected &&
       publishPli.user.id == auth.user.id
     );
   };

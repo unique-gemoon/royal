@@ -3,30 +3,26 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { Button } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-import React, { useState, useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
-import { ROLES } from "../config/vars";
-import * as actionTypes from "../store/functions/actionTypes";
 
 export default function BarTemporellePli({
   state = {},
   setState = () => {},
   setMsgNotifTopTime = () => {},
 }) {
-  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
   const [stateTime, setStateTime] = useState();
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
-      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        10000
+      );
       return false;
     }
   };
@@ -54,7 +50,7 @@ export default function BarTemporellePli({
   }, []);
 
   const upTime = () => {
-    if(state.duration.disabled){
+    if (state.duration.disabled) {
       return;
     }
     const cpState = { ...state };
@@ -69,7 +65,7 @@ export default function BarTemporellePli({
   };
 
   const downTime = () => {
-    if(state.duration.disabled){
+    if (state.duration.disabled) {
       return;
     }
     const cpState = { ...state };
@@ -106,7 +102,7 @@ export default function BarTemporellePli({
         <div className="content-timer-bar">
           <span className="timer-down">{state?.duration?.countDown}</span>
           <div className="timer-item">
-            <TimerOutlinedIcon /> {stateTime && (<span>{stateTime}</span>)}
+            <TimerOutlinedIcon /> {stateTime && <span>{stateTime}</span>}
           </div>
           <span className="timer-up">{state?.duration?.countUp}</span>
         </div>

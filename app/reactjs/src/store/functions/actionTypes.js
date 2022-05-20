@@ -1,6 +1,5 @@
 // Login actions
 export const LOGIN_SUCCESS = "LOGIN_SUCCESS";
-export const TO_LOGIN = "TO_LOGIN";
 export const LOGIN_FAIL = "LOGIN_FAIL";
 export const SET_USER = "SET_USER";
 export const SET_TOKEN = "SET_TOKEN";

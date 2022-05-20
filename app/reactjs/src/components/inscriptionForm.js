@@ -20,7 +20,7 @@ export default function InscriptionForm({}) {
   const [open, setOpen] = useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  const [message, setMessage] = useState(true);
+  const [message, setMessage] = useState(null);
   const [modalSuccess, setModalSuccess] = useState(false);
   const [submitting, setSubmitting] = useState(false);
   const [data, setData] = useState({});

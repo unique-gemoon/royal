@@ -4,13 +4,11 @@ import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { Button } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
 import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
-import { ROLES } from "../config/vars";
 import connector from "../connector";
 import { getInt, getPercentDuration } from "../helper/fonctions";
-import * as actionTypes from "../store/functions/actionTypes";
 
 export default function BarTemporelle({
   item = {},
@@ -24,9 +22,8 @@ export default function BarTemporelle({
   setMsgNotifTopTime = () => {},
   ...props
 }) {
-  const dispatch = useDispatch();
-  const auth = useSelector((store) => store.auth);
   const [isPending, setIsPending] = useState(false);
+  const auth = useSelector((store) => store.auth);
 
   const saveTime = ({ signe }) => {
     if (!isPending) {
@@ -63,17 +60,13 @@ export default function BarTemporelle({
   };
 
   const checkIsConnected = () => {
-    if (auth.roles.includes(ROLES.ROLE_USER)) {
+    if (auth.isConnected) {
       return true;
     } else {
       setMsgNotifTopTime(
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
         10000
       );
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
       return false;
     }
   };

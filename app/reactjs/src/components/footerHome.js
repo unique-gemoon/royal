@@ -7,7 +7,6 @@ import { ContainerDef, FooterDefault } from "../assets/styles/globalStyle";
 import NewPli from "./newPli";
 import SeeCounter from "./ui-elements/seeCounter";
 import ProfileMenu from "./profileMenu";
-import { ROLES } from "../config/vars";
 
 export default function FooterHome({
   action,
@@ -33,7 +32,7 @@ export default function FooterHome({
           <Row className="align-items-center">
             <Col md={3}>
               <div className="d-md-flex align-items-center">
-                {auth.roles.includes(ROLES.ROLE_USER) && (
+                {auth.isConnected && (
                   <ProfileMenu setMsgNotifTop={setMsgNotifTop} />
                 )}
                 <SeeCounter countSee={countConnection} />
