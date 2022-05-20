@@ -23,20 +23,20 @@ export default function pli(sequelize, Sequelize) {
     userId: {
       type: Sequelize.INTEGER,
       references: {
-        model: 'users',
-        key: 'id',
+        model: "users",
+        key: "id",
       },
       allowNull: false,
-      onDelete: 'cascade',
+      onDelete: "cascade",
     },
-
   });
 
   Pli.associate = function (models) {
     Pli.hasMany(models.media);
     Pli.belongsTo(models.user, { foreignKey: "userId" });
     Pli.hasMany(models.appearancePli);
+    Pli.hasMany(models.comment);
   };
-  
+
   return Pli;
 }
