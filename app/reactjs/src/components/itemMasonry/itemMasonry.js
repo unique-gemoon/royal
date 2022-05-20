@@ -23,8 +23,7 @@ export default function ItemMasonry({
   setActiveItemPlayer = () => {},
   activeItemPlayer = null,
   setMsgNotifTopTime = () => {},
-  state,
-  setState = () => {}
+  setStateModal = () => {},
 }) {
   const initData = {
     media: {
@@ -45,6 +44,16 @@ export default function ItemMasonry({
   const [data, setData] = useState({ ...initData });
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
+
+  const [state, setState] = useState({
+    showModal: false,
+    showComment: true,
+    item: {},
+  });
+
+  useEffect(() => {
+    setStateModal(state);
+  }, [state]);
 
   useEffect(() => {
     if (
@@ -90,7 +99,6 @@ export default function ItemMasonry({
         cpMedias[i] = media;
       }
     }
-    console.log("media",media);
     setItem({ ...item, medias: cpMedias, action: "update" });
   };
 
