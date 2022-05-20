@@ -943,8 +943,15 @@ export const FolowerSearch = styled.div`
         box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
         overflow: hidden;
         padding: 12px 16px;
-        & > svg{
-            font-size: 18px;
+        & > button{
+            background-color: transparent;
+            border: 0;
+            outline: none !important;
+            color: #FFF;
+            & > svg{
+                font-size: 18px;
+                cursor: pointer;
+            }
         }
         .search-input{
             margin-left: 9px;
@@ -2008,15 +2015,16 @@ export const ModalItem = styled(Modal)`
     }
     .modal-dialog{
         width: 900px;
-        height: 100%;
+        height: initial;
         margin: auto;
         max-width: 90%;
         border-radius: 20px;
+        max-height: calc(100% - 60px);
         .modal-content{
             border-radius: 0px;
             background-color: transparent;
             border: 0;
-            height: calc(100% - 60px);
+            height: 100%;
             margin:  30px auto;
         }
         .modal-body{
