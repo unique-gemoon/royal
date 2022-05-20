@@ -14,7 +14,7 @@ import { Button } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import BallotIcon from "../../assets/images/icons/ballotIcon";
@@ -25,7 +25,6 @@ import {
 } from "../../assets/styles/globalStyle";
 import { ROLES } from "../../config/vars";
 import { useOutsideAlerter } from "../../helper/events";
-import * as actionTypes from "../../store/functions/actionTypes";
 import { useMediaQuery } from "react-responsive";
 
 export default function HeadItem({
@@ -50,7 +49,6 @@ export default function HeadItem({
   const handleTooltipOpen = () => {
     setToggleProfile(!toggleProfile);
   };
-  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
   const history = useHistory();
@@ -81,10 +79,6 @@ export default function HeadItem({
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
         10000
       );
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
       return false;
     }
   };

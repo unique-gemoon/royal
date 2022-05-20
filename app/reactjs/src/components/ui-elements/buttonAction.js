@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import React, { useRef, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import {
   BlocActionButton,
   ButtonIcon,
@@ -17,7 +17,6 @@ export default function ButtonAction({
   setAction = () => {},
   setMsgNotifTopTime = () => {},
 }) {
-  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
   const [countNotif, setCountNotif] = useState(setCount);
   const containerRef = useRef(null);
@@ -41,10 +40,6 @@ export default function ButtonAction({
       return true;
     } else {
       setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
       return false;
     }
   };

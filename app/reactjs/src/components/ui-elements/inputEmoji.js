@@ -1,10 +1,9 @@
 import SendIcon from "@mui/icons-material/Send";
 import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { FormEmoji } from "../../assets/styles/componentStyle";
 import { ROLES } from "../../config/vars";
-import * as actionTypes from "../../store/functions/actionTypes";
 import Emojis from "../emojis";
 import InputTextareaAutosize from "./inputTextareaAutosize";
 
@@ -32,7 +31,6 @@ export default function InputEmoji({
     setOpen(state.inputEmoji.open);
   }, [state]);
 
-  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
   const checkIsConnected = () => {
@@ -43,10 +41,6 @@ export default function InputEmoji({
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
         10000
       );
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
       return false;
     }
   };

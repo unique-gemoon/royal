@@ -5,7 +5,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { StyledEngineProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import Masonry from "react-masonry-css";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
 import logoType from "../assets/images/Logotype.png";
@@ -32,7 +32,6 @@ import {
   sortObjects,
   uniqid,
 } from "../helper/fonctions";
-import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -49,7 +48,6 @@ export default function Home() {
   const [countConnection, setCountConnection] = useState(0);
   const [initOpenedPlis, setInitOpenedPlis] = useState(0);
 
-  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
 
   useEffect(() => {
@@ -313,10 +311,6 @@ export default function Home() {
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
         10000
       );
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
       return false;
     }
   };
@@ -413,7 +407,7 @@ export default function Home() {
           </Masonry>
         </ContainerDef>
 
-        {!auth.roles.includes(ROLES.ROLE_USER) && auth.toLogin ? (
+        {!auth.roles.includes(ROLES.ROLE_USER) ? (
           <FooterAuthHome
             setMsgNotifTopTime={setMsgNotifTopTime}
             countConnection={countConnection}

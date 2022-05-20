@@ -5,7 +5,6 @@ import * as actionTypes from "../functions/actionTypes";
 const initState = {
   token: null,
   roles: [],
-  toLogin: false,
   user: false,
 };
 
@@ -44,11 +43,6 @@ const AuthReducer = (state = initState, action) => {
     case actionTypes.SET_USER:
       return updateObject(state, {
         user: action.user !== undefined ? action.user : state.user,
-      });
-
-    case actionTypes.TO_LOGIN:
-      return updateObject(state, {
-        toLogin: action.toLogin !== undefined ? action.toLogin : false,
       });
 
     case actionTypes.SET_TOKEN:

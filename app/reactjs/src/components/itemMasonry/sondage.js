@@ -5,9 +5,8 @@ import {
 } from "../../assets/styles/componentStyle";
 import RadioButton from "../ui-elements/radioButton";
 import CheckCircleOutlineIcon from "@mui/icons-material/CheckCircleOutline";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { ROLES } from "../../config/vars";
-import * as actionTypes from "../../store/functions/actionTypes";
 import { getInt, getMsgError, getPercentInt } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
@@ -19,7 +18,6 @@ export default function Sondage({
   setMsgNotifTopTime = () => {},
 }) {
   const [options, setOptions] = useState([]);
-  const dispatch = useDispatch();
   const auth = useSelector((store) => store.auth);
   const [submitting, setSubmitting] = useState(false);
 
@@ -42,10 +40,6 @@ export default function Sondage({
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
         10000
       );
-      dispatch({
-        type: actionTypes.TO_LOGIN,
-        toLogin: true,
-      });
       return false;
     }
   };

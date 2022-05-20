@@ -64,10 +64,6 @@ export default function ProfileMenu({ setMsgNotifTop = () => {} }) {
     dispatch({
       type: actionTypes.LOGOUT,
     });
-    dispatch({
-      type: actionTypes.TO_LOGIN,
-      toLogin: true,
-    });
     setMsgNotifTop(null);
   };
 
