@@ -21,29 +21,33 @@ import BallotIcon from "../../assets/images/icons/ballotIcon";
 import {
   DetailsItems,
   HeadContentItem,
-  PlusIcon
+  PlusIcon,
 } from "../../assets/styles/globalStyle";
 import { useOutsideAlerter } from "../../helper/events";
 import { useMediaQuery } from "react-responsive";
-import moment from 'moment';
+import moment from "moment";
+import { getMsgError } from "../../helper/fonctions";
+import endPoints from "../../config/endPoints";
+import connector from "../../connector";
 
 export default function HeadItem({
   item,
+  setItem = () => {},
   state,
   setState,
   action,
   setAction = () => {},
   activeItem,
   setActiveItem = () => {},
-  setMsgNotifTopTime = () => { },
+  setMsgNotifTopTime = () => {},
   stateFolowersMessage,
-  setFolowersMessage = () => { },
+  setFolowersMessage = () => {},
 }) {
-
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 540px)" });
   const [toggleProfile, setToggleProfile] = useState(false);
   const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
   const [mediaIcons, setMediaIcons] = useState([]);
+  const [submitting, setSubmitting] = useState(false);
   const handleTooltipClose = () => {
     setToggleProfile(false);
   };
@@ -60,7 +64,7 @@ export default function HeadItem({
 
   useEffect(() => {
     if (pliId && item && item.id == pliId) {
-      setState({ ...state, showModal: true, showComment: true , item});
+      setState({ ...state, showModal: true, showComment: true, item });
       const cpAction = {
         ...action,
         notification: { ...action.notification, isOpen: false },
@@ -118,6 +122,55 @@ export default function HeadItem({
     setShowMediaIcons(false);
   });
 
+  const subscribe = () => {
+    if (!submitting) {
+      msgErrors({ submit: true });
+      connector({
+        method: "post",
+        url: `${endPoints.USER_SUBSCRIVBE}`,
+        data: { userId: item.user.id },
+        success: (response) => {
+          msgErrors({ submit: false, msg:`Vous êtes désormais abonné à "${item.user.username}".` });
+          setItem({
+            ...item,
+            user: { ...item.user, isSubscribed: true },
+            action: "update",
+          });
+        },
+        catch: (error) => {
+          msgErrors({ msg: getMsgError(error), submit: false });
+        },
+      });
+    }
+  };
+
+  const unsubscribe = () => {
+    if (!submitting) {
+      msgErrors({ submit: true });
+      connector({
+        method: "post",
+        url: `${endPoints.USER_UNSUBSCRIVBE}`,
+        data: { userId: item.user.id },
+        success: (response) => {
+          msgErrors({ submit: false , msg:`Vous êtes désormais désabonné de "${item.user.username}".` });
+          setItem({
+            ...item,
+            user: { ...item.user, isSubscribed: false },
+            action: "update",
+          });
+        },
+        catch: (error) => {
+          msgErrors({ msg: getMsgError(error), submit: false });
+        },
+      });
+    }
+  };
+
+  const msgErrors = (e) => {
+    if (e.submit !== undefined) setSubmitting(e.submit);
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
+  };
+
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
@@ -156,7 +209,8 @@ export default function HeadItem({
             <div
               className={`mediaDetails ${showMediaIcons ? "showMedia" : ""}`}
             >
-              {mediaIcons.length > 0 && !isDesktopOrLaptop &&
+              {mediaIcons.length > 0 &&
+                !isDesktopOrLaptop &&
                 mediaIcons.map((media, index) => (
                   <div key={index}>
                     {index > 0 ? (
@@ -245,40 +299,51 @@ export default function HeadItem({
                               }
                               const cpAction = {
                                 ...action,
-                                notification: { ...action.notification, isOpen: false },
+                                notification: {
+                                  ...action.notification,
+                                  isOpen: false,
+                                },
                                 folower: { ...action.folower, isOpen: false },
                                 search: { ...action.search, isOpen: false },
-                                messagerie: { ...action.messagerie, isOpen: true },
+                                messagerie: {
+                                  ...action.messagerie,
+                                  isOpen: true,
+                                },
                               };
                               setAction(cpAction);
-                              setFolowersMessage({ ...stateFolowersMessage, activeItem: { id: 4} });
+                              setFolowersMessage({
+                                ...stateFolowersMessage,
+                                activeItem: { id: 4 },
+                              });
                               setState({ ...state, showModal: false });
                             }}
                             className="toggle-item-message"
                           >
                             <MailOutlineRoundedIcon />
                           </Button>
-                          <Button
-                            onClick={() => {
-                              if (checkIsConnected()) {
-                                setStatutFolower(!statutFolower);
-                              } else {
-                                setState({ ...state, showModal: false, item });
-                              }
-                            }}
-                            className="btn-switch-folowers"
-                          >
-                            {statutFolower ? (
-                              <>
-                                S'abonner
-                                <PersonAddAltOutlinedIcon />
-                              </>
-                            ) : (
-                              <>
-                                {" "}
+                          <Button className="btn-switch-folowers">
+                            {item.user.isSubscribed ? (
+                              <div
+                                onClick={() => {
+                                  if (checkIsConnected()) {
+                                    unsubscribe();
+                                  }
+                                }}
+                              >
                                 Abonner
                                 <PersonRemoveOutlinedIcon />
-                              </>
+                              </div>
+                            ) : (
+                              <div
+                                onClick={() => {
+                                  if (checkIsConnected()) {
+                                    subscribe();
+                                  }
+                                }}
+                              >
+                                S'abonner
+                                <PersonAddAltOutlinedIcon />
+                              </div>
                             )}
                           </Button>
                         </div>
@@ -287,13 +352,26 @@ export default function HeadItem({
                   </>
                 }
               >
-                <span className="name-post" onClick={handleTooltipOpen}>
+                <span
+                  className="name-post"
+                  onClick={() => {
+                    if (
+                      !auth.isConnected ||
+                      (auth.user && auth.user.id != item.user.id)
+                    ) {
+                      handleTooltipOpen();
+                    }
+                  }}
+                >
                   {item.user.username}
                 </span>
               </Tooltip>
             </div>
           </ClickAwayListener>
-          <span className="timer-post"> {moment().diff(item.createdAt, 'hours')}h</span>
+          <span className="timer-post">
+            {" "}
+            {moment().diff(item.createdAt, "hours")}h
+          </span>
         </div>
       </div>
       <div className="option-item">
@@ -304,14 +382,14 @@ export default function HeadItem({
               setState({ ...state, showModal: false, item });
             }}
           >
-            {item?.countOpened ?item.countOpened: 0} <VisibilityIcon />{" "}
+            {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />{" "}
             <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
           </div>
         ) : (
           <div
             className="users-enligne-pli"
             onClick={() => {
-              setState({ ...state, showModal: true, showComment: true, item  });
+              setState({ ...state, showModal: true, showComment: true, item });
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -320,10 +398,12 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setActiveItem((activeItem && activeItem.id == item.id) ? null : item);
+              setActiveItem(
+                activeItem && activeItem.id == item.id ? null : item
+              );
             }}
           >
-            {item?.countOpened ?item.countOpened: 0} <VisibilityIcon />{" "}
+            {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />{" "}
             <OpenInFullOutlinedIcon className="open-zoom-icon" />
           </div>
         )}

@@ -12,5 +12,9 @@ const endPoints = {
   PLIS : "/pli/list",
   PLI_SONDAGE_VOTE : "/pli/sondage/vote",
   PLI_SONDAGE_NOTE_VOTE : "/pli/sondage/not-vote",
+  USER_SUBSCRIVBE : "/user/subscribe",
+  USER_UNSUBSCRIVBE : "/user/unsubscribe",
+  USER_SUBSCRICERS : "/user/subscribers/list", 
+  USER_SUBSCRIPTIONS : "/user/subscriptions/list", 
 };
 export default endPoints;
