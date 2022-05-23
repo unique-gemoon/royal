@@ -23,6 +23,7 @@ export default function subscriber(sequelize, Sequelize) {
   Subscriber.associate = function (models) {
     Subscriber.belongsTo(models.user, { foreignKey: "userId" });
     Subscriber.belongsTo(models.user, { foreignKey: "subscriberId" });
+    Subscriber.hasMany(models.subscriberNotifications); 
   };
 
   return Subscriber;

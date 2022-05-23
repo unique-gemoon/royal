@@ -105,7 +105,6 @@ var multi_upload = multer({
 export function uploadMedia(req, res, next) {
   multi_upload(req, res, function (err) {
     if (err instanceof multer.MulterError) {
-      console.log(err);
       const message =
         error.code == "LIMIT_FILE_SIZE"
           ? "La taille du fichier est trop grande. La taille de fichier autorisée est 100mo"

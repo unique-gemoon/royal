@@ -36,6 +36,7 @@ export default function pli(sequelize, Sequelize) {
     Pli.belongsTo(models.user, { foreignKey: "userId" });
     Pli.hasMany(models.appearancePli);
     Pli.hasMany(models.comment);
+    Pli.hasMany(models.pliNotifications); 
   };
 
   return Pli;

@@ -9,6 +9,7 @@ const SondageOptions = db.sondageOptions;
 const SondageVotes = db.sondageVotes;
 const AppearancePli = db.appearancePli;
 const SondageNotVotes = db.sondageNotVotes;
+const Subscriber = db.subscriber;
 const PliMedias = Pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 const PliUser = Pli.belongsTo(User);
@@ -19,6 +20,7 @@ const SondageOptionsVotes = SondageOptions.hasMany(SondageVotes, {
 const MediaSondageNotVotes = Media.hasMany(SondageNotVotes, {
   as: "notVotes",
 });
+const UserSubscriber = User.hasMany(Subscriber, { foreignKey: "subscriberId" });
 const Op = db.Sequelize.Op;
 
 //TODO : delete demo data comments
@@ -254,7 +256,6 @@ export function findPliUserNotElapsed(req, res, next) {
       if (!pli) {
         next();
       } else {
-        //TODO modifier message
         res.status(400).send({
           message:
             "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
@@ -278,7 +279,7 @@ export function findAllPlisNotElapsed(req, res, next) {
   };
   let options = {};
 
-  if(req.query?.id && parseInt(req.query.id)){
+  if (req.query?.id && parseInt(req.query.id)) {
     where.id = parseInt(req.query.id);
     options.limit = 1;
   }
@@ -319,6 +320,14 @@ export function findAllPlisNotElapsed(req, res, next) {
         association: PliUser,
         as: "user",
         attributes: ["id", "username"],
+        include: [
+          {
+            model: Subscriber,
+            association: UserSubscriber,
+            as: "subscribers",
+            attributes: { exclude: ["createdAt", "updatedAt"] },
+          },
+        ],
       },
       {
         model: AppearancePli,
@@ -336,7 +345,7 @@ export function findAllPlisNotElapsed(req, res, next) {
         "DESC",
       ],
     ],
-    ...options
+    ...options,
   })
     .then((plis) => {
       if (!plis) {
@@ -421,13 +430,29 @@ export function findAllPlisNotElapsed(req, res, next) {
               signe = cpPliAppearance.signe;
             }
           }
+
+          let isSubscribed = false;
+          if (req.user) {
+            for (let j = 0; j < cpPli.user.subscribers.length; j++) {
+              const subscriber = cpPli.user.subscribers[j];
+              if (subscriber.userId == req.user.id) {
+                isSubscribed = true;
+                break;
+              }
+            }
+          }
+
           const id = cpPli.id;
           const content = cpPli.content;
           const ouverture = cpPli.ouverture;
           const duration = durationTime(cpPli.createdAt, cpPli.allottedTime);
           const allottedTime = cpPli.allottedTime;
           const medias = cpMedias;
-          const user = cpPli.user;
+          const user = {
+            id: cpPli.user.id,
+            username: cpPli.user.username,
+            isSubscribed,
+          };
           const createdAt = cpPli.createdAt;
           const appearances = { countDown, countUp, alreadyUpdated, signe };
 
