@@ -1,6 +1,6 @@
 {
 	"info": {
-		"_postman_id": "2aaed8f7-22e4-4988-90e0-50e0d59b2afc",
+		"_postman_id": "b72b7b11-2a9e-402e-932b-517f961d7362",
 		"name": "Royalis",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
 	},
@@ -47,7 +47,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"username\":\"ayoub\",\"email\":\"ayoub@example.com\",\"password\":\"123456\"}"
+					"raw": "{\"username\":\"ayoub4\",\"email\":\"ayoub4@edxample.com\",\"password\":\"123456\"}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/api/auth/register",
@@ -94,7 +94,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"email\":\"ayoub@example.com\",\"password\":\"123456\"}"
+					"raw": "{\"username\":\"ayoub@example.com\",\"password\":\"123456\"}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/api/auth/login",
@@ -110,6 +110,170 @@
 						"api",
 						"auth",
 						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pli_new",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjozLCJ1c2VybmFtZSI6ImphY29iIiwiZW1haWwiOiJqYWNvYkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTIzNDkyMjI0MjYsImV4cCI6MTY1MjYwODQyMjQyNn0.B1jIVs0hcjZNWHRB8wHtbs84J5QTiaIQ1SVN0337_eY\nConnection: keep-alive",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"content\":\"test\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/pli/new",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pli",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "vote_sondage",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjo0LCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTI3OTY1MjY3NTYsImV4cCI6MTY1MzA1NTcyNjc1Nn0.rCEmSiO3hFjQaqouCiDkfavEIEuJM85vVtZS_C3p-No",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"sondageId\":1,\"optionId\":2}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/pli/sondage/vote",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pli",
+						"sondage",
+						"vote"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pli_list",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjo0LCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTI3OTY1MjY3NTYsImV4cCI6MTY1MzA1NTcyNjc1Nn0.rCEmSiO3hFjQaqouCiDkfavEIEuJM85vVtZS_C3p-No",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/pli/list",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pli",
+						"list"
 					]
 				}
 			},
@@ -141,7 +305,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpYXQiOjE2NDc1MTYyOTA2OTksImV4cCI6MTY0Nzc3NTQ5MDY5OX0.4C9sno_8_VDKlFuV8wTQ7RYeHPboDzsX14VNim4qplU\"}"
+					"raw": "{\"refreshToken\":\"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsImlhdCI6MTY0NzUyMTM5MTk3NCwiZXhwIjoxNjQ4MTI2MTkxOTc0fQ.ITYUm1wCH1YuQ157LJRI8mOGlLy69-OY-lgM7DIIgjI\"}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/api/auth/refresh-token",
@@ -257,29 +421,6 @@
 			"response": []
 		},
 		{
-			"name": "secrets",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "http://127.0.0.1:8080/api/secrets",
-					"protocol": "http",
-					"host": [
-						"127",
-						"0",
-						"0",
-						"1"
-					],
-					"port": "8080",
-					"path": [
-						"api",
-						"secrets"
-					]
-				}
-			},
-			"response": []
-		},
-		{
 			"name": "logout",
 			"request": {
 				"method": "GET",
@@ -343,6 +484,110 @@
 						"api",
 						"auth",
 						"profile"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "delete-account",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjo2LCJ1c2VybmFtZSI6ImF5b3ViNCIsImVtYWlsIjoiYXlvdWI0QGVkeGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NDc4NjYyNTU0MTMsImV4cCI6MTY0ODEyNTQ1NTQxM30.CjDbba44qbqsgNxk3gpf_Etv42giYLI-uQjujITXCVE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/auth/delete-account",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"auth",
+						"delete-account"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "update_time_pli",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjozLCJ1c2VybmFtZSI6ImphY29iIiwiZW1haWwiOiJqYWNvYkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTIzNTEzOTY4MTIsImV4cCI6MTY1MjYxMDU5NjgxMn0.NP9yQmVA55mVP4IxYZoAXvS_KKnQD0KmqmIP2Qkfo7s",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "urlencoded",
+					"urlencoded": [
+						{
+							"key": "duration",
+							"value": "00:01:00",
+							"type": "text"
+						},
+						{
+							"key": "allottedTime",
+							"value": "1",
+							"type": "text"
+						},
+						{
+							"key": "signe",
+							"value": "true",
+							"type": "text"
+						},
+						{
+							"key": "id",
+							"value": "11",
+							"type": "text"
+						}
+					]
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/pli/time",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pli",
+						"time"
 					]
 				}
 			},
