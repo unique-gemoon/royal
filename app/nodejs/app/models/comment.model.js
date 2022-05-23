@@ -37,6 +37,7 @@ export default function comment(sequelize, Sequelize) {
     Comment.belongsTo(models.pli, { foreignKey: "pliId" });
     Comment.belongsTo(models.user, { foreignKey: "userId" });
     Comment.belongsTo(models.comment, { foreignKey: "parentId" });
+    Comment.hasMany(models.commentNotifications); 
   };
 
   return Comment;

@@ -60,6 +60,11 @@ export default function user(sequelize, Sequelize) {
       type: Sequelize.BOOLEAN,
       defaultValue: true,
     },
+
+    seenNotificationNewAccount: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   // Creating a custom method for our User model. This will check if an unhashed
@@ -90,6 +95,7 @@ export default function user(sequelize, Sequelize) {
     User.hasMany(models.comment);
     User.hasMany(models.threadUsers);
     User.hasMany(models.message); 
+    User.hasMany(models.subscriberNotifications); 
   };
 
   return User;

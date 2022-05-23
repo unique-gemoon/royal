@@ -13,6 +13,9 @@ import comment from "./comment.model.js";
 import thread from './thread.model.js';
 import threadUsers from './threadUsers.model.js';
 import message from './message.model.js'; 
+import subscriberNotifications from './subscriberNotifications.model.js'; 
+import commentNotifications from './commentNotifications.model.js'; 
+import pliNotifications from './pliNotifications.model.js'; 
 
 let db = {};
 
@@ -50,6 +53,9 @@ db.comment = comment(sequelize, Sequelize);
 db.thread = thread(sequelize, Sequelize);
 db.threadUsers = threadUsers(sequelize, Sequelize);
 db.message = message(sequelize, Sequelize); 
+db.subscriberNotifications = subscriberNotifications(sequelize, Sequelize); 
+db.commentNotifications = commentNotifications(sequelize, Sequelize); 
+db.pliNotifications = pliNotifications(sequelize, Sequelize); 
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
