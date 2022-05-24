@@ -11,7 +11,9 @@ export default function SearchFolowers({
     setAction = () => { },
     stateFolowersMessage,
     setFolowersMessage = () => { },
+    setMsgNotifTopTime = () => {},
 }) {
+    
     const [showResult, setShowResult]= useState(false);
     const [state, setState] = useState({
       search:{
@@ -121,6 +123,7 @@ export default function SearchFolowers({
                             <ItemListFolower 
                                 key={item.id} 
                                 item={item}
+                                setMsgNotifTopTime={setMsgNotifTopTime}
                                 onClick={() => {
                                     console.log("test", action)
                                     const cpAction = {

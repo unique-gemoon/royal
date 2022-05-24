@@ -45,7 +45,6 @@ export default function HeadItem({
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 540px)" });
   const [toggleProfile, setToggleProfile] = useState(false);
-  const [statutFolower, setStatutFolower] = useState(item.statutAbonne);
   const [mediaIcons, setMediaIcons] = useState([]);
   const [submitting, setSubmitting] = useState(false);
   const handleTooltipClose = () => {

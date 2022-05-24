@@ -20,7 +20,8 @@ export default function OptionsBtnFooter({
   publishPli = null,
   setPublishPli = () => {},
   stateFolowersMessage,
-  setFolowersMessage = () => { },
+  setFolowersMessage = () => {},
+  updateSubscriberStatus = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -105,6 +106,8 @@ export default function OptionsBtnFooter({
           setFolowersMessage={setFolowersMessage}  
           action={action}
           setAction={setAction}
+          setMsgNotifTopTime={setMsgNotifTopTime}
+          updateSubscriberStatus={updateSubscriberStatus}
         />
       </ButtonAction>
       <ButtonAction

@@ -2,7 +2,10 @@ import db from "../models/index.model.js";
 
 const User = db.user;
 const Subscriber = db.subscriber;
-const UserSubscriber = Subscriber.belongsTo(User);
+const SubscriberUser = Subscriber.belongsTo(User, { foreignKey: "userId" });
+const SubscriberUserSubscriber = Subscriber.belongsTo(User, {
+  foreignKey: "subscriberId",
+});
 
 export function subscribe(req, res) {
   if (!req.subscriber) {
@@ -70,7 +73,7 @@ export function findSubscribersList(req, res) {
     include: [
       {
         model: User,
-        association: UserSubscriber,
+        association: SubscriberUserSubscriber,
         as: "user",
         attributes: ["id", "username"],
       },
@@ -81,7 +84,16 @@ export function findSubscribersList(req, res) {
     },
   })
     .then((subscribers) => {
-      res.status(200).send({ message: "ok", subscribers });
+      let cpSubscribers = [];
+      for (let i = 0; i < subscribers.length; i++) {
+        const subscriber = subscribers[i];
+        cpSubscribers.push({
+          id: subscriber.user.id,
+          username: subscriber.user.username,
+          isSubscribed: true,
+        });
+      }
+      res.status(200).send({ message: "ok", subscribers: cpSubscribers });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -95,7 +107,7 @@ export function findSubscriptionsList(req, res) {
     include: [
       {
         model: User,
-        association: UserSubscriber,
+        association: SubscriberUser,
         as: "user",
         attributes: ["id", "username"],
       },
@@ -106,7 +118,16 @@ export function findSubscriptionsList(req, res) {
     },
   })
     .then((subscriptions) => {
-      res.status(200).send({ message: "ok", subscriptions });
+      let cpSubscriptions = [];
+      for (let i = 0; i < subscriptions.length; i++) {
+        const subscription = subscriptions[i];
+        cpSubscriptions.push({
+          id: subscription.user.id,
+          username: subscription.user.username,
+          isSubscribed: null,
+        });
+      }
+      res.status(200).send({ message: "ok", subscriptions: cpSubscriptions });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

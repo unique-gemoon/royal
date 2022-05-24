@@ -22,6 +22,7 @@ export default function FooterHome({
   publishPli = null,
   setPublishPli = () => {},
   countConnection = 0,
+  updateSubscriberStatus=()=>{},
   
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -66,6 +67,7 @@ export default function FooterHome({
                 setPublishPli={setPublishPli}
                 stateFolowersMessage={stateFolowersMessage}
                 setFolowersMessage={setFolowersMessage}
+                updateSubscriberStatus={updateSubscriberStatus}
               />
             </Col>
           </Row>
@@ -85,6 +87,7 @@ export default function FooterHome({
           setPublishPli={setPublishPli}
           stateFolowersMessage={stateFolowersMessage}
           setFolowersMessage={setFolowersMessage}
+          updateSubscriberStatus={updateSubscriberStatus}
         />
       )}
     </FooterDefault>
