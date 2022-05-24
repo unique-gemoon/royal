@@ -53,9 +53,8 @@ export default function Home() {
     getPlis(true);
   }, [auth.isConnected]);
 
-
   useEffect(() => {
-    if(initOpenedPlis && socket){
+    if (initOpenedPlis && socket) {
       socket.emit("CLIENT_OPEN_PLI", { id: 0, opened: false });
     }
   }, [initOpenedPlis]);
@@ -150,7 +149,7 @@ export default function Home() {
           localStorage.removeItem("publishPli");
         }
         if (refresh) {
-          setInitOpenedPlis(initOpenedPlis+1);
+          setInitOpenedPlis(initOpenedPlis + 1);
         }
       },
       catch: (error) => {
@@ -354,6 +353,7 @@ export default function Home() {
     1200: 2,
     993: 1,
   };
+
   const [stateFolowersMessage, setFolowersMessage] = useState({
     showSearchFolower: false,
     activeItem: false,
@@ -366,6 +366,20 @@ export default function Home() {
       className: "search-input",
     },
   });
+
+  const updateSubscriberStatus = (item) => {
+    for (let i = 0; i < plis.length; i++) {
+      const pli = plis[i];
+      if (pli.user.id === item.id) {
+        refreshItem({
+          ...pli,
+          user: { ...pli.user, isSubscribed: item.isSubscribed },
+          action: "update",
+        });
+        break;
+      }
+    }
+  };
 
   return (
     <DefaultMain>
@@ -438,6 +452,7 @@ export default function Home() {
             countConnection={countConnection}
             stateFolowersMessage={stateFolowersMessage}
             setFolowersMessage={setFolowersMessage}
+            updateSubscriberStatus={updateSubscriberStatus}
           />
         )}
         <ModalMessage

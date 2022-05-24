@@ -288,6 +288,7 @@ export default function Messagerie({
               <div className="list-result-search">
                 {dataFolower.map((item) => (
                   <ItemListFolower
+                    setMsgNotifTopTime={setMsgNotifTopTime}
                     stateFolowersMessage={stateFolowersMessage}
                     setFolowersMessage={setFolowersMessage}
                     shwoButtonMessage={false}
