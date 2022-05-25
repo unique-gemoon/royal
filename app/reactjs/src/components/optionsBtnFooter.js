@@ -14,7 +14,6 @@ export default function OptionsBtnFooter({
   dataNotifs,
   setDataNotifs = () => {},
   setMsgNotifTop = () => {},
-  getPlis = () => {},
   setItem = () => {},
   setMsgNotifTopTime = () => {},
   publishPli = null,
@@ -58,12 +57,12 @@ export default function OptionsBtnFooter({
           updateAction(e, "messagerie");
         }}
         stateFolowersMessage={stateFolowersMessage}
-        setFolowersMessage={setFolowersMessage}  
+        setFolowersMessage={setFolowersMessage}
       >
-        <Messagerie 
-          setMsgNotifTopTime={setMsgNotifTopTime} 
+        <Messagerie
+          setMsgNotifTopTime={setMsgNotifTopTime}
           stateFolowersMessage={stateFolowersMessage}
-          setFolowersMessage={setFolowersMessage}  
+          setFolowersMessage={setFolowersMessage}
         />
       </ButtonAction>
       <ButtonAction
@@ -75,11 +74,14 @@ export default function OptionsBtnFooter({
           updateAction(e, "search");
         }}
       >
-        <SearchFolowers 
+        <SearchFolowers
           stateFolowersMessage={stateFolowersMessage}
           setFolowersMessage={setFolowersMessage}
           action={action}
-          setAction={setAction} />
+          setAction={setAction}
+          setMsgNotifTopTime={setMsgNotifTopTime}
+          updateSubscriberStatus={updateSubscriberStatus}
+        />
       </ButtonAction>
       {isTabletOrMobile && (
         <NewPli
@@ -101,9 +103,9 @@ export default function OptionsBtnFooter({
           updateAction(e, "folower");
         }}
       >
-        <BlocFolowers 
+        <BlocFolowers
           stateFolowersMessage={stateFolowersMessage}
-          setFolowersMessage={setFolowersMessage}  
+          setFolowersMessage={setFolowersMessage}
           action={action}
           setAction={setAction}
           setMsgNotifTopTime={setMsgNotifTopTime}

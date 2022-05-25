@@ -6,6 +6,7 @@ import {
   subscribe,
   unsubscribe,
   findSubscriptionsList,
+  searchUsersList,
 } from "../controllers/user.controller.js";
 
 const userRoutes = Router();
@@ -34,6 +35,12 @@ userRoutes.get(
   "/subscriptions/list",
   passport.authenticate("jwt", { session: false }),
   findSubscriptionsList
+);
+
+userRoutes.get(
+  "/search/list",
+  passport.authenticate("jwt", { session: false }),
+  searchUsersList
 );
 
 export default userRoutes;

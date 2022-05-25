@@ -15,7 +15,7 @@ export default function ButtonAction({
   setAction = () => {},
   setMsgNotifTopTime = () => {},
   stateFolowersMessage,
-  setFolowersMessage = () => { },
+  setFolowersMessage = () => {},
 }) {
   const auth = useSelector((store) => store.auth);
   const [countNotif, setCountNotif] = useState(setCount);
@@ -39,7 +39,10 @@ export default function ButtonAction({
     if (auth.isConnected) {
       return true;
     } else {
-      setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",10000);
+      setMsgNotifTopTime(
+        "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
+        5000
+      );
       return false;
     }
   };

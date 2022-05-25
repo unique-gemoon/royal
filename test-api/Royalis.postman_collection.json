@@ -170,6 +170,114 @@
 			"response": []
 		},
 		{
+			"name": "user_subscribe",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTMyOTk1OTkzNDIsImV4cCI6MTY1MzU1ODc5OTM0Mn0.sjE671v9kj2-bUnJAMx03oIUuCFvpnG1gUJOCUxpwEs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userId\":\"1\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/user/subscribe",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"subscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_unsubscribe",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTMyOTk1OTkzNDIsImV4cCI6MTY1MzU1ODc5OTM0Mn0.sjE671v9kj2-bUnJAMx03oIUuCFvpnG1gUJOCUxpwEs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userId\":\"1\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/user/unsubscribe",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"unsubscribe"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "vote_sondage",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
@@ -238,7 +346,7 @@
 					"bearer": [
 						{
 							"key": "token",
-							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjo0LCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTI3OTY1MjY3NTYsImV4cCI6MTY1MzA1NTcyNjc1Nn0.rCEmSiO3hFjQaqouCiDkfavEIEuJM85vVtZS_C3p-No",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTMyOTk1OTkzNDIsImV4cCI6MTY1MzU1ODc5OTM0Mn0.sjE671v9kj2-bUnJAMx03oIUuCFvpnG1gUJOCUxpwEs",
 							"type": "string"
 						}
 					]
@@ -273,6 +381,174 @@
 					"path": [
 						"api",
 						"pli",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_subscribers_list",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTMyOTk1OTkzNDIsImV4cCI6MTY1MzU1ODc5OTM0Mn0.sjE671v9kj2-bUnJAMx03oIUuCFvpnG1gUJOCUxpwEs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/user/subscribers/list",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"subscribers",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_search_list",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTMyOTk1OTkzNDIsImV4cCI6MTY1MzU1ODc5OTM0Mn0.sjE671v9kj2-bUnJAMx03oIUuCFvpnG1gUJOCUxpwEs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/user/search/list",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"search",
+						"list"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "user_subscriptions_list",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTMyOTk1OTkzNDIsImV4cCI6MTY1MzU1ODc5OTM0Mn0.sjE671v9kj2-bUnJAMx03oIUuCFvpnG1gUJOCUxpwEs",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/user/subscriptions/list",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"subscriptions",
 						"list"
 					]
 				}

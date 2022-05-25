@@ -31,7 +31,6 @@ export default function ItemListFolower({
             submit: false,
             msg: `Vous êtes désormais abonné à "${item.username}".`,
           });
-          // refresh pli and item
           setItem({ ...item, isSubscribed: true });
         },
         catch: (error) => {
@@ -53,7 +52,6 @@ export default function ItemListFolower({
             submit: false,
             msg: `Vous êtes désormais désabonné de "${item.username}".`,
           });
-          // refresh pli and item
           setItem({ ...item, isSubscribed: false });
         },
         catch: (error) => {
@@ -65,7 +63,7 @@ export default function ItemListFolower({
 
   const msgErrors = (e) => {
     if (e.submit !== undefined) setSubmitting(e.submit);
-    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
   };
 
   return (

@@ -42,6 +42,7 @@ export default function HeadItem({
   setMsgNotifTopTime = () => {},
   stateFolowersMessage,
   setFolowersMessage = () => {},
+  updateSubscriberStatus = () => {},
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 540px)" });
   const [toggleProfile, setToggleProfile] = useState(false);
@@ -82,7 +83,7 @@ export default function HeadItem({
     } else {
       setMsgNotifTopTime(
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
-        10000
+        5000
       );
       return false;
     }
@@ -135,6 +136,7 @@ export default function HeadItem({
             user: { ...item.user, isSubscribed: true },
             action: "update",
           });
+          updateSubscriberStatus({ ...item.user, isSubscribed: true });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -157,6 +159,7 @@ export default function HeadItem({
             user: { ...item.user, isSubscribed: false },
             action: "update",
           });
+          updateSubscriberStatus({ ...item.user, isSubscribed: false });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -167,7 +170,7 @@ export default function HeadItem({
 
   const msgErrors = (e) => {
     if (e.submit !== undefined) setSubmitting(e.submit);
-    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
   };
 
   return (

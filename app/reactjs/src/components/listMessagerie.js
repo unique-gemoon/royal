@@ -15,7 +15,6 @@ export default function ListMessagerie({ data = [], setData = () => { }, state, 
         }
         return data.map((row, index) => (
             <ItemListMessagerie
-
                 key={index}
                 onClick={() => {
                     setState({ ...state, activeItem: row });

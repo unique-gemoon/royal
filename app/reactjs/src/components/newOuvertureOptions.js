@@ -41,19 +41,13 @@ export default function NewOuvertureOptions({
     multiple: true,
     onDrop: (acceptedFiles) => {
       acceptedFiles.map((file) => {
-        console.log(file);
         for (const key in state.mediaOuverture) {
-          console.log(state.mediaOuverture[key]);
-          console.log(state.mediaOuverture[key].file.length);
-          console.log(state.mediaOuverture[key].maxFiles);
           if (state.mediaOuverture[key].accept.indexOf(file.type) !== -1) {
             if (state.mediaOuverture[key].file.length < state.mediaOuverture[key].maxFiles) {
               const cpState = { ...state };
               cpState.mediaOuverture[key].file = [...cpState.mediaOuverture[key].file, file];
-              console.log(cpState);
               setState(cpState);
-            }
-            else {
+            }else {
               setMessage(<>Veuillez sélectionner maximun {state.mediaOuverture[key].maxFiles} {state.mediaOuverture[key].name} </>);
             }
             break;
@@ -139,8 +133,8 @@ export default function NewOuvertureOptions({
         <div className="liste-files">
           {state.mediaOuverture.images.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {Array.from(state.mediaOuverture.images.file).map((file, i) => (
-                <ImageUpload key={i}>
+              {Array.from(state.mediaOuverture.images.file).map((file, index) => (
+                <ImageUpload key={index}>
                   <img src={URL.createObjectURL(file)} alt={file.name} />
                   <Button onClick={()=>removeFile(file, "images")}>
                     <RemoveFile />
@@ -152,8 +146,8 @@ export default function NewOuvertureOptions({
 
           {state.mediaOuverture.video.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {Array.from(state.mediaOuverture.video.file).map((file, i) => (
-                <VideoUpload key={i}>
+              {Array.from(state.mediaOuverture.video.file).map((file, index) => (
+                <VideoUpload key={index}>
                   <img src={iconVideo} alt={file.name} />
                   <Button onClick={()=>removeFile(file, "video")}>
                     <RemoveFile />
@@ -165,8 +159,8 @@ export default function NewOuvertureOptions({
 
           {state.mediaOuverture.music.file.length > 0 && (
             <div className="bloc-item-image-file">
-              {state.mediaOuverture.music.file.map((file, i) => (
-                <SoundUpload key={i}>
+              {state.mediaOuverture.music.file.map((file, index) => (
+                <SoundUpload key={index}>
                   <span className="icon-sound">
                     <GraphicEqIcon />
                   </span>

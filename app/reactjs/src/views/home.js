@@ -235,6 +235,7 @@ export default function Home() {
       for (var i = 0; i < cpPlis.length; i++) {
         if (cpPlis[i].id == item.id) {
           cpPlis[i] = item;
+          break;
         }
       }
     }
@@ -306,7 +307,7 @@ export default function Home() {
     } else {
       setMsgNotifTopTime(
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
-        10000
+        5000
       );
       return false;
     }
@@ -345,7 +346,7 @@ export default function Home() {
 
   const msgErrors = (e) => {
     if (e.submit !== undefined) setSubmitting(e.submit);
-    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 10000);
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
   };
 
   const breakpointColumnsObj = {
@@ -379,6 +380,11 @@ export default function Home() {
         break;
       }
     }
+    socket.emit("CLIENT_SUBSCRIBER_UPDATED", {
+      user: { id: auth.user.id, username: auth.user.username },
+      subscriber: { id: item.id, username: item.username },
+      isSubscribed: item.isSubscribed,
+    });
   };
 
   return (
@@ -412,9 +418,9 @@ export default function Home() {
             columnClassName="pli-masonry-grid_column"
           >
             {plis &&
-              plis.map((item) => (
+              plis.map((item, index) => (
                 <ItemMasonry
-                  key={item.id}
+                  key={index}
                   item={item}
                   setItem={setItem}
                   action={action}
@@ -427,6 +433,7 @@ export default function Home() {
                   setStateModal={setStateModal}
                   stateFolowersMessage={stateFolowersMessage}
                   setFolowersMessage={setFolowersMessage}
+                  updateSubscriberStatus={updateSubscriberStatus}
                 />
               ))}
           </Masonry>

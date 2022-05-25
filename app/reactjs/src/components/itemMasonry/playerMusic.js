@@ -55,7 +55,6 @@ export default function PlayerMusic({
       }
     });
     wavesurfer.current.on("play", function () {
-      //console.log('music read');
       setActiveItemMusic(item);
     });
 

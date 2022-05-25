@@ -25,7 +25,8 @@ export default function ItemMasonry({
   setMsgNotifTopTime = () => {},
   setStateModal = () => {},
   stateFolowersMessage,
-  setFolowersMessage = () => { },
+  setFolowersMessage = () => {},
+  updateSubscriberStatus = () => {},
 }) {
   const initData = {
     media: {
@@ -119,6 +120,7 @@ export default function ItemMasonry({
           setMsgNotifTopTime={setMsgNotifTopTime}
           stateFolowersMessage={stateFolowersMessage}
           setFolowersMessage={setFolowersMessage}
+          updateSubscriberStatus={updateSubscriberStatus}
         />
         <div className="bloc-miniature">
           {item.content ? (
@@ -127,30 +129,30 @@ export default function ItemMasonry({
 
           {data.media.count > 0 && (
             <div>
-              {data.media.sondage.map((sondage) => (
+              {data.media.sondage.map((sondage, index) => (
                 <Sondage
                   name={`bloc_${sondage.id}`}
                   item={sondage}
                   setItem={setMedia}
-                  key={sondage.id}
+                  key={index}
                   setMsgNotifTopTime={setMsgNotifTopTime}
                 />
               ))}
               <ImagesGallery items={data.media.image} />
-              {data.media.video.map((video) => (
+              {data.media.video.map((video, index) => (
                 <PlayerVideo
                   setActiveItemPlayer={setActiveItemPlayer}
                   activeItemPlayer={activeItemPlayer}
                   item={video}
-                  key={video.id}
+                  key={index}
                 />
               ))}
-              {data.media.music.map((music) => (
+              {data.media.music.map((music, index) => (
                 <PlayerMusic
                   setActiveItemMusic={setActiveItemPlayer}
                   activeItemMusic={activeItemPlayer}
                   item={music}
-                  key={music.id}
+                  key={index}
                 />
               ))}
             </div>
@@ -195,20 +197,20 @@ export default function ItemMasonry({
                   />
                 ))}
                 <ImagesGallery items={data.mediaOuverture.image} />
-                {data.mediaOuverture.video.map((video) => (
+                {data.mediaOuverture.video.map((video,index) => (
                   <PlayerVideo
                     setActiveItemPlayer={setActiveItemPlayer}
                     activeItemPlayer={activeItemPlayer}
                     item={video}
-                    key={video.id}
+                    key={index}
                   />
                 ))}
-                {data.mediaOuverture.music.map((music) => (
+                {data.mediaOuverture.music.map((music,index) => (
                   <PlayerMusic
                     setActiveItemMusic={setActiveItemPlayer}
                     activeItemMusic={activeItemPlayer}
                     item={music}
-                    key={music.id}
+                    key={index}
                   />
                 ))}
               </div>
@@ -277,7 +279,10 @@ export default function ItemMasonry({
         </ModalItem.Body>
       </ModalItem>
       <MasonryItem height={height}>
-        <div className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`} ref={refHeight}>
+        <div
+          className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`}
+          ref={refHeight}
+        >
           {renderContentNV1()}
         </div>
         <div className="Bloc-NV2">

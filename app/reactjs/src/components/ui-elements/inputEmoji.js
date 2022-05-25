@@ -12,7 +12,7 @@ export default function InputEmoji({
   typeInput,
   open,
   setOpen = () => {},
-  setMsgNotifTopTime  = () => {},
+  setMsgNotifTopTime = () => {},
   ...props
 }) {
   const [state, setState] = useState({
@@ -38,7 +38,7 @@ export default function InputEmoji({
     } else {
       setMsgNotifTopTime(
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
-        10000
+        5000
       );
       return false;
     }

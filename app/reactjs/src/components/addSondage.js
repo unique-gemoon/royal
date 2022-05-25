@@ -18,8 +18,6 @@ export default function AddSondage({
     setSondage({ ...sondage, value: options });
   };
 
-  //console.log(sondage);
-
   return (
     <BlocNewSondage>
       <p className="titre-add-sondage">
