@@ -6,6 +6,10 @@ const SubscriberUser = Subscriber.belongsTo(User, { foreignKey: "userId" });
 const SubscriberUserSubscriber = Subscriber.belongsTo(User, {
   foreignKey: "subscriberId",
 });
+const UserSubscribers = User.hasMany(Subscriber, {
+  foreignKey: "subscriberId",
+});
+const Op = db.Sequelize.Op;
 
 export function subscribe(req, res) {
   if (!req.subscriber) {
@@ -128,6 +132,45 @@ export function findSubscriptionsList(req, res) {
         });
       }
       res.status(200).send({ message: "ok", subscriptions: cpSubscriptions });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
+    });
+}
+
+export function searchUsersList(req, res) {
+  User.findAll({
+    attributes: ["id", "username"],
+    include: [
+      {
+        model: Subscriber,
+        association: UserSubscribers,
+        as: "subscribers",
+        where: {
+          userId: req.user.id,
+        },
+        required: false
+      },
+    ],
+    order: [["username", "ASC"]],
+    where: {
+      id: {
+        [Op.ne]: req.user.id,
+      },
+    },
+  })
+    .then((users) => {
+      const cpUsers = [];
+      for (let i = 0; i < users.length; i++) {
+        const user = users[i];
+        cpUsers.push({
+          id: user.id,
+          username: user.username,
+          isSubscribed: user.subscribers.length>0,
+        });
+      }
+      res.status(200).send({ message: "ok", users: cpUsers });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

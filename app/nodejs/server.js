@@ -108,6 +108,10 @@ io.on("connection", (socket) => {
     io.emit("SERVER_PLI", data);
   });
 
+  socket.on("CLIENT_SUBSCRIBER_UPDATED", (data) => {
+    io.emit("SERVER_SUBSCRIBER_UPDATED", data);
+  });
+
   socket.on("CLIENT_OPEN_PLI", (data) => {
     if (
       data.id != undefined &&

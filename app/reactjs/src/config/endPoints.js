@@ -16,5 +16,6 @@ const endPoints = {
   USER_UNSUBSCRIVBE : "/user/unsubscribe",
   USER_SUBSCRICERS : "/user/subscribers/list", 
   USER_SUBSCRIPTIONS : "/user/subscriptions/list", 
+  USER_SEARCH_LIST : "/user/search/list", 
 };
 export default endPoints;

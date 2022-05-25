@@ -65,7 +65,7 @@ export default function BarTemporelle({
     } else {
       setMsgNotifTopTime(
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
-        10000
+        5000
       );
       return false;
     }

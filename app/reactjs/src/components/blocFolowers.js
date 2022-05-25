@@ -3,10 +3,12 @@ import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Tab from "@mui/material/Tab";
 import React, { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { FolowersModal } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import ItemListFolower from "./itemListFolower";
+import { socket } from "./socket";
 
 export default function BlocFolowers({
   action,
@@ -16,6 +18,7 @@ export default function BlocFolowers({
   setMsgNotifTopTime = () => {},
   updateSubscriberStatus = () => {},
 }) {
+  const auth = useSelector((store) => store.auth);
   const [value, setValue] = React.useState("1");
 
   const handleChange = (event, newValue) => {
@@ -27,6 +30,84 @@ export default function BlocFolowers({
 
   //TODO count new Abonnements
   const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
+
+  useEffect(() => {
+    const updateSubscriber = (item) => {
+      if (auth.user.id == item.user.id) {
+        const cpSubscribers = [...subscribers];
+        let existe = false;
+        for (let i = 0; i < cpSubscribers.length; i++) {
+          const subscriber = cpSubscribers[i];
+          if (subscriber.id == item.subscriber.id) {
+            existe = true;
+            cpSubscribers[i].isSubscribed = item.isSubscribed;
+            break;
+          }
+        }
+        if (!existe) {
+          cpSubscribers.push({
+            id: item.subscriber.id,
+            username: item.subscriber.username,
+            isSubscribed: item.isSubscribed,
+            type: "subscriber",
+          });
+        }
+        setSubscribers(cpSubscribers);
+
+        const cpSubscriptions = [...subscriptions];
+        for (let i = 0; i < cpSubscriptions.length; i++) {
+          const subscription = cpSubscriptions[i];
+          if (subscription.id == item.subscriber.id) {
+            cpSubscriptions[i].isSubscribed = item.isSubscribed;
+            break;
+          }
+        }
+        setSubscriptions(cpSubscriptions);
+      } else if (auth.user.id == item.subscriber.id) {
+        let cpSubscriptions = [...subscriptions];
+        if (item.isSubscribed) {
+          const cpSubscribers = [...subscribers];
+          let isSubscribed = false;
+          for (let i = 0; i < cpSubscribers.length; i++) {
+            const subscriber = cpSubscribers[i];
+            if (subscriber.id == item.user.id) {
+              isSubscribed = item.isSubscribed;
+              break;
+            }
+          }
+
+          let existe = false;
+          for (let i = 0; i < cpSubscriptions.length; i++) {
+            const subscription = cpSubscriptions[i];
+            if (subscription.id == item.user.id) {
+              existe = true;
+              cpSubscriptions[i].isSubscribed = isSubscribed;
+              break;
+            }
+          }
+
+          if (!existe) {
+            cpSubscriptions.push({
+              id: item.user.id,
+              username: item.user.username,
+              isSubscribed: isSubscribed,
+              type: "subscription",
+            });
+          }
+        } else {
+          cpSubscriptions = cpSubscriptions.filter(function (subscription) {
+            return subscription.id != item.user.id;
+          });
+        }
+        setSubscriptions(cpSubscriptions);
+      }
+    };
+    socket.on("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
+
+    return () => {
+      socket.off("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
+    };
+  }, [subscribers, subscriptions]);
 
   useEffect(() => {
     getSubscribers();
@@ -84,17 +165,13 @@ export default function BlocFolowers({
           let existe = false;
           const cpSubscriptions = [...subscriptions];
           for (let i = 0; i < cpSubscriptions.length; i++) {
-              const subscription = cpSubscriptions[i];
-              if(subscription.id == item.id){
-                  existe = true;
-                  cpSubscriptions[i].isSubscribed = item.isSubscribed
-                  break;
-              }
+            const subscription = cpSubscriptions[i];
+            if (subscription.id == item.id) {
+              existe = true;
+              cpSubscriptions[i].isSubscribed = item.isSubscribed;
+              break;
+            }
           }
-         
-          if(!existe){
-            cpSubscriptions.push({...item,type: "subscription"});
-          } 
           setSubscriptions(cpSubscriptions);
         }
       } else if (item.type == "subscription") {
@@ -106,17 +183,17 @@ export default function BlocFolowers({
           let existe = false;
           const cpSubscribers = [...subscribers];
           for (let i = 0; i < cpSubscribers.length; i++) {
-              const subscriber = cpSubscribers[i];
-              if(subscriber.id == item.id){
-                  existe = true;
-                  cpSubscribers[i].isSubscribed = item.isSubscribed
-                  break;
-              }
+            const subscriber = cpSubscribers[i];
+            if (subscriber.id == item.id) {
+              existe = true;
+              cpSubscribers[i].isSubscribed = item.isSubscribed;
+              break;
+            }
           }
-         
-          if(!existe){
-            cpSubscribers.push({...item,type: "subscriber"});
-          } 
+
+          if (!existe) {
+            cpSubscribers.push({ ...item, type: "subscriber" });
+          }
           setSubscribers(cpSubscribers);
         }
       }
@@ -148,7 +225,7 @@ export default function BlocFolowers({
               {subscribers.length > 0 &&
                 subscribers.map((item, index) => (
                   <ItemListFolower
-                    key={item.id}
+                    key={index}
                     item={{ ...item, type: "subscriber", index }}
                     setItem={setItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}
@@ -175,7 +252,7 @@ export default function BlocFolowers({
               {subscriptions.length > 0 &&
                 subscriptions.map((item, index) => (
                   <ItemListFolower
-                    key={item.id}
+                    key={index}
                     item={{ ...item, type: "subscription", index }}
                     setItem={setItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}

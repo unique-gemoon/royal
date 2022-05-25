@@ -286,13 +286,13 @@ export default function Messagerie({
           {stateFolowersMessage.resultSearch ? (
             <div className="content-search-results">
               <div className="list-result-search">
-                {dataFolower.map((item) => (
+                {dataFolower.map((item,index) => (
                   <ItemListFolower
                     setMsgNotifTopTime={setMsgNotifTopTime}
                     stateFolowersMessage={stateFolowersMessage}
                     setFolowersMessage={setFolowersMessage}
                     shwoButtonMessage={false}
-                    key={item.id}
+                    key={index}
                     item={item}
                   />
                 ))}

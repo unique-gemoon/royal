@@ -163,7 +163,7 @@ export default function NewPli({
     } else {
       setMsgNotifTopTime(
         "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
-        10000
+        5000
       );
       return false;
     }
@@ -256,7 +256,7 @@ export default function NewPli({
             clearPli();
             setMsgNotifTopTime(
               "Votre pli a bien été publié sur la page universelle ! Il reste 1 heure avant qu’il ne disparaisse si aucun délai supplémentaire ne lui est ajouté ou enlevé par les utilisateurs.",
-              10000
+              5000
             );
             setTogglePli(false);
             setPublishPli(response.data.pli);

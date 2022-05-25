@@ -32,16 +32,11 @@ export default function NewPliOptions({
     multiple: true,
     onDrop: (acceptedFiles) => {
       acceptedFiles.map((file) => {
-        console.log(file);
         for (const key in state.media) {
-          console.log(state.media[key]);
-          console.log(state.media[key].file.length);
-          console.log(state.media[key].maxFiles);
           if (state.media[key].accept.indexOf(file.type)!==-1) {
             if (state.media[key].file.length < state.media[key].maxFiles){
               const cpState = { ...state };
               cpState.media[key].file = [...cpState.media[key].file, file];
-              console.log(cpState);
               setState(cpState);
             }
             else{
@@ -85,8 +80,8 @@ export default function NewPliOptions({
       <div className="liste-files">
         {state.media.images.file.length > 0 && (
           <div className="bloc-item-image-file">
-            {Array.from(state.media.images.file).map((file, i) => (
-              <ImageUpload key={i}>
+            {Array.from(state.media.images.file).map((file, index) => (
+              <ImageUpload key={index}>
                 <img src={URL.createObjectURL(file)} alt={file.name} />
                 <Button onClick={() => removeFile(file, "images")}>
                   <RemoveFile />
@@ -97,8 +92,8 @@ export default function NewPliOptions({
         )}
         {state.media.video.file.length > 0 && (
           <div className="bloc-item-video-file">
-            {Array.from(state.media.video.file).map((file, i) => (
-              <VideoUpload key={i}>
+            {Array.from(state.media.video.file).map((file, index) => (
+              <VideoUpload key={index}>
                 <img src={iconVideo} alt={file.name} />
                 <Button onClick={() => removeFile(file, "video")}>
                   <RemoveFile />
@@ -109,8 +104,8 @@ export default function NewPliOptions({
         )}
         {state.media.music.file.length > 0 && (
           <div className="bloc-item-sound-file">
-            {state.media.music.file.map((file, i) => (
-              <SoundUpload key={i}>
+            {state.media.music.file.map((file, index) => (
+              <SoundUpload key={index}>
                 <span className="icon-sound">
                   <GraphicEqIcon />
                 </span>
