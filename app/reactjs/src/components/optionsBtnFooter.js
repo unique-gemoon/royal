@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { useMediaQuery } from "react-responsive";
 import { OptionsBtnAction } from "../assets/styles/globalStyle";
 import ButtonAction from "./ui-elements/buttonAction";
@@ -11,8 +11,6 @@ import Messagerie from "./messagerie";
 export default function OptionsBtnFooter({
   action,
   setAction = () => {},
-  dataNotifs,
-  setDataNotifs = () => {},
   setMsgNotifTop = () => {},
   setItem = () => {},
   setMsgNotifTopTime = () => {},
@@ -20,13 +18,12 @@ export default function OptionsBtnFooter({
   setPublishPli = () => {},
   stateFolowersMessage,
   setFolowersMessage = () => {},
-  updateSubscriberStatus = () => {},
+  updateSubscriberStatus = () => {},  
+  notifications = [],
+  isSeenNotification = () => {},
+  countNewNotifications = 0,
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
-
-  const [newNotifs, setNewNotifs] = useState(
-    dataNotifs.filter((newNotif) => newNotif.isRead == false)
-  );
 
   const updateAction = (e, name) => {
     let cpAction = { ...action };
@@ -49,7 +46,7 @@ export default function OptionsBtnFooter({
     <OptionsBtnAction>
       <ButtonAction
         className="messages-bloc-action"
-        setCount={0}
+        countNewNotif={0}
         action={action.messagerie}
         icon={action.messagerie.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
@@ -96,7 +93,7 @@ export default function OptionsBtnFooter({
       <ButtonAction
         className="abonnee-bloc-action"
         action={action.folower}
-        setCount={0}
+        countNewNotif={0}
         icon={action.folower.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
@@ -111,11 +108,11 @@ export default function OptionsBtnFooter({
           setMsgNotifTopTime={setMsgNotifTopTime}
           updateSubscriberStatus={updateSubscriberStatus}
         />
-      </ButtonAction>
+      </ButtonAction> 
       <ButtonAction
         className="notification-bloc-action"
         action={action.notification}
-        setCount={0}
+        countNewNotif={countNewNotifications}
         icon={action.notification.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
@@ -123,10 +120,9 @@ export default function OptionsBtnFooter({
         }}
       >
         <Notifications
-          items={newNotifs.length ? newNotifs : dataNotifs}
-          setNewNotifs={setNewNotifs}
-          dataNotifs={dataNotifs}
-          setDataNotifs={setDataNotifs}
+          notifications={notifications}
+          isSeenNotification={isSeenNotification}
+          countNewNotifications={countNewNotifications}
         />
       </ButtonAction>
     </OptionsBtnAction>

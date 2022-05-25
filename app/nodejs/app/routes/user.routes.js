@@ -7,6 +7,12 @@ import {
   unsubscribe,
   findSubscriptionsList,
   searchUsersList,
+  findNotifications,
+  findNotificationsNewAccount,
+  findNotificationsNewSubscriber,
+  findNotificationsSubscriberNewPli,
+  findNotificationsNewComment,
+  seenNotification,
 } from "../controllers/user.controller.js";
 
 const userRoutes = Router();
@@ -41,6 +47,22 @@ userRoutes.get(
   "/search/list",
   passport.authenticate("jwt", { session: false }),
   searchUsersList
+);
+
+userRoutes.get(
+  "/notifications",
+  passport.authenticate("jwt", { session: false }),
+  findNotificationsNewAccount,
+  findNotificationsNewSubscriber,
+  findNotificationsSubscriberNewPli,
+  findNotificationsNewComment,
+  findNotifications
+);
+
+userRoutes.post(
+  "/seen/notification",
+  passport.authenticate("jwt", { session: false }),
+  seenNotification
 );
 
 export default userRoutes;

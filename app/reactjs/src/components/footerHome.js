@@ -13,8 +13,6 @@ export default function FooterHome({
   setFolowersMessage = () => {},
   action,
   setAction = () => {},
-  dataNotifs,
-  setDataNotifs = () => {},
   setMsgNotifTop = () => {},
   setMsgNotifTopTime = () => {},
   getPlis = () => {},
@@ -22,8 +20,11 @@ export default function FooterHome({
   publishPli = null,
   setPublishPli = () => {},
   countConnection = 0,
-  updateSubscriberStatus=()=>{},
-  
+  updateSubscriberStatus = () => {},
+  notifications = [],
+  isSeenNotification = () => {},
+  countNewNotifications,
+  setCountNewNotifications = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -57,8 +58,6 @@ export default function FooterHome({
               <OptionsBtnFooter
                 action={action}
                 setAction={setAction}
-                dataNotifs={dataNotifs}
-                setDataNotifs={setDataNotifs}
                 setMsgNotifTop={setMsgNotifTop}
                 getPlis={getPlis}
                 setItem={setItem}
@@ -68,6 +67,10 @@ export default function FooterHome({
                 stateFolowersMessage={stateFolowersMessage}
                 setFolowersMessage={setFolowersMessage}
                 updateSubscriberStatus={updateSubscriberStatus}
+                notifications={notifications}
+                isSeenNotification={isSeenNotification}
+                countNewNotifications={countNewNotifications}
+                setCountNewNotifications={setCountNewNotifications}
               />
             </Col>
           </Row>
@@ -77,8 +80,6 @@ export default function FooterHome({
         <OptionsBtnFooter
           action={action}
           setAction={setAction}
-          dataNotifs={dataNotifs}
-          setDataNotifs={setDataNotifs}
           setMsgNotifTop={setMsgNotifTop}
           getPlis={getPlis}
           setItem={setItem}
@@ -88,6 +89,10 @@ export default function FooterHome({
           stateFolowersMessage={stateFolowersMessage}
           setFolowersMessage={setFolowersMessage}
           updateSubscriberStatus={updateSubscriberStatus}
+          notifications={notifications}
+          isSeenNotification={isSeenNotification}
+          countNewNotifications={countNewNotifications}
+          setCountNewNotifications={setCountNewNotifications}
         />
       )}
     </FooterDefault>

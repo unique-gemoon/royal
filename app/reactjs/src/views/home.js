@@ -173,51 +173,6 @@ export default function Home() {
     });
   };
 
-  const [dataNotifs, setDataNotifs] = useState([
-    {
-      id: 1,
-      title: "Création du compte",
-      timer: "2mn",
-      isRead: false,
-    },
-    {
-      id: 2,
-      title: "Création du compte1",
-      timer: "21mn",
-      isRead: false,
-    },
-    {
-      id: 3,
-      title: "Création du compte2",
-      timer: "45mn",
-      isRead: true,
-    },
-    {
-      id: 4,
-      title: "Création du compte2",
-      timer: "45mn",
-      isRead: true,
-    },
-    {
-      id: 5,
-      title: "Création du compte2",
-      timer: "45mn",
-      isRead: true,
-    },
-    {
-      id: 6,
-      title: "Création du compte2",
-      timer: "45mn",
-      isRead: true,
-    },
-    {
-      id: 7,
-      title: "Création du compte2",
-      timer: "45mn",
-      isRead: true,
-    },
-  ]);
-
   const [msgNotifTop, setMsgNotifTop] = useState(null);
 
   const setItem = (item) => {
@@ -387,6 +342,50 @@ export default function Home() {
     });
   };
 
+  const [notifications, setNotifications] = useState([]);
+  const [countNewNotifications, setCountNewNotifications] = useState(0);
+  //TODO: on scroll check total and get next data
+  const [totalNotifications, setTotalNotifications] = useState(0);
+
+  useEffect(() => {
+    getNotifications();
+  }, []);
+
+  const getNotifications = () => {
+    connector({
+      method: "get",
+      url: `${endPoints.USER_NOTIFICATIONS}`,
+      success: (response) => {
+        setNotifications(response.data.notifications);
+        setCountNewNotifications(response.data.countNewNotifications);
+        setTotalNotifications(response.data.totalNotifications);
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const isSeenNotification = (index) => {
+    let cpNotifications = [...notifications];
+    if (cpNotifications[index]) {
+      const notification = cpNotifications[index];
+      connector({
+        method: "post",
+        url: `${endPoints.USER_SEEN_NOTIFICATION}`,
+        data: { ...notification },
+        success: (response) => {
+          cpNotifications[index].seen = true;
+          setCountNewNotifications(countNewNotifications - 1);
+          setNotifications(cpNotifications);
+        },
+        catch: (error) => {
+          console.log(error);
+        },
+      });
+    }
+  };
+
   return (
     <DefaultMain>
       <StyledEngineProvider injectFirst>
@@ -448,8 +447,6 @@ export default function Home() {
           <FooterHome
             action={action}
             setAction={setAction}
-            dataNotifs={dataNotifs}
-            setDataNotifs={setDataNotifs}
             setMsgNotifTop={setMsgNotifTop}
             setMsgNotifTopTime={setMsgNotifTopTime}
             getPlis={getPlis}
@@ -460,6 +457,10 @@ export default function Home() {
             stateFolowersMessage={stateFolowersMessage}
             setFolowersMessage={setFolowersMessage}
             updateSubscriberStatus={updateSubscriberStatus}
+            notifications={notifications}
+            isSeenNotification={isSeenNotification}
+            countNewNotifications={countNewNotifications}
+            setCountNewNotifications={setCountNewNotifications}
           />
         )}
         <ModalMessage

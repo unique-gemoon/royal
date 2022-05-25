@@ -51,13 +51,25 @@ export function arrayRemove(arr, value) {
   });
 }
 
-
 export function countPlisOpened(arr) {
   let cpArr = [];
   for (var i = 0; i < arr.length; i++) {
-    if(arr[i].users.length > 0) {
-      cpArr.push({id: arr[i].id, count: arr[i].users.length});
+    if (arr[i].users.length > 0) {
+      cpArr.push({ id: arr[i].id, count: arr[i].users.length });
     }
   }
   return cpArr;
+}
+
+export function sortByKey(property) {
+  var sortOrder = 1;
+  if (property[0] === "-") {
+    sortOrder = -1;
+    property = property.substr(1);
+  }
+  return function (a, b) {
+    var result =
+      a[property] < b[property] ? -1 : a[property] > b[property] ? 1 : 0;
+    return result * sortOrder;
+  };
 }
