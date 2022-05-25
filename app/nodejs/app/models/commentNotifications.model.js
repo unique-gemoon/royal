@@ -18,6 +18,10 @@ export default function commentNotifications(sequelize, Sequelize) {
       allowNull: false,
       onDelete: "cascade",
     },
+    seen: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   CommentNotifications.associate = function (models) {

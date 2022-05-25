@@ -388,6 +388,67 @@
 			"response": []
 		},
 		{
+			"name": "user_notifications",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTMzOTUzMzk1MjAsImV4cCI6MTY1MzY1NDUzOTUyMH0.Az848lr2q82fXuBf8LWBmmhTglKQA8d-G7cujdexWG0",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/user/notifications?p=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"user",
+						"notifications"
+					],
+					"query": [
+						{
+							"key": "p",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "user_subscribers_list",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {

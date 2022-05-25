@@ -18,6 +18,10 @@ export default function pliNotifications(sequelize, Sequelize) {
       allowNull: false,
       onDelete: "cascade",
     },
+    seen: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   PliNotifications.associate = function (models) {

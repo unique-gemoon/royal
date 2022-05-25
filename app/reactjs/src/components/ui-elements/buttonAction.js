@@ -1,5 +1,5 @@
 import { motion } from "framer-motion";
-import React, { useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   BlocActionButton,
@@ -10,7 +10,7 @@ export default function ButtonAction({
   children,
   className = "",
   icon = null,
-  setCount = null,
+  countNewNotif = "",
   action,
   setAction = () => {},
   setMsgNotifTopTime = () => {},
@@ -18,7 +18,7 @@ export default function ButtonAction({
   setFolowersMessage = () => {},
 }) {
   const auth = useSelector((store) => store.auth);
-  const [countNotif, setCountNotif] = useState(setCount);
+  const [countNotif, setCountNotif] = useState(0);
   const containerRef = useRef(null);
   const sidebar = {
     open: {
@@ -34,6 +34,11 @@ export default function ButtonAction({
       },
     },
   };
+
+  useEffect(() => {
+    setCountNotif(countNewNotif);
+  }, [countNewNotif]);
+
 
   const checkIsConnected = () => {
     if (auth.isConnected) {
@@ -62,7 +67,7 @@ export default function ButtonAction({
         }}
       >
         {icon}
-        {countNotif ? <span className="count-notif">{countNotif}</span> : null}
+        {countNotif > 0 ? <span className="count-notif">{countNotif}</span> : null}
       </ButtonIcon>
       {action.isOpen ? (
         <motion.div

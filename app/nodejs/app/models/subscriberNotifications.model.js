@@ -18,6 +18,10 @@ export default function subscriberNotifications(sequelize, Sequelize) {
       allowNull: false,
       onDelete: "cascade",
     },
+    seen: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   SubscriberNotifications.associate = function (models) {

@@ -1,3 +1,4 @@
+import { sortByKey } from "../middleware/functions.js";
 import db from "../models/index.model.js";
 
 const User = db.user;
@@ -150,7 +151,7 @@ export function searchUsersList(req, res) {
         where: {
           userId: req.user.id,
         },
-        required: false
+        required: false,
       },
     ],
     order: [["username", "ASC"]],
@@ -167,7 +168,7 @@ export function searchUsersList(req, res) {
         cpUsers.push({
           id: user.id,
           username: user.username,
-          isSubscribed: user.subscribers.length>0,
+          isSubscribed: user.subscribers.length > 0,
         });
       }
       res.status(200).send({ message: "ok", users: cpUsers });
@@ -176,4 +177,86 @@ export function searchUsersList(req, res) {
       res.status(500).send({ message: err.message });
       return;
     });
+}
+
+export function findNotificationsNewAccount(req, res, next) {
+  User.findOne({
+    attributes: ["id", "seenNotificationNewAccount", "createdAt"],
+    where: {
+      id: req.user.id,
+    },
+  })
+    .then((user) => {
+      if (user) {
+        req.notifications = [
+          {
+            type: "newAccount",
+            id: user.id,
+            message: "création du compte",
+            createdAt: user.createdAt,
+            seen: user.seenNotificationNewAccount,
+          },
+        ];
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
+    });
+}
+
+export function findNotificationsNewSubscriber(req, res, next) {
+  next();
+}
+
+export function findNotificationsSubscriberNewPli(req, res, next) {
+  next();
+}
+
+export function findNotificationsNewComment(req, res, next) {
+  next();
+}
+
+export function findNotifications(req, res) {
+  const page = req.body.page || 1;
+  const perPage = 10;
+  const start = (page - 1) * perPage;
+
+  let allNotifications = req.notifications;
+  let notificationsNotSeen = allNotifications.filter(
+    (notification) => !notification.seen
+  );
+
+  let notifications = [];
+  if (allNotifications.length > 0) {
+    notifications = [...allNotifications.sort(sortByKey("createdAt"))].splice(
+      start,
+      perPage
+    );
+  }
+
+  res.status(200).send({
+    message: "ok",
+    notifications,
+    total: allNotifications.length,
+    countNewNotifications: notificationsNotSeen.length,
+  });
+}
+
+export function seenNotification(req, res) {
+  if (req.body.type == "newAccount" && req.body.id == req.user.id) {
+    User.update(
+      { seenNotificationNewAccount: true },
+      { where: { id: req.user.id } }
+    )
+      .then((response) => {
+        res.status(200).send({ message: "ok" });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  } else {
+    res.status(500).send({ message: "Action non autorisé." });
+  }
 }

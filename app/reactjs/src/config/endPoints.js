@@ -17,5 +17,7 @@ const endPoints = {
   USER_SUBSCRICERS : "/user/subscribers/list", 
   USER_SUBSCRIPTIONS : "/user/subscriptions/list", 
   USER_SEARCH_LIST : "/user/search/list", 
+  USER_NOTIFICATIONS : "/user/notifications", 
+  USER_SEEN_NOTIFICATION : "/user/seen/notification", 
 };
 export default endPoints;

@@ -96,6 +96,15 @@ export function getInt(val) {
   return parseInt(val) || 0;
 }
 
-export function getPercentInt(val,total) {
-  return parseInt(Number(val) * 100 / total);
+export function getPercentInt(val, total) {
+  return parseInt((Number(val) * 100) / total);
+}
+
+export function getDurationHM(from, to) {
+  if (!from || !to) {
+    return "";
+  }
+  const h = from.diff(to, "hours");
+  const m = from.diff(to, "minutes") % 60;
+  return `${h}h${m}mn`;
 }
