@@ -13,6 +13,7 @@ import {
   findNotificationsSubscriberNewPli,
   findNotificationsNewComment,
   seenNotification,
+  subscribeNotification,
 } from "../controllers/user.controller.js";
 
 const userRoutes = Router();
@@ -21,7 +22,8 @@ userRoutes.post(
   "/subscribe",
   passport.authenticate("jwt", { session: false }),
   findSubscriber,
-  subscribe
+  subscribe,
+  subscribeNotification
 );
 
 userRoutes.post(

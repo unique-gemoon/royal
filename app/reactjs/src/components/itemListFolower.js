@@ -31,7 +31,7 @@ export default function ItemListFolower({
             submit: false,
             msg: `Vous êtes désormais abonné à "${item.username}".`,
           });
-          setItem({ ...item, isSubscribed: true });
+          setItem({ ...item, isSubscribed: true, notification : response.data.notification });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -52,7 +52,7 @@ export default function ItemListFolower({
             submit: false,
             msg: `Vous êtes désormais désabonné de "${item.username}".`,
           });
-          setItem({ ...item, isSubscribed: false });
+          setItem({ ...item, isSubscribed: false, notification : response.data.notification });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
