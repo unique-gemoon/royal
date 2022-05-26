@@ -92,10 +92,22 @@ export default function Home() {
     };
     socket.on("SERVER_OPEN_PLI", updateOpenPlis);
 
+    const subscriberUpdated = (data) => {
+      if (data?.notification?.id) {
+        if(auth.user && auth.user.id == data.notification.subscriberId && data.notification.type == 'newSubscriber') {
+          setNotifications([data.notification, ...notifications]);
+          setCountNewNotifications(countNewNotifications+1);
+          setTotalNotifications(totalNotifications+1);
+        }
+      }
+    };
+    socket.on("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
+
     return () => {
       socket.off("SERVER_PLI", updatePli);
       socket.off("SERVER_COUNT_CONNECTION", updateCountConnection);
       socket.off("SERVER_OPEN_PLI", updateOpenPlis);
+      socket.off("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
       //socket.disconnect();
     };
   }, [plis]);
@@ -339,6 +351,7 @@ export default function Home() {
       user: { id: auth.user.id, username: auth.user.username },
       subscriber: { id: item.id, username: item.username },
       isSubscribed: item.isSubscribed,
+      notification: item.notification
     });
   };
 
@@ -395,7 +408,7 @@ export default function Home() {
               <img src={logoType} alt="Royalis" />
             </div>
             <div className="d-flex">
-              <SeeCounter countSee={14} />
+              <SeeCounter countSee={countConnection} />
               {auth.isConnected && (
                 <ProfileMenu setMsgNotifTop={setMsgNotifTop} />
               )}

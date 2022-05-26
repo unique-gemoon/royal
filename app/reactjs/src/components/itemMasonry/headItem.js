@@ -26,7 +26,7 @@ import {
 import { useOutsideAlerter } from "../../helper/events";
 import { useMediaQuery } from "react-responsive";
 import moment from "moment";
-import { getMsgError } from "../../helper/fonctions";
+import { getDurationHM, getMsgError } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
 
@@ -130,13 +130,16 @@ export default function HeadItem({
         url: `${endPoints.USER_SUBSCRIVBE}`,
         data: { userId: item.user.id },
         success: (response) => {
-          msgErrors({ submit: false, msg:`Vous êtes désormais abonné à "${item.user.username}".` });
+          msgErrors({
+            submit: false,
+            msg: `Vous êtes désormais abonné à "${item.user.username}".`,
+          });
           setItem({
             ...item,
             user: { ...item.user, isSubscribed: true },
             action: "update",
           });
-          updateSubscriberStatus({ ...item.user, isSubscribed: true });
+          updateSubscriberStatus({ ...item.user, isSubscribed: true, notification : response.data.notification });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -153,13 +156,16 @@ export default function HeadItem({
         url: `${endPoints.USER_UNSUBSCRIVBE}`,
         data: { userId: item.user.id },
         success: (response) => {
-          msgErrors({ submit: false , msg:`Vous êtes désormais désabonné de "${item.user.username}".` });
+          msgErrors({
+            submit: false,
+            msg: `Vous êtes désormais désabonné de "${item.user.username}".`,
+          });
           setItem({
             ...item,
             user: { ...item.user, isSubscribed: false },
             action: "update",
           });
-          updateSubscriberStatus({ ...item.user, isSubscribed: false });
+          updateSubscriberStatus({ ...item.user, isSubscribed: false , notification : response.data.notification});
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -371,8 +377,7 @@ export default function HeadItem({
             </div>
           </ClickAwayListener>
           <span className="timer-post">
-            {" "}
-            {moment().diff(item.createdAt, "hours")}h
+            {getDurationHM(moment(), item.createdAt)}
           </span>
         </div>
       </div>

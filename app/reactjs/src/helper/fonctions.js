@@ -106,5 +106,5 @@ export function getDurationHM(from, to) {
   }
   const h = from.diff(to, "hours");
   const m = from.diff(to, "minutes") % 60;
-  return `${h}h${m}mn`;
+  return `${h>0 ? h + "h": ""}${m>0 ? m + "mn": (h>0 ? "":"0mn")}`;
 }

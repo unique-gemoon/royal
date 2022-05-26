@@ -3,6 +3,7 @@ import db from "../models/index.model.js";
 
 const User = db.user;
 const Subscriber = db.subscriber;
+const SubscriberNotifications = db.subscriberNotifications;
 const SubscriberUser = Subscriber.belongsTo(User, { foreignKey: "userId" });
 const SubscriberUserSubscriber = Subscriber.belongsTo(User, {
   foreignKey: "subscriberId",
@@ -12,16 +13,15 @@ const UserSubscribers = User.hasMany(Subscriber, {
 });
 const Op = db.Sequelize.Op;
 
-export function subscribe(req, res) {
+export function subscribe(req, res, next) {
   if (!req.subscriber) {
     Subscriber.create({
       userId: req.user.id,
       subscriberId: req.body.userId,
     })
       .then((subscriber) => {
-        res
-          .status(200)
-          .json({ message: "ok", subscriber: { id: subscriber.id } });
+        req.subscriber = subscriber;
+        next();
       })
       .catch((err) => {
         res.status(400).send({ message: err.message });
@@ -32,6 +32,30 @@ export function subscribe(req, res) {
   }
 }
 
+export function subscribeNotification(req, res) {
+  SubscriberNotifications.create({
+    userId: req.subscriber.userId,
+    subscriberId: req.subscriber.subscriberId,
+  })
+    .then((notification) => {
+      res.status(200).json({
+        message: "ok",
+        notification: {
+          type: "newSubscriber",
+          id: notification.id,
+          userId: notification.userId,
+          subscriberId: notification.subscriberId,
+          message: "Un nouveau abonné sur ton compte.",
+          createdAt: notification.createdAt,
+          seen: false,
+        },
+      });
+    })
+    .catch((err) => {
+      res.status(400).send({ message: err.message });
+    });
+}
+
 export function unsubscribe(req, res) {
   if (req.subscriber) {
     Subscriber.destroy({
@@ -40,7 +64,7 @@ export function unsubscribe(req, res) {
       },
     })
       .then((response) => {
-        res.status(200).json({ message: "ok" });
+        res.status(200).json({ message: "ok", notification:{} });
       })
       .catch((err) => {
         res.status(400).send({ message: err.message });
@@ -191,7 +215,11 @@ export function findNotificationsNewAccount(req, res, next) {
         req.notifications = [
           {
             type: "newAccount",
-            id: user.id,
+            id: null,
+            userId: user.id,
+            subscriberId:null,
+            commentId:null,
+            pliId:null,
             message: "création du compte",
             createdAt: user.createdAt,
             seen: user.seenNotificationNewAccount,
@@ -207,7 +235,31 @@ export function findNotificationsNewAccount(req, res, next) {
 }
 
 export function findNotificationsNewSubscriber(req, res, next) {
-  next();
+  SubscriberNotifications.findAll({
+    where: {
+      subscriberId: req.user.id,
+    },
+  })
+    .then((notifications) => {
+      for (let i = 0; i < notifications.length; i++) {
+        const notification = notifications[i];
+        req.notifications.push({
+          type: "newSubscriber",
+          id: notification.id,
+          userId: notification.userId,
+          subscriberId: notification.subscriberId,
+          commentId:null,
+          pliId:null,
+          message: "Un nouveau abonné sur ton compte.",
+          createdAt: notification.createdAt,
+          seen:  notification.seen,
+        });
+      }
+      next();
+    })
+    .catch((err) => {
+      res.status(400).send({ message: err.message });
+    });
 }
 
 export function findNotificationsSubscriberNewPli(req, res, next) {
@@ -230,7 +282,7 @@ export function findNotifications(req, res) {
 
   let notifications = [];
   if (allNotifications.length > 0) {
-    notifications = [...allNotifications.sort(sortByKey("createdAt"))].splice(
+    notifications = [...allNotifications.sort(sortByKey("-createdAt"))].splice(
       start,
       perPage
     );
@@ -245,7 +297,7 @@ export function findNotifications(req, res) {
 }
 
 export function seenNotification(req, res) {
-  if (req.body.type == "newAccount" && req.body.id == req.user.id) {
+  if (req.body.type == "newAccount" && req.body.userId == req.user.id) {
     User.update(
       { seenNotificationNewAccount: true },
       { where: { id: req.user.id } }
@@ -256,7 +308,18 @@ export function seenNotification(req, res) {
       .catch((err) => {
         res.status(500).send({ message: err.message });
       });
-  } else {
+  } else if(req.body.type == "newSubscriber" && req.body.subscriberId == req.user.id && parseInt(req.body.id)){
+    SubscriberNotifications.update(
+      { seen: true },
+      { where: { id: req.body.id } }
+    )
+      .then((response) => {
+        res.status(200).send({ message: "ok" });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  }else {
     res.status(500).send({ message: "Action non autorisé." });
   }
 }
