@@ -20,6 +20,27 @@ export function useOutsideAlerter(ref, handler) {
     };
   }, [ref, handler]);
 }
+export function ScrollBottom(ref, handler) {
+  useEffect(() => {
+    const listener = event => {
+      //To do
+      console.log("reached bottom");
+      if (ref.current) {
+        const { scrollTop, scrollHeight, clientHeight } = ref.current;
+        if (scrollTop + clientHeight === scrollHeight) {
+          console.log("reached bottom");
+          handler(event);
+        }
+      }
+    };
+
+    document.addEventListener("scroll", listener);
+
+    return () => {
+      document.removeEventListener("scroll", listener);
+    };
+  }, [ref, handler]);
+}
 
 /**
  * Hook that alerts clicks outside of the passed ref

@@ -3,7 +3,8 @@ import DoneIcon from '@mui/icons-material/Done';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { ListItemsMessagerie, ItemListMessagerie } from '../assets/styles/componentStyle';
 
-export default function ListMessagerie({ data = [], setData = () => { }, state, setState, ...props }) {
+
+export default function ListMessagerie({ data = [], setData = () => { }, state, setState=()=>{}, ...props }) {
     const showData = () => {
 
         if (data.length === 0) {
@@ -35,6 +36,8 @@ export default function ListMessagerie({ data = [], setData = () => { }, state, 
         ));
     };
     return (
-        <ListItemsMessagerie>{showData()}</ListItemsMessagerie>
+        <ListItemsMessagerie>
+            {showData()}
+        </ListItemsMessagerie>
     );
 }
