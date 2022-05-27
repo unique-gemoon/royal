@@ -308,3 +308,16 @@ export function pliNotification(req, res) {
     res.status(500).send({ message: "Identifiant pli non définie." });
   }
 }
+
+export function seenSubscriptionsNotification(req, res){
+  Subscriber.update(
+    { seen: true },
+    { where: { subscriberId: req.user.id } }
+  )
+    .then((response) => {
+      res.status(200).send({ message: "ok" });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+}

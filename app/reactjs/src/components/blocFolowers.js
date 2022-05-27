@@ -2,13 +2,11 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Tab from "@mui/material/Tab";
-import React, { useEffect, useState, useRef } from "react";
-import { useSelector } from "react-redux";
+import React, { useRef, useState } from "react";
 import { FolowersModal } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import ItemListFolower from "./itemListFolower";
-import { socket } from "./socket";
 import SpinnerLoading from "./spinnerLoading";
 
 export default function BlocFolowers({
@@ -18,150 +16,28 @@ export default function BlocFolowers({
   setFolowersMessage = () => {},
   setMsgNotifTopTime = () => {},
   updateSubscriberStatus = () => {},
+  countNewSubscriptions = 0,
+  subscribers = [],
+  setSubscribers = () => {},
+  subscriptions = [],
+  setSubscriptions = () => {},
 }) {
-  const auth = useSelector((store) => store.auth);
   const [value, setValue] = React.useState("1");
+  const [endScroll, setEndScroll] = useState(false);
+  const ref = useRef(null);
 
-  const handleChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const [subscribers, setSubscribers] = useState([]);
-  const [subscriptions, setSubscriptions] = useState([]);
-  const [isLoadedSubscribers, setIsLoadedSubscribers] = useState(false);
-  const [isLoadedSubscriptions, setIsLoadedSubscriptions] = useState(false);
-
-  //TODO count new Abonnements
-  const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
-
-  useEffect(() => {
-    const updateSubscriber = (item) => {
-      if (auth.user.id == item.user.id) {
-        const cpSubscribers = [...subscribers];
-        let existe = false;
-        for (let i = 0; i < cpSubscribers.length; i++) {
-          const subscriber = cpSubscribers[i];
-          if (subscriber.id == item.subscriber.id) {
-            existe = true;
-            cpSubscribers[i].isSubscribed = item.isSubscribed;
-            break;
-          }
-        }
-        if (!existe) {
-          cpSubscribers.push({
-            id: item.subscriber.id,
-            username: item.subscriber.username,
-            isSubscribed: item.isSubscribed,
-            type: "subscriber",
-          });
-        }
-        setSubscribers(cpSubscribers);
-
-        const cpSubscriptions = [...subscriptions];
-        for (let i = 0; i < cpSubscriptions.length; i++) {
-          const subscription = cpSubscriptions[i];
-          if (subscription.id == item.subscriber.id) {
-            cpSubscriptions[i].isSubscribed = item.isSubscribed;
-            break;
-          }
-        }
-        setSubscriptions(cpSubscriptions);
-      } else if (auth.user.id == item.subscriber.id) {
-        let cpSubscriptions = [...subscriptions];
-        if (item.isSubscribed) {
-          const cpSubscribers = [...subscribers];
-          let isSubscribed = false;
-          for (let i = 0; i < cpSubscribers.length; i++) {
-            const subscriber = cpSubscribers[i];
-            if (subscriber.id == item.user.id) {
-              isSubscribed = item.isSubscribed;
-              break;
-            }
-          }
-
-          let existe = false;
-          for (let i = 0; i < cpSubscriptions.length; i++) {
-            const subscription = cpSubscriptions[i];
-            if (subscription.id == item.user.id) {
-              existe = true;
-              cpSubscriptions[i].isSubscribed = isSubscribed;
-              break;
-            }
-          }
-
-          if (!existe) {
-            cpSubscriptions.push({
-              id: item.user.id,
-              username: item.user.username,
-              isSubscribed: isSubscribed,
-              type: "subscription",
-            });
-          }
-        } else {
-          cpSubscriptions = cpSubscriptions.filter(function (subscription) {
-            return subscription.id != item.user.id;
-          });
-        }
-        setSubscriptions(cpSubscriptions);
-      } 
-    };
-    socket.on("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
-
-    return () => {
-      socket.off("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
-    };
-  }, [subscribers, subscriptions,countNewSubscriptions]);
-
-  useEffect(() => {
-    getSubscribers();
-    getSubscriptions();
-  }, []);
-
-  useEffect(() => {
-    if(isLoadedSubscribers && isLoadedSubscriptions){
-      let cpSubscriptions = [];
-      for (let i = 0; i < subscriptions.length; i++) {
-        const subscription = subscriptions[i];
-        let isSubscribed = false;
-        for (let j = 0; j < subscribers.length; j++) {
-          const subscriber = subscribers[j];
-          if (subscriber.id == subscription.id) {
-            isSubscribed = true;
-            break;
-          }
-        }
-        cpSubscriptions.push({ ...subscription, isSubscribed });
-      }
-      setSubscriptions(cpSubscriptions);
+  const onScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    if (scrollTop + clientHeight === scrollHeight) {
+      setEndScroll(true);
+      setTimeout(() => {
+        setEndScroll(false);
+      }, 600);
     }
-  }, [isLoadedSubscribers,isLoadedSubscriptions]);
-
-  const getSubscribers = () => {
-    connector({
-      method: "get",
-      url: `${endPoints.USER_SUBSCRICERS}`,
-      success: (response) => {
-        setSubscribers(response.data.subscribers);
-        setIsLoadedSubscribers(true);
-      },
-      catch: (error) => {
-        console.log(error);
-      },
-    });
   };
 
-  const getSubscriptions = () => {
-    connector({
-      method: "get",
-      url: `${endPoints.USER_SUBSCRIPTIONS}`,
-      success: (response) => {
-        setSubscriptions(response.data.subscriptions);
-        setIsLoadedSubscriptions(true);
-      },
-      catch: (error) => {
-        console.log(error);
-      },
-    });
+  const handleChange = (_event, newValue) => {
+    setValue(newValue);
   };
 
   const setItem = (item) => {
@@ -182,7 +58,7 @@ export default function BlocFolowers({
               break;
             }
           }
-          setSubscriptions(cpSubscriptions); 
+          setSubscriptions(cpSubscriptions);
         }
       } else if (item.type == "subscription") {
         if (subscriptions[item.index]) {
@@ -211,17 +87,23 @@ export default function BlocFolowers({
     }
   };
 
-  const [endScroll, setEndScroll] = useState(false)
-  const ref = useRef(null);
-  const onScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } = ref.current;
-    if (scrollTop + clientHeight === scrollHeight) {
-      setEndScroll(true)
-      setTimeout(() => {
-        setEndScroll(false)
-      }, 600);
-    }
-  }
+  const seenSubscriptions = () => {
+    connector({
+      method: "post",
+      url: endPoints.NOTIFICATION_SEEN_SUBSCRIPTIONS,
+      success: (_response) => {
+        const cpSubscriptions = [...subscriptions];
+        for (let i = 0; i < cpSubscriptions.length; i++) {
+          cpSubscriptions[i].seen = true;
+        }
+        setSubscriptions(cpSubscriptions);
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
   return (
     <FolowersModal>
       <TabContext value={value}>
@@ -238,6 +120,11 @@ export default function BlocFolowers({
               </>
             }
             value="2"
+            onClick={() => {
+              if (countNewSubscriptions > 0) {
+                seenSubscriptions();
+              }
+            }}
           />
         </TabList>
         <div className="content-tab-modal">

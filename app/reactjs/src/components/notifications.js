@@ -9,6 +9,8 @@ export default function Notifications({
   notifications = [],
   isSeenNotification = () => {},
   countNewNotifications = 0,
+  action={},
+  updateAction = () => {}
 }) {
   const history = useHistory();
   const [endScroll, setEndScroll] = useState(false)
@@ -42,6 +44,8 @@ export default function Notifications({
                 }
                 if (item.type == "newPli" && item.pliId) {
                   history.push(`/?pli=${item.pliId}`);
+                }else if (item.type == "newSubscriber" && item.userId) {
+                  updateAction({...action, isOpen:true},"folower");
                 }
               }}
             >

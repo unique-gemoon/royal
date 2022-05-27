@@ -129,6 +129,7 @@ export function findSubscriptionsList(req, res) {
           id: subscription.user.id,
           username: subscription.user.username,
           isSubscribed: null,
+          seen: subscription.seen
         });
       }
       res.status(200).send({ message: "ok", subscriptions: cpSubscriptions });

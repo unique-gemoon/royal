@@ -7,7 +7,8 @@ import {
     findNotificationsNewSubscriber,
     findNotificationsSubscriberNewPli,
     pliNotification,
-    seenNotification
+    seenNotification,
+    seenSubscriptionsNotification
 } from "../controllers/notification.controller.js";
 
 const notificationRoutes = Router();
@@ -33,5 +34,12 @@ notificationRoutes.get(
   passport.authenticate("jwt", { session: false }),
   pliNotification
 );
+
+notificationRoutes.post(
+  "/seen/subscriptions",
+  passport.authenticate("jwt", { session: false }),
+  seenSubscriptionsNotification
+);
+
 
 export default notificationRoutes;

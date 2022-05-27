@@ -18,10 +18,15 @@ export default function OptionsBtnFooter({
   setPublishPli = () => {},
   stateFolowersMessage,
   setFolowersMessage = () => {},
-  updateSubscriberStatus = () => {},  
+  updateSubscriberStatus = () => {},
   notifications = [],
   isSeenNotification = () => {},
   countNewNotifications = 0,
+  countNewSubscriptions = 0,
+  subscribers = [],
+  setSubscribers = () => {},
+  subscriptions = [],
+  setSubscriptions = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -93,7 +98,7 @@ export default function OptionsBtnFooter({
       <ButtonAction
         className="abonnee-bloc-action"
         action={action.folower}
-        countNewNotif={0}
+        countNewNotif={countNewSubscriptions}
         icon={action.folower.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
@@ -107,8 +112,13 @@ export default function OptionsBtnFooter({
           setAction={setAction}
           setMsgNotifTopTime={setMsgNotifTopTime}
           updateSubscriberStatus={updateSubscriberStatus}
+          countNewSubscriptions={countNewSubscriptions}
+          subscribers={subscribers}
+          setSubscribers={setSubscribers}
+          subscriptions={subscriptions}
+          setSubscriptions={setSubscriptions}
         />
-      </ButtonAction> 
+      </ButtonAction>
       <ButtonAction
         className="notification-bloc-action"
         action={action.notification}
@@ -120,6 +130,8 @@ export default function OptionsBtnFooter({
         }}
       >
         <Notifications
+          action={action.notification}
+          updateAction={updateAction}
           notifications={notifications}
           isSeenNotification={isSeenNotification}
           countNewNotifications={countNewNotifications}
