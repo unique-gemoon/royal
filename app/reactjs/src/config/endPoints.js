@@ -8,6 +8,7 @@ const endPoints = {
   PROFILE: "/auth/profile",
   DELETE_ACCOUNT : "/auth/delete-account",
   PLI : "/pli",
+  PLI_NEW : "/pli/new",
   PLI_TIME : "/pli/time",
   PLIS : "/pli/list",
   PLI_SONDAGE_VOTE : "/pli/sondage/vote",
@@ -17,7 +18,8 @@ const endPoints = {
   USER_SUBSCRICERS : "/user/subscribers/list", 
   USER_SUBSCRIPTIONS : "/user/subscriptions/list", 
   USER_SEARCH_LIST : "/user/search/list", 
-  USER_NOTIFICATIONS : "/user/notifications", 
-  USER_SEEN_NOTIFICATION : "/user/seen/notification", 
+  NOTIFICATION_NEW : "/notification/new",
+  NOTIFICATION_LIST : "/notification/list", 
+  NOTIFICATION_SEEN : "/notification/seen", 
 };
 export default endPoints;

@@ -1,5 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
+import { subscribeNotification } from "../controllers/notification.controller.js";
 import {
   findSubscribersList,
   findSubscriber,
@@ -7,13 +8,6 @@ import {
   unsubscribe,
   findSubscriptionsList,
   searchUsersList,
-  findNotifications,
-  findNotificationsNewAccount,
-  findNotificationsNewSubscriber,
-  findNotificationsSubscriberNewPli,
-  findNotificationsNewComment,
-  seenNotification,
-  subscribeNotification,
 } from "../controllers/user.controller.js";
 
 const userRoutes = Router();
@@ -49,22 +43,6 @@ userRoutes.get(
   "/search/list",
   passport.authenticate("jwt", { session: false }),
   searchUsersList
-);
-
-userRoutes.get(
-  "/notifications",
-  passport.authenticate("jwt", { session: false }),
-  findNotificationsNewAccount,
-  findNotificationsNewSubscriber,
-  findNotificationsSubscriberNewPli,
-  findNotificationsNewComment,
-  findNotifications
-);
-
-userRoutes.post(
-  "/seen/notification",
-  passport.authenticate("jwt", { session: false }),
-  seenNotification
 );
 
 export default userRoutes;

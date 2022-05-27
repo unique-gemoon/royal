@@ -95,7 +95,7 @@ const comments = [
   },
 ];
 
-export function newPli(req, res) {
+export function newPli(req, res, next) {
   const content = req.body.content || "";
   const ouverture = req.body.contentOuverture || "";
   const duration = req.body.duration || "00:00:00";
@@ -203,7 +203,7 @@ export function newPli(req, res) {
     }
   )
     .then((pli) => {
-      const response = sendEmail({
+      sendEmail({
         from: "",
         to: req.user.email,
         subject: "Nouveau pli",
@@ -214,27 +214,25 @@ export function newPli(req, res) {
         },
       });
 
-      res.status(200).json({
-        pli: {
-          id: pli.id,
-          content: pli.content,
-          ouverture: pli.ouverture,
-          duration: pli.duration,
-          allottedTime,
-          medias: pli.medias,
-          appearances: {
-            countDown: 0,
-            countUp: 0,
-            alreadyUpdated: false,
-            signe: null,
-          },
-          user: { username: req.user.username, id: req.user.id },
-          createdAt: pli.createdAt,
-          comments: [],
+      req.pli = {
+        id: pli.id,
+        content: pli.content,
+        ouverture: pli.ouverture,
+        duration: pli.duration,
+        allottedTime,
+        medias: pli.medias,
+        appearances: {
+          countDown: 0,
+          countUp: 0,
+          alreadyUpdated: false,
+          signe: null,
         },
-        message: "ok",
-        email: response,
-      });
+        user: { username: req.user.username, id: req.user.id },
+        createdAt: pli.createdAt,
+        comments: [],
+      };
+
+      next();
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
