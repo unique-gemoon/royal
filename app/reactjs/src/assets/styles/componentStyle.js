@@ -998,15 +998,20 @@ export const FolowerSearch = styled.div`
         }
     }
     .content-search-results{
-        height: calc(50vh - 288px + 25px + 90px);
         background: linear-gradient(#2f6fba 0%, #3375b5 99.88%);
         box-shadow: 0px 3px 10px rgba(26, 57, 91, .90);
         border-radius: 12px;
         overflow: hidden;
         .list-result-search {
-            height: 100%;
+            max-height: calc(50vh - 288px + 25px + 90px);
             background: linear-gradient(#2f6fba 0%, #3375b5 99.88%);
             overflow-y: auto;
+        }
+        .message-not-result{
+            padding: 10px;
+            margin: 0;
+            text-align: center;
+            font-size: 14px;
         }
         .show-more-folower{
             margin-bottom: 0;

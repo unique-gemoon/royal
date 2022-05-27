@@ -20,8 +20,11 @@ import ItemListFolower from "./itemListFolower";
 import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import ItemSingleMessage from "./itemSingleMessage";
 import { useEffect } from "react";
+import SpinnerLoading from "./spinnerLoading";
+import { useRef } from "react";
 
 export default function Messagerie({ 
+
   setMsgNotifTopTime = () => {},
   stateFolowersMessage,
   setFolowersMessage = () => { },
@@ -34,6 +37,19 @@ export default function Messagerie({
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const [endScroll, setEndScroll] = useState(false)
+  const ref = useRef(null);
+  const onScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    if (scrollTop + clientHeight === scrollHeight) {
+      setEndScroll(true)
+      setTimeout(() => {
+        setEndScroll(false)
+      }, 600);
+    }
+  }
+  
   const [dataListMessage, setDataListMessage] = useState([
     {
       id: 1,
@@ -61,6 +77,37 @@ export default function Messagerie({
     },
     {
       id: 4,
+      name: "Lou",
+      timer: "10.08.2020",
+      lastMesssage: "Oui tout est assez calme récemment",
+      newMessage: false,
+    },
+    {
+      id: 5,
+      name: "Fossum",
+      etat: "reading",
+      timer: "20h",
+      lastMesssage:
+        "Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré...",
+      newMessage: false,
+    },
+    {
+      id: 6,
+      name: "Ellie",
+      etat: "send",
+      timer: "1jour",
+      lastMesssage: "Oui ça va. Et tiu ?",
+      newMessage: false,
+    },
+    {
+      id: 7,
+      name: "Jacquou",
+      timer: "11.09.2020",
+      lastMesssage: "J’ai vu ta dernière publication sur la page universelle !",
+      newMessage: true,
+    },
+    {
+      id: 8,
       name: "Lou",
       timer: "10.08.2020",
       lastMesssage: "Oui tout est assez calme récemment",
@@ -122,13 +169,15 @@ export default function Messagerie({
             <MailOutlineRoundedIcon /> Messages
           </div>
           <div className="content-messagerie">
-            <div className="list-messagerie">
+            <div className="list-messagerie"
+              onScroll={onScroll} ref={ref}>
               <ListMessagerie
                 data={dataListMessage}
                 setData={setDataListMessage}
                 stateFolowersMessage={stateFolowersMessage}
                 setFolowersMessage={setFolowersMessage}
               />
+              {endScroll && <SpinnerLoading />}
             </div>
           </div>
 

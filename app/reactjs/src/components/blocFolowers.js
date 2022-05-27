@@ -2,13 +2,14 @@ import TabContext from "@mui/lab/TabContext";
 import TabList from "@mui/lab/TabList";
 import TabPanel from "@mui/lab/TabPanel";
 import Tab from "@mui/material/Tab";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { FolowersModal } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import ItemListFolower from "./itemListFolower";
 import { socket } from "./socket";
+import SpinnerLoading from "./spinnerLoading";
 
 export default function BlocFolowers({
   action,
@@ -210,6 +211,17 @@ export default function BlocFolowers({
     }
   };
 
+  const [endScroll, setEndScroll] = useState(false)
+  const ref = useRef(null);
+  const onScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    if (scrollTop + clientHeight === scrollHeight) {
+      setEndScroll(true)
+      setTimeout(() => {
+        setEndScroll(false)
+      }, 600);
+    }
+  }
   return (
     <FolowersModal>
       <TabContext value={value}>
@@ -230,7 +242,7 @@ export default function BlocFolowers({
         </TabList>
         <div className="content-tab-modal">
           <TabPanel value="1">
-            <div className="list-tab-modal">
+            <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
               {subscribers.length > 0 &&
                 subscribers.map((item, index) => (
                   <ItemListFolower
@@ -254,10 +266,11 @@ export default function BlocFolowers({
                     }}
                   />
                 ))}
+              {endScroll && <SpinnerLoading />}
             </div>
           </TabPanel>
           <TabPanel value="2">
-            <div className="list-tab-modal">
+            <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
               {subscriptions.length > 0 &&
                 subscriptions.map((item, index) => (
                   <ItemListFolower
@@ -281,6 +294,7 @@ export default function BlocFolowers({
                     }}
                   />
                 ))}
+              {endScroll && <SpinnerLoading />}
             </div>
           </TabPanel>
         </div>

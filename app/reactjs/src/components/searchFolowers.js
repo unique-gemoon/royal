@@ -1,12 +1,14 @@
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import React, { useEffect, useState } from "react";
+import { useRef } from "react";
 import { useSelector } from "react-redux";
 import { FolowerSearch } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import ItemListFolower from "./itemListFolower";
 import { socket } from "./socket";
+import SpinnerLoading from "./spinnerLoading";
 import Input from "./ui-elements/input";
 
 export default function SearchFolowers({
@@ -86,6 +88,17 @@ export default function SearchFolowers({
     };
   }, [users]);
 
+  const [endScroll, setEndScroll] = useState(false)
+  const ref = useRef(null);
+  const onScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    if (scrollTop + clientHeight === scrollHeight) {
+      setEndScroll(true)
+      setTimeout(() => {
+        setEndScroll(false)
+      }, 600);
+    }
+  }
   return (
     <FolowerSearch>
       <div className="form-search-folower">
@@ -133,38 +146,41 @@ export default function SearchFolowers({
           </span>
         )}
       </div>
-      {showResult ? (
         <div className="content-search-results">
-          <div className="list-result-search">
-            {users.map((item, index) => (
-              <div key={index}>
-                {item.show && (
-                  <ItemListFolower
-                    key={item.id}
-                    item={{ ...item, index }}
-                    setItem={setItem}
-                    setMsgNotifTopTime={setMsgNotifTopTime}
-                    onClick={() => {
-                      const cpAction = {
-                        ...action,
-                        notification: { ...action.notification, isOpen: false },
-                        folower: { ...action.folower, isOpen: false },
-                        search: { ...action.search, isOpen: true },
-                        messagerie: { ...action.messagerie, isOpen: true },
-                      };
-                      setAction(cpAction);
-                      setFolowersMessage({
-                        ...stateFolowersMessage,
-                        activeItem: { id: 4 },
-                      });
-                    }}
-                  />
-                )}
-              </div>
-            ))}
-          </div>
+        {showResult && <div className="list-result-search" ref={ref} onScroll={onScroll}>
+          {users.length > 0 ? users.map((item, index) => (
+            <div key={index}>
+              {item.show && (
+                <ItemListFolower
+                  key={item.id}
+                  item={{ ...item, index }}
+                  setItem={setItem}
+                  setMsgNotifTopTime={setMsgNotifTopTime}
+                  onClick={() => {
+                    const cpAction = {
+                      ...action,
+                      notification: { ...action.notification, isOpen: false },
+                      folower: { ...action.folower, isOpen: false },
+                      search: { ...action.search, isOpen: true },
+                      messagerie: { ...action.messagerie, isOpen: true },
+                    };
+                    setAction(cpAction);
+                    setFolowersMessage({
+                      ...stateFolowersMessage,
+                      activeItem: { id: 4 },
+                    });
+                  }}
+                />
+              )}
+            </div>
+            )) : 
+            <p className="message-not-result">Aucun resultat trouvé </p>
+          }
+          {endScroll && <SpinnerLoading />}
+        </div> 
+        }
+          
         </div>
-      ) : null}
     </FolowerSearch>
   );
 }
