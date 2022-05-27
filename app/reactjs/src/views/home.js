@@ -35,6 +35,8 @@ import {
 export default function Home() {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
+  const auth = useSelector((store) => store.auth);
+
   const [plis, setPlis] = useState([]);
   const [seconds, setSeconds] = useState(0);
   const [activeItem, setActiveItem] = useState(null);
@@ -46,8 +48,77 @@ export default function Home() {
   const [channel] = useState(uniqid());
   const [countConnection, setCountConnection] = useState(0);
   const [initOpenedPlis, setInitOpenedPlis] = useState(0);
+  const [subscribers, setSubscribers] = useState([]);
+  const [subscriptions, setSubscriptions] = useState([]);
+  const [isLoadedSubscribers, setIsLoadedSubscribers] = useState(false);
+  const [isLoadedSubscriptions, setIsLoadedSubscriptions] = useState(false);
+  const [notifications, setNotifications] = useState([]);
+  const [countNewNotifications, setCountNewNotifications] = useState(0);
+  const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
+  //TODO: on scroll check total and get next data
+  const [totalNotifications, setTotalNotifications] = useState(0);
+  const [msgNotifTop, setMsgNotifTop] = useState(null);
 
-  const auth = useSelector((store) => store.auth);
+  const query = new URLSearchParams(useLocation().search);
+  const tokenRestPassword = query.get("tokenRestPassword") || null;
+  const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
+
+  const breakpointColumnsObj = {
+    default: 3,
+    1200: 2,
+    993: 1,
+  };
+
+  const [stateFolowersMessage, setFolowersMessage] = useState({
+    showSearchFolower: false,
+    activeItem: false,
+    resultSearch: false,
+    search: {
+      type: "text",
+      id: "search-folowers",
+      value: "",
+      placeholder: "Qui recherchez-vous ?",
+      className: "search-input",
+    },
+  });
+
+  useEffect(() => {
+    if (tokenRestPassword) {
+      checkIsConnected();
+    }
+  }, [tokenRestPassword]);
+
+  useEffect(() => {
+    if (tokenConfirmEmail) {
+      checkTokenConfirmEmail();
+    }
+  }, [tokenConfirmEmail]);
+
+  const [action, setAction] = useState({
+    notification: {
+      icon: <NotificationsNoneOutlinedIcon />,
+      isOpen: false,
+    },
+    folower: {
+      icon: <PeopleOutlineRoundedIcon />,
+      isOpen: false,
+    },
+    search: {
+      icon: <SearchRoundedIcon />,
+      isOpen: false,
+    },
+    messagerie: {
+      icon: <MailOutlineRoundedIcon />,
+      isOpen: false,
+    },
+  });
+
+  useEffect(() => {
+    getNotifications();
+    getSubscribers();
+    getSubscriptions();
+  }, []);
+
 
   useEffect(() => {
     getPlis(true);
@@ -162,6 +233,114 @@ export default function Home() {
     return () => clearInterval(interval);
   }, []);
 
+  useEffect(() => {
+    const updateSubscriber = (item) => {
+      if (auth.user.id == item.user.id) {
+        const cpSubscribers = [...subscribers];
+        let existe = false;
+        for (let i = 0; i < cpSubscribers.length; i++) {
+          const subscriber = cpSubscribers[i];
+          if (subscriber.id == item.subscriber.id) {
+            existe = true;
+            cpSubscribers[i].isSubscribed = item.isSubscribed;
+            break;
+          }
+        }
+        if (!existe) {
+          cpSubscribers.push({
+            id: item.subscriber.id,
+            username: item.subscriber.username,
+            isSubscribed: item.isSubscribed,
+            type: "subscriber",
+          });
+        }
+        setSubscribers(cpSubscribers);
+
+        const cpSubscriptions = [...subscriptions];
+        for (let i = 0; i < cpSubscriptions.length; i++) {
+          const subscription = cpSubscriptions[i];
+          if (subscription.id == item.subscriber.id) {
+            cpSubscriptions[i].isSubscribed = item.isSubscribed;
+            break;
+          }
+        }
+        setSubscriptions(cpSubscriptions);
+      } else if (auth.user.id == item.subscriber.id) {
+        let cpSubscriptions = [...subscriptions];
+        if (item.isSubscribed) {
+          const cpSubscribers = [...subscribers];
+          let isSubscribed = false;
+          for (let i = 0; i < cpSubscribers.length; i++) {
+            const subscriber = cpSubscribers[i];
+            if (subscriber.id == item.user.id) {
+              isSubscribed = item.isSubscribed;
+              break;
+            }
+          }
+
+          let existe = false;
+          for (let i = 0; i < cpSubscriptions.length; i++) {
+            const subscription = cpSubscriptions[i];
+            if (subscription.id == item.user.id) {
+              existe = true;
+              cpSubscriptions[i].isSubscribed = isSubscribed;
+              break;
+            }
+          }
+
+          if (!existe) {
+            cpSubscriptions.push({
+              id: item.user.id,
+              username: item.user.username,
+              isSubscribed: isSubscribed,
+              type: "subscription",
+            });
+          }
+        } else {
+          cpSubscriptions = cpSubscriptions.filter(function (subscription) {
+            return subscription.id != item.user.id;
+          });
+        }
+        setSubscriptions(cpSubscriptions);
+      }
+    };
+    socket.on("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
+
+    return () => {
+      socket.off("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
+    };
+  }, [subscribers, subscriptions, countNewSubscriptions]);
+
+  useEffect(() => {
+    let cmp = 0;
+    for (let i = 0; i < subscriptions.length; i++) {
+      const subscription = subscriptions[i];
+      if (subscription.seen==false) {
+        cmp++;
+      }
+    }
+    setCountNewSubscriptions(cmp);
+  }, [subscriptions]);
+
+  useEffect(() => {
+    if (isLoadedSubscribers && isLoadedSubscriptions) {
+      let cpSubscriptions = [];
+      for (let i = 0; i < subscriptions.length; i++) {
+        const subscription = subscriptions[i];
+        let isSubscribed = false;
+        for (let j = 0; j < subscribers.length; j++) {
+          const subscriber = subscribers[j];
+          if (subscriber.id == subscription.id) {
+            isSubscribed = true;
+            break;
+          }
+        }
+        cpSubscriptions.push({ ...subscription, isSubscribed });
+      }
+      setSubscriptions(cpSubscriptions);
+    }
+  }, [isLoadedSubscribers, isLoadedSubscriptions]);
+
   const getPlis = (refresh = false) => {
     connector({
       method: "get",
@@ -174,6 +353,21 @@ export default function Home() {
         }
         if (refresh) {
           setInitOpenedPlis(initOpenedPlis + 1);
+        }
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const getPli = (id, action) => {
+    connector({
+      method: "get",
+      url: `${endPoints.PLIS}?id=${id}`,
+      success: (response) => {
+        if (response.data.plis.length == 1) {
+          refreshItem({ ...response.data.plis[0], action });
         }
       },
       catch: (error) => {
@@ -198,23 +392,6 @@ export default function Home() {
       },
     });
   };
-
-  const getPli = (id, action) => {
-    connector({
-      method: "get",
-      url: `${endPoints.PLIS}?id=${id}`,
-      success: (response) => {
-        if (response.data.plis.length == 1) {
-          refreshItem({ ...response.data.plis[0], action });
-        }
-      },
-      catch: (error) => {
-        console.log(error);
-      },
-    });
-  };
-
-  const [msgNotifTop, setMsgNotifTop] = useState(null);
 
   const setItem = (item) => {
     if (socket) {
@@ -267,35 +444,12 @@ export default function Home() {
     }
   };
 
-  const [action, setAction] = useState({
-    notification: {
-      icon: <NotificationsNoneOutlinedIcon />,
-      isOpen: false,
-    },
-    folower: {
-      icon: <PeopleOutlineRoundedIcon />,
-      isOpen: false,
-    },
-    search: {
-      icon: <SearchRoundedIcon />,
-      isOpen: false,
-    },
-    messagerie: {
-      icon: <MailOutlineRoundedIcon />,
-      isOpen: false,
-    },
-  });
-
   const setMsgNotifTopTime = (msg, time) => {
     setMsgNotifTop(msg);
     setTimeout(() => {
       setMsgNotifTop(false);
     }, time);
   };
-
-  const query = new URLSearchParams(useLocation().search);
-  const tokenRestPassword = query.get("tokenRestPassword") || null;
-  const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
 
   const checkIsConnected = () => {
     if (auth.isConnected) {
@@ -308,18 +462,6 @@ export default function Home() {
       return false;
     }
   };
-
-  useEffect(() => {
-    if (tokenRestPassword) {
-      checkIsConnected();
-    }
-  }, [tokenRestPassword]);
-
-  useEffect(() => {
-    if (tokenConfirmEmail) {
-      checkTokenConfirmEmail();
-    }
-  }, [tokenConfirmEmail]);
 
   const checkTokenConfirmEmail = () => {
     if (!submitting) {
@@ -340,30 +482,6 @@ export default function Home() {
     }
   };
 
-  const msgErrors = (e) => {
-    if (e.submit !== undefined) setSubmitting(e.submit);
-    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
-  };
-
-  const breakpointColumnsObj = {
-    default: 3,
-    1200: 2,
-    993: 1,
-  };
-
-  const [stateFolowersMessage, setFolowersMessage] = useState({
-    showSearchFolower: false,
-    activeItem: false,
-    resultSearch: false,
-    search: {
-      type: "text",
-      id: "search-folowers",
-      value: "",
-      placeholder: "Qui recherchez-vous ?",
-      className: "search-input",
-    },
-  });
-
   const updateSubscriberStatus = (item) => {
     for (let i = 0; i < plis.length; i++) {
       const pli = plis[i];
@@ -383,15 +501,6 @@ export default function Home() {
       notification: item.notification,
     });
   };
-
-  const [notifications, setNotifications] = useState([]);
-  const [countNewNotifications, setCountNewNotifications] = useState(0);
-  //TODO: on scroll check total and get next data
-  const [totalNotifications, setTotalNotifications] = useState(0);
-
-  useEffect(() => {
-    getNotifications();
-  }, []);
 
   const getNotifications = () => {
     connector({
@@ -428,6 +537,38 @@ export default function Home() {
     }
   };
 
+  const getSubscribers = () => {
+    connector({
+      method: "get",
+      url: `${endPoints.USER_SUBSCRICERS}`,
+      success: (response) => {
+        setSubscribers(response.data.subscribers);
+        setIsLoadedSubscribers(true);
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const getSubscriptions = () => {
+    connector({
+      method: "get",
+      url: `${endPoints.USER_SUBSCRIPTIONS}`,
+      success: (response) => {
+        setSubscriptions(response.data.subscriptions);
+        setIsLoadedSubscriptions(true);
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const msgErrors = (e) => {
+    if (e.submit !== undefined) setSubmitting(e.submit);
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
+  };
   return (
     <DefaultMain>
       <StyledEngineProvider injectFirst>
@@ -503,6 +644,11 @@ export default function Home() {
             isSeenNotification={isSeenNotification}
             countNewNotifications={countNewNotifications}
             setCountNewNotifications={setCountNewNotifications}
+            countNewSubscriptions={countNewSubscriptions}
+            subscribers={subscribers}
+            setSubscribers={setSubscribers}
+            subscriptions={subscriptions}
+            setSubscriptions={setSubscriptions}
           />
         )}
         <ModalMessage

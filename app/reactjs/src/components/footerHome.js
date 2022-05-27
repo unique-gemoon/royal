@@ -25,6 +25,11 @@ export default function FooterHome({
   isSeenNotification = () => {},
   countNewNotifications,
   setCountNewNotifications = () => {},
+  countNewSubscriptions = 0,
+  subscribers = [],
+  setSubscribers = () => {},
+  subscriptions = [],
+  setSubscriptions  = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -71,6 +76,9 @@ export default function FooterHome({
                 isSeenNotification={isSeenNotification}
                 countNewNotifications={countNewNotifications}
                 setCountNewNotifications={setCountNewNotifications}
+                countNewSubscriptions={countNewSubscriptions}
+                subscribers={subscribers}
+                subscriptions={subscriptions}
               />
             </Col>
           </Row>
@@ -93,6 +101,11 @@ export default function FooterHome({
           isSeenNotification={isSeenNotification}
           countNewNotifications={countNewNotifications}
           setCountNewNotifications={setCountNewNotifications}
+          countNewSubscriptions={countNewSubscriptions}
+          subscribers={subscribers}
+          setSubscribers={setSubscribers}
+          subscriptions={subscriptions}
+          setSubscriptions={setSubscriptions}
         />
       )}
     </FooterDefault>
