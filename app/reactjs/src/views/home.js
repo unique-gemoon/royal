@@ -63,6 +63,14 @@ export default function Home() {
     const updatePli = (item) => {
       if (channel != item.channel) {
         getPli(item.id, item.action);
+        if (
+          item.subscribers != undefined &&
+          item.subscribers.length > 0 &&
+          auth?.user?.id &&
+          item.subscribers.includes(auth.user.id)
+        ) {
+          getNotificationNewPli(item.id);
+        }
       }
     };
     socket.on("SERVER_PLI", updatePli);
@@ -94,10 +102,14 @@ export default function Home() {
 
     const subscriberUpdated = (data) => {
       if (data?.notification?.id) {
-        if(auth.user && auth.user.id == data.notification.subscriberId && data.notification.type == 'newSubscriber') {
+        if (
+          auth.user &&
+          auth.user.id == data.notification.subscriberId &&
+          data.notification.type == "newSubscriber"
+        ) {
           setNotifications([data.notification, ...notifications]);
-          setCountNewNotifications(countNewNotifications+1);
-          setTotalNotifications(totalNotifications+1);
+          setCountNewNotifications(countNewNotifications + 1);
+          setTotalNotifications(totalNotifications + 1);
         }
       }
     };
@@ -162,6 +174,23 @@ export default function Home() {
         }
         if (refresh) {
           setInitOpenedPlis(initOpenedPlis + 1);
+        }
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const getNotificationNewPli = (pliId) => {
+    connector({
+      method: "get",
+      url: `${endPoints.NOTIFICATION_NEW}?pliId=${pliId}`,
+      success: (response) => {
+        if (response.data.notification) {
+          setNotifications([response.data.notification, ...notifications]);
+          setCountNewNotifications(countNewNotifications + 1);
+          setTotalNotifications(totalNotifications + 1);
         }
       },
       catch: (error) => {
@@ -351,7 +380,7 @@ export default function Home() {
       user: { id: auth.user.id, username: auth.user.username },
       subscriber: { id: item.id, username: item.username },
       isSubscribed: item.isSubscribed,
-      notification: item.notification
+      notification: item.notification,
     });
   };
 
@@ -367,7 +396,7 @@ export default function Home() {
   const getNotifications = () => {
     connector({
       method: "get",
-      url: `${endPoints.USER_NOTIFICATIONS}`,
+      url: `${endPoints.NOTIFICATION_LIST}`,
       success: (response) => {
         setNotifications(response.data.notifications);
         setCountNewNotifications(response.data.countNewNotifications);
@@ -385,7 +414,7 @@ export default function Home() {
       const notification = cpNotifications[index];
       connector({
         method: "post",
-        url: `${endPoints.USER_SEEN_NOTIFICATION}`,
+        url: `${endPoints.NOTIFICATION_SEEN}`,
         data: { ...notification },
         success: (response) => {
           cpNotifications[index].seen = true;

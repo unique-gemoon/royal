@@ -1,5 +1,6 @@
 import moment from "moment";
 import React from "react";
+import { useHistory } from "react-router-dom";
 import { BlocNotification } from "../assets/styles/componentStyle";
 import { getDurationHM } from "../helper/fonctions";
 
@@ -8,6 +9,8 @@ export default function Notifications({
   isSeenNotification = () => {},
   countNewNotifications = 0,
 }) {
+  const history = useHistory();
+
   return (
     <BlocNotification>
       <div className="header-notif">
@@ -25,6 +28,9 @@ export default function Notifications({
               onClick={() => {
                 if (!item.seen) {
                   isSeenNotification(index);
+                }
+                if (item.type == "newPli" && item.pliId) {
+                  history.push(`/?pli=${item.pliId}`);
                 }
               }}
             >

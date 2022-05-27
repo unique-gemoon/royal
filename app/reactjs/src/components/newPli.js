@@ -249,7 +249,7 @@ export default function NewPli({
 
         connector({
           method: "post",
-          url: `${endPoints.PLI}/new`,
+          url: endPoints.PLI_NEW,
           data,
           success: (response) => {
             msgErrors({ submit: false });
@@ -260,7 +260,11 @@ export default function NewPli({
             );
             setTogglePli(false);
             setPublishPli(response.data.pli);
-            setItem({ ...response.data.pli, action: "create" });
+            setItem({
+              ...response.data.pli,
+              action: "create",
+              subscribers: response.data.subscribers,
+            });
           },
           catch: (error) => {
             msgErrors({ msg: getMsgError(error), submit: false });
@@ -482,7 +486,7 @@ export default function NewPli({
           </div>
         </div>
       )}
-      {isPublishPli()&& (
+      {isPublishPli() && (
         <BarTimerPli>
           <LinearProgress
             className="progressBar-item"
@@ -500,32 +504,31 @@ export default function NewPli({
           </div>
         </BarTimerPli>
       )}
-      {!isPublishPli() &&
-        togglePli === false && (
-          <div
-            onClick={() => {
-              if (checkIsConnected()) {
-                setMsgNotifTop(null);
-                setTogglePli(true);
-                const cpAction = {
-                  ...action,
-                  notification: { ...action.notification, isOpen: false },
-                  folower: { ...action.folower, isOpen: false },
-                  search: { ...action.search, isOpen: false },
-                  messagerie: { ...action.messagerie, isOpen: false },
-                };
-                setAction(cpAction);
-              }
-            }}
-            className="toggled-new-pli"
-          >
-            {isDesktopOrLaptop ? (
-              <KeyboardArrowUpIcon />
-            ) : (
-              <AddCircleOutlineOutlinedIcon />
-            )}
-          </div>
-        )}
+      {!isPublishPli() && togglePli === false && (
+        <div
+          onClick={() => {
+            if (checkIsConnected()) {
+              setMsgNotifTop(null);
+              setTogglePli(true);
+              const cpAction = {
+                ...action,
+                notification: { ...action.notification, isOpen: false },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: false },
+                messagerie: { ...action.messagerie, isOpen: false },
+              };
+              setAction(cpAction);
+            }
+          }}
+          className="toggled-new-pli"
+        >
+          {isDesktopOrLaptop ? (
+            <KeyboardArrowUpIcon />
+          ) : (
+            <AddCircleOutlineOutlinedIcon />
+          )}
+        </div>
+      )}
 
       {!isPublishPli() && togglePli && (
         <div className="toggled-new-pli open-pli">

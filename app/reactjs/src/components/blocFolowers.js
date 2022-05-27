@@ -27,6 +27,8 @@ export default function BlocFolowers({
 
   const [subscribers, setSubscribers] = useState([]);
   const [subscriptions, setSubscriptions] = useState([]);
+  const [isLoadedSubscribers, setIsLoadedSubscribers] = useState(false);
+  const [isLoadedSubscriptions, setIsLoadedSubscriptions] = useState(false);
 
   //TODO count new Abonnements
   const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
@@ -100,18 +102,38 @@ export default function BlocFolowers({
           });
         }
         setSubscriptions(cpSubscriptions);
-      }
+      } 
     };
     socket.on("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
 
     return () => {
       socket.off("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
     };
-  }, [subscribers, subscriptions]);
+  }, [subscribers, subscriptions,countNewSubscriptions]);
 
   useEffect(() => {
     getSubscribers();
+    getSubscriptions();
   }, []);
+
+  useEffect(() => {
+    if(isLoadedSubscribers && isLoadedSubscriptions){
+      let cpSubscriptions = [];
+      for (let i = 0; i < subscriptions.length; i++) {
+        const subscription = subscriptions[i];
+        let isSubscribed = false;
+        for (let j = 0; j < subscribers.length; j++) {
+          const subscriber = subscribers[j];
+          if (subscriber.id == subscription.id) {
+            isSubscribed = true;
+            break;
+          }
+        }
+        cpSubscriptions.push({ ...subscription, isSubscribed });
+      }
+      setSubscriptions(cpSubscriptions);
+    }
+  }, [isLoadedSubscribers,isLoadedSubscriptions]);
 
   const getSubscribers = () => {
     connector({
@@ -119,7 +141,7 @@ export default function BlocFolowers({
       url: `${endPoints.USER_SUBSCRICERS}`,
       success: (response) => {
         setSubscribers(response.data.subscribers);
-        getSubscriptions();
+        setIsLoadedSubscribers(true);
       },
       catch: (error) => {
         console.log(error);
@@ -132,21 +154,8 @@ export default function BlocFolowers({
       method: "get",
       url: `${endPoints.USER_SUBSCRIPTIONS}`,
       success: (response) => {
-        let cpSubscriptions = [];
-        for (let i = 0; i < response.data.subscriptions.length; i++) {
-          const subscription = response.data.subscriptions[i];
-          let isSubscribed = false;
-          for (let j = 0; j < subscribers.length; j++) {
-            const subscriber = subscribers[j];
-            if (subscriber.id == subscription.id) {
-              isSubscribed = true;
-              break;
-            }
-          }
-          cpSubscriptions.push({ ...subscription, isSubscribed });
-        }
-
-        setSubscriptions(cpSubscriptions);
+        setSubscriptions(response.data.subscriptions);
+        setIsLoadedSubscriptions(true);
       },
       catch: (error) => {
         console.log(error);
@@ -172,7 +181,7 @@ export default function BlocFolowers({
               break;
             }
           }
-          setSubscriptions(cpSubscriptions);
+          setSubscriptions(cpSubscriptions); 
         }
       } else if (item.type == "subscription") {
         if (subscriptions[item.index]) {

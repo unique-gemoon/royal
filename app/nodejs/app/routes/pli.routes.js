@@ -1,18 +1,24 @@
 import { Router } from "express";
 import passport from "passport";
 import { getUserAuthenticated } from "../controllers/auth.controller.js";
+import { pliNotifications } from "../controllers/notification.controller.js";
 import {
-  findPliAppearancesById,
+  addNotVoteSondagePli,
+  addVoteSondagePli,
   findAllPlisNotElapsed,
+  findPliAppearancesById,
   findPliUserNotElapsed,
+  findSondageNotVotesById,
+  findSondageOptionsVotesById,
   newPli,
   updateAppearancePli,
-  addVoteSondagePli,
-  findSondageOptionsVotesById,
-  findSondageNotVotesById,
-  addNotVoteSondagePli,
 } from "../controllers/pli.controller.js";
-import { checkDataPli, checkDataPliTime, checkSondageNotVotes, checkSondagePliIsVoted } from "../middleware/checkPli.js";
+import {
+  checkDataPli,
+  checkDataPliTime,
+  checkSondageNotVotes,
+  checkSondagePliIsVoted,
+} from "../middleware/checkPli.js";
 import { uploadMedia } from "../middleware/uploadMedia.js";
 
 const pliRoutes = Router();
@@ -23,7 +29,8 @@ pliRoutes.post(
   findPliUserNotElapsed,
   uploadMedia,
   checkDataPli,
-  newPli
+  newPli,
+  pliNotifications
 );
 
 pliRoutes.get("/list", getUserAuthenticated, findAllPlisNotElapsed);
