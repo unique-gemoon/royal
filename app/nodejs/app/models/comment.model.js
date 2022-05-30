@@ -28,7 +28,7 @@ export default function comment(sequelize, Sequelize) {
         model: "users",
         key: "id",
       },
-      allowNull: false,
+      allowNull: true,
       onDelete: "cascade",
     },
     parentId: {

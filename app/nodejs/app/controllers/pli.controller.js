@@ -10,6 +10,7 @@ const SondageVotes = db.sondageVotes;
 const AppearancePli = db.appearancePli;
 const SondageNotVotes = db.sondageNotVotes;
 const Subscriber = db.subscriber;
+const Comment = db.comment;
 const PliMedias = Pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 const PliUser = Pli.belongsTo(User);
@@ -21,6 +22,14 @@ const MediaSondageNotVotes = Media.hasMany(SondageNotVotes, {
   as: "notVotes",
 });
 const UserSubscriber = User.hasMany(Subscriber, { foreignKey: "subscriberId" });
+const PliComments = Pli.hasMany(Comment);
+const CommentChilds = Comment.hasMany(Comment, { as : "childs",foreignKey: "parentId"  });
+const CommentUser = Comment.belongsTo(User, { foreignKey: "userId" });
+const CommentIntendedUser = Comment.belongsTo(User, {
+  foreignKey: "intendedUserId",
+  targetKey: "id",
+  as: "IntendedUser",
+});
 const Op = db.Sequelize.Op;
 
 //TODO : delete demo data comments
@@ -267,7 +276,7 @@ export function findPliUserNotElapsed(req, res, next) {
     });
 }
 
-export function findAllPlisNotElapsed(req, res, next) {
+export function findAllPlisNotElapsed(req, res) {
   let where = {
     createdAt: {
       [Op.gt]: db.Sequelize.literal(
@@ -332,6 +341,47 @@ export function findAllPlisNotElapsed(req, res, next) {
         association: PliAppearancePlis,
         as: "appearances",
         attributes: ["id", "signe", "userId"],
+      },
+      {
+        model: Comment,
+        association: PliComments,
+        as: "comments",
+        include: [
+          {
+            model: Comment,
+            association: CommentChilds,
+            as: "childs",
+            include: [
+              {
+                model: User,
+                association: CommentUser,
+                as: "user",
+                attributes: ["id", "username"],
+              },
+              {
+                model: User,
+                association: CommentIntendedUser,
+                as: "intendedUser",
+                attributes: ["id", "username"],
+              },
+            ],
+            order: [["createdAt", "DESC"]],
+          },
+          {
+            model: User,
+            association: CommentUser,
+            as: "user",
+            attributes: ["id", "username"],
+          },
+          {
+            model: User,
+            association: CommentIntendedUser,
+            as: "intendedUser",
+            attributes: ["id", "username"],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+        where : { parentId : null}
       },
     ],
     where,
@@ -465,6 +515,7 @@ export function findAllPlisNotElapsed(req, res, next) {
             appearances,
             createdAt,
             comments,
+            comments2: cpPli.comments,
           });
         }
 
