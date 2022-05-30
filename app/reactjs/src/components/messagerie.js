@@ -40,13 +40,11 @@ export default function Messagerie({
 
   const [endScroll, setEndScroll] = useState(false)
   const ref = useRef(null);
+
   const onScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
     if (scrollTop + clientHeight === scrollHeight) {
-      setEndScroll(true)
-      setTimeout(() => {
-        setEndScroll(false)
-      }, 600);
+      setEndScroll(true);
     }
   }
   

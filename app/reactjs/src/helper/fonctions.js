@@ -104,7 +104,24 @@ export function getDurationHM(from, to) {
   if (!from || !to) {
     return "";
   }
-  const h = from.diff(to, "hours");
-  const m = from.diff(to, "minutes") % 60;
-  return `${h>0 ? h + "h": ""}${m>0 ? m + "mn": (h>0 ? "":"0mn")}`;
+  const d = from.diff(to, "days");
+  const h = from.diff(to, "hours") % 24 ;
+  const m = parseInt(from.diff(to, "minutes") / 24) % 60;
+  return `${d>0 ? d + "j": ""}${h>0 ? h + "h": ""}${m>0 ? m + "m": (h>0 ? "":"Mainten.")}`;
 }
+
+export function getUniqueListBy(arr, key) {
+  return [...new Map(arr.map(item => [item[key], item])).values()]
+}
+
+export function getUniqueListNotifications(arr) {
+  return arr.reduce((acc, current) => {
+    const x = acc.find(item => item.id === current.id && item.type === current.type);
+    if (!x) {
+      return acc.concat([current]);
+    } else {
+      return acc;
+    }
+  }, []);
+}
+

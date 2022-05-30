@@ -30,6 +30,8 @@ export default function FooterHome({
   setSubscribers = () => {},
   subscriptions = [],
   setSubscriptions  = () => {},
+  loadingMore={},
+  setLoadingMore=() => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -78,7 +80,11 @@ export default function FooterHome({
                 setCountNewNotifications={setCountNewNotifications}
                 countNewSubscriptions={countNewSubscriptions}
                 subscribers={subscribers}
+                setSubscribers={setSubscribers}
                 subscriptions={subscriptions}
+                setSubscriptions={setSubscriptions}
+                loadingMore={loadingMore}
+                setLoadingMore={setLoadingMore}
               />
             </Col>
           </Row>
@@ -106,6 +112,8 @@ export default function FooterHome({
           setSubscribers={setSubscribers}
           subscriptions={subscriptions}
           setSubscriptions={setSubscriptions}
+          loadingMore={loadingMore}
+          setLoadingMore={setLoadingMore}
         />
       )}
     </FooterDefault>
