@@ -12,7 +12,7 @@ import logoType from "../assets/images/Logotype.png";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile,
+  HeaderMobile
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -30,7 +30,7 @@ import {
   getTime,
   getUniqueListNotifications,
   sortObjects,
-  uniqid,
+  uniqid
 } from "../helper/fonctions";
 
 export default function Home() {
@@ -56,7 +56,6 @@ export default function Home() {
   const [notifications, setNotifications] = useState([]);
   const [countNewNotifications, setCountNewNotifications] = useState(0);
   const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
-  //TODO: on scroll check total and get next data
   const [totalNotifications, setTotalNotifications] = useState(0);
   const [msgNotifTop, setMsgNotifTop] = useState(null);
 
@@ -554,8 +553,7 @@ export default function Home() {
   };
 
   const setLoadingMoreCheck = (e) => {
-    console.log("test", notifications.length, totalNotifications);
-    if (notifications.length < totalNotifications) {
+    if (e.notifications && notifications.length < totalNotifications) {
       setLoadingMore({ ...loadingMore, notifications: e });
       setPageNotifications(pageNotifications + 1);
     }
@@ -613,6 +611,7 @@ export default function Home() {
     if (e.submit !== undefined) setSubmitting(e.submit);
     if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
   };
+
   return (
     <DefaultMain>
       <StyledEngineProvider injectFirst>
