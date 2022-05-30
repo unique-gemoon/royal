@@ -1087,11 +1087,10 @@ export const BlocNotification = styled.div`
         .item-notif{
             position: relative;
             display: flex;
-            align-items: center;
             font-size: 13px;
             line-height: 18px;
             color: #c0f6ff;
-            padding: 13px 14px;
+            padding: 13px 14px 13px 24px;
             border-bottom: 1px solid rgba(234, 234, 234, 0.15);
             transition: .4s ease-in-out;
             &.new-notif{
@@ -1115,7 +1114,9 @@ export const BlocNotification = styled.div`
             }
             &::before{
                 content: "";
-                position: relative;
+                position: absolute;
+                left: 10px;
+                top: 20px;
                 min-width: 4px;
                 width: 4px;
                 height: 4px;
@@ -1131,6 +1132,7 @@ export const BlocNotification = styled.div`
                 color: #97cedd;
                 margin-left: auto;
                 padding-left: 10px;
+                white-space: nowrap;
             }
         }
         .show-more-folower{

@@ -93,10 +93,7 @@ export default function SearchFolowers({
   const onScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
     if (scrollTop + clientHeight === scrollHeight) {
-      setEndScroll(true)
-      setTimeout(() => {
-        setEndScroll(false)
-      }, 600);
+      setEndScroll(true);
     }
   }
   return (

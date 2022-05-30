@@ -28,6 +28,7 @@ import {
   decrementDuration,
   getMsgError,
   getTime,
+  getUniqueListNotifications,
   sortObjects,
   uniqid,
 } from "../helper/fonctions";
@@ -62,6 +63,8 @@ export default function Home() {
   const query = new URLSearchParams(useLocation().search);
   const tokenRestPassword = query.get("tokenRestPassword") || null;
   const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
+  const [pageNotifications, setPageNotifications] = useState(1);
+  const [loadingMore, setLoadingMore] = useState({ notifications: false });
 
   const breakpointColumnsObj = {
     default: 3,
@@ -114,14 +117,26 @@ export default function Home() {
   });
 
   useEffect(() => {
-    getNotifications();
-    getSubscribers();
-    getSubscriptions();
-  }, []);
-
+    if (auth.isConnected) {
+      getNotifications();
+    } else {
+      setNotifications([]);
+      setCountNewNotifications(0);
+      setTotalNotifications(0);
+      setPageNotifications(1);
+    }
+  }, [pageNotifications, auth.isConnected]);
 
   useEffect(() => {
     getPlis(true);
+
+    if (auth.isConnected) {
+      getSubscribers();
+      getSubscriptions();
+    } else {
+      setSubscribers([]);
+      setSubscriptions([]);
+    }
   }, [auth.isConnected]);
 
   useEffect(() => {
@@ -140,7 +155,9 @@ export default function Home() {
           auth?.user?.id &&
           item.subscribers.includes(auth.user.id)
         ) {
-          getNotificationNewPli(item.id);
+          if (item.action == "create") {
+            getNotificationNewPli(item.id);
+          }
         }
       }
     };
@@ -294,6 +311,7 @@ export default function Home() {
               username: item.user.username,
               isSubscribed: isSubscribed,
               type: "subscription",
+              seen: false,
             });
           }
         } else {
@@ -315,7 +333,7 @@ export default function Home() {
     let cmp = 0;
     for (let i = 0; i < subscriptions.length; i++) {
       const subscription = subscriptions[i];
-      if (subscription.seen==false) {
+      if (subscription.seen == false) {
         cmp++;
       }
     }
@@ -382,9 +400,15 @@ export default function Home() {
       url: `${endPoints.NOTIFICATION_NEW}?pliId=${pliId}`,
       success: (response) => {
         if (response.data.notification) {
-          setNotifications([response.data.notification, ...notifications]);
-          setCountNewNotifications(countNewNotifications + 1);
-          setTotalNotifications(totalNotifications + 1);
+          const cpNotifications = getUniqueListNotifications([
+            response.data.notification,
+            ...notifications,
+          ]);
+          if (cpNotifications.length > notifications.length) {
+            setNotifications([response.data.notification, ...notifications]);
+            setCountNewNotifications(countNewNotifications + 1);
+            setTotalNotifications(totalNotifications + 1);
+          }
         }
       },
       catch: (error) => {
@@ -502,19 +526,39 @@ export default function Home() {
     });
   };
 
-  const getNotifications = () => {
+  const getNotifications = (refresh = false) => {
+    const cpPageNotifications = refresh ? 1 : pageNotifications;
+    if (pageNotifications != cpPageNotifications) {
+      setPageNotifications(cpPageNotifications);
+    }
+
     connector({
       method: "get",
-      url: `${endPoints.NOTIFICATION_LIST}`,
+      url: `${endPoints.NOTIFICATION_LIST}?page=${cpPageNotifications}`,
       success: (response) => {
-        setNotifications(response.data.notifications);
-        setCountNewNotifications(response.data.countNewNotifications);
-        setTotalNotifications(response.data.totalNotifications);
+        //todo check double
+        setNotifications(
+          getUniqueListNotifications(
+            [...notifications, ...response.data.notifications],
+            "id"
+          )
+        );
+        setCountNewNotifications(parseInt(response.data.totalNew));
+        setTotalNotifications(parseInt(response.data.total));
+        setLoadingMore({ ...loadingMore, notifications: false });
       },
       catch: (error) => {
         console.log(error);
       },
     });
+  };
+
+  const setLoadingMoreCheck = (e) => {
+    console.log("test", notifications.length, totalNotifications);
+    if (notifications.length < totalNotifications) {
+      setLoadingMore({ ...loadingMore, notifications: e });
+      setPageNotifications(pageNotifications + 1);
+    }
   };
 
   const isSeenNotification = (index) => {
@@ -649,6 +693,8 @@ export default function Home() {
             setSubscribers={setSubscribers}
             subscriptions={subscriptions}
             setSubscriptions={setSubscriptions}
+            loadingMore={loadingMore}
+            setLoadingMore={setLoadingMoreCheck}
           />
         )}
         <ModalMessage

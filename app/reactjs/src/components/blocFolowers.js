@@ -20,7 +20,7 @@ export default function BlocFolowers({
   subscribers = [],
   setSubscribers = () => {},
   subscriptions = [],
-  setSubscriptions = () => {},
+  setSubscriptions= () => {} ,
 }) {
   const [value, setValue] = React.useState("1");
   const [endScroll, setEndScroll] = useState(false);
@@ -30,9 +30,6 @@ export default function BlocFolowers({
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
     if (scrollTop + clientHeight === scrollHeight) {
       setEndScroll(true);
-      setTimeout(() => {
-        setEndScroll(false);
-      }, 600);
     }
   };
 

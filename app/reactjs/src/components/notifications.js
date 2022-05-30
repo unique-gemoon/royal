@@ -10,18 +10,16 @@ export default function Notifications({
   isSeenNotification = () => {},
   countNewNotifications = 0,
   action={},
-  updateAction = () => {}
+  updateAction = () => {},
+  loadingMore={},
+  setLoadingMore=() => {},
 }) {
   const history = useHistory();
-  const [endScroll, setEndScroll] = useState(false)
   const ref = useRef(null);
   const onScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
-    if (scrollTop + clientHeight === scrollHeight) {
-      setEndScroll(true)
-      setTimeout(() => {
-        setEndScroll(false)
-      }, 600);
+    if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
+      setLoadingMore({...loadingMore,notifications:true});
     }
   }
   return (
@@ -55,7 +53,7 @@ export default function Notifications({
               </span>
             </div>
           ))}
-          {endScroll && <SpinnerLoading />}
+          {loadingMore.notifications && <SpinnerLoading />}
         </div>
       </div>
     </BlocNotification>

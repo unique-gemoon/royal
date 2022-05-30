@@ -166,6 +166,7 @@ export function findNotifications(req, res) {
   );
 
   let notifications = [];
+  const total = allNotifications.length;
   if (allNotifications.length > 0) {
     notifications = [...allNotifications.sort(sortByKey("-createdAt"))].splice(
       start,
@@ -176,8 +177,8 @@ export function findNotifications(req, res) {
   res.status(200).send({
     message: "ok",
     notifications,
-    total: allNotifications.length,
-    countNewNotifications: notificationsNotSeen.length,
+    total,
+    totalNew: notificationsNotSeen.length,
   });
 }
 
