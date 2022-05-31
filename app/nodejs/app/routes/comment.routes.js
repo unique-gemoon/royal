@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { checkParentComment, checkPli, newComment } from '../controllers/comment.controller.js';
+import { checkAncestryComment, checkParentComment, checkPli, newComment } from '../controllers/comment.controller.js';
 
 const commentRoutes = Router();
 
@@ -9,6 +9,7 @@ commentRoutes.post(
   passport.authenticate("jwt", { session: false }),
   checkPli,
   checkParentComment,
+  checkAncestryComment, 
   newComment
 );
 

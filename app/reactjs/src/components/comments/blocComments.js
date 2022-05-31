@@ -29,6 +29,7 @@ export default function BlocComments({
       ) : null}
       <ListComments
         items={item.comments}
+        itemsOld={item.commentsOld}
         state={state.showModal}
         setMsgNotifTopTime={setMsgNotifTopTime}
       />

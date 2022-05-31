@@ -8,7 +8,7 @@ export function newComment(req, res) {
     Comment.create({
       userId: req.user.id,
       pliId: req.pli.id,
-      intendedUserId: req?.parent?.userId ? req.parent.userId : null,
+      ancestryId: req?.ancestry?.id ? req.ancestry.id : null,
       parentId: req?.parent?.id ? req.parent.id : null,
       message: req.body.message,
     })
@@ -82,6 +82,34 @@ export function checkParentComment(req, res, next) {
       });
   } else {
     req.parent = {};
+    next();
+  }
+}
+
+export function checkAncestryComment(req, res, next) {
+  if (parseInt(req.body.ancestryId)) {
+    Comment.findOne({
+      where: {
+        id: req.body.ancestryId,
+      },
+    })
+      .then((comment) => {
+        if (comment) {
+          req.ancestry = comment;
+          next();
+        } else {
+          res.status(400).send({
+            message: "Le commentaire ascendance n'existe pas.",
+          });
+          return;
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+        return;
+      });
+  } else {
+    req.ancestry = {};
     next();
   }
 }

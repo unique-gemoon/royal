@@ -22,10 +22,10 @@ export default function comment(sequelize, Sequelize) {
       allowNull: false,
       onDelete: "cascade",
     },
-    intendedUserId: {
+    ancestryId: {
       type: Sequelize.INTEGER,
       references: {
-        model: "users",
+        model: "comments",
         key: "id",
       },
       allowNull: true,
@@ -45,8 +45,8 @@ export default function comment(sequelize, Sequelize) {
   Comment.associate = function (models) {
     Comment.belongsTo(models.pli, { foreignKey: "pliId" });
     Comment.belongsTo(models.user, { foreignKey: "userId" });
-    Comment.belongsTo(models.user, { foreignKey: "intendedUserId" });
     Comment.belongsTo(models.comment, { foreignKey: "parentId" });
+    Comment.belongsTo(models.comment, { foreignKey: "ancestryId" });
     Comment.hasMany(models.commentNotifications); 
   };
 

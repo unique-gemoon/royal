@@ -4,6 +4,8 @@ import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import { CommentItem } from "../../assets/styles/componentStyle";
 import { ReplyIcon, ReplyIconGreen } from "../../assets/styles/globalStyle";
 import InputEmoji from "../ui-elements/inputEmoji";
+import moment from "moment";
+import { getDurationHM } from "../../helper/fonctions";
 
 export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
   const [state, setState] = useState({
@@ -16,11 +18,13 @@ export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
   return (
     <CommentItem>
       <div className="head-comment">
-        <span className="name-user-comment">{item.user}</span>
+        <span className="name-user-comment">{item.user.username}</span>
         {item.time ? " . " : null}
-        <span className="time-comment">Il y a {item.time}</span>
+        <span className="time-comment">
+          Il y a {getDurationHM(moment(), item.createdAt)}
+        </span>
       </div>
-      <div className="content-text-comment"> {item.subject}</div>
+      <div className="content-text-comment"> {item.message}</div>
 
       {auth.isConnected && (
         <div className="bloc-repondre">
@@ -35,15 +39,15 @@ export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
               name="comment-pli"
               placeholder="Mon commentaire"
               setMsgNotifTopTime={setMsgNotifTopTime}
-              setState={()=>{}}
+              setState={() => {}}
             />
           ) : null}
         </div>
       )}
 
-      {item.reponses ? (
+      {item.childs ? (
         <div className="bloc-item-reponces">
-          {item.reponses ? (
+          {item.childs.length > 0 && (
             <p
               className={`toggle-reponces ${!state.openReponces ? "open" : ""}`}
               onClick={() => {
@@ -53,22 +57,27 @@ export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
             >
               <ArrowDownIcon />
               {state.openReponces ? "Masquer" : "Afficher"} les{" "}
-              {item.reponses.length} réponses{" "}
+              {item.childs.length} réponses{" "}
             </p>
-          ) : null}
+          )}
           {state.openReponces ? (
             <div className="reponces-list">
-              {item.reponses &&
-                item.reponses.map((rep, index) => (
+              {item.childs &&
+                item.childs.map((rep, index) => (
                   <CommentItem key={index}>
                     <div className="head-comment">
                       <span className="name-user-comment">
-                        {rep.user} {">"} {rep.userRep}
+                        {rep.user.username} {">"}{" "}
+                        {rep?.ancestry?.user?.username
+                          ? rep.ancestry.user.username
+                          : item.user.username}
                       </span>
-                      {rep.time ? " . " : null}
-                      <span className="time-comment">Il y a {rep.time}</span>
+                      {rep.createdAt ? " . " : null}
+                      <span className="time-comment">
+                        Il y a {getDurationHM(moment(), rep.createdAt)}
+                      </span>
                     </div>
-                    <div className="content-text-comment"> {rep.subject}</div>
+                    <div className="content-text-comment"> {rep.message}</div>
                     {auth.isConnected && (
                       <div className="bloc-repondre">
                         <p
