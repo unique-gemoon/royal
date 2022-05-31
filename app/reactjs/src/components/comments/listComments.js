@@ -6,6 +6,7 @@ export default function ListComments({
   items,
   itemsOld,
   setMsgNotifTopTime = () => {},
+  saveMessage = () => {},
   ...props
 }) {
   return (
@@ -18,6 +19,7 @@ export default function ListComments({
                 key={index}
                 item={item}
                 setMsgNotifTopTime={setMsgNotifTopTime}
+                saveMessage={saveMessage}
               />
             ))}
         </div>
@@ -29,6 +31,7 @@ export default function ListComments({
                 key={index}
                 item={item}
                 setMsgNotifTopTime={setMsgNotifTopTime}
+                saveMessage={saveMessage}
               />
             ))}
         </div>

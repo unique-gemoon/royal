@@ -13,6 +13,7 @@ export default function InputEmoji({
   open,
   setOpen = () => {},
   setMsgNotifTopTime = () => {},
+  saveMessage = () => {},
   ...props
 }) {
   const [state, setState] = useState({
@@ -71,6 +72,9 @@ export default function InputEmoji({
         onClick={(e) => {
           if (!checkIsConnected()) {
             props.setState({ ...props.state, showModal: false });
+          }else{
+            console.log("test");
+            saveMessage({message: state.inputEmoji.value});
           }
         }}
       >

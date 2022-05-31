@@ -7,7 +7,12 @@ import InputEmoji from "../ui-elements/inputEmoji";
 import moment from "moment";
 import { getDurationHM } from "../../helper/fonctions";
 
-export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
+export default function ItemComment({
+  item,
+  setMsgNotifTopTime = () => {},
+  saveMessage = () => {},
+}) {
+  
   const [state, setState] = useState({
     openReponces: false,
     repondre: false,
@@ -39,7 +44,9 @@ export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
               name="comment-pli"
               placeholder="Mon commentaire"
               setMsgNotifTopTime={setMsgNotifTopTime}
-              setState={() => {}}
+              saveMessage={(message) => {
+                saveMessage({ ...message, parentId: item.id, ancestryId: null });
+              }}
             />
           ) : null}
         </div>
@@ -108,7 +115,9 @@ export default function ItemComment({ item, setMsgNotifTopTime = () => {} }) {
                             name="comment-pli"
                             placeholder="Mon commentaire"
                             setMsgNotifTopTime={setMsgNotifTopTime}
-                            setState={() => {}}
+                            saveMessage={(message) => {
+                              saveMessage({ ...message, parentId: item.id, ancestryId: rep.id  });
+                            }}
                           />
                         ) : null}
                       </div>
