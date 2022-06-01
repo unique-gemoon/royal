@@ -167,7 +167,7 @@ export default function ItemMasonry({
           setAction={setAction}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
-          className={state.showModal ? "" : isCheck(item) ? "" : "nv-hide"}
+          className={state.showModal ? "" : !isCheck(item) ? "" : "nv-hide"}
           setMsgNotifTopTime={setMsgNotifTopTime}
         />
       </>
@@ -197,7 +197,7 @@ export default function ItemMasonry({
                   />
                 ))}
                 <ImagesGallery items={data.mediaOuverture.image} />
-                {data.mediaOuverture.video.map((video,index) => (
+                {data.mediaOuverture.video.map((video, index) => (
                   <PlayerVideo
                     setActiveItemPlayer={setActiveItemPlayer}
                     activeItemPlayer={activeItemPlayer}
@@ -205,7 +205,7 @@ export default function ItemMasonry({
                     key={index}
                   />
                 ))}
-                {data.mediaOuverture.music.map((music,index) => (
+                {data.mediaOuverture.music.map((music, index) => (
                   <PlayerMusic
                     setActiveItemMusic={setActiveItemPlayer}
                     activeItemMusic={activeItemPlayer}
@@ -265,14 +265,13 @@ export default function ItemMasonry({
                     </>
                   )}
                 </div>
-                {state.showComment ? (
-                  <BlocComments
-                    item={item}
-                    state={state}
-                    setState={setState}
-                    setMsgNotifTopTime={setMsgNotifTopTime}
-                  />
-                ) : null}
+                <BlocComments
+                  className={`${state.showComment ? "d-none" : ""}`}
+                  item={item}
+                  state={state}
+                  setState={setState}
+                  setMsgNotifTopTime={setMsgNotifTopTime}
+                />
               </>
             </div>
           </MasonryItem>
@@ -286,33 +285,31 @@ export default function ItemMasonry({
           {renderContentNV1()}
         </div>
         <div className="Bloc-NV2">
-          {isCheck(item) && (
-            <>
-              {renderContentNV2()}
+          <div className={`${isCheck(item) ? "d-none" : ""}`}>
+            {renderContentNV2()}
 
-              <div
-                className="toggle-pli2"
-                onClick={() =>
-                  setState({ ...state, showModal: true, showComment: true })
-                }
-              >
-                <span className="users-views">
-                  14 <VisibilityIcon />
-                </span>{" "}
-                .{" "}
-                <span className="toggle-zoom">
-                  Etendre le pli
-                  <OpenInFullOutlinedIcon className="open-zoom-icon" />
-                </span>
-              </div>
-              <BlocComments
-                item={item}
-                state={state}
-                setState={setState}
-                setMsgNotifTopTime={setMsgNotifTopTime}
-              />
-            </>
-          )}
+            <div
+              className="toggle-pli2"
+              onClick={() =>
+                setState({ ...state, showModal: true, showComment: true })
+              }
+            >
+              <span className="users-views">
+                14 <VisibilityIcon />
+              </span>{" "}
+              .{" "}
+              <span className="toggle-zoom">
+                Etendre le pli
+                <OpenInFullOutlinedIcon className="open-zoom-icon" />
+              </span>
+            </div>
+            <BlocComments
+              item={item}
+              state={state}
+              setState={setState}
+              setMsgNotifTopTime={setMsgNotifTopTime}
+            />
+          </div>
         </div>
       </MasonryItem>
     </>

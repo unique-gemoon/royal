@@ -112,6 +112,10 @@ io.on("connection", (socket) => {
     io.emit("SERVER_SUBSCRIBER_UPDATED", data);
   });
 
+  socket.on("CLIENT_COMMENT", (data) => {
+    io.emit("SERVER_COMMENT", data);
+  });
+
   socket.on("CLIENT_OPEN_PLI", (data) => {
     if (
       data.id != undefined &&

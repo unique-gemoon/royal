@@ -4,7 +4,9 @@ import ItemCommentSimple from "./itemCommentSimple";
 
 export default function ListComments({
   items,
+  itemsOld,
   setMsgNotifTopTime = () => {},
+  saveMessage = () => {},
   ...props
 }) {
   return (
@@ -17,17 +19,19 @@ export default function ListComments({
                 key={index}
                 item={item}
                 setMsgNotifTopTime={setMsgNotifTopTime}
+                saveMessage={saveMessage}
               />
             ))}
         </div>
       ) : (
         <div className="list-comments liste-comment-modal">
-          {items &&
-            items.map((item, index) => (
+          {itemsOld &&
+            itemsOld.map((item, index) => (
               <ItemCommentSimple
                 key={index}
                 item={item}
                 setMsgNotifTopTime={setMsgNotifTopTime}
+                saveMessage={saveMessage}
               />
             ))}
         </div>

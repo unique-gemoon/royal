@@ -22,5 +22,6 @@ const endPoints = {
   NOTIFICATION_LIST : "/notification/list", 
   NOTIFICATION_SEEN : "/notification/seen", 
   NOTIFICATION_SEEN_SUBSCRIPTIONS : "/notification/seen/subscriptions", 
+  COMMENT_NEW : "/comment/new",
 };
 export default endPoints;

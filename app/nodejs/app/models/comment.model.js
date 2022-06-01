@@ -22,6 +22,15 @@ export default function comment(sequelize, Sequelize) {
       allowNull: false,
       onDelete: "cascade",
     },
+    ancestryId: {
+      type: Sequelize.INTEGER,
+      references: {
+        model: "comments",
+        key: "id",
+      },
+      allowNull: true,
+      onDelete: "cascade",
+    },
     parentId: {
       type: Sequelize.INTEGER,
       references: {
@@ -37,6 +46,7 @@ export default function comment(sequelize, Sequelize) {
     Comment.belongsTo(models.pli, { foreignKey: "pliId" });
     Comment.belongsTo(models.user, { foreignKey: "userId" });
     Comment.belongsTo(models.comment, { foreignKey: "parentId" });
+    Comment.belongsTo(models.comment, { foreignKey: "ancestryId" });
     Comment.hasMany(models.commentNotifications); 
   };
 

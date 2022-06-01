@@ -2,7 +2,8 @@
 	"info": {
 		"_postman_id": "b72b7b11-2a9e-402e-932b-517f961d7362",
 		"name": "Royalis",
-		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "15901090"
 	},
 	"item": [
 		{
@@ -163,6 +164,60 @@
 					"path": [
 						"api",
 						"pli",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "comment_new",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImphY29iIiwiZW1haWwiOiJqYWNvYkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTM1NjE0ODU5ODgsImV4cCI6MTY1MzgyMDY4NTk4OH0.7F2or4V_J8l6Qm0J6hr2uvwUF7XWBGnFzPxD44NjdtE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"pliId\":\"9\",\"parentId\":\"\",\"citationId\":\"\",\"message\":\"test2\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/comment/new",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"comment",
 						"new"
 					]
 				}
@@ -424,7 +479,7 @@
 					"raw": ""
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8080/api/user/notifications?p=1",
+					"raw": "http://127.0.0.1:8080/api/notification/list?p=1",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -435,13 +490,75 @@
 					"port": "8080",
 					"path": [
 						"api",
-						"user",
-						"notifications"
+						"notification",
+						"list"
 					],
 					"query": [
 						{
 							"key": "p",
 							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "pli_new_notification",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoxLCJ1c2VybmFtZSI6ImphY29iIiwiZW1haWwiOiJqYWNvYkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTM1NjE0ODU5ODgsImV4cCI6MTY1MzgyMDY4NTk4OH0.7F2or4V_J8l6Qm0J6hr2uvwUF7XWBGnFzPxD44NjdtE",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/pli/new/notification?pliId=22",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"pli",
+						"new",
+						"notification"
+					],
+					"query": [
+						{
+							"key": "pliId",
+							"value": "22"
 						}
 					]
 				}
