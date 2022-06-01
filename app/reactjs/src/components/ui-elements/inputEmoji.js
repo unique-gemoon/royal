@@ -27,6 +27,8 @@ export default function InputEmoji({
     },
   });
 
+  const [submitting, setSubmitting] = useState(false);
+
   useEffect(() => {
     setOpen(state.inputEmoji.open);
   }, [state]);
@@ -72,9 +74,25 @@ export default function InputEmoji({
         onClick={(e) => {
           if (!checkIsConnected()) {
             props.setState({ ...props.state, showModal: false });
-          }else{
-            console.log("test");
-            saveMessage({message: state.inputEmoji.value});
+          } else {
+            if (state.inputEmoji.value) {
+              if (!submitting) {
+                setSubmitting(true);
+                saveMessage({ message: state.inputEmoji.value })
+                  .then(() => {
+                    setState({
+                      ...state,
+                      inputEmoji: { ...state.inputEmoji, value: "" },
+                    });
+                    setSubmitting(false);
+                  });
+              }
+            } else {
+              setMsgNotifTopTime(
+                "Vous ne pouvez pas poster un message vide.",
+                5000
+              );
+            }
           }
         }}
       >

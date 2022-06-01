@@ -12,7 +12,7 @@ import logoType from "../assets/images/Logotype.png";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile
+  HeaderMobile,
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -30,7 +30,7 @@ import {
   getTime,
   getUniqueListNotifications,
   sortObjects,
-  uniqid
+  uniqid,
 } from "../helper/fonctions";
 
 export default function Home() {
@@ -202,11 +202,54 @@ export default function Home() {
     };
     socket.on("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
 
+    const newComment = (item) => {
+      if (
+        item.id != undefined &&
+        item.message != undefined &&
+        item.pliId != undefined
+      ) {
+        const cpPlis = [...plis];
+        for (let i = 0; i < cpPlis.length; i++) {
+          const pli = cpPlis[i];
+          if (pli.id == item.pliId) {
+            if (item.parentId) {
+              for (let j = 0; j < pli.comments.length; j++) {
+                const comment = pli.comments[j];
+                if (comment.id == item.parentId) {
+                  if (item.ancestryId) {
+                    for (let k = 0; k < comment.childs.length; k++) {
+                      const child = comment.childs[k];
+                      if (child.id == item.ancestryId) {
+                        item.ancestry = {id:child.id, message: child.message, user: child.user};
+                        break;
+                      }
+                    }
+                  }
+                  if (Array.isArray(cpPlis[i].comments[j].childs)) {
+                    cpPlis[i].comments[j].childs.push(item);
+                  } else {
+                    cpPlis[i].comments[j].childs = [item];
+                  }
+                  break;
+                }
+              }
+            } else {
+              cpPlis[i].comments.push(item);
+            }
+            break;
+          }
+        }
+        setPlis(cpPlis);
+      }
+    };
+    socket.on("SERVER_COMMENT", newComment);
+
     return () => {
       socket.off("SERVER_PLI", updatePli);
       socket.off("SERVER_COUNT_CONNECTION", updateCountConnection);
       socket.off("SERVER_OPEN_PLI", updateOpenPlis);
       socket.off("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
+      socket.off("SERVER_COMMENT", newComment);
       //socket.disconnect();
     };
   }, [plis]);

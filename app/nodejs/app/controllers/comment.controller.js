@@ -15,7 +15,13 @@ export function newComment(req, res) {
       .then((comment) => {
         res.status(200).json({
           message: "ok",
-          comment: { id: comment.id },
+          comment: {
+            id: comment.id,
+            userId: comment.userId,
+            user: { id: comment.userId, username: req.user.username },
+            createdAt: comment.createdAt,
+            ancestry: {},
+          },
         });
       })
       .catch((err) => {

@@ -12,7 +12,6 @@ export default function ItemComment({
   setMsgNotifTopTime = () => {},
   saveMessage = () => {},
 }) {
-  
   const [state, setState] = useState({
     openReponces: false,
     repondre: false,
@@ -20,6 +19,21 @@ export default function ItemComment({
 
   const [activeItemComment, setActiveItemComment] = useState(null);
   const auth = useSelector((store) => store.auth);
+
+  const getTitleComment = (rep) => {
+    let title = rep.user.username;
+    if (rep?.ancestry?.user?.username) {
+      if (rep.user.username != rep.ancestry.user.username) {
+        title += " > " + rep.ancestry.user.username;
+      }
+    } else {
+      if (rep.user.username != item.user.username) {
+        title += " > " + item.user.username;
+      }
+    }
+    return title;
+  };
+
   return (
     <CommentItem>
       <div className="head-comment">
@@ -45,7 +59,11 @@ export default function ItemComment({
               placeholder="Mon commentaire"
               setMsgNotifTopTime={setMsgNotifTopTime}
               saveMessage={(message) => {
-                saveMessage({ ...message, parentId: item.id, ancestryId: null });
+                return saveMessage({
+                  ...message,
+                  parentId: item.id,
+                  ancestryId: null,
+                });
               }}
             />
           ) : null}
@@ -74,10 +92,7 @@ export default function ItemComment({
                   <CommentItem key={index}>
                     <div className="head-comment">
                       <span className="name-user-comment">
-                        {rep.user.username} {">"}{" "}
-                        {rep?.ancestry?.user?.username
-                          ? rep.ancestry.user.username
-                          : item.user.username}
+                        {getTitleComment(rep)}
                       </span>
                       {rep.createdAt ? " . " : null}
                       <span className="time-comment">
@@ -116,7 +131,11 @@ export default function ItemComment({
                             placeholder="Mon commentaire"
                             setMsgNotifTopTime={setMsgNotifTopTime}
                             saveMessage={(message) => {
-                              saveMessage({ ...message, parentId: item.id, ancestryId: rep.id  });
+                              return saveMessage({
+                                ...message,
+                                parentId: item.id,
+                                ancestryId: rep.id,
+                              });
                             }}
                           />
                         ) : null}
