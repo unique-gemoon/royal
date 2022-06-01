@@ -28,12 +28,15 @@ export default function BlocComments({
         if (response.data?.comment) {
           const comment = response.data.comment;
           data = {
-            ...data,
-            id: comment.id,
-            userId: comment.userId,
-            user: comment.user,
-            createdAt: comment.createdAt,
-            ancestry: comment.ancestry,
+            comment: {
+              ...data,
+              id: comment.id,
+              userId: comment.userId,
+              user: comment.user,
+              createdAt: comment.createdAt,
+              ancestry: comment.ancestry,
+            },
+            users: response.data.users,
           };
           socket.emit("CLIENT_COMMENT", data);
           return true;

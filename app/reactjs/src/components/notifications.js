@@ -44,6 +44,8 @@ export default function Notifications({
                   history.push(`/?pli=${item.pliId}`);
                 }else if (item.type == "newSubscriber" && item.userId) {
                   updateAction({...action, isOpen:true},"folower");
+                }else if(item.type == "newComment" && item.pliId && item.commentId) {
+                  history.push(`/?pli=${item.pliId}`);
                 }
               }}
             >
