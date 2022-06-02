@@ -93,6 +93,7 @@ export default function user(sequelize, Sequelize) {
     User.hasMany(models.sondageVotes);
     User.hasMany(models.subscriber);
     User.hasMany(models.comment);
+    User.hasMany(models.citation);
     User.hasMany(models.threadUsers);
     User.hasMany(models.message); 
     User.hasMany(models.subscriberNotifications); 
