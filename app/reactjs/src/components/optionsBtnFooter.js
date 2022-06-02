@@ -29,6 +29,8 @@ export default function OptionsBtnFooter({
   setSubscriptions = () => {},
   loadingMore={},
   setLoadingMore=() => {},
+  setActiveItemNV2=() => {},
+  plis=[]
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -139,6 +141,8 @@ export default function OptionsBtnFooter({
           countNewNotifications={countNewNotifications}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
+          setActiveItemNV2={setActiveItemNV2}
+          plis={plis}
         />
       </ButtonAction>
     </OptionsBtnAction>

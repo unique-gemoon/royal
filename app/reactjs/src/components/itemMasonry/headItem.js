@@ -26,7 +26,7 @@ import {
 import { useOutsideAlerter } from "../../helper/events";
 import { useMediaQuery } from "react-responsive";
 import moment from "moment";
-import { getDurationHM, getMsgError } from "../../helper/fonctions";
+import { copyToClipboard, getDurationHM, getMsgError } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
 
@@ -108,13 +108,14 @@ export default function HeadItem({
 
   const [showMediaIcons, setShowMediaIcons] = useState(false);
 
-  const [CopyOpen, setCopyOpen] = useState(false);
+  const [copyOpen, setCopyOpen] = useState(false);
   const handleCopyClose = () => {
     setCopyOpen(false);
   };
 
   const handleCopyOpen = () => {
     setCopyOpen(true);
+    copyToClipboard(`${window.location.origin}/?pli=${item.id}`);
   };
 
   const ref = useRef(null);
@@ -396,7 +397,7 @@ export default function HeadItem({
           <div
             className="users-enligne-pli"
             onClick={() => {
-              setState({ ...state, showModal: true, showComment: true, item });
+              setState({ ...state, showModal: true, item });
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -416,14 +417,14 @@ export default function HeadItem({
         )}
         <div
           className={`nb-message-comment ${
-            (activeItem && activeItem.id == item.id) || state.showModal
+            (activeItem && activeItem.id == item.id) || (state.showModal && state.showCitation) || (!state.showModal && state.showNV2)
               ? "comment-is-open"
               : ""
           }`}
           onClick={() => {
             if (state.showModal) {
-              setState({ ...state, showModal: false, item });
-            } else {
+              setState({ ...state, showCitation: !state.showCitation });
+            }else{
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -435,10 +436,11 @@ export default function HeadItem({
               setActiveItem(
                 activeItem && activeItem.id == item.id ? null : item
               );
+              setState({ ...state, showNV2: !state.showNV2 });
             }
           }}
         >
-          3 <CommentOutlinedIcon /> <ArrowDownIcon />
+          {item.totalComments}  <CommentOutlinedIcon /> <ArrowDownIcon/>
         </div>
         <div className="btn-copy">
           <ClickAwayListener onClickAway={handleCopyClose}>
@@ -448,7 +450,7 @@ export default function HeadItem({
                   disablePortal: true,
                 }}
                 onClose={handleCopyClose}
-                open={CopyOpen}
+                open={copyOpen}
                 arrow
                 leaveDelay={1000}
                 title="lien du pli copié"

@@ -34,6 +34,7 @@ import {
 } from "../helper/fonctions";
 
 export default function Home() {
+
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
   const auth = useSelector((store) => store.auth);
@@ -41,6 +42,7 @@ export default function Home() {
   const [plis, setPlis] = useState([]);
   const [seconds, setSeconds] = useState(0);
   const [activeItem, setActiveItem] = useState(null);
+  const [activeItemNV2, setActiveItemNV2] = useState(null);
   const [activeItemPlayer, setActiveItemPlayer] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [showBlocModalMessage, setShowBlocModalMessage] = useState(null);
@@ -95,6 +97,12 @@ export default function Home() {
       checkTokenConfirmEmail();
     }
   }, [tokenConfirmEmail]);
+
+  useEffect(() => {
+    if(activeItem?.id){
+      setActiveItemNV2({...activeItem});
+    }
+  }, [activeItem]);
 
   const [action, setAction] = useState({
     notification: {
@@ -202,44 +210,58 @@ export default function Home() {
     };
     socket.on("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
 
-    const newComment = (item) => {
+    const newComment = (data) => {
       if (
-        item.id != undefined &&
-        item.message != undefined &&
-        item.pliId != undefined
+        data.comment.id != undefined &&
+        data.comment.message != undefined &&
+        data.comment.pliId != undefined
       ) {
         const cpPlis = [...plis];
         for (let i = 0; i < cpPlis.length; i++) {
           const pli = cpPlis[i];
-          if (pli.id == item.pliId) {
-            if (item.parentId) {
+          if (pli.id == data.comment.pliId) {
+            if (data.comment.parentId) {
               for (let j = 0; j < pli.comments.length; j++) {
                 const comment = pli.comments[j];
-                if (comment.id == item.parentId) {
-                  if (item.ancestryId) {
+                if (comment.id == data.comment.parentId) {
+                  if (data.comment.ancestryId) {
                     for (let k = 0; k < comment.childs.length; k++) {
                       const child = comment.childs[k];
-                      if (child.id == item.ancestryId) {
-                        item.ancestry = {id:child.id, message: child.message, user: child.user};
+                      if (child.id == data.comment.ancestryId) {
+                        data.comment.ancestry = {
+                          id: child.id,
+                          message: child.message,
+                          user: child.user,
+                        };
                         break;
                       }
                     }
                   }
                   if (Array.isArray(cpPlis[i].comments[j].childs)) {
-                    cpPlis[i].comments[j].childs.push(item);
+                    cpPlis[i].comments[j].childs.push(data.comment);
                   } else {
-                    cpPlis[i].comments[j].childs = [item];
+                    cpPlis[i].comments[j].childs = [data.comment];
                   }
                   break;
                 }
               }
             } else {
-              cpPlis[i].comments.push(item);
+              cpPlis[i].comments.push(data.comment);
             }
+            cpPlis[i].totalComments++;
             break;
           }
         }
         setPlis(cpPlis);
+
+        if (
+          data.users != undefined &&
+          data.users.length > 0 &&
+          auth?.user?.id &&
+          data.users.includes(auth.user.id)
+        ) {
+          getNotificationNewComment(data.comment.id);
+        }
       }
     };
     socket.on("SERVER_COMMENT", newComment);
@@ -440,6 +462,29 @@ export default function Home() {
     connector({
       method: "get",
       url: `${endPoints.NOTIFICATION_NEW}?pliId=${pliId}`,
+      success: (response) => {
+        if (response.data.notification) {
+          const cpNotifications = getUniqueListNotifications([
+            response.data.notification,
+            ...notifications,
+          ]);
+          if (cpNotifications.length > notifications.length) {
+            setNotifications([response.data.notification, ...notifications]);
+            setCountNewNotifications(countNewNotifications + 1);
+            setTotalNotifications(totalNotifications + 1);
+          }
+        }
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const getNotificationNewComment = (commentId) => {
+    connector({
+      method: "get",
+      url: `${endPoints.NOTIFICATION_NEW}?commentId=${commentId}`,
       success: (response) => {
         if (response.data.notification) {
           const cpNotifications = getUniqueListNotifications([
@@ -702,6 +747,7 @@ export default function Home() {
                   stateFolowersMessage={stateFolowersMessage}
                   setFolowersMessage={setFolowersMessage}
                   updateSubscriberStatus={updateSubscriberStatus}
+                  activeItemNV2={activeItemNV2}
                 />
               ))}
           </Masonry>
@@ -737,6 +783,8 @@ export default function Home() {
             setSubscriptions={setSubscriptions}
             loadingMore={loadingMore}
             setLoadingMore={setLoadingMoreCheck}
+            setActiveItemNV2={setActiveItemNV2}
+            plis={plis}
           />
         )}
         <ModalMessage

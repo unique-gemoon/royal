@@ -3,7 +3,7 @@ import db from "../models/index.model.js";
 const Comment = db.comment;
 const Pli = db.pli;
 
-export function newComment(req, res) {
+export function newComment(req, res, next) {
   if (String(req.body.message).length) {
     Comment.create({
       userId: req.user.id,
@@ -13,16 +13,14 @@ export function newComment(req, res) {
       message: req.body.message,
     })
       .then((comment) => {
-        res.status(200).json({
-          message: "ok",
-          comment: {
+        req.comment =  {
             id: comment.id,
             userId: comment.userId,
             user: { id: comment.userId, username: req.user.username },
             createdAt: comment.createdAt,
             ancestry: {},
-          },
-        });
+          };
+          next();
       })
       .catch((err) => {
         res.status(400).send({ message: err.message });
@@ -119,3 +117,4 @@ export function checkAncestryComment(req, res, next) {
     next();
   }
 }
+

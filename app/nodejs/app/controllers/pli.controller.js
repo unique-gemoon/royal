@@ -238,8 +238,12 @@ export function newPli(req, res, next) {
         },
         user: { username: req.user.username, id: req.user.id },
         createdAt: pli.createdAt,
-        comments: [],
         commentsOld: [],
+        comments: [],
+        citations: [],
+        commentsOld: [],
+        totalComments: 0,
+        totalCitations: 0,
       };
 
       next();
@@ -510,6 +514,14 @@ export function findAllPlisNotElapsed(req, res) {
           const createdAt = cpPli.createdAt;
           const appearances = { countDown, countUp, alreadyUpdated, signe };
 
+          let totalComments = 0; 
+          for (let j = 0;j < cpPli.comments.length; j++) {
+            if(Array.isArray(cpPli.comments[j].childs)){
+              totalComments += cpPli.comments[j].childs.length;
+            }
+            totalComments++;
+          }
+
           cpPlis.push({
             id,
             content,
@@ -522,6 +534,9 @@ export function findAllPlisNotElapsed(req, res) {
             createdAt,
             commentsOld : comments,
             comments: cpPli.comments,
+            citations:[],
+            totalComments: totalComments,
+            totalCitations: 0,
           });
         }
 

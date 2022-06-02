@@ -1,14 +1,15 @@
 import { Router } from "express";
 import passport from "passport";
 import {
-    findNotifications,
-    findNotificationsNewAccount,
-    findNotificationsNewComment,
-    findNotificationsNewSubscriber,
-    findNotificationsSubscriberNewPli,
-    pliNotification,
-    seenNotification,
-    seenSubscriptionsNotification
+  commentNotification,
+  findNotifications,
+  findNotificationsNewAccount,
+  findNotificationsNewComment,
+  findNotificationsNewSubscriber,
+  findNotificationsSubscriberNewPli,
+  pliNotification,
+  seenNotification,
+  seenSubscriptionsNotification,
 } from "../controllers/notification.controller.js";
 
 const notificationRoutes = Router();
@@ -32,7 +33,8 @@ notificationRoutes.post(
 notificationRoutes.get(
   "/new",
   passport.authenticate("jwt", { session: false }),
-  pliNotification
+  pliNotification,
+  commentNotification
 );
 
 notificationRoutes.post(
@@ -40,6 +42,5 @@ notificationRoutes.post(
   passport.authenticate("jwt", { session: false }),
   seenSubscriptionsNotification
 );
-
 
 export default notificationRoutes;

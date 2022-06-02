@@ -6,7 +6,9 @@ const Subscriber = db.subscriber;
 const SubscriberNotifications = db.subscriberNotifications;
 const PliNotifications = db.pliNotifications;
 const CommentNotifications = db.commentNotifications;
-const SubscriberNotificationsUser = SubscriberNotifications.belongsTo(User, { foreignKey: "userId" });
+const SubscriberNotificationsUser = SubscriberNotifications.belongsTo(User, {
+  foreignKey: "userId",
+});
 
 export function subscribeNotification(req, res) {
   SubscriberNotifications.create({
@@ -21,7 +23,8 @@ export function subscribeNotification(req, res) {
           id: notification.id,
           userId: notification.userId,
           subscriberId: notification.subscriberId,
-          message: "Un nouveau abonné `"+req.user.username+"` sur ton compte.",
+          message:
+            "Un nouveau abonné `" + req.user.username + "` sur ton compte.",
           createdAt: notification.createdAt,
           seen: false,
         },
@@ -87,7 +90,10 @@ export function findNotificationsNewSubscriber(req, res, next) {
           subscriberId: notification.subscriberId,
           commentId: null,
           pliId: null,
-          message: "Un nouveau abonné `"+notification.user.username+"` sur ton compte.",
+          message:
+            "Un nouveau abonné `" +
+            notification.user.username +
+            "` sur ton compte.",
           createdAt: notification.createdAt,
           seen: notification.seen,
         });
@@ -137,7 +143,7 @@ export function findNotificationsNewComment(req, res, next) {
       for (let i = 0; i < notifications.length; i++) {
         const notification = notifications[i];
         req.notifications.push({
-          type: "newPli",
+          type: "newComment",
           id: notification.id,
           userId: notification.userId,
           subscriberId: null,
@@ -221,6 +227,18 @@ export function seenNotification(req, res) {
       .catch((err) => {
         res.status(500).send({ message: err.message });
       });
+  } else if (
+    req.body.type == "newComment" &&
+    req.body.userId == req.user.id &&
+    parseInt(req.body.id)
+  ) {
+    CommentNotifications.update({ seen: true }, { where: { id: req.body.id } })
+      .then((response) => {
+        res.status(200).send({ message: "ok" });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
   } else {
     res.status(500).send({ message: "Action non autorisé." });
   }
@@ -262,9 +280,7 @@ export function pliNotifications(req, res) {
             });
           });
       } else {
-        res
-          .status(200)
-          .send({ message: "ok", pli: req.pli, notifications: [], users: [] });
+        res.status(200).send({ message: "ok", pli: req.pli, subscribers: [] });
       }
     })
     .catch((err) => {
@@ -273,7 +289,7 @@ export function pliNotifications(req, res) {
     });
 }
 
-export function pliNotification(req, res) {
+export function pliNotification(req, res, next) {
   if (parseInt(req.query.pliId)) {
     PliNotifications.findOne({
       where: {
@@ -306,19 +322,85 @@ export function pliNotification(req, res) {
         return;
       });
   } else {
-    res.status(500).send({ message: "Identifiant pli non définie." });
+    next();
   }
 }
 
-export function seenSubscriptionsNotification(req, res){
-  Subscriber.update(
-    { seen: true },
-    { where: { subscriberId: req.user.id } }
-  )
+export function commentNotification(req, res) {
+  if (parseInt(req.query.commentId)) {
+    CommentNotifications.findOne({
+      where: {
+        userId: req.user.id,
+        commentId: parseInt(req.query.commentId),
+      },
+    })
+      .then((notification) => {
+        if (notification) {
+          res.status(200).send({
+            message: "ok",
+            notification: {
+              type: "newComment",
+              id: notification.id,
+              userId: notification.userId,
+              subscriberId: null,
+              commentId: req.query.commentId,
+              pliId: notification.pliId,
+              message: "Un nouveau commentaire vient d'être posté.",
+              createdAt: notification.createdAt,
+              seen: notification.seen,
+            },
+          });
+        } else {
+          res.status(200).send({ message: "ok", notification: {} });
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+        return;
+      });
+  } else {
+    res.status(200).send({ message: "ok", notification: {} });
+  }
+}
+
+export function seenSubscriptionsNotification(req, res) {
+  Subscriber.update({ seen: true }, { where: { subscriberId: req.user.id } })
     .then((response) => {
       res.status(200).send({ message: "ok" });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
+}
+
+export function commentNotifications(req, res) {
+  let data = [];
+  let users = [];
+  users.push(req.user.id);
+  if (req.user.id != req.pli.userId) {
+    users.push(req.pli.userId);
+  }
+
+  if (users.length > 0) {
+    for (let i = 0; i < users.length; i++) {
+      const id = users[i];
+      data.push({
+        pliId: req.pli.id,
+        userId: id,
+        commentId: req.comment.id,
+      });
+    }
+
+    CommentNotifications.bulkCreate(data, {
+      ignoreDuplicates: true,
+    })
+      .then((response) => {
+        res.status(200).send({ message: "ok", comment: req.comment, users });
+      })
+      .catch((err) => {
+        res.status(400).send({ message: err.message });
+      });
+  } else {
+    res.status(200).send({ message: "ok", comment: req.comment, users: [] });
+  }
 }
