@@ -12,6 +12,7 @@ import ImagesGallery from "./imagesGallery";
 import PlayerMusic from "./playerMusic";
 import PlayerVideo from "./playerVideo";
 import Sondage from "./sondage";
+import BlocCitations from "../citations/blocCitations";
 
 export default function ItemMasonry({
   item,
@@ -27,6 +28,7 @@ export default function ItemMasonry({
   stateFolowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
+  activeItemNV2={},
 }) {
   const initData = {
     media: {
@@ -51,6 +53,8 @@ export default function ItemMasonry({
   const [state, setState] = useState({
     showModal: false,
     showComment: true,
+    showCitation: false,
+    showNV2: item?.showNV2,
     item: {},
   });
 
@@ -91,8 +95,8 @@ export default function ItemMasonry({
     setData(cpData);
   }, [item.medias]);
 
-  const isCheck = (i) => {
-    return activeItem && i.id == activeItem.id;
+  const isOpenNV2 = (i) => {
+    return activeItemNV2 && i.id == activeItemNV2.id && state.showNV2;
   };
 
   const setMedia = (media) => {
@@ -167,7 +171,7 @@ export default function ItemMasonry({
           setAction={setAction}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
-          className={state.showModal ? "" : !isCheck(item) ? "" : "nv-hide"}
+          className={state.showModal ? "" : isOpenNV2(item) ? "" : "nv-hide"}
           setMsgNotifTopTime={setMsgNotifTopTime}
         />
       </>
@@ -241,43 +245,29 @@ export default function ItemMasonry({
                   className="toggle-pli2"
                   onClick={() => setState({ ...state, showModal: false, item })}
                 >
-                  {!state.showComment ? (
-                    <>
-                      <span className="users-views">
-                        14 <VisibilityIcon />
-                      </span>{" "}
-                      .
-                      <span className="toggle-zoom">
-                        Etendre le pli{" "}
-                        <OpenInFullOutlinedIcon className="open-zoom-icon" />
-                      </span>
-                    </>
-                  ) : (
-                    <>
-                      <span className="users-views">
-                        14 <CommentOutlinedIcon />
-                      </span>{" "}
-                      .
-                      <span className="toggle-zoom">
-                        Retour au pli ouvert{" "}
-                        <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
-                      </span>
-                    </>
-                  )}
+                  <span className="users-views">
+                    {item.totalCitations} <CommentOutlinedIcon />
+                  </span>{" "}
+                  .
+                  <span className="toggle-zoom">
+                    Retour au pli ouvert{" "}
+                    <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
+                  </span>
                 </div>
-                <BlocComments
-                  className={`${state.showComment ? "d-none" : ""}`}
-                  item={item}
-                  state={state}
-                  setState={setState}
-                  setMsgNotifTopTime={setMsgNotifTopTime}
-                />
+                <div className={`${state.showCitation ? "d-none" : ""}`}>
+                  <BlocCitations
+                    item={item}
+                    state={state}
+                    setState={setState}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
+                  />
+                </div>
               </>
             </div>
           </MasonryItem>
         </ModalItem.Body>
       </ModalItem>
-      <MasonryItem height={height}>
+      <MasonryItem height={height} id={`masonryItem_${item.id}`}>
         <div
           className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`}
           ref={refHeight}
@@ -285,17 +275,17 @@ export default function ItemMasonry({
           {renderContentNV1()}
         </div>
         <div className="Bloc-NV2">
-          <div className={`${isCheck(item) ? "d-none" : ""}`}>
+          <div className={`${isOpenNV2(item) ? "" : "d-none"}`}>
             {renderContentNV2()}
 
             <div
               className="toggle-pli2"
-              onClick={() =>
-                setState({ ...state, showModal: true, showComment: true })
-              }
+              onClick={() => {
+                setState({ ...state, showModal: true });
+              }}
             >
               <span className="users-views">
-                14 <VisibilityIcon />
+                {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />
               </span>{" "}
               .{" "}
               <span className="toggle-zoom">

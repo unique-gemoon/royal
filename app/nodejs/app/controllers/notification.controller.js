@@ -143,7 +143,7 @@ export function findNotificationsNewComment(req, res, next) {
       for (let i = 0; i < notifications.length; i++) {
         const notification = notifications[i];
         req.notifications.push({
-          type: "newPli",
+          type: "newComment",
           id: notification.id,
           userId: notification.userId,
           subscriberId: null,

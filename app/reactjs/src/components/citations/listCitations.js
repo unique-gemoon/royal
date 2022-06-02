@@ -1,16 +1,16 @@
 import React from "react";
-import ItemComment from "./itemComment";
+import ItemCommentSimple from "../comments/itemCommentSimple";
 
-export default function ListComments({
-  items,
+export default function ListCitations({
+  itemsOld,
   setMsgNotifTopTime = () => {},
   saveMessage = () => {},
 }) {
   return (
-    <div className="list-comments">
-      {items &&
-        items.map((item, index) => (
-          <ItemComment
+    <div className="list-comments liste-comment-modal">
+      {itemsOld &&
+        itemsOld.map((item, index) => (
+          <ItemCommentSimple
             key={index}
             item={item}
             setMsgNotifTopTime={setMsgNotifTopTime}

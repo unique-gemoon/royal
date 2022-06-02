@@ -105,18 +105,22 @@ export function getDurationHM(from, to) {
     return "";
   }
   const d = from.diff(to, "days");
-  const h = from.diff(to, "hours") % 24 ;
+  const h = from.diff(to, "hours") % 24;
   const m = parseInt(from.diff(to, "minutes") / 24) % 60;
-  return `${d>0 ? d + "j": ""}${h>0 ? h + "h": ""}${m>0 ? m + "m": (h>0 ? "":"Mainten.")}`;
+  return `${d > 0 ? d + "j" : ""}${h > 0 ? h + "h" : ""}${
+    m > 0 ? m + "m" : h > 0 ? "" : "Mainten."
+  }`;
 }
 
 export function getUniqueListBy(arr, key) {
-  return [...new Map(arr.map(item => [item[key], item])).values()]
+  return [...new Map(arr.map((item) => [item[key], item])).values()];
 }
 
 export function getUniqueListNotifications(arr) {
   return arr.reduce((acc, current) => {
-    const x = acc.find(item => item.id === current.id && item.type === current.type);
+    const x = acc.find(
+      (item) => item.id === current.id && item.type === current.type
+    );
     if (!x) {
       return acc.concat([current]);
     } else {
@@ -125,3 +129,17 @@ export function getUniqueListNotifications(arr) {
   }, []);
 }
 
+export function scrollToElement(id) {
+  if (id && document.getElementById(id)) {
+    document.getElementById(id).scrollIntoView();
+  }
+}
+
+export function copyToClipboard(text) {
+  var textField = document.createElement("textarea");
+  textField.innerText = text;
+  document.body.appendChild(textField);
+  textField.select();
+  document.execCommand("copy");
+  textField.remove();
+}

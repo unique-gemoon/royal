@@ -34,6 +34,7 @@ import {
 } from "../helper/fonctions";
 
 export default function Home() {
+
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
   const auth = useSelector((store) => store.auth);
@@ -41,6 +42,7 @@ export default function Home() {
   const [plis, setPlis] = useState([]);
   const [seconds, setSeconds] = useState(0);
   const [activeItem, setActiveItem] = useState(null);
+  const [activeItemNV2, setActiveItemNV2] = useState(null);
   const [activeItemPlayer, setActiveItemPlayer] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [showBlocModalMessage, setShowBlocModalMessage] = useState(null);
@@ -95,6 +97,12 @@ export default function Home() {
       checkTokenConfirmEmail();
     }
   }, [tokenConfirmEmail]);
+
+  useEffect(() => {
+    if(activeItem?.id){
+      setActiveItemNV2({...activeItem});
+    }
+  }, [activeItem]);
 
   const [action, setAction] = useState({
     notification: {
@@ -240,6 +248,7 @@ export default function Home() {
             } else {
               cpPlis[i].comments.push(data.comment);
             }
+            cpPlis[i].totalComments++;
             break;
           }
         }
@@ -738,6 +747,7 @@ export default function Home() {
                   stateFolowersMessage={stateFolowersMessage}
                   setFolowersMessage={setFolowersMessage}
                   updateSubscriberStatus={updateSubscriberStatus}
+                  activeItemNV2={activeItemNV2}
                 />
               ))}
           </Masonry>
@@ -773,6 +783,8 @@ export default function Home() {
             setSubscriptions={setSubscriptions}
             loadingMore={loadingMore}
             setLoadingMore={setLoadingMoreCheck}
+            setActiveItemNV2={setActiveItemNV2}
+            plis={plis}
           />
         )}
         <ModalMessage

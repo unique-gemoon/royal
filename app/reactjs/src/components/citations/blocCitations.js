@@ -1,14 +1,16 @@
 import React, { useState } from "react";
 import {
   CommentsBloc,
+  EntrainTyping,
 } from "../../assets/styles/componentStyle";
+import LoaderTyping from "../loaderTyping";
 import InputEmoji from "../ui-elements/inputEmoji";
-import ListComments from "./listComments";
 import connector from "../../connector";
 import endPoints from "../../config/endPoints";
-import { socket } from "../../components/socket";
+import { socket } from "../socket";
+import ListCitations from "./listCitations";
 
-export default function BlocComments({
+export default function BlocCitations({
   item,
   state,
   setState = () => {},
@@ -17,6 +19,9 @@ export default function BlocComments({
   const [open, setOpen] = useState(false);
 
   const saveMessage = async (data) => {
+    //TODO save citation
+    console.log(data);
+    return;
     data = { ...data, pliId: item.id };
     return await connector({
       method: "post",
@@ -50,30 +55,32 @@ export default function BlocComments({
 
   return (
     <CommentsBloc className={`${open ? "emoji-open" : ""} `}>
-      {state.showComment && (
-        <InputEmoji
-          className="commentaire-form"
-          name="comment-pli"
-          placeholder="Mon commentaire"
-          open={open}
-          setOpen={setOpen}
-          setMsgNotifTopTime={setMsgNotifTopTime}
-          setState={() => {}}
-          saveMessage={(message) => {
-            return saveMessage({
-              ...message,
-              parentId: null,
-              ancestryId: null,
-            });
-          }}
-        />
-      )}
-      <ListComments
+      <ListCitations
         items={item.comments}
         itemsOld={item.commentsOld}
         state={state.showModal}
         setMsgNotifTopTime={setMsgNotifTopTime}
         saveMessage={saveMessage}
+      />
+      <EntrainTyping>
+        <LoaderTyping />
+        Jacquou est en train d’écrire
+      </EntrainTyping>
+      <InputEmoji
+        className="commentaire-form comment-def-modal"
+        name="comment-pli"
+        placeholder="Mon commentaire"
+        open={open}
+        setOpen={setOpen}
+        setMsgNotifTopTime={setMsgNotifTopTime}
+        setState={setState}
+        saveMessage={(message) => {
+          return saveMessage({
+            ...message,
+            parentId: null,
+            ancestryId: null,
+          });
+        }}
       />
     </CommentsBloc>
   );

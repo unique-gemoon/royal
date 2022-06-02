@@ -32,6 +32,8 @@ export default function FooterHome({
   setSubscriptions  = () => {},
   loadingMore={},
   setLoadingMore=() => {},
+  setActiveItemNV2=() => {},
+  plis= []
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -85,6 +87,8 @@ export default function FooterHome({
                 setSubscriptions={setSubscriptions}
                 loadingMore={loadingMore}
                 setLoadingMore={setLoadingMore}
+                setActiveItemNV2={setActiveItemNV2}
+                plis={plis}
               />
             </Col>
           </Row>
@@ -114,6 +118,8 @@ export default function FooterHome({
           setSubscriptions={setSubscriptions}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
+          setActiveItemNV2={setActiveItemNV2}
+          plis={plis}
         />
       )}
     </FooterDefault>
