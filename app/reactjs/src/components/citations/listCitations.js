@@ -1,20 +1,25 @@
 import React from "react";
-import ItemCommentSimple from "../comments/itemCommentSimple";
+import ItemCitation from './itemCitation';
 
 export default function ListCitations({
-  itemsOld,
+  items,
   setMsgNotifTopTime = () => {},
   saveMessage = () => {},
+  activeCitation = {},
+  setActiveCitation = () => {},
 }) {
+
   return (
-    <div className="list-comments liste-comment-modal">
-      {itemsOld &&
-        itemsOld.map((item, index) => (
-          <ItemCommentSimple
+    <div className="list-comments liste-comment-modal"  id="citations-container">
+      {items &&
+        items.map((item, index) => (
+          <ItemCitation
             key={index}
             item={item}
             setMsgNotifTopTime={setMsgNotifTopTime}
             saveMessage={saveMessage}
+            activeCitation={activeCitation}
+            setActiveCitation={setActiveCitation}
           />
         ))}
     </div>

@@ -17,31 +17,28 @@ export default function BlocCitations({
   setMsgNotifTopTime = () => {},
 }) {
   const [open, setOpen] = useState(false);
+  const [activeCitation, setActiveCitation] = useState({});
 
   const saveMessage = async (data) => {
-    //TODO save citation
-    console.log(data);
-    return;
-    data = { ...data, pliId: item.id };
+    data = { ...data, pliId: item.id, ancestryId: activeCitation?.id ? activeCitation.id : null  };
     return await connector({
       method: "post",
-      url: endPoints.COMMENT_NEW,
+      url: endPoints.CITATION_NEW,
       data,
       success: (response) => {
-        if (response.data?.comment) {
-          const comment = response.data.comment;
+        if (response.data?.citation) {
+          const citation = response.data.citation;
           data = {
-            comment: {
+            citation: {
               ...data,
-              id: comment.id,
-              userId: comment.userId,
-              user: comment.user,
-              createdAt: comment.createdAt,
-              ancestry: comment.ancestry,
-            },
-            users: response.data.users,
+              id: citation.id,
+              userId: citation.userId,
+              user: citation.user,
+              createdAt: citation.createdAt,
+              ancestry: citation.ancestry,
+            }
           };
-          socket.emit("CLIENT_COMMENT", data);
+          socket.emit("CLIENT_CITATION", data);
           return true;
         }
         return;
@@ -56,16 +53,17 @@ export default function BlocCitations({
   return (
     <CommentsBloc className={`${open ? "emoji-open" : ""} `}>
       <ListCitations
-        items={item.comments}
-        itemsOld={item.commentsOld}
+        items={item.citations}
         state={state.showModal}
         setMsgNotifTopTime={setMsgNotifTopTime}
+        activeCitation={activeCitation}
+        setActiveCitation={setActiveCitation}
         saveMessage={saveMessage}
       />
-      <EntrainTyping>
+     {/* TODO : show user typing <EntrainTyping>
         <LoaderTyping />
         Jacquou est en train d’écrire
-      </EntrainTyping>
+      </EntrainTyping> */}
       <InputEmoji
         className="commentaire-form comment-def-modal"
         name="comment-pli"
@@ -74,13 +72,7 @@ export default function BlocCitations({
         setOpen={setOpen}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setState={setState}
-        saveMessage={(message) => {
-          return saveMessage({
-            ...message,
-            parentId: null,
-            ancestryId: null,
-          });
-        }}
+        saveMessage={saveMessage}
       />
     </CommentsBloc>
   );

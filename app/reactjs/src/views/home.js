@@ -29,12 +29,12 @@ import {
   getMsgError,
   getTime,
   getUniqueListNotifications,
+  scrollBottomById,
   sortObjects,
   uniqid,
 } from "../helper/fonctions";
 
 export default function Home() {
-
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
   const auth = useSelector((store) => store.auth);
@@ -99,8 +99,8 @@ export default function Home() {
   }, [tokenConfirmEmail]);
 
   useEffect(() => {
-    if(activeItem?.id){
-      setActiveItemNV2({...activeItem});
+    if (activeItem?.id) {
+      setActiveItemNV2({ ...activeItem });
     }
   }, [activeItem]);
 
@@ -224,19 +224,6 @@ export default function Home() {
               for (let j = 0; j < pli.comments.length; j++) {
                 const comment = pli.comments[j];
                 if (comment.id == data.comment.parentId) {
-                  if (data.comment.ancestryId) {
-                    for (let k = 0; k < comment.childs.length; k++) {
-                      const child = comment.childs[k];
-                      if (child.id == data.comment.ancestryId) {
-                        data.comment.ancestry = {
-                          id: child.id,
-                          message: child.message,
-                          user: child.user,
-                        };
-                        break;
-                      }
-                    }
-                  }
                   if (Array.isArray(cpPlis[i].comments[j].childs)) {
                     cpPlis[i].comments[j].childs.push(data.comment);
                   } else {
@@ -266,12 +253,40 @@ export default function Home() {
     };
     socket.on("SERVER_COMMENT", newComment);
 
+    const newCitation = (data) => {
+      if (
+        data.citation.id != undefined &&
+        data.citation.message != undefined &&
+        data.citation.pliId != undefined
+      ) {
+        const cpPlis = [...plis];
+        for (let i = 0; i < cpPlis.length; i++) {
+          const pli = cpPlis[i];
+          if (pli.id == data.citation.pliId) {
+            if (Array.isArray(cpPlis[i].citations)) {
+              cpPlis[i].citations.push(data.citation);
+            } else {
+              cpPlis[i].citations = [data.citation];
+            } 
+            cpPlis[i].totalCitations++;
+            break;
+          }
+        }
+        setPlis(cpPlis);
+        if(data.citation.userId != undefined && auth.user && data.citation.userId == auth.user.id){
+          scrollBottomById("citations-container");
+        }
+      }
+    };
+    socket.on("SERVER_CITATION", newCitation);
+
     return () => {
       socket.off("SERVER_PLI", updatePli);
       socket.off("SERVER_COUNT_CONNECTION", updateCountConnection);
       socket.off("SERVER_OPEN_PLI", updateOpenPlis);
       socket.off("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
       socket.off("SERVER_COMMENT", newComment);
+      socket.off("SERVER_CITATION", newCitation);
       //socket.disconnect();
     };
   }, [plis]);

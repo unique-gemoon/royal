@@ -143,3 +143,10 @@ export function copyToClipboard(text) {
   document.execCommand("copy");
   textField.remove();
 }
+
+export function scrollBottomById(id) {
+  if (id && document.getElementById(id)) {
+    const container = document.getElementById(id);
+    if (container) container.scrollTop = container.scrollHeight;
+  }
+}

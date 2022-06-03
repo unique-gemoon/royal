@@ -1,7 +1,9 @@
 import db from "../models/index.model.js";
 
 const Comment = db.comment;
+const User = db.user;
 const Pli = db.pli;
+const CommentUser = Comment.belongsTo(User, { foreignKey: "userId" });
 
 export function newComment(req, res, next) {
   if (String(req.body.message).length) {
@@ -13,14 +15,16 @@ export function newComment(req, res, next) {
       message: req.body.message,
     })
       .then((comment) => {
-        req.comment =  {
-            id: comment.id,
-            userId: comment.userId,
-            user: { id: comment.userId, username: req.user.username },
-            createdAt: comment.createdAt,
-            ancestry: {},
-          };
-          next();
+        req.comment = {
+          id: comment.id,
+          userId: comment.userId,
+          user: { id: comment.userId, username: req.user.username },
+          pliId: comment.pliId,
+          createdAt: comment.createdAt,
+          ancestry: comment.ancestryId ? req.ancestry : null,
+          ancestryId: comment.ancestryId
+        };
+        next();
       })
       .catch((err) => {
         res.status(400).send({ message: err.message });
@@ -30,35 +34,6 @@ export function newComment(req, res, next) {
       message: "Vous ne pouvez pas poster un commentaire vide.",
     });
     return;
-  }
-}
-
-export function checkPli(req, res, next) {
-  if (parseInt(req.body.pliId)) {
-    Pli.findOne({
-      where: {
-        id: req.body.pliId,
-      },
-    })
-      .then((pli) => {
-        if (pli) {
-          req.pli = pli;
-          next();
-        } else {
-          res.status(400).send({
-            message: "Pli non existe.",
-          });
-          return;
-        }
-      })
-      .catch((err) => {
-        res.status(500).send({ message: err.message });
-        return;
-      });
-  } else {
-    res.status(400).send({
-      message: "Identifiant pli non définie.",
-    });
   }
 }
 
@@ -93,6 +68,15 @@ export function checkParentComment(req, res, next) {
 export function checkAncestryComment(req, res, next) {
   if (parseInt(req.body.ancestryId)) {
     Comment.findOne({
+      attributes: { exclude: ["updatedAt"] },
+      include: [
+        {
+          model: User,
+          association: CommentUser,
+          as: "user",
+          attributes: ["id", "username"],
+        },
+      ],
       where: {
         id: req.body.ancestryId,
       },
@@ -117,4 +101,3 @@ export function checkAncestryComment(req, res, next) {
     next();
   }
 }
-

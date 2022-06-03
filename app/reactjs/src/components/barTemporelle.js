@@ -11,6 +11,8 @@ import connector from "../connector";
 import { getInt, getPercentDuration } from "../helper/fonctions";
 
 export default function BarTemporelle({
+  state = {},
+  setState = () => {},
   item = {},
   setItem = {},
   showModal = false,
@@ -153,6 +155,7 @@ export default function BarTemporelle({
               setActiveItem(
                 activeItem && activeItem.id == item.id ? null : item
               );
+              setState({ ...state, showNV2: !state.showNV2 });
             }
           }}
         >

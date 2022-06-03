@@ -16,6 +16,7 @@ import message from './message.model.js';
 import subscriberNotifications from './subscriberNotifications.model.js'; 
 import commentNotifications from './commentNotifications.model.js'; 
 import pliNotifications from './pliNotifications.model.js'; 
+import citation from './citation.model.js';
 
 let db = {};
 
@@ -56,6 +57,7 @@ db.message = message(sequelize, Sequelize);
 db.subscriberNotifications = subscriberNotifications(sequelize, Sequelize); 
 db.commentNotifications = commentNotifications(sequelize, Sequelize); 
 db.pliNotifications = pliNotifications(sequelize, Sequelize); 
+db.citation = citation(sequelize, Sequelize);
 
 Object.keys(db).forEach((modelName) => {
   if (db[modelName].associate) {
