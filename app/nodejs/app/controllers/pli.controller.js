@@ -11,6 +11,7 @@ const AppearancePli = db.appearancePli;
 const SondageNotVotes = db.sondageNotVotes;
 const Subscriber = db.subscriber;
 const Comment = db.comment;
+const Citation = db.citation;
 const PliMedias = Pli.hasMany(Media, { as: "medias" });
 const MediaSondageOptions = db.media.hasMany(SondageOptions, { as: "options" });
 const PliUser = Pli.belongsTo(User);
@@ -30,79 +31,14 @@ const CommentAncestry = Comment.belongsTo(Comment, {
   targetKey: "id",
   as: "ancestry",
 });
+const PliCitations = Pli.hasMany(Citation);
+const CitationUser = Citation.belongsTo(User, { foreignKey: "userId" });
+const CitationAncestry = Comment.belongsTo(Comment, {
+  foreignKey: "ancestryId",
+  targetKey: "id",
+  as: "ancestry",
+});
 const Op = db.Sequelize.Op;
-
-//TODO : delete demo data comments
-const comments = [
-  {
-    id: 1,
-    user: "Dan",
-    subject: "J'aime bien cette citation !",
-    time: "3mn",
-    citation: {
-      citationUser: "Jacquou",
-      citationText: "Voici une citation",
-    },
-    reponses: [
-      {
-        id: 1,
-        user: "Lys",
-        subject: "J'aime bien cette citation !",
-        time: "2mn",
-        userRep: "Dan",
-      },
-      {
-        id: 2,
-        user: "Dan",
-        subject: "J'aime bien cette citation !",
-        time: "2mn",
-        userRep: "Lys",
-      },
-      {
-        id: 3,
-        user: "Jacquou",
-        subject: "J'aime bien cette citation !",
-        time: "2mn",
-        userRep: "Dan",
-      },
-      {
-        id: 4,
-        user: "Dan",
-        subject: "J'aime bien cette citation !",
-        time: "2mn",
-        userRep: "Jacquou",
-      },
-    ],
-  },
-  {
-    id: 2,
-    user: "Dan",
-    subject: "J'aime bien cette citation !",
-    time: "3mn",
-    cotte: true,
-    reponses: [
-      {
-        id: 1,
-        user: "Lys",
-        subject: "J'aime bien cette citation !",
-        time: "2mn",
-        userRep: "Dan",
-      },
-    ],
-  },
-  {
-    id: 3,
-    user: "Dan",
-    subject: "J'aime bien cette citation !",
-    time: "3mn",
-  },
-  {
-    id: 4,
-    user: "Dan",
-    subject: "J'aime bien cette citation !",
-    time: "3mn",
-  },
-];
 
 export function newPli(req, res, next) {
   const content = req.body.content || "";
@@ -238,10 +174,8 @@ export function newPli(req, res, next) {
         },
         user: { username: req.user.username, id: req.user.id },
         createdAt: pli.createdAt,
-        commentsOld: [],
         comments: [],
         citations: [],
-        commentsOld: [],
         totalComments: 0,
         totalCitations: 0,
       };
@@ -393,6 +327,37 @@ export function findAllPlisNotElapsed(req, res) {
         order: [["createdAt", "DESC"]],
         where : { parentId : null}
       },
+      {
+        model: Citation,
+        association: PliCitations,
+        as: "citations",
+        attributes: { exclude: ["updatedAt"] },
+        required: false,
+        include: [
+          {
+            model: User,
+            association: CitationUser,
+            as: "user",
+            attributes: ["id", "username"],
+          },
+          {
+            model: Citation,
+            association: CitationAncestry,
+            as: "ancestry",
+            attributes: ["id", "message"],
+            include: [
+              {
+                model: User,
+                association: CitationUser,
+                as: "user",
+                attributes: ["id", "username"],
+              }
+            ],
+          },
+        ],
+        order: [["createdAt", "DESC"]],
+        where : { parentId : null}
+      },
     ],
     where,
     order: [
@@ -532,11 +497,10 @@ export function findAllPlisNotElapsed(req, res) {
             user,
             appearances,
             createdAt,
-            commentsOld : comments,
             comments: cpPli.comments,
-            citations:[],
+            citations: cpPli.citations,
             totalComments: totalComments,
-            totalCitations: 0,
+            totalCitations: cpPli.citations.length,
           });
         }
 
