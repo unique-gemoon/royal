@@ -55,7 +55,6 @@ export default function Notifications({
                   for (let i = 0; i < plis.length; i++) {
                     const pli = plis[i];
                     if (pli.id == item.pliId) {
-                      console.log({...pli, showNV2:true});
                       setActiveItemNV2({...pli, showNV2:true});
                       break;
                     }

@@ -50,11 +50,15 @@ export default function ItemMasonry({
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
 
+  const getShowNV2 = (i) => {
+    return activeItemNV2 && i.id == activeItemNV2.id && activeItemNV2.showNV2 ;
+  };
+
   const [state, setState] = useState({
     showModal: false,
     showComment: true,
     showCitation: false,
-    showNV2: item?.showNV2,
+    showNV2: getShowNV2(item),
     item: {},
   });
 
@@ -96,8 +100,10 @@ export default function ItemMasonry({
   }, [item.medias]);
 
   const isOpenNV2 = (i) => {
-    return activeItemNV2 && i.id == activeItemNV2.id && state.showNV2;
+    return activeItemNV2 && i.id == activeItemNV2.id && state.showNV2 ;
   };
+
+
 
   const setMedia = (media) => {
     let cpMedias = [...item.medias];
