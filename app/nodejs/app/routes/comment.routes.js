@@ -1,7 +1,8 @@
 import { Router } from "express";
 import passport from "passport";
-import { checkAncestryComment, checkParentComment, checkPli, newComment } from '../controllers/comment.controller.js';
+import { checkAncestryComment, checkParentComment, newComment } from '../controllers/comment.controller.js';
 import { commentNotifications } from "../controllers/notification.controller.js";
+import { checkPli } from "../controllers/pli.controller.js";
 
 const commentRoutes = Router();
 

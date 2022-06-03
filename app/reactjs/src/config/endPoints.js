@@ -23,5 +23,6 @@ const endPoints = {
   NOTIFICATION_SEEN : "/notification/seen", 
   NOTIFICATION_SEEN_SUBSCRIPTIONS : "/notification/seen/subscriptions", 
   COMMENT_NEW : "/comment/new",
+  CITATION_NEW : "/citation/new",
 };
 export default endPoints;

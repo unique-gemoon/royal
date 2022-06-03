@@ -33,7 +33,7 @@ const CommentAncestry = Comment.belongsTo(Comment, {
 });
 const PliCitations = Pli.hasMany(Citation);
 const CitationUser = Citation.belongsTo(User, { foreignKey: "userId" });
-const CitationAncestry = Comment.belongsTo(Comment, {
+const CitationAncestry = Citation.belongsTo(Citation, {
   foreignKey: "ancestryId",
   targetKey: "id",
   as: "ancestry",
@@ -356,7 +356,6 @@ export function findAllPlisNotElapsed(req, res) {
           },
         ],
         order: [["createdAt", "DESC"]],
-        where : { parentId : null}
       },
     ],
     where,
@@ -719,4 +718,33 @@ export function addNotVoteSondagePli(req, res) {
     .catch((err) => {
       res.status(400).send({ message: err.message });
     });
+}
+
+export function checkPli(req, res, next) {
+  if (parseInt(req.body.pliId)) {
+    Pli.findOne({
+      where: {
+        id: req.body.pliId,
+      },
+    })
+      .then((pli) => {
+        if (pli) {
+          req.pli = pli;
+          next();
+        } else {
+          res.status(400).send({
+            message: "Pli non existe.",
+          });
+          return;
+        }
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+        return;
+      });
+  } else {
+    res.status(400).send({
+      message: "Identifiant pli non définie.",
+    });
+  }
 }

@@ -116,6 +116,10 @@ io.on("connection", (socket) => {
     io.emit("SERVER_COMMENT", data);
   });
 
+  socket.on("CLIENT_CITATION", (data) => {
+    io.emit("SERVER_CITATION", data);
+  });
+
   socket.on("CLIENT_OPEN_PLI", (data) => {
     if (
       data.id != undefined &&
