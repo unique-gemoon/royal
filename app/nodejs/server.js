@@ -116,6 +116,10 @@ io.on("connection", (socket) => {
     io.emit("SERVER_COMMENT", data);
   });
 
+  socket.on("CLIENT_TYPING_CITATION", (data) => {
+    io.emit("SERVER_TYPING_CITATION", data);
+  });
+
   socket.on("CLIENT_CITATION", (data) => {
     io.emit("SERVER_CITATION", data);
   });
@@ -168,6 +172,8 @@ io.on("connection", (socket) => {
         }
       }
       io.emit("SERVER_OPEN_PLI", countPlisOpened(plisOpened));
+
+      io.emit("SERVER_TYPING_CITATION", {});
     }
   });
 });

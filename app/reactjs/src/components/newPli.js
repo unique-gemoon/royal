@@ -12,7 +12,11 @@ import { BlocAddPli, BarTimerPli } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { useOutsideAlerter } from "../helper/events";
-import { getMsgError, getPercentDuration } from "../helper/fonctions";
+import {
+  decrementDurationTime,
+  getMsgError,
+  getPercentDuration,
+} from "../helper/fonctions";
 import AddSondage from "./addSondage";
 import BarTemporellePli from "./barTemporellePli";
 import ErrorFormMessage from "./errorFormMessage";
@@ -33,6 +37,28 @@ export default function NewPli({
 }) {
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
   const auth = useSelector((store) => store.auth);
+  const [duration, setDuration] = useState(false);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    if (publishPli?.duration) {
+      setDuration(publishPli.duration);
+    }
+  }, [publishPli]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    let cpDuration = duration ? decrementDurationTime(duration) : false;
+    if (cpDuration) {
+      setDuration(cpDuration);
+    }
+  }, [seconds]);
 
   const [state, setState] = useState({
     inputEmoji: {
@@ -259,7 +285,9 @@ export default function NewPli({
               5000
             );
             setTogglePli(false);
-            setPublishPli(response.data.pli);
+            const pli = response.data.pli;
+            setPublishPli(pli);
+            localStorage.setItem("publishPli",pli.id);
             setItem({
               ...response.data.pli,
               action: "create",
@@ -486,7 +514,7 @@ export default function NewPli({
           </div>
         </div>
       )}
-      {isPublishPli() && (
+      {isPublishPli() && duration && (
         <BarTimerPli>
           <LinearProgress
             className="progressBar-item"
@@ -498,7 +526,7 @@ export default function NewPli({
               {publishPli?.appearances?.countDown}
             </span>
             <div className="timer-item">
-              <TimerOutlinedIcon /> <span>{publishPli?.duration}</span>
+              <TimerOutlinedIcon /> <span>{duration}</span>
             </div>
             <span className="timer-up">{publishPli?.appearances?.countUp}</span>
           </div>

@@ -16,6 +16,7 @@ import BlocCitations from "../citations/blocCitations";
 
 export default function ItemMasonry({
   item,
+  indexItem,
   setItem = () => {},
   action,
   setAction = () => {},
@@ -29,6 +30,8 @@ export default function ItemMasonry({
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
   activeItemNV2={},
+  clearPliElapsed=() => {},
+  typingCitation={}
 }) {
   const initData = {
     media: {
@@ -58,7 +61,7 @@ export default function ItemMasonry({
     showModal: false,
     showComment: true,
     showCitation: false,
-    showNV2: getShowNV2(item),
+    showNV2: false,
     item: {},
   });
 
@@ -66,12 +69,13 @@ export default function ItemMasonry({
     setStateModal(state);
   }, [state]);
 
+
   useEffect(() => {
-    if (
-      refHeight.current &&
-      (refHeight.current.clientHeight !== null ||
-        refHeight.current.clientHeight !== undefined)
-    ) {
+    setState({...state, showNV2: getShowNV2(item)});
+  }, [activeItemNV2]);
+
+  useEffect(() => {
+    if (refHeight?.current?.clientHeight){
       setTimeout(() => {
         setHeight(refHeight.current.clientHeight);
       }, 1000);
@@ -170,6 +174,7 @@ export default function ItemMasonry({
         </div>
         <BarTemporelle
           item={item}
+          indexItem={indexItem}
           setItem={setItem}
           state={state}
           setState={setState}
@@ -179,6 +184,7 @@ export default function ItemMasonry({
           setActiveItem={setActiveItem}
           className={state.showModal ? "" : isOpenNV2(item) ? "" : "nv-hide"}
           setMsgNotifTopTime={setMsgNotifTopTime}
+          clearPliElapsed={clearPliElapsed}
         />
       </>
     );
@@ -266,6 +272,7 @@ export default function ItemMasonry({
                     state={state}
                     setState={setState}
                     setMsgNotifTopTime={setMsgNotifTopTime}
+                    typingCitation={typingCitation}
                   />
                 </div>
               </>

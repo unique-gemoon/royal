@@ -14,6 +14,8 @@ export default function InputEmoji({
   setOpen = () => {},
   setMsgNotifTopTime = () => {},
   saveMessage = () => {},
+  waitingTime = false,
+  setImTyping=() => {},
   ...props
 }) {
   const [state, setState] = useState({
@@ -32,6 +34,14 @@ export default function InputEmoji({
   useEffect(() => {
     setOpen(state.inputEmoji.open);
   }, [state]);
+
+  useEffect(() => {
+    if(String(state.inputEmoji.value).length>0){
+      setImTyping(true);
+    }else{
+      setImTyping(false);
+    }
+  }, [state.inputEmoji.value]);
 
   const auth = useSelector((store) => store.auth);
 
@@ -74,18 +84,17 @@ export default function InputEmoji({
         onClick={(e) => {
           if (!checkIsConnected()) {
             props.setState({ ...props.state, showModal: false });
-          } else {
+          } else if (!waitingTime) {
             if (state.inputEmoji.value) {
               if (!submitting) {
                 setSubmitting(true);
-                saveMessage({ message: state.inputEmoji.value })
-                  .then(() => {
-                    setState({
-                      ...state,
-                      inputEmoji: { ...state.inputEmoji, value: "" },
-                    });
-                    setSubmitting(false);
+                saveMessage({ message: state.inputEmoji.value }).then(() => {
+                  setState({
+                    ...state,
+                    inputEmoji: { ...state.inputEmoji, value: "" },
                   });
+                  setSubmitting(false);
+                });
               }
             } else {
               setMsgNotifTopTime(
@@ -98,6 +107,8 @@ export default function InputEmoji({
       >
         <SendIcon />
       </Button>
+
+      {waitingTime}
     </FormEmoji>
   );
 }
