@@ -108,7 +108,7 @@ export default function InputEmoji({
         <SendIcon />
       </Button>
 
-      {waitingTime}
+      {waitingTime!=false && `0:0${waitingTime}`}
     </FormEmoji>
   );
 }
