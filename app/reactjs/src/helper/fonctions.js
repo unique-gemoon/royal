@@ -50,29 +50,6 @@ export function sortObjects(objs, key, order = "asc") {
   }
 }
 
-export function decrementDuration(duration) {
-  let hour, minute, second;
-  [hour, minute, second] = String(duration).split(":");
-  hour = getInt(hour);
-  minute = getInt(minute);
-  second = getInt(second);
-  if (second == 0) {
-    if (minute == 0) {
-      if (hour > 0) {
-        hour--;
-        minute = 59;
-        second = 59;
-      }
-    } else {
-      minute--;
-      second = 59;
-    }
-  } else {
-    second--;
-  }
-  return [hour, minute, second];
-}
-
 export function getPercentDuration(item) {
   if (!item.duration || !item.allottedTime) {
     return 0;
@@ -149,4 +126,27 @@ export function scrollBottomById(id) {
     const container = document.getElementById(id);
     if (container) container.scrollTop = container.scrollHeight;
   }
+}
+
+export function decrementDurationTime(duration) {
+  if (duration) {
+    let hour, minute, second;
+    [hour, minute, second] = String(duration).split(":");
+
+    const d = getInt(hour) * 3600 + getInt(minute) * 60 + getInt(second) - 1;
+
+    if (d <= 0) {
+      return false;
+    }
+
+    hour = Math.floor(d / 3600);
+    minute = Math.floor(d % 3600 / 60);
+    second = Math.floor(d % 3600 % 60);
+
+    const h = String(hour).length == 1 ? "0" + hour : hour;
+    const m = String(minute).length == 1 ? "0" + minute : minute;
+    const s = String(second).length == 1 ? "0" + second : second;
+    return h + ":" + m + ":" + s;
+  }
+  return false;
 }

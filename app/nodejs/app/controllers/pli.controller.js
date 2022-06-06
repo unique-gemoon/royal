@@ -252,6 +252,7 @@ export function findAllPlisNotElapsed(req, res) {
                 attributes: { exclude: ["createdAt", "updatedAt"] },
               },
             ],
+            order: [["id", "ASC"]],
           },
           {
             model: SondageNotVotes,

@@ -3,17 +3,18 @@ import RemoveIcon from "@mui/icons-material/Remove";
 import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import { Button } from "@mui/material";
 import LinearProgress from "@mui/material/LinearProgress";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { BarTimer } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
-import { getInt, getPercentDuration } from "../helper/fonctions";
+import { decrementDurationTime, getInt, getPercentDuration } from "../helper/fonctions";
 
 export default function BarTemporelle({
   state = {},
   setState = () => {},
   item = {},
+  indexItem,
   setItem = {},
   showModal = false,
   setShowModal = () => {},
@@ -22,10 +23,33 @@ export default function BarTemporelle({
   activeItem = {},
   setActiveItem = () => {},
   setMsgNotifTopTime = () => {},
+  clearPliElapsed=() => {},
   ...props
 }) {
   const [isPending, setIsPending] = useState(false);
   const auth = useSelector((store) => store.auth);
+  const [duration, setDuration] = useState(item.duration);
+  const [seconds , setSeconds] = useState(0);
+
+  useEffect(() => {
+      setDuration(item.duration);
+  }, [item.duration]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+       setSeconds((seconds)=>seconds + 1);
+     }, 1000);
+     return () => clearInterval(interval); 
+   }, []);
+
+  useEffect(() => {
+    let cpDuration = duration ? decrementDurationTime(duration) :  false;
+    if(cpDuration){
+      setDuration(cpDuration);
+    }else{
+      clearPliElapsed(indexItem);
+    }
+  }, [seconds]);
 
   const saveTime = ({ signe }) => {
     if (!isPending) {
@@ -77,33 +101,12 @@ export default function BarTemporelle({
     if (item.appearances.alreadyUpdated) {
       return;
     }
-    let hour, minute, second;
-    [hour, minute, second] = String(item.duration).split(":");
-    hour = getInt(hour);
-    minute = getInt(minute);
-    minute++;
-    if (minute >= 60) {
-      minute = 0;
-      hour++;
-    }
     saveTime({ signe: true });
   };
 
   const downTime = () => {
     if (item.appearances.alreadyUpdated) {
       return;
-    }
-    let hour, minute, second;
-    [hour, minute, second] = String(item.duration).split(":");
-    hour = getInt(hour);
-    minute = getInt(minute);
-    if (minute == 0) {
-      if (hour > 0) {
-        hour--;
-        minute = 59;
-      }
-    } else {
-      minute--;
     }
     saveTime({ signe: false });
   };
@@ -161,7 +164,7 @@ export default function BarTemporelle({
         >
           <span className="timer-down">{item?.appearances?.countDown}</span>
           <div className="timer-item">
-            <TimerOutlinedIcon /> <span>{item?.duration}</span>
+            <TimerOutlinedIcon /> <span>{duration}</span>
           </div>
           <span className="timer-up">{item?.appearances?.countUp}</span>
         </div>

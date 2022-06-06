@@ -23,12 +23,9 @@ export function useOutsideAlerter(ref, handler) {
 export function ScrollBottom(ref, handler) {
   useEffect(() => {
     const listener = event => {
-      //To do
-      console.log("reached bottom");
       if (ref.current) {
         const { scrollTop, scrollHeight, clientHeight } = ref.current;
         if (scrollTop + clientHeight === scrollHeight) {
-          console.log("reached bottom");
           handler(event);
         }
       }

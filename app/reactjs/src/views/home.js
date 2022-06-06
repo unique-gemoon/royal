@@ -25,9 +25,7 @@ import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import {
-  decrementDuration,
   getMsgError,
-  getTime,
   getUniqueListNotifications,
   scrollBottomById,
   sortObjects,
@@ -40,7 +38,6 @@ export default function Home() {
   const auth = useSelector((store) => store.auth);
 
   const [plis, setPlis] = useState([]);
-  const [seconds, setSeconds] = useState(0);
   const [activeItem, setActiveItem] = useState(null);
   const [activeItemNV2, setActiveItemNV2] = useState(null);
   const [activeItemPlayer, setActiveItemPlayer] = useState(null);
@@ -66,6 +63,7 @@ export default function Home() {
   const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
   const [pageNotifications, setPageNotifications] = useState(1);
   const [loadingMore, setLoadingMore] = useState({ notifications: false });
+  const [typingCitation, setTypingCitation] = useState({});
 
   const breakpointColumnsObj = {
     default: 3,
@@ -267,18 +265,29 @@ export default function Home() {
               cpPlis[i].citations.push(data.citation);
             } else {
               cpPlis[i].citations = [data.citation];
-            } 
+            }
             cpPlis[i].totalCitations++;
             break;
           }
         }
         setPlis(cpPlis);
-        if(data.citation.userId != undefined && auth.user && data.citation.userId == auth.user.id){
+        if (
+          data.citation.userId != undefined &&
+          auth.user &&
+          data.citation.userId == auth.user.id
+        ) {
           scrollBottomById("citations-container");
         }
       }
     };
     socket.on("SERVER_CITATION", newCitation);
+
+    const updateTypingCitation = (item) => {
+      if (auth.isConnected && auth.user.id != item.userId) {
+        setTypingCitation(item);
+      }
+    };
+    socket.on("SERVER_TYPING_CITATION", updateTypingCitation);
 
     return () => {
       socket.off("SERVER_PLI", updatePli);
@@ -287,9 +296,10 @@ export default function Home() {
       socket.off("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
       socket.off("SERVER_COMMENT", newComment);
       socket.off("SERVER_CITATION", newCitation);
+      socket.off("SERVER_TYPING_CITATION", updateTypingCitation);
       //socket.disconnect();
     };
-  }, [plis]);
+  }, [plis, auth]);
 
   const [stateModal, setStateModal] = useState({
     showModal: false,
@@ -302,32 +312,17 @@ export default function Home() {
         id: stateModal?.item?.id ? stateModal.item.id : null,
         opened: stateModal.showModal,
       });
+
+      if (auth.isConnected) {
+        const data = {
+          pliId: null,
+          username: auth.user.username,
+          userId: auth.user.id,
+        };
+        socket.emit("CLIENT_TYPING_CITATION", data);
+      }
     }
   }, [stateModal.showModal]);
-
-  useEffect(() => {
-    updateDurations();
-  }, [seconds]);
-
-  useEffect(() => {
-    if (localStorage.getItem("publishPli")) {
-      setPublishPli({
-        id: Number(localStorage.getItem("publishPli")),
-        duration: "00:00:00",
-        appearances: {
-          countDown: 0,
-          countUp: 0,
-        },
-      });
-    }
-  }, []);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setSeconds((seconds) => seconds + 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
 
   useEffect(() => {
     const updateSubscriber = (item) => {
@@ -447,6 +442,8 @@ export default function Home() {
         if (response.data.plis.length == 0) {
           setPublishPli(null);
           localStorage.removeItem("publishPli");
+        } else {
+          refreshpPublishPli(response.data.plis);
         }
         if (refresh) {
           setInitOpenedPlis(initOpenedPlis + 1);
@@ -456,6 +453,19 @@ export default function Home() {
         console.log(error);
       },
     });
+  };
+
+  const refreshpPublishPli = (data) => {
+    if (localStorage.getItem("publishPli")) {
+      const id = Number(localStorage.getItem("publishPli"));
+      for (let i = 0; i < data.length; i++) {
+        const cpPli = { ...data[i] };
+        if (id === cpPli.id) {
+          setPublishPli(cpPli);
+          break;
+        }
+      }
+    }
   };
 
   const getPli = (id, action) => {
@@ -534,6 +544,9 @@ export default function Home() {
       for (var i = 0; i < cpPlis.length; i++) {
         if (cpPlis[i].id == item.id) {
           cpPlis[i] = item;
+          if (publishPli && publishPli.id === item.id) {
+            setPublishPli(item);
+          }
           break;
         }
       }
@@ -542,31 +555,17 @@ export default function Home() {
     setPlis(cpPlis);
   };
 
-  const updateDurations = () => {
-    if (plis.length) {
-      let existed = false;
-      let hour, minute, second;
-      const cpPlis = [];
-      for (let i = 0; i < plis.length; i++) {
-        const cpPli = { ...plis[i] };
-        [hour, minute, second] = decrementDuration(cpPli.duration);
-        cpPli.duration = getTime(hour, minute, second);
-        if (hour > 0 || minute > 0 || second > 0) {
-          cpPlis.push(cpPli);
-        }
-        if (publishPli && publishPli.id === cpPli.id) {
-          if (hour > 0 || minute > 0 || second > 0) {
-            setPublishPli(cpPli);
-            localStorage.setItem("publishPli", cpPli.id);
-            existed = true;
-          }
-        }
-      }
-      setPlis(cpPlis);
-      if (!existed) {
+  const clearPliElapsed = (index) => {
+    console.log("clearPliElapsed");
+    if (plis[index]) {
+      const pli = { ...plis[index] };
+      if (publishPli && publishPli.id === pli.id) {
         setPublishPli(null);
         localStorage.removeItem("publishPli");
       }
+      let cpPlis = [...plis];
+      cpPlis.splice(index, 1);
+      setPlis(cpPlis);
     }
   };
 
@@ -749,6 +748,7 @@ export default function Home() {
               plis.map((item, index) => (
                 <ItemMasonry
                   key={index}
+                  indexItem={index}
                   item={item}
                   setItem={setItem}
                   action={action}
@@ -763,6 +763,8 @@ export default function Home() {
                   setFolowersMessage={setFolowersMessage}
                   updateSubscriberStatus={updateSubscriberStatus}
                   activeItemNV2={activeItemNV2}
+                  clearPliElapsed={clearPliElapsed}
+                  typingCitation={typingCitation}
                 />
               ))}
           </Masonry>
