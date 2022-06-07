@@ -1170,7 +1170,7 @@ export const BlocEmojis = styled.div`
         padding: 0;
         position: absolute;
         right: 0;
-        top: -4px;
+        top: -3px;
         min-width: auto;
         color: #a0a4b5;
         transition: .3s ease-in-out;
@@ -1206,7 +1206,6 @@ export const BlocEmojis = styled.div`
 export const FormEmoji = styled.div`
     
     display: flex;
-    align-items: center;
     &.commentaire-form{
         background-color: #d9dce1;
         padding: 14px 12px 14px 18px;
@@ -1257,10 +1256,11 @@ export const FormEmoji = styled.div`
         }
     }
     textarea{
-        min-height: 20px;
+        min-height: 22px;
         line-height: initial;
         border: 0;
         resize: none;
+        padding-top: 5px;
         &.form-control{
             max-height: 30px;
         }
@@ -1269,6 +1269,26 @@ export const FormEmoji = styled.div`
         position: relative;
         width: 100%;
         margin-right: 8px;
+        &.is-waiting{
+            pointer-events: none;
+            textarea{
+                opacity: .8;
+                border-bottom: 1px solid red;
+            }
+            
+        }
+        .timer-waiting {
+            color: #414141;
+            font-family: 'ProximaNovaSoftW03-Semibold';
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-top: 4px;
+            svg{
+                font-size: 17px;
+            }
+        }
     }
     .btn-send-emoji {
         color: #3583D6;
@@ -1539,8 +1559,7 @@ export const BlocMessagerie = styled.div`
                         }
                         .bloc-list-emoji{
                             bottom: 33px;
-                            right: auto;
-                            left: 0;
+                            right: -28px;
                             .emoji-picker-react {
                                 width: 206px;
                                 box-shadow: none;
@@ -2169,16 +2188,6 @@ export const SimpleComment = styled.div`
     }
     &.cotte-comment {
         background: #f2f2f2;
-        width: calc(100% - 18px);
-        &:after{
-            content: "";
-            position: absolute;
-            top: -1px;
-            right: -18px;
-            bottom: -1px;
-            width: 18px;
-            background-color: #FFF;
-        }
     }
     .cotte-comment {
         position: absolute;
@@ -2354,13 +2363,21 @@ export const CommentsBloc = styled.div`
         overflow-y: auto;
     }
     &.emoji-open{
-        min-height: 250px;
-        .comment-def-modal{
-            .bloc-list-emoji{
-                bottom: 27px;
-            }
+        padding-top: 150px;
+        .bloc-list-emoji{
+            bottom: 33px;
         }
     }
+    &.has-comments{
+        padding-top: 0 !important;
+        .bloc-list-emoji{
+            bottom: auto;
+        }
+    }
+    &.has-comments-citations{
+        padding-top: 0 !important;
+    }
+
 `;
 export const BlocNewPliContent = styled.div`
     .toggle-action-dropzone{
