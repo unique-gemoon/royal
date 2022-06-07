@@ -12,6 +12,7 @@ export default function Emojis({ inputEmoji = {}, setInputEmoji = () => {} }) {
 
   useOutsideAlerter(ref, () => {
     setToggleEmoji(false);
+    setInputEmoji({ ...inputEmoji, open: false })
   });
 
   const onEmojiClick = (event, emojiObject) => {
@@ -19,7 +20,7 @@ export default function Emojis({ inputEmoji = {}, setInputEmoji = () => {} }) {
       setInputEmoji({
         ...inputEmoji,
         value: inputEmoji.value + emojiObject.emoji,
-        open: true,
+        open: false,
       });
     }
     setToggleEmoji(false);
@@ -38,7 +39,9 @@ export default function Emojis({ inputEmoji = {}, setInputEmoji = () => {} }) {
         </Button>
       )}
       {toggleEmoji && (
-        <Button className={`btn-toggle-emoji active-emoji`}>
+        <Button className={`btn-toggle-emoji active-emoji`} onClick={() => {
+          setInputEmoji({ ...inputEmoji, open: false });
+        }}>
           <SentimentSatisfiedAltRoundedIcon />
         </Button>
       )}

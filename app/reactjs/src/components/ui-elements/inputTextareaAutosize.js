@@ -9,10 +9,11 @@ export default function InputTextareaAutosize({
   as = "",
   onChange = () => {},
   onClick = () => {},
+  ...props
 }) {
   return (
     <TextareaAutosize
-      className="form-control"
+      className={`form-control ${props.className}`}
       name={name}
       value={value}
       placeholder={placeholder}
