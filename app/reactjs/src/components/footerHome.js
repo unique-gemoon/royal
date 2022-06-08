@@ -9,7 +9,7 @@ import SeeCounter from "./ui-elements/seeCounter";
 import ProfileMenu from "./profileMenu";
 
 export default function FooterHome({
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   action,
   setAction = () => {},
@@ -33,7 +33,9 @@ export default function FooterHome({
   loadingMore={},
   setLoadingMore=() => {},
   setActiveItemNV2=() => {},
-  plis= []
+  plis= [],
+  threads= [],
+  setThreads=() => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -73,7 +75,7 @@ export default function FooterHome({
                 setMsgNotifTopTime={setMsgNotifTopTime}
                 publishPli={publishPli}
                 setPublishPli={setPublishPli}
-                stateFolowersMessage={stateFolowersMessage}
+                folowersMessage={folowersMessage}
                 setFolowersMessage={setFolowersMessage}
                 updateSubscriberStatus={updateSubscriberStatus}
                 notifications={notifications}
@@ -89,6 +91,8 @@ export default function FooterHome({
                 setLoadingMore={setLoadingMore}
                 setActiveItemNV2={setActiveItemNV2}
                 plis={plis}
+                threads={threads}
+                setThreads={setThreads}
               />
             </Col>
           </Row>
@@ -104,7 +108,7 @@ export default function FooterHome({
           setMsgNotifTopTime={setMsgNotifTopTime}
           publishPli={publishPli}
           setPublishPli={setPublishPli}
-          stateFolowersMessage={stateFolowersMessage}
+          folowersMessage={folowersMessage}
           setFolowersMessage={setFolowersMessage}
           updateSubscriberStatus={updateSubscriberStatus}
           notifications={notifications}
@@ -120,6 +124,8 @@ export default function FooterHome({
           setLoadingMore={setLoadingMore}
           setActiveItemNV2={setActiveItemNV2}
           plis={plis}
+          threads={threads}
+          setThreads={setThreads}
         />
       )}
     </FooterDefault>

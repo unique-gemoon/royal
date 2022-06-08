@@ -1,3 +1,4 @@
+import moment from "moment";
 import noImage from "../assets/images/noImage.png";
 import { pathImage } from "../config/vars";
 
@@ -84,9 +85,17 @@ export function getDurationHM(from, to) {
   const d = from.diff(to, "days");
   const h = from.diff(to, "hours") % 24;
   const m = parseInt(from.diff(to, "minutes") / 24) % 60;
-  return `${d > 0 ? d + "j" : ""}${h > 0 ? h + "h" : ""}${
-    m > 0 ? m + "m" : h > 0 ? "" : "Mainten."
-  }`;
+  if(d==0 && h == 0 && m == 0){
+    return "Mainten.";
+  }else if(d==1){
+    return "Hier";
+  }else if(d>1){
+    return moment(to).format("DD.MM.YYYY");
+  }else{
+    const hour = String(h).length == 1 ? "0" + h : h;
+    const minute = String(m).length == 1 ? "0" + m : m;
+    return `${h > 0 ? hour + "h" : ""}${m > 0 ? minute + "m" : "" }`;
+  }
 }
 
 export function getUniqueListBy(arr, key) {

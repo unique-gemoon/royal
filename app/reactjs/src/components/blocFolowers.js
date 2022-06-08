@@ -12,7 +12,7 @@ import SpinnerLoading from "./spinnerLoading";
 export default function BlocFolowers({
   action,
   setAction = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   setMsgNotifTopTime = () => {},
   updateSubscriberStatus = () => {},
@@ -144,7 +144,7 @@ export default function BlocFolowers({
                       };
                       setAction(cpAction);
                       setFolowersMessage({
-                        ...stateFolowersMessage,
+                        ...folowersMessage,
                         activeItem: { id: item.id },
                       });
                     }}
@@ -172,7 +172,7 @@ export default function BlocFolowers({
                       };
                       setAction(cpAction);
                       setFolowersMessage({
-                        ...stateFolowersMessage,
+                        ...folowersMessage,
                         activeItem: { id: item.id },
                       });
                     }}

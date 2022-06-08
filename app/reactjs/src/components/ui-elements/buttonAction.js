@@ -14,7 +14,7 @@ export default function ButtonAction({
   action,
   setAction = () => {},
   setMsgNotifTopTime = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
 }) {
   const auth = useSelector((store) => store.auth);
@@ -63,7 +63,7 @@ export default function ButtonAction({
               setCountNotif("");
             }, 1000);
           }
-          setFolowersMessage({ ...stateFolowersMessage, activeItem: false });
+          setFolowersMessage({ ...folowersMessage, activeItem: false });
         }}
       >
         {icon}

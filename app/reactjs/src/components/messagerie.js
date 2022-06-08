@@ -1,35 +1,36 @@
-import React, { useState } from "react";
+import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
+import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
+import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
+import MoreVertIcon from "@mui/icons-material/MoreVert";
+import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
+import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
+import { Button } from "@mui/material";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import React, { useEffect, useRef, useState } from "react";
+import { useSelector } from "react-redux";
 import {
   BlocMessagerie,
   ChatSpace,
   LoadingMessage,
-  MessageFindFolower,
+  MessageFindFolower
 } from "../assets/styles/componentStyle";
-import MailOutlineRoundedIcon from "@mui/icons-material/MailOutlineRounded";
-import ModeEditOutlineOutlinedIcon from "@mui/icons-material/ModeEditOutlineOutlined";
-import { Button } from "@mui/material";
-import Menu from "@mui/material/Menu";
-import MenuItem from "@mui/material/MenuItem";
-import ListMessagerie from "./listMessagerie";
-import KeyboardArrowLeftIcon from "@mui/icons-material/KeyboardArrowLeft";
-import MoreVertIcon from "@mui/icons-material/MoreVert";
-import InputEmoji from "./ui-elements/inputEmoji";
-import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import Input from "./ui-elements/input";
 import ItemListFolower from "./itemListFolower";
-import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import ItemSingleMessage from "./itemSingleMessage";
-import { useEffect } from "react";
+import ListMessagerie from "./listMessagerie";
 import SpinnerLoading from "./spinnerLoading";
-import { useRef } from "react";
+import Input from "./ui-elements/input";
+import InputEmoji from "./ui-elements/inputEmoji";
 
-export default function Messagerie({ 
+export default function Messagerie({
   setMsgNotifTopTime = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   loadingMore = {},
   setLoadingMore = () => {},
- }) {
+  threads = [],
+  setThreads = () => {},
+}) {
 
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -39,89 +40,28 @@ export default function Messagerie({
   const handleClose = () => {
     setAnchorEl(null);
   };
-
-  const [endScroll, setEndScroll] = useState(false);
+  const auth = useSelector((store) => store.auth);
   const [startScroll, setStartScroll] = useState(false);
   const ref = useRef(null);
+  const [messages, setMessages] = useState([]);
+  const [countNewMessages, setCountNewMessages] = useState(0);
+  const [totalMessages, setTotalMessages] = useState(0);
+  const [pageMessages, setPageMessages] = useState(1);
 
-  const onScroll = () => {
+  const onScrollThreads = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
     if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
-      setEndScroll(true);
+      setLoadingMore({ ...loadingMore, threads: true });
     }
-  }
+  };
 
   const onScrollTop = () => {
-    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    const { scrollTop } = ref.current;
     if (parseInt(scrollTop) == 0) {
       setStartScroll(true);
     }
-  }
-  
-  const [dataListMessage, setDataListMessage] = useState([
-    {
-      id: 1,
-      name: "Fossum",
-      etat: "reading",
-      timer: "20h",
-      lastMesssage:
-        "Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré...",
-      newMessage: false,
-    },
-    {
-      id: 2,
-      name: "Ellie",
-      etat: "send",
-      timer: "1jour",
-      lastMesssage: "Oui ça va. Et tiu ?",
-      newMessage: false,
-    },
-    {
-      id: 3,
-      name: "Jacquou",
-      timer: "11.09.2020",
-      lastMesssage: "J’ai vu ta dernière publication sur la page universelle !",
-      newMessage: true,
-    },
-    {
-      id: 4,
-      name: "Lou",
-      timer: "10.08.2020",
-      lastMesssage: "Oui tout est assez calme récemment",
-      newMessage: false,
-    },
-    {
-      id: 5,
-      name: "Fossum",
-      etat: "reading",
-      timer: "20h",
-      lastMesssage:
-        "Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré...",
-      newMessage: false,
-    },
-    {
-      id: 6,
-      name: "Ellie",
-      etat: "send",
-      timer: "1jour",
-      lastMesssage: "Oui ça va. Et tiu ?",
-      newMessage: false,
-    },
-    {
-      id: 7,
-      name: "Jacquou",
-      timer: "11.09.2020",
-      lastMesssage: "J’ai vu ta dernière publication sur la page universelle !",
-      newMessage: true,
-    },
-    {
-      id: 8,
-      name: "Lou",
-      timer: "10.08.2020",
-      lastMesssage: "Oui tout est assez calme récemment",
-      newMessage: false,
-    },
-  ]);
+  };
+
   const [dataFolower, setDataFolower] = useState([
     {
       id: 4,
@@ -160,32 +100,76 @@ export default function Messagerie({
       statut: 0,
     },
   ]);
+
   const scrollChat = () => {
     const container = document.getElementById("messages-container");
     if (container) container.scrollTop = container.scrollHeight;
   };
+
   useEffect(() => {
-    if (stateFolowersMessage.activeItem) {
+    if (folowersMessage.activeItem) {
+      getMessages(true);
       setTimeout(() => scrollChat(), 100);
     }
-  }, [stateFolowersMessage.activeItem]);
+  }, [folowersMessage.activeItem]);
+
+
+  
+  useEffect(() => {
+    if (auth.isConnected) {
+      getMessages();
+    } else {
+      setMessages([]);
+      setCountNewMessages(0);
+      setTotalMessages(0);
+      setPageMessages(1);
+    }
+  }, [pageMessages, auth.isConnected]);
+
+  const getMessages = (refresh = false) => {
+    if (folowersMessage?.activeItem?.thread?.id) {
+      const cpPageMessages = refresh ? 1 : pageMessages;
+      if (pageMessages != cpPageMessages) {
+        setPageMessages(cpPageMessages);
+      }
+      connector({
+        method: "get",
+        url: `${endPoints.MESSAGE_LIST}?page=${cpPageMessages}&threadId=${folowersMessage.activeItem.thread.id}`,
+        success: (response) => {
+          setMessages(
+            getUniqueList([...messages, ...response.data.messages], "id")
+          );
+          //setCountNewMessages(parseInt(response.data.totalNew));
+          setTotalMessages(parseInt(response.data.total));
+          setLoadingMore({ ...loadingMore, messages: false });
+        },
+        catch: (error) => {
+          console.log(error);
+        },
+      });
+    }
+  };
+
   return (
     <BlocMessagerie>
-      {!stateFolowersMessage.activeItem && !stateFolowersMessage.showSearchFolower ? (
+      {!folowersMessage.activeItem && !folowersMessage.showSearchFolower ? (
         <div className="bloc-lists-messagerie">
           <div className="header-messagerie">
             <MailOutlineRoundedIcon /> Messages
           </div>
           <div className="content-messagerie">
-            <div className="list-messagerie"
-              onScroll={onScroll} ref={ref}>
+            <div
+              className="list-messagerie"
+              onScroll={onScrollThreads}
+              ref={ref}
+            >
               <ListMessagerie
-                data={dataListMessage}
-                setData={setDataListMessage}
-                stateFolowersMessage={stateFolowersMessage}
+                threads={threads}
+                setThreads={setThreads}
+                folowersMessage={folowersMessage}
                 setFolowersMessage={setFolowersMessage}
               />
-              {endScroll && <SpinnerLoading />}
+              {loadingMore.threads && <SpinnerLoading />}
             </div>
           </div>
 
@@ -193,7 +177,7 @@ export default function Messagerie({
             className="start-new-message"
             onClick={() => {
               setFolowersMessage({
-                ...stateFolowersMessage,
+                ...folowersMessage,
                 activeItem: false,
                 showSearchFolower: true,
               });
@@ -203,21 +187,23 @@ export default function Messagerie({
           </Button>
         </div>
       ) : null}
-      {stateFolowersMessage.activeItem ? (
+      {folowersMessage.activeItem ? (
         <div className="bloc-message-item">
           <div className="header-messagerie">
             <span
               className="back-to-list"
               onClick={(e) => {
                 e.preventDefault();
-                const cpState = { ...stateFolowersMessage };
+                const cpState = { ...folowersMessage };
                 cpState.activeItem = false;
                 setFolowersMessage(cpState);
               }}
             >
               <KeyboardArrowLeftIcon />
             </span>
-            <span className="name-messagerie">{stateFolowersMessage.activeItem.nameItem}</span>
+            <span className="name-messagerie">
+              {folowersMessage.activeItem.nameItem}
+            </span>
             <div>
               <Button
                 id="demo-positioned-button"
@@ -306,14 +292,14 @@ export default function Messagerie({
           </div>
         </div>
       ) : null}
-      {stateFolowersMessage.showSearchFolower ? (
+      {folowersMessage.showSearchFolower ? (
         <MessageFindFolower>
           <div className="header-messagerie">
             <span
               className="back-to-list"
               onClick={(e) => {
                 e.preventDefault();
-                const cpState = { ...stateFolowersMessage };
+                const cpState = { ...folowersMessage };
                 cpState.showSearchFolower = false;
                 setFolowersMessage(cpState);
               }}
@@ -327,15 +313,21 @@ export default function Messagerie({
           <div className="bloc-search-folower">
             <SearchRoundedIcon />
             <Input
-              {...stateFolowersMessage.search}
+              {...folowersMessage.search}
               onChange={(e) => {
-                const cpState = { ...stateFolowersMessage };
+                const cpState = { ...folowersMessage };
                 cpState.search.value = e.target.value;
                 setFolowersMessage(cpState);
                 if (cpState.search.value.length >= 3) {
-                  setFolowersMessage({ ...stateFolowersMessage, resultSearch: true });
+                  setFolowersMessage({
+                    ...folowersMessage,
+                    resultSearch: true,
+                  });
                 } else {
-                  setFolowersMessage({ ...stateFolowersMessage, resultSearch: false });
+                  setFolowersMessage({
+                    ...folowersMessage,
+                    resultSearch: false,
+                  });
                 }
               }}
             />
@@ -343,13 +335,13 @@ export default function Messagerie({
           <div className="header-info-search">
             <PeopleOutlineRoundedIcon /> Abonnements
           </div>
-          {stateFolowersMessage.resultSearch ? (
+          {folowersMessage.resultSearch ? (
             <div className="content-search-results">
               <div className="list-result-search">
-                {dataFolower.map((item,index) => (
+                {dataFolower.map((item, index) => (
                   <ItemListFolower
                     setMsgNotifTopTime={setMsgNotifTopTime}
-                    stateFolowersMessage={stateFolowersMessage}
+                    folowersMessage={folowersMessage}
                     setFolowersMessage={setFolowersMessage}
                     shwoButtonMessage={false}
                     key={index}
@@ -359,7 +351,9 @@ export default function Messagerie({
               </div>
             </div>
           ) : null}
-          <span className="name-messagerie">{stateFolowersMessage.activeItem.name}</span>
+          <span className="name-messagerie">
+            {folowersMessage.activeItem.name}
+          </span>
         </MessageFindFolower>
       ) : (
         <p>No resultat</p>

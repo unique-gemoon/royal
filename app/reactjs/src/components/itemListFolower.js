@@ -9,7 +9,7 @@ import connector from "../connector";
 import { getMsgError } from "../helper/fonctions";
 
 export default function ItemListFolower({
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   item,
   setItem = () => {},
@@ -70,7 +70,7 @@ export default function ItemListFolower({
     <ItemFolower key={item.id}>
       <span
         onClick={() => {
-          setFolowersMessage({ ...stateFolowersMessage, activeItem: item });
+          setFolowersMessage({ ...folowersMessage, activeItem: item });
         }}
       >
         {item.username}

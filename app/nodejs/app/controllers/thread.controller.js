@@ -98,7 +98,7 @@ export function listThreads(req, res) {
         ],
       },
       {
-        attributes: ["id", "username"],
+        attributes: ["username"],
         model: User,
         association: ThreadUsersUser,
         as: "user",
@@ -110,8 +110,8 @@ export function listThreads(req, res) {
     limit: perPage,
     order: [["id", "DESC"]],
   })
-    .then((threadUsers) => {
-      res.status(200).send({ message: "ok", threadUsers });
+    .then((threads) => {
+      res.status(200).send({ message: "ok", threads });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });

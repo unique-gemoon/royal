@@ -40,7 +40,7 @@ export default function HeadItem({
   activeItem,
   setActiveItem = () => {},
   setMsgNotifTopTime = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
 }) {
@@ -322,7 +322,7 @@ export default function HeadItem({
                               };
                               setAction(cpAction);
                               setFolowersMessage({
-                                ...stateFolowersMessage,
+                                ...folowersMessage,
                                 activeItem: { id: 4 },
                               });
                               setState({ ...state, showModal: false });

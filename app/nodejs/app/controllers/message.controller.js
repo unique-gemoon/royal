@@ -31,7 +31,7 @@ export function listMessages(req, res) {
   const start = (page - 1) * perPage;
 
   Message.findAll({
-    attributes: { exclude: ["updatedAt","threadId"] },
+    attributes: { exclude: ["updatedAt", "threadId"] },
     include: [
       {
         attributes: ["username"],
@@ -44,12 +44,27 @@ export function listMessages(req, res) {
     where: {
       threadId: req.thread.id,
     },
-    offset : start,
+    offset: start,
     limit: perPage,
     order: [["createdAt", "DESC"]],
   })
     .then((messages) => {
-      res.status(200).send({ message: "ok.", messages });
+      res.status(200).send({ message: "ok.", messages, total: req.total });
+    })
+    .catch((err) => {
+      res.status(400).send({ message: err.message });
+    });
+}
+
+export function totalMessages(req, res, next) {
+  Message.count({
+    where: {
+      threadId: req.thread.id,
+    },
+  })
+    .then((total) => {
+      req.total = total;
+      next();
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
