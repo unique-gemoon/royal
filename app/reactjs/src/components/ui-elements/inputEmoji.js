@@ -3,6 +3,7 @@ import { Button } from "@mui/material";
 import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import { FormEmoji } from "../../assets/styles/componentStyle";
+import TimerOutlinedIcon from "@mui/icons-material/TimerOutlined";
 import Emojis from "../emojis";
 import InputTextareaAutosize from "./inputTextareaAutosize";
 
@@ -59,7 +60,7 @@ export default function InputEmoji({
 
   return (
     <FormEmoji className={props.className}>
-      <div className="content-form-emoji">
+      <div className={`content-form-emoji ${waitingTime !== false ? "is-waiting" : "" }`}>
         <InputTextareaAutosize
           {...state.inputEmoji}
           onChange={(e) => {
@@ -77,6 +78,9 @@ export default function InputEmoji({
           inputEmoji={state.inputEmoji}
           setInputEmoji={(e) => setState({ ...state, inputEmoji: e })}
         />
+        <div className="timer-waiting">
+          {waitingTime !== false && <span> 00:0{waitingTime} <TimerOutlinedIcon /></span>}
+        </div> 
       </div>
 
       <Button
@@ -107,8 +111,6 @@ export default function InputEmoji({
       >
         <SendIcon />
       </Button>
-
-      {waitingTime!=false && `0:0${waitingTime}`}
     </FormEmoji>
   );
 }
