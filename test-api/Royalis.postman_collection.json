@@ -203,7 +203,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"pliId\":\"9\",\"parentId\":\"\",\"citationId\":\"\",\"message\":\"test2\"}"
+					"raw": "{\"pliId\":\"9\",\"parentId\":\"21\",\"ancestryId\":\"22\",\"message\":\"test\"}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/api/comment/new",
@@ -1042,6 +1042,240 @@
 						"api",
 						"pli",
 						"time"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thread_new",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjozLCJ1c2VybmFtZSI6ImFtaW5lIiwiZW1haWwiOiJhbWluZUBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTQ2MTA2Nzc4NjAsImV4cCI6MTY1NDg2OTg3Nzg2MH0.cKAfgoZwqgkMwB20Ja0E9nLAeU2h3GJNTjUy5NIgNoM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"userId\":\"2\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/thread/new",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"thread",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "thread_list",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjozLCJ1c2VybmFtZSI6ImFtaW5lIiwiZW1haWwiOiJhbWluZUBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTQ2MTA2Nzc4NjAsImV4cCI6MTY1NDg2OTg3Nzg2MH0.cKAfgoZwqgkMwB20Ja0E9nLAeU2h3GJNTjUy5NIgNoM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/thread/list?p=1",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"thread",
+						"list"
+					],
+					"query": [
+						{
+							"key": "p",
+							"value": "1"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "message_new",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjozLCJ1c2VybmFtZSI6ImFtaW5lIiwiZW1haWwiOiJhbWluZUBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTQ2MTA2Nzc4NjAsImV4cCI6MTY1NDg2OTg3Nzg2MH0.cKAfgoZwqgkMwB20Ja0E9nLAeU2h3GJNTjUy5NIgNoM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"threadId\":\"1\",\"message\":\"test\"}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/message/new",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"message",
+						"new"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "message_list",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				},
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjozLCJ1c2VybmFtZSI6ImFtaW5lIiwiZW1haWwiOiJhbWluZUBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTQ2MTA2Nzc4NjAsImV4cCI6MTY1NDg2OTg3Nzg2MH0.cKAfgoZwqgkMwB20Ja0E9nLAeU2h3GJNTjUy5NIgNoM",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": ""
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/message/list?p=1&threadId=2",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"message",
+						"list"
+					],
+					"query": [
+						{
+							"key": "p",
+							"value": "1"
+						},
+						{
+							"key": "threadId",
+							"value": "2"
+						}
 					]
 				}
 			},

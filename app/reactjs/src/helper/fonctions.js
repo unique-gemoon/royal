@@ -93,7 +93,7 @@ export function getUniqueListBy(arr, key) {
   return [...new Map(arr.map((item) => [item[key], item])).values()];
 }
 
-export function getUniqueListNotifications(arr) {
+export function getUniqueList(arr) {
   return arr.reduce((acc, current) => {
     const x = acc.find(
       (item) => item.id === current.id && item.type === current.type

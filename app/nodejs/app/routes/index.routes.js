@@ -6,6 +6,8 @@ import userRoutes from "./user.routes.js";
 import notificationRoutes from "./notification.routes.js";
 import commentRoutes from "./comment.routes.js";
 import citationRoutes from "./citation.routes.js";
+import messageRoutes from "./message.routes.js";
+import threadRoutes from "./thread.routes.js";
 
 var router = Router();
 
@@ -22,5 +24,9 @@ router.use("/notification", notificationRoutes);
 router.use("/comment", commentRoutes);
 
 router.use("/citation", citationRoutes);
+
+router.use("/message", messageRoutes);
+
+router.use("/thread", threadRoutes);
 
 export default router;
