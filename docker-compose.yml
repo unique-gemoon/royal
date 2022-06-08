@@ -19,6 +19,7 @@ services:
     environment:
         MYSQL_ROOT_PASSWORD: azerty
         PMA_HOST: mysqldb
+        UPLOAD_LIMIT: 300M
     ports:
         - 8001:80
 

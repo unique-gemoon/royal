@@ -12,7 +12,7 @@ import logoType from "../assets/images/Logotype.png";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile,
+  HeaderMobile
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -26,10 +26,10 @@ import endPoints from "../config/endPoints";
 import connector from "../connector";
 import {
   getMsgError,
-  getUniqueListNotifications,
+  getUniqueList,
   scrollBottomById,
   sortObjects,
-  uniqid,
+  uniqid
 } from "../helper/fonctions";
 
 export default function Home() {
@@ -62,8 +62,15 @@ export default function Home() {
   const tokenRestPassword = query.get("tokenRestPassword") || null;
   const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
   const [pageNotifications, setPageNotifications] = useState(1);
-  const [loadingMore, setLoadingMore] = useState({ notifications: false });
+  const [pageMessages, setPageMessages] = useState(1);
+  const [loadingMore, setLoadingMore] = useState({
+    notifications: false,
+    messages: false,
+  });
   const [typingCitation, setTypingCitation] = useState({});
+  const [messages, setMessages] = useState([]);
+  const [countNewMessages, setCountNewMessages] = useState(0);
+  const [totalMessages, setTotalMessages] = useState(0);
 
   const breakpointColumnsObj = {
     default: 3,
@@ -131,6 +138,17 @@ export default function Home() {
       setPageNotifications(1);
     }
   }, [pageNotifications, auth.isConnected]);
+
+  useEffect(() => {
+    if (auth.isConnected) {
+      getMessages();
+    } else {
+      setMessages([]);
+      setCountNewMessages(0);
+      setTotalMessages(0);
+      setPageMessages(1);
+    }
+  }, [pageMessages, auth.isConnected]);
 
   useEffect(() => {
     getPlis(true);
@@ -489,7 +507,7 @@ export default function Home() {
       url: `${endPoints.NOTIFICATION_NEW}?pliId=${pliId}`,
       success: (response) => {
         if (response.data.notification) {
-          const cpNotifications = getUniqueListNotifications([
+          const cpNotifications = getUniqueList([
             response.data.notification,
             ...notifications,
           ]);
@@ -512,7 +530,7 @@ export default function Home() {
       url: `${endPoints.NOTIFICATION_NEW}?commentId=${commentId}`,
       success: (response) => {
         if (response.data.notification) {
-          const cpNotifications = getUniqueListNotifications([
+          const cpNotifications = getUniqueList([
             response.data.notification,
             ...notifications,
           ]);
@@ -637,9 +655,8 @@ export default function Home() {
       method: "get",
       url: `${endPoints.NOTIFICATION_LIST}?page=${cpPageNotifications}`,
       success: (response) => {
-        //todo check double
         setNotifications(
-          getUniqueListNotifications(
+          getUniqueList(
             [...notifications, ...response.data.notifications],
             "id"
           )
@@ -702,6 +719,28 @@ export default function Home() {
       success: (response) => {
         setSubscriptions(response.data.subscriptions);
         setIsLoadedSubscriptions(true);
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const getMessages = (refresh = false) => {
+    const cpPageMessages = refresh ? 1 : pageMessages;
+    if (pageMessages != cpPageMessages) {
+      setPageMessages(cpPageMessages);
+    }
+    connector({
+      method: "get",
+      url: `${endPoints.MESSAGE_LIST}?page=${cpPageMessages}`,
+      success: (response) => {
+        setMessages(
+          getUniqueList([...messages, ...response.data.messages], "id")
+        );
+        setCountNewMessages(parseInt(response.data.totalNew));
+        setTotalMessages(parseInt(response.data.total));
+        setLoadingMore({ ...loadingMore, messages: false });
       },
       catch: (error) => {
         console.log(error);

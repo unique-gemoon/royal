@@ -22,6 +22,10 @@ const endPoints = {
   NOTIFICATION_LIST : "/notification/list", 
   NOTIFICATION_SEEN : "/notification/seen", 
   NOTIFICATION_SEEN_SUBSCRIPTIONS : "/notification/seen/subscriptions", 
+  MESSAGE_NEW : "/message/new",
+  MESSAGE_LIST : "/message/list", 
+  THREAD_LIST : "/thread/list", 
+  THREAD_NEW : "/thread/new", 
   COMMENT_NEW : "/comment/new",
   CITATION_NEW : "/citation/new",
 };
