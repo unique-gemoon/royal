@@ -71,7 +71,7 @@ export default function ItemMasonry({
 
 
   useEffect(() => {
-    setState({...state, showNV2: getShowNV2(item)});
+    setState({...state, showNV2: !getShowNV2(item)});
   }, [activeItemNV2]);
 
   useEffect(() => {

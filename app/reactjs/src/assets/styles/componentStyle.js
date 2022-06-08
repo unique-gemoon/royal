@@ -290,6 +290,7 @@ export const BlocActionButton = styled.div`
     .content-button-action{
         position: fixed;
         color: #FFF;
+        z-index: 999;
     }
     &.messages-bloc-action{
         .content-button-action{
@@ -2186,8 +2187,14 @@ export const SimpleComment = styled.div`
     &:last-child{
         border-bottom: 0;
     }
+    &:first-child{
+        &.cotte-comment {
+            margin-top: 12px;
+        }
+    }
     &.cotte-comment {
         background: #f2f2f2;
+        
     }
     .cotte-comment {
         position: absolute;
@@ -2339,21 +2346,24 @@ export const CommentItem = styled.div`
             background-color: transparent;
             padding: 0;
             margin-bottom: 12px;
-                .form-control{
-                    color: #000 !important;
-                    &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
-                        color: #6a7b89 !important;
-                    }
-                    &::-moz-placeholder { /* Firefox 19+ */
-                        color: #6a7b89 !important;
-                    }
-                    &:-ms-input-placeholder { /* IE 10+ */
-                        color: #6a7b89 !important;
-                    }
-                    &:-moz-placeholder { /* Firefox 18- */
-                        color: #6a7b89 !important;
-                    }
+            .form-control{
+                color: #000 !important;
+                &::-webkit-input-placeholder { /* Chrome/Opera/Safari */
+                    color: #6a7b89 !important;
                 }
+                &::-moz-placeholder { /* Firefox 19+ */
+                    color: #6a7b89 !important;
+                }
+                &:-ms-input-placeholder { /* IE 10+ */
+                    color: #6a7b89 !important;
+                }
+                &:-moz-placeholder { /* Firefox 18- */
+                    color: #6a7b89 !important;
+                }
+            }
+            .bloc-list-emoji{
+                bottom: 33px;
+            }
         }
     }
 `;
@@ -3075,6 +3085,11 @@ export const ChatSpace = styled.div`
     max-height: 100%;
     position: relative;
     padding: 10px 0;
+    .is-top-spinner {
+        top: -8px;
+        z-index: 11;
+        background: linear-gradient(rgba(130, 179, 244, 0) 0%, rgba(128, 177, 244, 0.94) 1.48%, rgba(128, 177, 244, 0) 100%);
+    }
   }
   .msg_cotainer {
     word-wrap: break-word;

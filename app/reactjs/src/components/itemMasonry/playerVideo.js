@@ -44,9 +44,9 @@ export default function PlayerVideo({
     if (
       activeItemPlayer &&
       activeItemPlayer.path &&
-      activeItemPlayer.id != item.id
+      activeItemPlayer.id !== item.id
     ) {
-      if (playerRef.current != null) {
+      if (playerRef.current !== null) {
         playerRef.current.pause();
       }
     }

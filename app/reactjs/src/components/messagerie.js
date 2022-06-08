@@ -262,7 +262,7 @@ export default function Messagerie({
                 onScroll={onScrollTop}
                 ref={ref}
               >
-                 {startScroll && <SpinnerLoading/>}
+                 {startScroll && <SpinnerLoading className="is-top-spinner"/>}
                 <ItemSingleMessage
                   typeSend="user-send"
                   message="Hé bien test, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave."

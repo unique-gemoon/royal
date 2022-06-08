@@ -105,22 +105,30 @@ export const HeadContentItem = styled.div`
     padding: 7px 19px 12px 13px;
     .user-info-tooltip{
         display: inline-flex;
+        & > div{
+            z-index: 999;
+        }
     }
-    .name-post{
-        margin-right: 5px;
-        font-family: 'ProximaNovaSoftW03-Semibold';
-        cursor: pointer;
+    .user-info-tooltip{
         @media(max-width: 375px){
-            margin-right: 0;
-            overflow: hidden;
-            white-space: nowrap;
-            text-overflow: ellipsis;
             max-width: 62px;
-            display: inline-block;
+            .name-post{
+                margin-right: 0;
+                overflow: hidden;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                width: 100%;
+                display: inline-block;
+            }
         }
         @media(max-width: 335px){
             max-width: 48px;
         }
+    }
+    .tooltip-post{
+        margin-right: 5px;
+        font-family: 'ProximaNovaSoftW03-Semibold';
+        cursor: pointer;
     }
     .default-tooltip{
         .MuiTooltip-popper{
