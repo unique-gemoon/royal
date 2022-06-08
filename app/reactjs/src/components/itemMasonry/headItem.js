@@ -50,6 +50,7 @@ export default function HeadItem({
   const [submitting, setSubmitting] = useState(false);
   const handleTooltipClose = () => {
     setToggleProfile(false);
+
   };
 
   const handleTooltipOpen = () => {
@@ -325,6 +326,7 @@ export default function HeadItem({
                                 activeItem: { id: 4 },
                               });
                               setState({ ...state, showModal: false });
+                              setToggleProfile(false);
                             }}
                             className="toggle-item-message"
                           >
