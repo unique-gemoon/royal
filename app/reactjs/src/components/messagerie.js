@@ -24,11 +24,13 @@ import SpinnerLoading from "./spinnerLoading";
 import { useRef } from "react";
 
 export default function Messagerie({ 
-
   setMsgNotifTopTime = () => {},
   stateFolowersMessage,
-  setFolowersMessage = () => { },
+  setFolowersMessage = () => {},
+  loadingMore = {},
+  setLoadingMore = () => {},
  }) {
+
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -38,13 +40,21 @@ export default function Messagerie({
     setAnchorEl(null);
   };
 
-  const [endScroll, setEndScroll] = useState(false)
+  const [endScroll, setEndScroll] = useState(false);
+  const [startScroll, setStartScroll] = useState(false);
   const ref = useRef(null);
 
   const onScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
-    if (scrollTop + clientHeight === scrollHeight) {
+    if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
       setEndScroll(true);
+    }
+  }
+
+  const onScrollTop = () => {
+    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    if (parseInt(scrollTop) == 0) {
+      setStartScroll(true);
     }
   }
   
@@ -249,10 +259,13 @@ export default function Messagerie({
               <div
                 className="content-space-chat show-typing"
                 id="messages-container"
+                onScroll={onScrollTop}
+                ref={ref}
               >
+                 {startScroll && <SpinnerLoading/>}
                 <ItemSingleMessage
                   typeSend="user-send"
-                  message="Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave."
+                  message="Hé bien test, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave."
                   date="Hier . 19:20"
                   stautVu="vuReading"
                 />

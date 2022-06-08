@@ -63,14 +63,18 @@ export default function Home() {
   const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
   const [pageNotifications, setPageNotifications] = useState(1);
   const [pageMessages, setPageMessages] = useState(1);
+  const [pageThreads, setPageThreads] = useState(1);
   const [loadingMore, setLoadingMore] = useState({
     notifications: false,
     messages: false,
+    threads: false,
   });
   const [typingCitation, setTypingCitation] = useState({});
   const [messages, setMessages] = useState([]);
   const [countNewMessages, setCountNewMessages] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
+  const [totalThreads, setTotalThreads] = useState(0);
+  const [threads, setThreads] = useState([]);
 
   const breakpointColumnsObj = {
     default: 3,
@@ -149,6 +153,16 @@ export default function Home() {
       setPageMessages(1);
     }
   }, [pageMessages, auth.isConnected]);
+
+  useEffect(() => {
+    if (auth.isConnected) {
+      getThreads();
+    } else {
+      setThreads([]);
+      setTotalThreads(0);
+      setPageThreads(1);
+    }
+  }, [pageThreads, auth.isConnected]);
 
   useEffect(() => {
     getPlis(true);
@@ -672,9 +686,21 @@ export default function Home() {
   };
 
   const setLoadingMoreCheck = (e) => {
-    if (e.notifications && notifications.length < totalNotifications) {
-      setLoadingMore({ ...loadingMore, notifications: e });
-      setPageNotifications(pageNotifications + 1);
+    if (e.notifications) {
+      if(notifications.length < totalNotifications){
+        setLoadingMore({ ...loadingMore, notifications: e });
+        setPageNotifications(pageNotifications + 1);
+      }
+    }else if(e.threads){
+      if(threads.length < totalThreads){
+        setLoadingMore({ ...loadingMore, threads: e });
+        setPageThreads(pageThreads + 1);
+      }
+    }else if(e.messages){
+      if(messages.length < totalMessages){
+        setLoadingMore({ ...loadingMore, messages: e });
+        setPageMessages(pageMessages + 1);
+      }
     }
   };
 
@@ -741,6 +767,27 @@ export default function Home() {
         setCountNewMessages(parseInt(response.data.totalNew));
         setTotalMessages(parseInt(response.data.total));
         setLoadingMore({ ...loadingMore, messages: false });
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
+
+  const getThreads = (refresh = false) => {
+    const cpPageThreads = refresh ? 1 : pageThreads;
+    if (pageThreads != cpPageThreads) {
+      setPageThreads(cpPageThreads);
+    }
+    connector({
+      method: "get",
+      url: `${endPoints.THREAD_LIST}?page=${cpPageThreads}`,
+      success: (response) => {
+        setThreads(
+          getUniqueList([...threads, ...response.data.threads], "id")
+        );
+        setTotalThreads(parseInt(response.data.total));
+        setLoadingMore({ ...loadingMore, threads: false });
       },
       catch: (error) => {
         console.log(error);
