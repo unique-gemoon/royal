@@ -69,6 +69,8 @@ export default function OptionsBtnFooter({
           setMsgNotifTopTime={setMsgNotifTopTime}
           stateFolowersMessage={stateFolowersMessage}
           setFolowersMessage={setFolowersMessage}
+          loadingMore={loadingMore}
+          setLoadingMore={setLoadingMore}
         />
       </ButtonAction>
       <ButtonAction
