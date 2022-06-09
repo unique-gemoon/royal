@@ -33,7 +33,7 @@ export function newThread(req, res) {
   })
     .then((thread) => {
       if (thread) {
-        res.status(200).send({ message: "ok", thread: { id: thread.id } });
+        res.status(200).send({ message: "ok", thread: { id: thread.id  } });
       } else {
         Thread.create(
           {

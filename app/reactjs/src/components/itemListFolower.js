@@ -7,6 +7,7 @@ import { ItemFolower } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { getMsgError } from "../helper/fonctions";
+import { socket } from "./socket";
 
 export default function ItemListFolower({
   folowersMessage,
@@ -16,6 +17,8 @@ export default function ItemListFolower({
   onClick,
   shwoButtonMessage = true,
   setMsgNotifTopTime = () => {},
+  threads = [],
+  setThreads = () => {},
 }) {
   const [submitting, setSubmitting] = useState(false);
 
@@ -31,7 +34,11 @@ export default function ItemListFolower({
             submit: false,
             msg: `Vous êtes désormais abonné à "${item.username}".`,
           });
-          setItem({ ...item, isSubscribed: true, notification : response.data.notification });
+          setItem({
+            ...item,
+            isSubscribed: true,
+            notification: response.data.notification,
+          });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -52,13 +59,60 @@ export default function ItemListFolower({
             submit: false,
             msg: `Vous êtes désormais désabonné de "${item.username}".`,
           });
-          setItem({ ...item, isSubscribed: false, notification : response.data.notification });
+          setItem({
+            ...item,
+            isSubscribed: false,
+            notification: response.data.notification,
+          });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
         },
       });
     }
+  };
+
+  const getThread = (item) => {
+    connector({
+      method: "post",
+      url: endPoints.THREAD_NEW,
+      data: { userId: item.id },
+      success: (response) => {
+        if (response.data?.thread) {
+          const thread = {
+            id: -1,
+            userId: item.id,
+            thread: {
+              id: response.data.thread.id,
+              messages: [],
+            },
+            user: {
+              username: item.username,
+            },
+          };
+          setFolowersMessage({
+            ...folowersMessage,
+            activeItem: thread,
+          });
+
+          //todo check thred
+          let existe = false;
+          for (let i = 0; i < threads.length; i++) {
+            if (threads[i].thread.id === thread.thread.id) {
+              existe = true;
+              break;
+            }
+          }
+          if (!existe) {
+            setThreads([thread, ...threads]);
+            socket.emit("CLIENT_THREAD", thread);
+          }
+        }
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
   };
 
   const msgErrors = (e) => {
@@ -70,7 +124,7 @@ export default function ItemListFolower({
     <ItemFolower key={item.id}>
       <span
         onClick={() => {
-          setFolowersMessage({ ...folowersMessage, activeItem: item });
+          getThread(item);
         }}
       >
         {item.username}

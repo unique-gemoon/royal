@@ -98,6 +98,8 @@ export default function OptionsBtnFooter({
           setAction={setAction}
           setMsgNotifTopTime={setMsgNotifTopTime}
           updateSubscriberStatus={updateSubscriberStatus}
+          threads={threads}
+          setThreads={setThreads}
         />
       </ButtonAction>
       {isTabletOrMobile && (
@@ -132,6 +134,8 @@ export default function OptionsBtnFooter({
           setSubscribers={setSubscribers}
           subscriptions={subscriptions}
           setSubscriptions={setSubscriptions}
+          threads={threads}
+          setThreads={setThreads}
         />
       </ButtonAction>
       <ButtonAction
