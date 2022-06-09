@@ -181,6 +181,25 @@ export default function HeadItem({
     if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
   };
 
+
+  const [createdAt, setCreatedAt] = useState(item.createdAt);
+  const [seconds, setSeconds] = useState(0);
+
+  useEffect(() => {
+    setCreatedAt(item.createdAt);
+  }, [item.createdAt]);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSeconds((seconds) => seconds + 1);
+    }, 1000);
+    return () => clearInterval(interval); 
+  }, []);
+
+  useEffect(() => {
+      setCreatedAt(getDurationHM(moment(), item.createdAt));
+  }, [seconds]);
+
   return (
     <HeadContentItem>
       <div className="bloc-content-item">
@@ -380,7 +399,7 @@ export default function HeadItem({
             </div>
           </ClickAwayListener>
           <span className="timer-post">
-            {getDurationHM(moment(), item.createdAt)}
+            {'. '}{createdAt}
           </span>
         </div>
       </div>
