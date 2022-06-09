@@ -79,14 +79,15 @@ export function getPercentInt(val, total) {
 }
 
 export function getDurationHM(from, to) {
+  console.log(from, to);
   if (!from || !to) {
     return "";
   }
   const d = from.diff(to, "days");
-  const h = from.diff(to, "hours") % 24;
-  const m = parseInt(from.diff(to, "minutes") / 24) % 60;
+  const h = from.diff(to, "hours") % 24; 
+  const m = from.diff(to, "minutes") %60;
   if(d==0 && h == 0 && m == 0){
-    return "Mainten.";
+    return "1m";
   }else if(d==1){
     return "Hier";
   }else if(d>1){
