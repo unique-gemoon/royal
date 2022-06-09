@@ -7,6 +7,7 @@ export default function InputTextareaAutosize({
   value = "",
   type = "text",
   as = "",
+  onKeyPress,
   onChange = () => {},
   onClick = () => {},
   ...props
@@ -15,6 +16,7 @@ export default function InputTextareaAutosize({
     <TextareaAutosize
       className={`form-control ${props.className}`}
       name={name}
+      onKeyPress={onKeyPress}
       value={value}
       placeholder={placeholder}
       type={type}

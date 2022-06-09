@@ -113,7 +113,6 @@ export const HeadContentItem = styled.div`
         @media(max-width: 375px){
             max-width: 62px;
             .name-post{
-                margin-right: 0;
                 overflow: hidden;
                 white-space: nowrap;
                 text-overflow: ellipsis;

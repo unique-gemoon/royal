@@ -1271,10 +1271,8 @@ export const FormEmoji = styled.div`
         width: 100%;
         margin-right: 8px;
         &.is-waiting{
-            pointer-events: none;
-            textarea{
-                opacity: .8;
-                border-bottom: 1px solid red;
+            .timer-waiting {
+                color: red;
             }
             
         }
