@@ -61,7 +61,6 @@ export default function Messagerie({
   const [pageMessages, setPageMessages] = useState(1);
   const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
   const [users, setUsers] = useState([]);
-  const [searchFolower, setSearchFolower] = useState(null);
 
   useEffect(() => {
     const cpSubscriptions = [];
@@ -201,7 +200,7 @@ export default function Messagerie({
 
     const updateThread = (item) => {
       if (auth.isConnected) {
-        if (auth.user.id == item.userId) {
+        if (auth.user.id == item.otherUser.id) {
           let existe = false;
           for (let i = 0; i < threads.length; i++) {
             if (threads[i].thread.id === item.thread.id) {

@@ -3,6 +3,7 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import { Button } from "@mui/material";
 import React, { useState } from "react";
+import { useSelector } from "react-redux";
 import { ItemFolower } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
@@ -21,6 +22,7 @@ export default function ItemListFolower({
   setThreads = () => {},
 }) {
   const [submitting, setSubmitting] = useState(false);
+  const auth = useSelector((store) => store.auth);
 
   const subscribe = () => {
     if (!submitting) {
@@ -105,7 +107,22 @@ export default function ItemListFolower({
           }
           if (!existe) {
             setThreads([thread, ...threads]);
-            socket.emit("CLIENT_THREAD", thread);
+            const otherThread = {
+              id: -1,
+              userId: auth.user.id,
+              thread: {
+                id: response.data.thread.id,
+                messages: [],
+              },
+              user: {
+                username: auth.user.username,
+              },
+              otherUser:{
+                id: item.id,
+                username: item.username,
+              }
+            };
+            socket.emit("CLIENT_THREAD", otherThread);
           }
         }
       },
