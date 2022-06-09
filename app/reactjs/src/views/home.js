@@ -66,7 +66,6 @@ export default function Home() {
   const [loadingMore, setLoadingMore] = useState({
     notifications: false,
     threads: false,
-    messages: false,
   });
   const [typingCitation, setTypingCitation] = useState({});
   const [totalThreads, setTotalThreads] = useState(0);
@@ -673,16 +672,14 @@ export default function Home() {
   const setLoadingMoreCheck = (e) => {
     if (e.notifications) {
       if(notifications.length < totalNotifications){
-        setLoadingMore({ ...loadingMore, notifications: e });
+        setLoadingMore({ ...loadingMore, notifications: true });
         setPageNotifications(pageNotifications + 1);
       }
     }else if(e.threads){
       if(threads.length < totalThreads){
-        setLoadingMore({ ...loadingMore, threads: e });
+        setLoadingMore({ ...loadingMore, threads: true });
         setPageThreads(pageThreads + 1);
       }
-    }else if(e.messages){
-        setLoadingMore({ ...loadingMore, threads: e });
     }
   };
 

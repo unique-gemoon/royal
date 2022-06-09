@@ -18,7 +18,11 @@ import {
 } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
-import { getDurationHM, getUniqueList } from "../helper/fonctions";
+import {
+  getDurationHM,
+  getUniqueList,
+  scrollToElement,
+} from "../helper/fonctions";
 import ItemListFolower from "./itemListFolower";
 import ItemSingleMessage from "./itemSingleMessage";
 import ListMessagerie from "./listMessagerie";
@@ -35,6 +39,11 @@ export default function Messagerie({
   setLoadingMore = () => {},
   threads = [],
   setThreads = () => {},
+  subscribers = [],
+  setSubscribers = () => {},
+  subscriptions = [],
+  setSubscriptions = () => {},
+  updateSubscriberStatus = () => {},
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -50,6 +59,7 @@ export default function Messagerie({
   //const [countNewMessages, setCountNewMessages] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [pageMessages, setPageMessages] = useState(1);
+  const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
 
   const onScrollThreads = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
@@ -62,7 +72,7 @@ export default function Messagerie({
     const { scrollTop } = ref.current;
     if (parseInt(scrollTop) == 0) {
       if (messages.length < totalMessages) {
-        setLoadingMore({ ...loadingMore, messages: true });
+        setLoadingMoreMessages(true);
         setPageMessages(pageMessages + 1);
       }
     }
@@ -140,17 +150,16 @@ export default function Messagerie({
         method: "get",
         url: `${endPoints.MESSAGE_LIST}?page=${cpPageMessages}&threadId=${folowersMessage.activeItem.thread.id}`,
         success: (response) => {
+          const data = [...response.data.messages].reverse();
           if (refresh) {
-            setMessages([...response.data.messages]);
+            setMessages(data);
           } else {
-            setMessages(
-              getUniqueList([...messages, ...response.data.messages], "id")
-            );
+            setMessages(getUniqueList([...data, ...messages], "id"));
           }
-
           //setCountNewMessages(parseInt(response.data.totalNew));
           setTotalMessages(parseInt(response.data.total));
-          setLoadingMore({ ...loadingMore, messages: false });
+          setLoadingMoreMessages(false);
+          scrollToElement("message_9");
         },
         catch: (error) => {
           console.log(error);
@@ -160,7 +169,10 @@ export default function Messagerie({
   };
 
   const saveMessage = async (data) => {
-    if (folowersMessage?.activeItem?.thread?.id && folowersMessage.activeItem?.userId) {
+    if (
+      folowersMessage?.activeItem?.thread?.id &&
+      folowersMessage.activeItem?.userId
+    ) {
       data = { ...data, threadId: folowersMessage.activeItem.thread.id };
       return await connector({
         method: "post",
@@ -199,6 +211,33 @@ export default function Messagerie({
       socket.off("SERVER_MESSAGE", updateMessage);
     };
   }, [threads, messages, auth]);
+
+  const setItem = (item) => {
+    if (item.index !== undefined) {
+      if (subscriptions[item.index]) {
+        const cpSubscriptions = [...subscriptions];
+        cpSubscriptions[item.index] = item;
+        setSubscriptions(cpSubscriptions);
+
+        let existe = false;
+        const cpSubscribers = [...subscribers];
+        for (let i = 0; i < cpSubscribers.length; i++) {
+          const subscriber = cpSubscribers[i];
+          if (subscriber.id == item.id) {
+            existe = true;
+            cpSubscribers[i].isSubscribed = item.isSubscribed;
+            break;
+          }
+        }
+
+        if (!existe) {
+          cpSubscribers.push({ ...item, type: "subscriber" });
+        }
+        setSubscribers(cpSubscribers);
+      }
+      updateSubscriberStatus(item);
+    }
+  };
 
   return (
     <BlocMessagerie>
@@ -252,7 +291,7 @@ export default function Messagerie({
               <KeyboardArrowLeftIcon />
             </span>
             <span className="name-messagerie">
-              {folowersMessage.activeItem.user.username}
+              {folowersMessage.activeItem?.user?.username}
             </span>
             <div>
               <Button
@@ -298,7 +337,7 @@ export default function Messagerie({
                 onScroll={onScrollMessages}
                 ref={ref}
               >
-                {loadingMore.messages && (
+                {loadingMoreMessages && (
                   <SpinnerLoading className="is-top-spinner" />
                 )}
 
@@ -309,6 +348,7 @@ export default function Messagerie({
                       typeSend={row.userId == auth.user.id ? "user-send" : ""}
                       message={row.message}
                       date={getDurationHM(moment(), row.message.createdAt)}
+                      index={index}
                       stautVu={
                         row.userId == auth.user.id && row.seen
                           ? "vuReading"
@@ -340,7 +380,7 @@ export default function Messagerie({
           </div>
         </div>
       ) : null}
-      {folowersMessage.showSearchFolower ? (
+      {folowersMessage.showSearchFolower && (
         <MessageFindFolower>
           <div className="header-messagerie">
             <span
@@ -386,16 +426,24 @@ export default function Messagerie({
           {folowersMessage.resultSearch ? (
             <div className="content-search-results">
               <div className="list-result-search">
-                {dataFolower.map((item, index) => (
-                  <ItemListFolower
-                    setMsgNotifTopTime={setMsgNotifTopTime}
-                    folowersMessage={folowersMessage}
-                    setFolowersMessage={setFolowersMessage}
-                    shwoButtonMessage={false}
-                    key={index}
-                    item={item}
-                  />
-                ))}
+                {subscriptions.length > 0 &&
+                  subscriptions.map((item, index) => (
+                    <ItemListFolower
+                      folowersMessage={folowersMessage}
+                      setFolowersMessage={setFolowersMessage}
+                      shwoButtonMessage={false}
+                      key={index}
+                      item={{ ...item, index }}
+                      setItem={setItem}
+                      setMsgNotifTopTime={setMsgNotifTopTime}
+                      onClick={() => {
+                        setFolowersMessage({
+                          ...folowersMessage,
+                          activeItem: { id: item.id },
+                        });
+                      }}
+                    />
+                  ))}
               </div>
             </div>
           ) : null}
@@ -403,8 +451,6 @@ export default function Messagerie({
             {folowersMessage.activeItem.name}
           </span>
         </MessageFindFolower>
-      ) : (
-        <p>No resultat</p>
       )}
     </BlocMessagerie>
   );
