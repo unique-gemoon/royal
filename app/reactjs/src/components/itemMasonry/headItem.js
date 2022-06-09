@@ -40,7 +40,7 @@ export default function HeadItem({
   activeItem,
   setActiveItem = () => {},
   setMsgNotifTopTime = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
 }) {
@@ -322,7 +322,7 @@ export default function HeadItem({
                               };
                               setAction(cpAction);
                               setFolowersMessage({
-                                ...stateFolowersMessage,
+                                ...folowersMessage,
                                 activeItem: { id: 4 },
                               });
                               setState({ ...state, showModal: false });
@@ -419,7 +419,7 @@ export default function HeadItem({
         )}
         <div
           className={`nb-message-comment ${
-            (activeItem && activeItem.id == item.id ) || (state.showModal && state.showCitation) || (!state.showModal && state.showNV2) // verifier close in modale
+            (activeItem && activeItem.id == item.id )  || (state.showModal && state.showCitation)/* || (!state.showModal && state.showNV2)  */// verifier close in modale
               ? "comment-is-open"
               : ""
           }`}

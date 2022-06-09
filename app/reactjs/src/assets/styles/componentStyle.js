@@ -3043,7 +3043,7 @@ export const ChatSpace = styled.div`
   overflow: hidden;
   position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   .head-space-chat {
     background-color: #fafafa;
     border-bottom: 1px solid #e9e9e9;
@@ -3086,9 +3086,10 @@ export const ChatSpace = styled.div`
     position: relative;
     padding: 10px 0;
     .is-top-spinner {
-        top: -8px;
+        top: 0;
+        bottom: auto;
         z-index: 11;
-        background: linear-gradient(rgba(130, 179, 244, 0) 0%, rgba(128, 177, 244, 0.94) 1.48%, rgba(128, 177, 244, 0) 100%);
+        background: linear-gradient(rgba(130,179,244,0) 0%,rgba(128,177,244,0.6) 1.48%,rgba(128,177,244,0) 100%);
     }
   }
   .msg_cotainer {

@@ -16,7 +16,7 @@ export default function OptionsBtnFooter({
   setMsgNotifTopTime = () => {},
   publishPli = null,
   setPublishPli = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
   notifications = [],
@@ -30,7 +30,9 @@ export default function OptionsBtnFooter({
   loadingMore={},
   setLoadingMore=() => {},
   setActiveItemNV2=() => {},
-  plis=[]
+  plis=[],
+  threads=[],
+  setThreads=() => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -62,15 +64,22 @@ export default function OptionsBtnFooter({
         setAction={(e) => {
           updateAction(e, "messagerie");
         }}
-        stateFolowersMessage={stateFolowersMessage}
+        folowersMessage={folowersMessage}
         setFolowersMessage={setFolowersMessage}
       >
         <Messagerie
           setMsgNotifTopTime={setMsgNotifTopTime}
-          stateFolowersMessage={stateFolowersMessage}
+          folowersMessage={folowersMessage}
           setFolowersMessage={setFolowersMessage}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
+          threads={threads}
+          setThreads={setThreads}
+          subscribers={subscribers}
+          setSubscribers={setSubscribers}
+          subscriptions={subscriptions}
+          setSubscriptions={setSubscriptions}
+          updateSubscriberStatus={updateSubscriberStatus}
         />
       </ButtonAction>
       <ButtonAction
@@ -83,7 +92,7 @@ export default function OptionsBtnFooter({
         }}
       >
         <SearchFolowers
-          stateFolowersMessage={stateFolowersMessage}
+          folowersMessage={folowersMessage}
           setFolowersMessage={setFolowersMessage}
           action={action}
           setAction={setAction}
@@ -112,7 +121,7 @@ export default function OptionsBtnFooter({
         }}
       >
         <BlocFolowers
-          stateFolowersMessage={stateFolowersMessage}
+          folowersMessage={folowersMessage}
           setFolowersMessage={setFolowersMessage}
           action={action}
           setAction={setAction}

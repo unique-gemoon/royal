@@ -124,6 +124,14 @@ io.on("connection", (socket) => {
     io.emit("SERVER_CITATION", data);
   });
 
+  socket.on("CLIENT_MESSAGE", (data) => {
+    io.emit("SERVER_MESSAGE", data);
+  });
+
+  socket.on("CLIENT_TYPING_MESSAGE", (data) => {
+    io.emit("SERVER_TYPING_MESSAGE", data);
+  });
+
   socket.on("CLIENT_OPEN_PLI", (data) => {
     if (
       data.id != undefined &&

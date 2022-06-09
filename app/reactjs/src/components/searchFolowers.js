@@ -14,7 +14,7 @@ import Input from "./ui-elements/input";
 export default function SearchFolowers({
   action,
   setAction = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   setMsgNotifTopTime = () => {},
   updateSubscriberStatus = () => {},
@@ -163,7 +163,7 @@ export default function SearchFolowers({
                     };
                     setAction(cpAction);
                     setFolowersMessage({
-                      ...stateFolowersMessage,
+                      ...folowersMessage,
                       activeItem: { id: 4 },
                     });
                   }}

@@ -26,7 +26,7 @@ export default function ItemMasonry({
   activeItemPlayer = null,
   setMsgNotifTopTime = () => {},
   setStateModal = () => {},
-  stateFolowersMessage,
+  folowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
   activeItemNV2={},
@@ -132,7 +132,7 @@ export default function ItemMasonry({
           activeItem={activeItem}
           setActiveItem={setActiveItem}
           setMsgNotifTopTime={setMsgNotifTopTime}
-          stateFolowersMessage={stateFolowersMessage}
+          folowersMessage={folowersMessage}
           setFolowersMessage={setFolowersMessage}
           updateSubscriberStatus={updateSubscriberStatus}
         />

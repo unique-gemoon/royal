@@ -1,43 +1,94 @@
-import React from 'react';
-import DoneIcon from '@mui/icons-material/Done';
-import DoneAllIcon from '@mui/icons-material/DoneAll';
-import { ListItemsMessagerie, ItemListMessagerie } from '../assets/styles/componentStyle';
+import DoneIcon from "@mui/icons-material/Done";
+import DoneAllIcon from "@mui/icons-material/DoneAll";
+import React from "react";
+import { useSelector } from "react-redux";
+import {
+  ItemListMessagerie,
+  ListItemsMessagerie,
+} from "../assets/styles/componentStyle";
+import { getDurationHM } from "../helper/fonctions";
+import moment from "moment";
 
+export default function ListMessagerie({
+  threads = [],
+  setThreads = () => {},
+  folowersMessage,
+  setFolowersMessage = () => {},
+}) {
+  const auth = useSelector((store) => store.auth);
 
-export default function ListMessagerie({ data = [], setData = () => { }, state, setState=()=>{}, ...props }) {
-    const showData = () => {
+  const getEtat = (row) => {
+    let message = row.thread.messages.length > 0 ? row.thread.messages[0] : {};
+    let etat = "";
 
-        if (data.length === 0) {
-            return (
-                <div className="no-content-loading" style={{ textAlign: "center" }}>
-                    Aucune donnée
-                </div>
-            );
+    if (message) {
+      if (message.userId == auth.user.id) {
+        if (message.seen) {
+          etat = "read";
+        } else {
+          etat = "send";
         }
-        return data.map((row, index) => (
-            <ItemListMessagerie
-                key={index}
-                onClick={() => {
-                    setState({ ...state, activeItem: row });
-                    let cpData = [...data];
-                    cpData = cpData.map((d) => { return (d.id == row.id) ? { ...d, newMessage: false } : d; });
-                    setData(cpData);
-                }}
-            >
-                <div className='head-item-list-message'>
-                    <span className={`name-item-message ${row.newMessage ? "hasMesaage" : ""}`}>{row.name}</span>
-                    <span className='date-message'>
-                        {row.etat === "send" ? <DoneIcon /> : row.etat === "reading" ? <DoneAllIcon /> : null}
-                        {row.timer}
-                    </span>
-                </div>
-                <div className='last-item-message'>{row.lastMesssage}</div>
-            </ItemListMessagerie>
-        ));
-    };
-    return (
-        <ListItemsMessagerie>
-            {showData()}
-        </ListItemsMessagerie>
-    );
+      } else {
+        if (!message.seen) {
+          etat = "receive";
+        }
+      }
+    }
+    return etat;
+  };
+
+  return (
+    <ListItemsMessagerie>
+      {threads.length > 0 &&
+        threads.map((row, index) => (
+          <ItemListMessagerie
+            key={index}
+            onClick={() => {
+              setFolowersMessage({ ...folowersMessage, activeItem: row });
+              if (row.thread.messages.length > 0 && row.thread.messages[0].userId != auth.user.id ) {
+                let cpThreads = [...threads];
+                const cpThread = cpThreads[index];
+                cpThreads[index] = {
+                  ...cpThread,
+                  thread: {
+                    ...cpThread.thread,
+                    messages: [{ ...cpThread.thread.messages[0], seen: true }],
+                  },
+                };
+                setThreads(cpThreads);
+              }
+            }}
+          >
+            <div className="head-item-list-message">
+              <span
+                className={`name-item-message ${
+                  getEtat(row) == "receive" ? "hasMesaage" : ""
+                }`}
+              >
+                {row.user.username}
+              </span>
+              <span className="date-message">
+                {getEtat(row) === "send" ? (
+                  <DoneIcon />
+                ) : getEtat(row) === "reading" ? (
+                  <DoneAllIcon />
+                ) : null}
+                {row.thread.messages.length > 0 &&
+                  getDurationHM(moment(), row.thread.messages[0].createdAt)}
+              </span>
+            </div>
+            <div className="last-item-message">
+              {getEtat(row)}
+              {row.thread.messages.length > 0 && row.thread.messages[0].message}
+            </div>
+          </ItemListMessagerie>
+        ))}
+
+      {threads.length == 0 && (
+        <div className="no-content-loading" style={{ textAlign: "center" }}>
+          Aucune donnée
+        </div>
+      )}
+    </ListItemsMessagerie>
+  );
 }

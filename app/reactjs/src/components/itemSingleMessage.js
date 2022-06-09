@@ -7,6 +7,7 @@ export default function ItemSingleMessage({
   date,
   stautVu,
   typeSend,
+  index
 }) {
   const getSend = () => {
     switch (typeSend) {
@@ -37,6 +38,7 @@ export default function ItemSingleMessage({
           ? "justify-content-end"
           : "justify-content-start"
       } mb-2`}
+      id={`message_${index+1}`}
     >
       <div className={`msg_cotainer ${getSend()}`}>
         <div className="content-msg">{message}</div>

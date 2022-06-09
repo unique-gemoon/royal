@@ -62,17 +62,12 @@ export default function Home() {
   const tokenRestPassword = query.get("tokenRestPassword") || null;
   const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
   const [pageNotifications, setPageNotifications] = useState(1);
-  const [pageMessages, setPageMessages] = useState(1);
   const [pageThreads, setPageThreads] = useState(1);
   const [loadingMore, setLoadingMore] = useState({
     notifications: false,
-    messages: false,
     threads: false,
   });
   const [typingCitation, setTypingCitation] = useState({});
-  const [messages, setMessages] = useState([]);
-  const [countNewMessages, setCountNewMessages] = useState(0);
-  const [totalMessages, setTotalMessages] = useState(0);
   const [totalThreads, setTotalThreads] = useState(0);
   const [threads, setThreads] = useState([]);
 
@@ -82,7 +77,7 @@ export default function Home() {
     993: 1,
   };
 
-  const [stateFolowersMessage, setFolowersMessage] = useState({
+  const [folowersMessage, setFolowersMessage] = useState({
     showSearchFolower: false,
     activeItem: false,
     resultSearch: false,
@@ -142,17 +137,6 @@ export default function Home() {
       setPageNotifications(1);
     }
   }, [pageNotifications, auth.isConnected]);
-
-  useEffect(() => {
-    if (auth.isConnected) {
-      getMessages();
-    } else {
-      setMessages([]);
-      setCountNewMessages(0);
-      setTotalMessages(0);
-      setPageMessages(1);
-    }
-  }, [pageMessages, auth.isConnected]);
 
   useEffect(() => {
     if (auth.isConnected) {
@@ -688,18 +672,13 @@ export default function Home() {
   const setLoadingMoreCheck = (e) => {
     if (e.notifications) {
       if(notifications.length < totalNotifications){
-        setLoadingMore({ ...loadingMore, notifications: e });
+        setLoadingMore({ ...loadingMore, notifications: true });
         setPageNotifications(pageNotifications + 1);
       }
     }else if(e.threads){
       if(threads.length < totalThreads){
-        setLoadingMore({ ...loadingMore, threads: e });
+        setLoadingMore({ ...loadingMore, threads: true });
         setPageThreads(pageThreads + 1);
-      }
-    }else if(e.messages){
-      if(messages.length < totalMessages){
-        setLoadingMore({ ...loadingMore, messages: e });
-        setPageMessages(pageMessages + 1);
       }
     }
   };
@@ -745,28 +724,6 @@ export default function Home() {
       success: (response) => {
         setSubscriptions(response.data.subscriptions);
         setIsLoadedSubscriptions(true);
-      },
-      catch: (error) => {
-        console.log(error);
-      },
-    });
-  };
-
-  const getMessages = (refresh = false) => {
-    const cpPageMessages = refresh ? 1 : pageMessages;
-    if (pageMessages != cpPageMessages) {
-      setPageMessages(cpPageMessages);
-    }
-    connector({
-      method: "get",
-      url: `${endPoints.MESSAGE_LIST}?page=${cpPageMessages}`,
-      success: (response) => {
-        setMessages(
-          getUniqueList([...messages, ...response.data.messages], "id")
-        );
-        setCountNewMessages(parseInt(response.data.totalNew));
-        setTotalMessages(parseInt(response.data.total));
-        setLoadingMore({ ...loadingMore, messages: false });
       },
       catch: (error) => {
         console.log(error);
@@ -845,7 +802,7 @@ export default function Home() {
                   setActiveItemPlayer={setActiveItemPlayer}
                   setMsgNotifTopTime={setMsgNotifTopTime}
                   setStateModal={setStateModal}
-                  stateFolowersMessage={stateFolowersMessage}
+                  folowersMessage={folowersMessage}
                   setFolowersMessage={setFolowersMessage}
                   updateSubscriberStatus={updateSubscriberStatus}
                   activeItemNV2={activeItemNV2}
@@ -872,7 +829,7 @@ export default function Home() {
             publishPli={publishPli}
             setPublishPli={setPublishPli}
             countConnection={countConnection}
-            stateFolowersMessage={stateFolowersMessage}
+            folowersMessage={folowersMessage}
             setFolowersMessage={setFolowersMessage}
             updateSubscriberStatus={updateSubscriberStatus}
             notifications={notifications}
@@ -888,6 +845,8 @@ export default function Home() {
             setLoadingMore={setLoadingMoreCheck}
             setActiveItemNV2={setActiveItemNV2}
             plis={plis}
+            threads={threads}
+            setThreads={setThreads}
           />
         )}
         <ModalMessage
