@@ -18,6 +18,8 @@ export default function SearchFolowers({
   setFolowersMessage = () => {},
   setMsgNotifTopTime = () => {},
   updateSubscriberStatus = () => {},
+  threads=[],
+  setThreads= () => {},
 }) {
   const auth = useSelector((store) => store.auth);
   const [showResult, setShowResult] = useState(false);
@@ -153,6 +155,8 @@ export default function SearchFolowers({
                   item={{ ...item, index }}
                   setItem={setItem}
                   setMsgNotifTopTime={setMsgNotifTopTime}
+                  threads={threads}
+                  setThreads={setThreads}
                   onClick={() => {
                     const cpAction = {
                       ...action,
@@ -162,10 +166,6 @@ export default function SearchFolowers({
                       messagerie: { ...action.messagerie, isOpen: true },
                     };
                     setAction(cpAction);
-                    setFolowersMessage({
-                      ...folowersMessage,
-                      activeItem: { id: 4 },
-                    });
                   }}
                 />
               )}

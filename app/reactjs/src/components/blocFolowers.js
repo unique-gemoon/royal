@@ -21,6 +21,8 @@ export default function BlocFolowers({
   setSubscribers = () => {},
   subscriptions = [],
   setSubscriptions= () => {} ,
+  threads=[],
+  setThreads= () => {} ,
 }) {
   const [value, setValue] = React.useState("1");
   const [endScroll, setEndScroll] = useState(false);
@@ -134,6 +136,8 @@ export default function BlocFolowers({
                     item={{ ...item, type: "subscriber", index }}
                     setItem={setItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}
+                    threads={threads}
+                    setThreads={setThreads}
                     onClick={() => {
                       const cpAction = {
                         ...action,
@@ -162,6 +166,8 @@ export default function BlocFolowers({
                     item={{ ...item, type: "subscription", index }}
                     setItem={setItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}
+                    threads={threads}
+                    setThreads={setThreads}
                     onClick={() => {
                       const cpAction = {
                         ...action,

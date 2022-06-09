@@ -78,7 +78,6 @@ export default function ListMessagerie({
               </span>
             </div>
             <div className="last-item-message">
-              {getEtat(row)}
               {row.thread.messages.length > 0 && row.thread.messages[0].message}
             </div>
           </ItemListMessagerie>

@@ -14,22 +14,22 @@ import {
   BlocMessagerie,
   ChatSpace,
   LoadingMessage,
-  MessageFindFolower,
+  MessageFindFolower
 } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import {
   getDurationHM,
   getUniqueList,
-  scrollToElement,
+  scrollToElement
 } from "../helper/fonctions";
 import ItemListFolower from "./itemListFolower";
 import ItemSingleMessage from "./itemSingleMessage";
 import ListMessagerie from "./listMessagerie";
+import { socket } from "./socket";
 import SpinnerLoading from "./spinnerLoading";
 import Input from "./ui-elements/input";
 import InputEmoji from "./ui-elements/inputEmoji";
-import { socket } from "./socket";
 
 export default function Messagerie({
   setMsgNotifTopTime = () => {},
@@ -60,6 +60,22 @@ export default function Messagerie({
   const [totalMessages, setTotalMessages] = useState(0);
   const [pageMessages, setPageMessages] = useState(1);
   const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
+  const [users, setUsers] = useState([]);
+
+  useEffect(() => {
+    const cpSubscriptions = [];
+    for (let i = 0; i < subscriptions.length; i++) {
+      const user = subscriptions[i];
+      let show = false;
+      if (
+        String(user.username).indexOf(String(folowersMessage.search.value)) == 0
+      ) {
+        show = true;
+      }
+      cpSubscriptions.push({ ...user, show });
+    }
+    setUsers(cpSubscriptions);
+  }, [subscriptions, folowersMessage.search.value]);
 
   const onScrollThreads = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
@@ -77,45 +93,6 @@ export default function Messagerie({
       }
     }
   };
-
-  const [dataFolower, setDataFolower] = useState([
-    {
-      id: 4,
-      name: "LangNickname",
-      idMessanger: 12,
-      statut: 0,
-    },
-    {
-      id: 5,
-      name: "Elly",
-      idMessanger: 12,
-      statut: 0,
-    },
-    {
-      id: 6,
-      name: "LangNickname",
-      idMessanger: 12,
-      statut: 0,
-    },
-    {
-      id: 7,
-      name: "Elly",
-      idMessanger: 12,
-      statut: 0,
-    },
-    {
-      id: 8,
-      name: "LangNickname",
-      idMessanger: 12,
-      statut: 0,
-    },
-    {
-      id: 9,
-      name: "Elly",
-      idMessanger: 12,
-      statut: 0,
-    },
-  ]);
 
   const scrollChat = () => {
     const container = document.getElementById("messages-container");
@@ -202,13 +179,46 @@ export default function Messagerie({
 
   useEffect(() => {
     const updateMessage = (item) => {
-      if (auth.isConnected && auth.user.id == item.otherUser.id) {
-        setMessages([...messages, item]);
+      if (auth.isConnected) {
+        if (auth.user.id == item.otherUser.id) {
+          setMessages([...messages, item]);
+        }
+
+        if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
+          const cpThreads = [...threads];
+          for (let i = 0; i < cpThreads.length; i++) {
+            if (cpThreads[i].thread.id == item.threadId) {
+              cpThreads[i].thread.messages = [item];
+              setThreads(cpThreads);
+              break;
+            }
+          }
+        }
       }
     };
     socket.on("SERVER_MESSAGE", updateMessage);
+
+    const updateThread = (item) => {
+      if (auth.isConnected) {
+        if (auth.user.id == item.otherUser.id) {
+          let existe = false;
+          for (let i = 0; i < threads.length; i++) {
+            if (threads[i].thread.id === item.thread.id) {
+              existe = true;
+              break;
+            }
+          }
+          if (!existe) {
+            setThreads([item, ...threads]);
+          }
+        }
+      }
+    };
+    socket.on("SERVER_THREAD", updateThread);
+
     return () => {
       socket.off("SERVER_MESSAGE", updateMessage);
+      socket.off("SERVER_THREAD", updateThread);
     };
   }, [threads, messages, auth]);
 
@@ -380,7 +390,7 @@ export default function Messagerie({
           </div>
         </div>
       ) : null}
-      {folowersMessage.showSearchFolower && (
+      {!folowersMessage.activeItem && folowersMessage.showSearchFolower && (
         <MessageFindFolower>
           <div className="header-messagerie">
             <span
@@ -426,24 +436,26 @@ export default function Messagerie({
           {folowersMessage.resultSearch ? (
             <div className="content-search-results">
               <div className="list-result-search">
-                {subscriptions.length > 0 &&
-                  subscriptions.map((item, index) => (
-                    <ItemListFolower
-                      folowersMessage={folowersMessage}
-                      setFolowersMessage={setFolowersMessage}
-                      shwoButtonMessage={false}
-                      key={index}
-                      item={{ ...item, index }}
-                      setItem={setItem}
-                      setMsgNotifTopTime={setMsgNotifTopTime}
-                      onClick={() => {
-                        setFolowersMessage({
-                          ...folowersMessage,
-                          activeItem: { id: item.id },
-                        });
-                      }}
-                    />
-                  ))}
+                {users.length > 0 ? (
+                  users.map(
+                    (item, index) =>
+                      item.show && (
+                        <ItemListFolower
+                          folowersMessage={folowersMessage}
+                          setFolowersMessage={setFolowersMessage}
+                          shwoButtonMessage={false}
+                          key={index}
+                          item={{ ...item, index }}
+                          setItem={setItem}
+                          setMsgNotifTopTime={setMsgNotifTopTime}
+                          threads={threads}
+                          setThreads={setThreads}
+                        />
+                      )
+                  )
+                ) : (
+                  <p className="message-not-result">Aucun resultat trouvé </p>
+                )}
               </div>
             </div>
           ) : null}
