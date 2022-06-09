@@ -7,20 +7,25 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { Button } from "@mui/material";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
+import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   BlocMessagerie,
   ChatSpace,
   LoadingMessage,
-  MessageFindFolower
+  MessageFindFolower,
 } from "../assets/styles/componentStyle";
+import endPoints from "../config/endPoints";
+import connector from "../connector";
+import { getDurationHM, getUniqueList } from "../helper/fonctions";
 import ItemListFolower from "./itemListFolower";
 import ItemSingleMessage from "./itemSingleMessage";
 import ListMessagerie from "./listMessagerie";
 import SpinnerLoading from "./spinnerLoading";
 import Input from "./ui-elements/input";
 import InputEmoji from "./ui-elements/inputEmoji";
+import { socket } from "./socket";
 
 export default function Messagerie({
   setMsgNotifTopTime = () => {},
@@ -31,7 +36,6 @@ export default function Messagerie({
   threads = [],
   setThreads = () => {},
 }) {
-
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -41,10 +45,9 @@ export default function Messagerie({
     setAnchorEl(null);
   };
   const auth = useSelector((store) => store.auth);
-  const [startScroll, setStartScroll] = useState(false);
   const ref = useRef(null);
   const [messages, setMessages] = useState([]);
-  const [countNewMessages, setCountNewMessages] = useState(0);
+  //const [countNewMessages, setCountNewMessages] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [pageMessages, setPageMessages] = useState(1);
 
@@ -55,10 +58,13 @@ export default function Messagerie({
     }
   };
 
-  const onScrollTop = () => {
+  const onScrollMessages = () => {
     const { scrollTop } = ref.current;
     if (parseInt(scrollTop) == 0) {
-      setStartScroll(true);
+      if (messages.length < totalMessages) {
+        setLoadingMore({ ...loadingMore, messages: true });
+        setPageMessages(pageMessages + 1);
+      }
     }
   };
 
@@ -113,14 +119,12 @@ export default function Messagerie({
     }
   }, [folowersMessage.activeItem]);
 
-
-  
   useEffect(() => {
     if (auth.isConnected) {
       getMessages();
     } else {
       setMessages([]);
-      setCountNewMessages(0);
+      //setCountNewMessages(0);
       setTotalMessages(0);
       setPageMessages(1);
     }
@@ -136,9 +140,14 @@ export default function Messagerie({
         method: "get",
         url: `${endPoints.MESSAGE_LIST}?page=${cpPageMessages}&threadId=${folowersMessage.activeItem.thread.id}`,
         success: (response) => {
-          setMessages(
-            getUniqueList([...messages, ...response.data.messages], "id")
-          );
+          if (refresh) {
+            setMessages([...response.data.messages]);
+          } else {
+            setMessages(
+              getUniqueList([...messages, ...response.data.messages], "id")
+            );
+          }
+
           //setCountNewMessages(parseInt(response.data.totalNew));
           setTotalMessages(parseInt(response.data.total));
           setLoadingMore({ ...loadingMore, messages: false });
@@ -149,6 +158,47 @@ export default function Messagerie({
       });
     }
   };
+
+  const saveMessage = async (data) => {
+    if (folowersMessage?.activeItem?.thread?.id && folowersMessage.activeItem?.userId) {
+      data = { ...data, threadId: folowersMessage.activeItem.thread.id };
+      return await connector({
+        method: "post",
+        url: endPoints.MESSAGE_NEW,
+        data,
+        success: (response) => {
+          if (response.data?.msg) {
+            socket.emit("CLIENT_MESSAGE", {
+              ...response.data.msg,
+              otherUser: { id: folowersMessage.activeItem.userId },
+            });
+            setMessages([...messages, response.data.msg]);
+            scrollChat();
+            return true;
+          }
+          return;
+        },
+        catch: (error) => {
+          console.log(error);
+          return;
+        },
+      });
+    } else {
+      return;
+    }
+  };
+
+  useEffect(() => {
+    const updateMessage = (item) => {
+      if (auth.isConnected && auth.user.id == item.otherUser.id) {
+        setMessages([...messages, item]);
+      }
+    };
+    socket.on("SERVER_MESSAGE", updateMessage);
+    return () => {
+      socket.off("SERVER_MESSAGE", updateMessage);
+    };
+  }, [threads, messages, auth]);
 
   return (
     <BlocMessagerie>
@@ -202,7 +252,7 @@ export default function Messagerie({
               <KeyboardArrowLeftIcon />
             </span>
             <span className="name-messagerie">
-              {folowersMessage.activeItem.nameItem}
+              {folowersMessage.activeItem.user.username}
             </span>
             <div>
               <Button
@@ -245,32 +295,29 @@ export default function Messagerie({
               <div
                 className="content-space-chat show-typing"
                 id="messages-container"
-                onScroll={onScrollTop}
+                onScroll={onScrollMessages}
                 ref={ref}
               >
-                 {startScroll && <SpinnerLoading className="is-top-spinner"/>}
-                <ItemSingleMessage
-                  typeSend="user-send"
-                  message="Hé bien test, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave."
-                  date="Hier . 19:20"
-                  stautVu="vuReading"
-                />
-                <ItemSingleMessage message="Oui, alors ?" date="Hier . 19:30" />
-                <ItemSingleMessage
-                  typeSend="user-send"
-                  message="Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave."
-                  date="Hier . 19:20"
-                  stautVu="vuResent"
-                />
-                <ItemSingleMessage message="Oui, alors ?" date="Hier . 19:30" />
-                <ItemSingleMessage
-                  typeSend="user-send"
-                  message="Hé bien, j’ai emmené le chien au vétérinaire, et ça s’est avéré pas trop grave."
-                  date="Hier . 19:20"
-                  stautVu="vuSend"
-                />
-                <ItemSingleMessage message="Oui, alors ?" date="Hier . 19:30" />
+                {loadingMore.messages && (
+                  <SpinnerLoading className="is-top-spinner" />
+                )}
 
+                {messages.length > 0 &&
+                  messages.map((row, index) => (
+                    <ItemSingleMessage
+                      key={index}
+                      typeSend={row.userId == auth.user.id ? "user-send" : ""}
+                      message={row.message}
+                      date={getDurationHM(moment(), row.message.createdAt)}
+                      stautVu={
+                        row.userId == auth.user.id && row.seen
+                          ? "vuReading"
+                          : ""
+                      }
+                    />
+                  ))}
+
+                {/* TODO TYPING USER
                 <div className="d-flex justify-content-start is-teyping">
                   <div className="msg_cotainer">
                     <div className="content-msg">
@@ -281,13 +328,14 @@ export default function Messagerie({
                       </LoadingMessage>
                     </div>
                   </div>
-                </div>
+                </div> */}
               </div>
             </ChatSpace>
             <InputEmoji
               typeInput="textarea"
               setMsgNotifTopTime={setMsgNotifTopTime}
               setFolowersMessage={setFolowersMessage}
+              saveMessage={saveMessage}
             />
           </div>
         </div>

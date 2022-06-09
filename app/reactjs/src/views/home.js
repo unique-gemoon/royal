@@ -66,6 +66,7 @@ export default function Home() {
   const [loadingMore, setLoadingMore] = useState({
     notifications: false,
     threads: false,
+    messages: false,
   });
   const [typingCitation, setTypingCitation] = useState({});
   const [totalThreads, setTotalThreads] = useState(0);
@@ -680,6 +681,8 @@ export default function Home() {
         setLoadingMore({ ...loadingMore, threads: e });
         setPageThreads(pageThreads + 1);
       }
+    }else if(e.messages){
+        setLoadingMore({ ...loadingMore, threads: e });
     }
   };
 

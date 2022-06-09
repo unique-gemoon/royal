@@ -3043,7 +3043,7 @@ export const ChatSpace = styled.div`
   overflow: hidden;
   position: relative;
   display: flex;
-  align-items: flex-end;
+  align-items: flex-start;
   .head-space-chat {
     background-color: #fafafa;
     border-bottom: 1px solid #e9e9e9;

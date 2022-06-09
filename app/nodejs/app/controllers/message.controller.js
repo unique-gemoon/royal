@@ -12,7 +12,19 @@ export function newMessage(req, res) {
       message: req.body.message,
     })
       .then((message) => {
-        res.status(200).send({ message: "ok.", data: { id: message.id } });
+        res
+          .status(200)
+          .send({
+            message: "ok.",
+            msg: {
+              id: message.id,
+              userId: message.userId,
+              threadId: message.threadId,
+              message: message.message,
+              createdAt : message.createdAt,
+              seen: message.seen
+            },
+          });
       })
       .catch((err) => {
         res.status(400).send({ message: err.message });

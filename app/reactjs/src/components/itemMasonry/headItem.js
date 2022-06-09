@@ -419,7 +419,7 @@ export default function HeadItem({
         )}
         <div
           className={`nb-message-comment ${
-            (activeItem && activeItem.id == item.id ) || (state.showModal && state.showCitation) || (!state.showModal && state.showNV2) // verifier close in modale
+            (activeItem && activeItem.id == item.id )  || (state.showModal && state.showCitation)/* || (!state.showModal && state.showNV2)  */// verifier close in modale
               ? "comment-is-open"
               : ""
           }`}
