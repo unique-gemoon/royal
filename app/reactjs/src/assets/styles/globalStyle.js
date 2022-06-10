@@ -81,6 +81,7 @@ export const ContainerDef = styled(Container)`
         margin-left: -24px; /* gutter size offset */
         width: auto;
         padding: 0 12px;
+        margin-bottom: 100px;
         @media(max-width: 1200px){
             padding: 24px 0;
         }
@@ -97,6 +98,7 @@ export const ContainerDef = styled(Container)`
         }
     }
     max-width: 100%;
+
 `;
 export const HeadContentItem = styled.div`
     display: flex;

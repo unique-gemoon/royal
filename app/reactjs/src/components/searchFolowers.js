@@ -1,7 +1,6 @@
 import CloseOutlinedIcon from "@mui/icons-material/CloseOutlined";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
-import React, { useEffect, useState } from "react";
-import { useRef } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { useSelector } from "react-redux";
 import { FolowerSearch } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
@@ -10,6 +9,7 @@ import ItemListFolower from "./itemListFolower";
 import { socket } from "./socket";
 import SpinnerLoading from "./spinnerLoading";
 import Input from "./ui-elements/input";
+import { useMediaQuery } from "react-responsive";
 
 export default function SearchFolowers({
   action,
@@ -21,6 +21,7 @@ export default function SearchFolowers({
   threads=[],
   setThreads= () => {},
 }) {
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const auth = useSelector((store) => store.auth);
   const [showResult, setShowResult] = useState(false);
   const [state, setState] = useState({
@@ -30,12 +31,17 @@ export default function SearchFolowers({
       value: "",
       placeholder: "Qui recherchez-vous ?",
       className: "search-input",
+      autoFocus : false
     },
     searching: false,
   });
 
   const [users, setUsers] = useState([]);
-
+  useEffect(() => {
+    if (action.search.isOpen) {
+      setState({ ...state, search: { ...state.search, autoFocus: true }});
+    }
+  }, [action.search.isOpen]);
   useEffect(() => {
     getUsers();
   }, []);
@@ -106,6 +112,7 @@ export default function SearchFolowers({
         </button>
         <Input
           {...state.search}
+          autoFocus={true}
           onChange={(e) => {
             const cpState = { ...state };
             cpState.search.value = e.target.value;
@@ -145,8 +152,8 @@ export default function SearchFolowers({
           </span>
         )}
       </div>
-        <div className="content-search-results">
-        {showResult && <div className="list-result-search" ref={ref} onScroll={onScroll}>
+      <div className="content-search-results" ref={ref} onScroll={(e) => { if (isTabletOrMobile) { onScroll(e) } }}>
+        {showResult && <div className="list-result-search" ref={ref} onScroll={(e) => { if (!isTabletOrMobile) { onScroll(e) } }}>
           {users.length > 0 ? users.map((item, index) => (
             <div key={index}>
               {item.show && (
@@ -158,14 +165,25 @@ export default function SearchFolowers({
                   threads={threads}
                   setThreads={setThreads}
                   onClick={() => {
-                    const cpAction = {
-                      ...action,
-                      notification: { ...action.notification, isOpen: false },
-                      folower: { ...action.folower, isOpen: false },
-                      search: { ...action.search, isOpen: true },
-                      messagerie: { ...action.messagerie, isOpen: true },
-                    };
-                    setAction(cpAction);
+                    if (!isTabletOrMobile){
+                      const cpAction = {
+                        ...action,
+                        notification: { ...action.notification, isOpen: false },
+                        folower: { ...action.folower, isOpen: false },
+                        search: { ...action.search, isOpen: true },
+                        messagerie: { ...action.messagerie, isOpen: true },
+                      };
+                      setAction(cpAction);
+                    }else{
+                      const cpAction = {
+                        ...action,
+                        notification: { ...action.notification, isOpen: false },
+                        folower: { ...action.folower, isOpen: false },
+                        search: { ...action.search, isOpen: false },
+                        messagerie: { ...action.messagerie, isOpen: true },
+                      };
+                      setAction(cpAction);
+                    }
                   }}
                 />
               )}

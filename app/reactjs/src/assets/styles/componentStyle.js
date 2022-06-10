@@ -330,14 +330,25 @@ export const BlocActionButton = styled.div`
                 top: 55px;
             }
             @media(max-width: 993px){
-                max-height: calc(100% - 145px);
+                height: calc(100% - 145px);
                 width: 100%;
                 left: 0px;
+                margin: auto;
                 & > div{
-                    height: calc(100vh - 145px) !important;
+                    height: 100% !important;
                     max-height: initial !important;
                     width: 90%;
                     margin: auto;
+                    .content-search-results {
+                        height: auto;
+                        max-height: calc(100% - 38px);
+                        overflow-y: auto;
+                        .list-result-search {
+                            max-height: 100%;
+                            overflow: initial;
+                            position: relative
+                        }
+                    }
                 }
             }
             & > div{
@@ -354,14 +365,30 @@ export const BlocActionButton = styled.div`
                 top: 55px;
             }
             @media(max-width: 993px){
-                height: calc(100vh - 145px);
+                height: calc(100% - 145px);
                 width: 100%;
                 right: 0px;
                 & > div{
                     width: 90% !important;
                     margin: auto;
                     height: 100% !important;
-                    max-height: initial !important;
+                    max-height: 100% !important;
+                    background: transparent !important;
+                    overflow: initial !important;
+                    box-shadow: none !important;
+                    & > .MuiTabs-root{
+                        box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
+                        border-radius: 13px 13px 0 0;
+                    }
+                    .content-tab-modal {
+                        height: calc(100% - 48px);
+                        overflow-y: scroll;
+                        background: linear-gradient(#2d7fc3 0%, #579be9 100%);
+                        border-radius: 0 0 13px 13px;
+                        box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
+                        height: auto;
+                        min-height: 200px;
+                    }
                 }
             }
             & > div{
@@ -384,13 +411,33 @@ export const BlocActionButton = styled.div`
                 top: 55px;
             }
             @media(max-width: 993px){
-                height: calc(100% - 145px);
-                width: 100%;
-                right: 0px;
-                & > div{
-                    height: 100% !important;
+                    height: calc(100% - 145px);
+                    width: 100%;
+                    right: 0px;
+                    & > div{
+                    height: calc(100% - 14px) !important;
                     width: 90% !important;
                     margin: auto;
+                    background: transparent !important;
+                    overflow: initial !important;
+                    box-shadow: none !important;
+                    .header-notif{
+                        background: linear-gradient(#2d7fc3 0%,#579be9 100%);
+                        border-radius: 13px 13px 0 0 !important;
+                        box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
+                        overflow: hidden;
+                    }
+                    .content-notifs {
+                        overflow-y: scroll;
+                        background: linear-gradient(#2d7fc3 0%,#579be9 100%);
+                        border-radius: 0 0 13px 13px;
+                        max-height: calc(100% - 47px);
+                        height: auto;
+                        box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
+                        .list-notifs{
+                            overflow: initial;
+                        }
+                    }
                 }
             }
             & > div{
@@ -818,6 +865,7 @@ export const FolowersModal = styled.div`
             flex-direction: initial;
             white-space: nowrap;
             width: 50%;
+            background: linear-gradient(#2d7fc3 0%, #579be9 100%);
             .count-tab{
                 margin-left: 10px;
                 width: 21px;
@@ -898,6 +946,9 @@ export const ItemFolower = styled.div`
     &:hover{
         &::before{
             opacity: 0.15;
+        @media(max-width: 993px){
+            content: none;
+        }
         }
     }
     &:last-child{
@@ -1578,7 +1629,13 @@ export const BlocMessagerie = styled.div`
         }
     }
 `;
-export const ListItemsMessagerie = styled.div``;
+export const ListItemsMessagerie = styled.div`
+    .no-content-loading{
+        padding: 15px 10px;
+        font-size: 14px;
+        font-family: "ProximaNovaSoftW03-Semibold";
+    }
+`;
 export const ItemListMessagerie = styled.div`
     padding: 10px 16px;
     font-size: 12px;
