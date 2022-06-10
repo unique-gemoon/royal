@@ -26,6 +26,7 @@ const endPoints = {
   MESSAGE_LIST : "/message/list", 
   THREAD_LIST : "/thread/list", 
   THREAD_NEW : "/thread/new", 
+  THREAD_BLOCK : "/thread/block", 
   COMMENT_NEW : "/comment/new",
   CITATION_NEW : "/citation/new",
 };

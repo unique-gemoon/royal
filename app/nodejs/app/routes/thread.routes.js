@@ -17,7 +17,7 @@ threadRoutes.get(
 );
 
 threadRoutes.post(
-  "/blocked",
+  "/block",
   passport.authenticate("jwt", { session: false }),
   checkThread,
   blockThread,

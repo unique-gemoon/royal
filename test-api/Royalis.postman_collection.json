@@ -1163,7 +1163,7 @@
 			"response": []
 		},
 		{
-			"name": "thread_blocked",
+			"name": "thread_block",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
 					"content-type": true
@@ -1198,7 +1198,7 @@
 					"raw": "{\"threadId\":\"1\",\"blocked\":false}"
 				},
 				"url": {
-					"raw": "http://127.0.0.1:8080/api/thread/blocked",
+					"raw": "http://127.0.0.1:8080/api/thread/block",
 					"protocol": "http",
 					"host": [
 						"127",
@@ -1210,7 +1210,7 @@
 					"path": [
 						"api",
 						"thread",
-						"blocked"
+						"block"
 					]
 				}
 			},

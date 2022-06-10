@@ -71,7 +71,7 @@ export function listThreads(req, res) {
     attributes: { exclude: ["createdAt", "updatedAt", "threadId"] },
     include: [
       {
-        attributes: ["id"],
+        attributes: ["id","blocked","blockedBy"],
         model: Thread,
         association: ThreadUsersThread,
         as: "thread",

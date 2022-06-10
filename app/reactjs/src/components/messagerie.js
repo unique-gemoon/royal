@@ -14,14 +14,15 @@ import {
   BlocMessagerie,
   ChatSpace,
   LoadingMessage,
-  MessageFindFolower
+  MessageFindFolower,
 } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import {
   getDurationHM,
+  getMsgError,
   getUniqueList,
-  scrollToElement
+  scrollToElement,
 } from "../helper/fonctions";
 import ItemListFolower from "./itemListFolower";
 import ItemSingleMessage from "./itemSingleMessage";
@@ -150,6 +151,14 @@ export default function Messagerie({
       folowersMessage?.activeItem?.thread?.id &&
       folowersMessage.activeItem?.userId
     ) {
+      if (folowersMessage.activeItem.thread.blocked) {
+        setMsgNotifTopTime(
+          "Vous ne pouvez pas envoyer des messages cette discussion est bloquée.",
+          5000
+        );
+        return;
+      }
+
       data = { ...data, threadId: folowersMessage.activeItem.thread.id };
       return await connector({
         method: "post",
@@ -163,13 +172,12 @@ export default function Messagerie({
             });
             setMessages([...messages, response.data.msg]);
             scrollChat();
-            return true;
           }
-          return;
+          return true;
         },
         catch: (error) => {
-          console.log(error);
-          return;
+          msgErrors({ msg: getMsgError(error) });
+          return false;
         },
       });
     } else {
@@ -200,16 +208,35 @@ export default function Messagerie({
 
     const updateThread = (item) => {
       if (auth.isConnected) {
-        if (auth.user.id == item.otherUser.id) {
+        if (item?.otherUser?.id && auth.user.id == item.otherUser.id) {
           let existe = false;
-          for (let i = 0; i < threads.length; i++) {
-            if (threads[i].thread.id === item.thread.id) {
+          const cpThreads = [...threads];
+          for (let i = 0; i < cpThreads.length; i++) {
+            if (cpThreads[i].thread.id === item.thread.id) {
+              cpThreads[i].thread = {
+                ...cpThreads[i].thread,
+                blocked: item.thread.blocked,
+                blockedBy: item.thread.blockedBy,
+              };
+
+              if(folowersMessage?.activeItem?.thread?.id == item.thread.id){
+                const cpFolowersMessage = { ...folowersMessage };
+                cpFolowersMessage.activeItem.thread = {
+                  ...cpFolowersMessage.activeItem.thread,
+                  blocked: item.thread.blocked,
+                  blockedBy: item.thread.blockedBy,
+                };
+                setFolowersMessage(cpFolowersMessage);
+              }
+
               existe = true;
               break;
             }
           }
           if (!existe) {
             setThreads([item, ...threads]);
+          } else {
+            setThreads(cpThreads);
           }
         }
       }
@@ -247,6 +274,62 @@ export default function Messagerie({
       }
       updateSubscriberStatus(item);
     }
+  };
+
+  const blockThread = (blocked) => {
+    if (folowersMessage?.activeItem?.thread?.id) {
+      connector({
+        method: "post",
+        url: endPoints.THREAD_BLOCK,
+        data: { threadId: folowersMessage.activeItem.thread.id, blocked },
+        success: (response) => {
+          const cpThreads = [...threads];
+          for (let i = 0; i < cpThreads.length; i++) {
+            if (
+              cpThreads[i].thread.id == folowersMessage.activeItem.thread.id
+            ) {
+              cpThreads[i] = {
+                ...cpThreads[i],
+                thread: {
+                  ...cpThreads[i].thread,
+                  blocked,
+                  blockedBy: auth.user.id,
+                },
+                otherUser: { id: folowersMessage.activeItem.userId },
+              };
+
+              const cpFolowersMessage = { ...folowersMessage };
+              cpFolowersMessage.activeItem.thread = {
+                ...cpFolowersMessage.activeItem.thread,
+                blocked,
+                blockedBy: auth.user.id,
+              };
+              setFolowersMessage(cpFolowersMessage);
+
+              socket.emit("CLIENT_THREAD", cpThreads[i]);
+              break;
+            }
+          }
+          setThreads(cpThreads);
+          handleClose();
+
+          if(blocked){
+            setMsgNotifTopTime("L'utilisateur a bien été bloqué. Vous ne recevrez plus de message de sa part", 5000);
+          }else{
+            setMsgNotifTopTime("L'utilisateur a bien été débloqué. Vous pouvez à nouveau recevoir des messages de sa part", 5000);
+          }
+
+        },
+        catch: (error) => {
+          handleClose();
+          msgErrors({ msg: getMsgError(error) });
+        },
+      });
+    }
+  };
+
+  const msgErrors = (e) => {
+    if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
   };
 
   return (
@@ -335,7 +418,23 @@ export default function Messagerie({
                 <span className="close-drop-menu" onClick={() => handleClose}>
                   <MoreVertIcon />
                 </span>
-                <MenuItem onClick={handleClose}>Bloquer</MenuItem>
+                {folowersMessage?.activeItem?.thread?.blocked ? (
+                  <MenuItem
+                    onClick={() => {
+                      blockThread(false);
+                    }}
+                  >
+                    Débloquer
+                  </MenuItem>
+                ) : (
+                  <MenuItem
+                    onClick={() => {
+                      blockThread(true);
+                    }}
+                  >
+                    Bloquer
+                  </MenuItem>
+                )}
               </Menu>
             </div>
           </div>
