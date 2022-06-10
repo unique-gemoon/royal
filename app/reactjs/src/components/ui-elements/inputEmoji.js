@@ -16,7 +16,7 @@ export default function InputEmoji({
   setMsgNotifTopTime = () => {},
   saveMessage = () => {},
   waitingTime = false,
-  setImTyping = () => {},
+  setImTyping=() => {},
   ...props
 }) {
   const [state, setState] = useState({
@@ -38,15 +38,15 @@ export default function InputEmoji({
   }, [state]);
 
   useEffect(() => {
-    if (!waitingTime) {
-      setWaitingTimeError(false);
+    if (!waitingTime){
+      setWaitingTimeError(false)
     }
   }, [waitingTime]);
 
   useEffect(() => {
-    if (String(state.inputEmoji.value).length > 0) {
+    if(String(state.inputEmoji.value).length>0){
       setImTyping(true);
-    } else {
+    }else{
       setImTyping(false);
     }
   }, [state.inputEmoji.value]);
@@ -67,9 +67,7 @@ export default function InputEmoji({
 
   return (
     <FormEmoji className={props.className}>
-      <div
-        className={`content-form-emoji ${waitingTimeError ? "is-waiting" : ""}`}
-      >
+      <div className={`content-form-emoji ${waitingTimeError ? "is-waiting" : "" }`}>
         <InputTextareaAutosize
           {...state.inputEmoji}
           onChange={(e) => {
@@ -77,36 +75,7 @@ export default function InputEmoji({
             cpState.inputEmoji.value = e.target.value;
             setState(cpState);
           }}
-          onKeyPress={(e) => {
-            if (e.key === "Enter") {
-              e.preventDefault();
-              if (!waitingTime) {
-                if (state.inputEmoji.value) {
-                  if (!submitting) {
-                    setSubmitting(true);
-                    saveMessage({ message: state.inputEmoji.value }).then(
-                      (response) => {
-                        if (response) {
-                          setState({
-                            ...state,
-                            inputEmoji: { ...state.inputEmoji, value: "" },
-                          });
-                        }
-                        setSubmitting(false);
-                      }
-                    );
-                  }
-                } else {
-                  setMsgNotifTopTime(
-                    "Vous ne pouvez pas poster un message vide.",
-                    5000
-                  );
-                }
-              } else {
-                setWaitingTimeError(true);
-              }
-            }
-          }}
+          
           onClick={(e) => {
             if (!checkIsConnected()) {
               props.setState({ ...props.state, showModal: false });
@@ -118,13 +87,8 @@ export default function InputEmoji({
           setInputEmoji={(e) => setState({ ...state, inputEmoji: e })}
         />
         <div className="timer-waiting">
-          {waitingTime !== false && (
-            <span>
-              {" "}
-              00:0{waitingTime} <TimerOutlinedIcon />
-            </span>
-          )}
-        </div>
+          {waitingTime !== false && <span> 00:0{waitingTime} <TimerOutlinedIcon /></span>}
+        </div> 
       </div>
 
       <Button
@@ -136,17 +100,13 @@ export default function InputEmoji({
             if (state.inputEmoji.value) {
               if (!submitting) {
                 setSubmitting(true);
-                saveMessage({ message: state.inputEmoji.value }).then(
-                  response => {
-                    if (response) {
-                      setState({
-                        ...state,
-                        inputEmoji: { ...state.inputEmoji, value: "" },
-                      });
-                    }
-                    setSubmitting(false);
-                  }
-                );
+                saveMessage({ message: state.inputEmoji.value }).then(() => {
+                  setState({
+                    ...state,
+                    inputEmoji: { ...state.inputEmoji, value: "" },
+                  });
+                  setSubmitting(false);
+                });
               }
             } else {
               setMsgNotifTopTime(
@@ -155,7 +115,7 @@ export default function InputEmoji({
               );
             }
           } else {
-            setWaitingTimeError(true);
+            setWaitingTimeError(true)
           }
         }}
       >
