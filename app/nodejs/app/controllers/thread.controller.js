@@ -33,7 +33,7 @@ export function newThread(req, res) {
   })
     .then((thread) => {
       if (thread) {
-        res.status(200).send({ message: "ok", thread: { id: thread.id  } });
+        res.status(200).send({ message: "ok", thread: { id: thread.id } });
       } else {
         Thread.create(
           {
@@ -106,7 +106,7 @@ export function listThreads(req, res) {
       },
     ],
     where: { userId: { [Op.ne]: req.user.id } },
-    offset : start,
+    offset: start,
     limit: perPage,
     order: [["id", "DESC"]],
   })
@@ -120,9 +120,11 @@ export function listThreads(req, res) {
 
 export function checkThread(req, res, next) {
   if (parseInt(req.body.threadId) || parseInt(req.query.threadId)) {
-    const threadId = parseInt(req.body.threadId) ? parseInt(req.body.threadId) : parseInt(req.query.threadId);
+    const threadId = parseInt(req.body.threadId)
+      ? parseInt(req.body.threadId)
+      : parseInt(req.query.threadId);
     Thread.findOne({
-      attributes: ["id"],
+      attributes: ["id", "blocked", "blockedBy"],
       include: [
         {
           attributes: [],
@@ -142,9 +144,9 @@ export function checkThread(req, res, next) {
           req.thread = thread;
           next();
         } else {
-          res
-            .status(400)
-            .send({ message: "Vous n'êtes pas liée à cette file de discussion." });
+          res.status(400).send({
+            message: "Vous n'êtes pas liée à cette file de discussion.",
+          });
           return;
         }
       })
@@ -158,4 +160,37 @@ export function checkThread(req, res, next) {
       .send({ message: "Identifiant fil de discussion non définie." });
     return;
   }
+}
+
+export function blockThread(req, res) {
+  if (req.thread.blocked && req.body.blocked) {
+    res.status(400).send({ message: "Ce fil de discussion est déjà bloqué." });
+    return;
+  } else if (!req.thread.blocked && !req.body.blocked) {
+    res
+      .status(400)
+      .send({ message: "Ce fil de discussion est déjà débloqué." });
+    return;
+  } else if (
+    req.thread.blocked &&
+    !req.body.blocked &&
+    req.user.id != req.thread.blockedBy
+  ) {
+    res
+      .status(400)
+      .send({ message: "Vous ne pouvez pas débloqué ce fil de discussion." });
+    return;
+  }
+
+  Thread.update(
+    { blocked: req.body.blocked, blockedBy: req.user.id },
+    { where: { id: req.thread.id } }
+  )
+    .then((response) => {
+      res.status(200).send({ message: "ok" });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+      return;
+    });
 }

@@ -572,7 +572,6 @@ export default function Home() {
   };
 
   const clearPliElapsed = (index) => {
-    console.log("clearPliElapsed");
     if (plis[index]) {
       const pli = { ...plis[index] };
       if (publishPli && publishPli.id === pli.id) {
