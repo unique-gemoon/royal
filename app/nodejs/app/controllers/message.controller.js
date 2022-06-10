@@ -5,6 +5,11 @@ const User = db.user;
 const MessageUser = Message.belongsTo(User);
 
 export function newMessage(req, res) {
+  if (req.thread.blocked) {
+    res.status(400).send({ message: "Ce fil de discussion est bloqué." });
+    return;
+  }
+
   if (String(req.body.message).length) {
     Message.create({
       userId: req.user.id,

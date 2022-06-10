@@ -1,6 +1,6 @@
 import { Router } from "express";
 import passport from "passport";
-import { listThreads, newThread } from "../controllers/thread.controller.js";
+import { blockThread, checkThread, listThreads, newThread } from "../controllers/thread.controller.js";
 
 const threadRoutes = Router();
 
@@ -14,6 +14,13 @@ threadRoutes.get(
   "/list",
   passport.authenticate("jwt", { session: false }),
   listThreads
+);
+
+threadRoutes.post(
+  "/block",
+  passport.authenticate("jwt", { session: false }),
+  checkThread,
+  blockThread,
 );
 
 export default threadRoutes;

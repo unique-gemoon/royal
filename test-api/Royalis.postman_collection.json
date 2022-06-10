@@ -1163,6 +1163,60 @@
 			"response": []
 		},
 		{
+			"name": "thread_block",
+			"protocolProfileBehavior": {
+				"disabledSystemHeaders": {
+					"content-type": true
+				}
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJSb3lhbGlzIiwic3ViIjoyLCJ1c2VybmFtZSI6ImF5b3ViIiwiZW1haWwiOiJheW91YkBleGFtcGxlLmNvbSIsInJvbGVzIjpbIlJPTEVfVVNFUiJdLCJpYXQiOjE2NTQ3ODgyNjcwNjQsImV4cCI6MTY1NTA0NzQ2NzA2NH0.9nJHq8MjtKEaYjKFdQ47aDkShH_gF5kioylgfzHF_J4",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [
+					{
+						"key": "Access-Control-Allow-Origin",
+						"value": " http://localhost:3000",
+						"type": "text"
+					},
+					{
+						"key": "Content-Type",
+						"value": " application/json; charset=utf-8",
+						"type": "text"
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\"threadId\":\"1\",\"blocked\":false}"
+				},
+				"url": {
+					"raw": "http://127.0.0.1:8080/api/thread/block",
+					"protocol": "http",
+					"host": [
+						"127",
+						"0",
+						"0",
+						"1"
+					],
+					"port": "8080",
+					"path": [
+						"api",
+						"thread",
+						"block"
+					]
+				}
+			},
+			"response": []
+		},
+		{
 			"name": "message_new",
 			"protocolProfileBehavior": {
 				"disabledSystemHeaders": {
@@ -1195,7 +1249,7 @@
 				],
 				"body": {
 					"mode": "raw",
-					"raw": "{\"threadId\":\"1\",\"message\":\"test\"}"
+					"raw": "{\"threadId\":\"2\",\"message\":\"test\"}"
 				},
 				"url": {
 					"raw": "http://127.0.0.1:8080/api/message/new",

@@ -18,7 +18,7 @@ const connector = (params) => {
     dateExp > Date.now()
   ) {
     entryPoint.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-    goOn(params);
+    return  goOn(params);
   } else if (refreshToken !== null) {
     entryPoint
       .post(endPoints.REFRESH_TOKEN, {refreshToken})
@@ -27,18 +27,18 @@ const connector = (params) => {
           "Authorization"
         ] = `Bearer ${response.data.token}`;
         localStorage.setItem("token", response.data.token);
-        goOn(params);
+        return  goOn(params);
       })
       .catch((error) => {
         localStorage.removeItem("token");
         localStorage.removeItem("refreshToken");
         window.location.reload();
       });
-  } else goOn(params);
+  } else {return  goOn(params);}
 };
 
 const goOn = (params) => {
-  entryPoint({
+  return entryPoint({
     method: params.method ?? "GET",
     url: params.url,
     data: params.data ?? {},

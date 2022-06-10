@@ -97,10 +97,9 @@ export default function ItemListFolower({
             activeItem: thread,
           });
 
-          //todo check thred
           let existe = false;
           for (let i = 0; i < threads.length; i++) {
-            if (threads[i].thread.id === thread.thread.id) {
+            if (threads[i].thread.id == thread.thread.id) {
               existe = true;
               break;
             }
