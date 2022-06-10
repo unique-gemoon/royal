@@ -300,7 +300,7 @@ export const BlocActionButton = styled.div`
             @media(max-width: 1200px){
                 left: 15px;
                 bottom: auto;
-                top: 55px;
+                top: 62px;
             }
             @media(max-width: 993px){
                 height: calc(100% - 145px);
@@ -327,7 +327,7 @@ export const BlocActionButton = styled.div`
             left: 24px;
             @media(max-width: 1200px){
                 left: 15px;
-                top: 55px;
+                top: 62px;
             }
             @media(max-width: 993px){
                 height: calc(100% - 145px);
@@ -362,14 +362,14 @@ export const BlocActionButton = styled.div`
             right: 24px;
             @media(max-width: 1200px){
                 right: 15px;
-                top: 55px;
+                top: 62px;
             }
             @media(max-width: 993px){
                 height: calc(100% - 145px);
                 width: 100%;
                 right: 0px;
                 & > div{
-                    width: 90% !important;
+                    width: calc(90% + 10px) !important;
                     margin: auto;
                     height: 100% !important;
                     max-height: 100% !important;
@@ -377,17 +377,32 @@ export const BlocActionButton = styled.div`
                     overflow: initial !important;
                     box-shadow: none !important;
                     & > .MuiTabs-root{
-                        box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
-                        border-radius: 13px 13px 0 0;
+                        padding: 0 10px;
+                        overflow: initial;
+                        margin: 0 -5px;
+                        & > div{
+                            box-shadow: rgba(26, 57, 91, .9) 0px 3px 10px;
+                            border-radius: 13px 13px 0 0;
+                        }
                     }
                     .content-tab-modal {
-                        height: calc(100% - 48px);
-                        overflow-y: scroll;
-                        background: linear-gradient(#2d7fc3 0%, #579be9 100%);
-                        border-radius: 0 0 13px 13px;
-                        box-shadow: 0px 3px 10px rgba(26, 57, 91, 0.9);
-                        height: auto;
-                        min-height: 200px;
+                        overflow: hidden;
+                        max-height: calc(100% - 48px);
+                        height: 100%;
+                        margin: 0 -5px;
+                        & > div {
+                            padding: 0px 10px 12px;
+                            height: 100%;
+                        }
+                        .list-tab-modal{
+                            height: auto;
+                            max-height: 100%;
+                            overflow-y: auto;
+                            border-radius: 0px 0px 13px 13px;
+                            position: relative;
+                            box-shadow: rgba(26, 57, 91, .9) 0px 3px 10px;
+                            background: linear-gradient(rgb(45, 127, 195) 0%, rgb(87, 155, 233) 100%);
+                        }
                     }
                 }
             }
@@ -408,7 +423,7 @@ export const BlocActionButton = styled.div`
             @media(max-width: 1200px){
                 right: 15px;
                 bottom: auto;
-                top: 55px;
+                top: 62px;
             }
             @media(max-width: 993px){
                     height: calc(100% - 145px);
@@ -527,7 +542,7 @@ export const NotificationMessage = styled.div`
     box-shadow: 0px 6px 6px rgba(0, 0, 0, 0.16);
     color: #FFF;
     text-align: center;
-    z-index: 9999;
+    z-index: 999999;
     transform: translateY(-100%);
     transition: .5s all;
     &.isMesssage{
@@ -819,6 +834,13 @@ export const FolowersModal = styled.div`
             .list-tab-modal{
                 height: 100%;
                 overflow-y: auto;
+                .message-not-result{
+                    padding: 15px 10px;
+                    font-size: 14px;
+                    font-family: "ProximaNovaSoftW03-Semibold";
+                    margin-bottom: 0;
+                    text-align: center;
+                }
             }
             .show-more-folower{
                 margin-bottom: 0;
@@ -1135,6 +1157,14 @@ export const BlocNotification = styled.div`
         .list-notifs{
             height: 100%;
             overflow-y: auto;
+            .message-not-result{
+                padding: 15px 10px;
+                font-size: 14px;
+                font-family: "ProximaNovaSoftW03-Semibold";
+                margin-bottom: 0;
+                text-align: center;
+                min-height: 100px;
+            }
         }
         .item-notif{
             position: relative;
@@ -1434,6 +1464,13 @@ export const MessageFindFolower = styled.div`
     .list-result-search{
         height: 100%;
         overflow-y: auto;
+        .message-not-result{
+            padding: 15px 10px;
+            font-size: 14px;
+            font-family: "ProximaNovaSoftW03-Semibold";
+            margin-bottom: 0;
+            text-align: center;
+        }
         & > div{
             padding: 0 14px 0 0;
             & > span{
