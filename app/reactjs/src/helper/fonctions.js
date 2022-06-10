@@ -79,7 +79,6 @@ export function getPercentInt(val, total) {
 }
 
 export function getDurationHM(from, to) {
-  console.log(from, to);
   if (!from || !to) {
     return "";
   }
