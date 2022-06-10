@@ -1464,6 +1464,13 @@ export const MessageFindFolower = styled.div`
     .list-result-search{
         height: 100%;
         overflow-y: auto;
+        .message-not-result{
+            padding: 15px 10px;
+            font-size: 14px;
+            font-family: "ProximaNovaSoftW03-Semibold";
+            margin-bottom: 0;
+            text-align: center;
+        }
         & > div{
             padding: 0 14px 0 0;
             & > span{
