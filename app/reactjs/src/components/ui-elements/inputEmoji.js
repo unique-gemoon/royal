@@ -75,7 +75,32 @@ export default function InputEmoji({
             cpState.inputEmoji.value = e.target.value;
             setState(cpState);
           }}
-          
+          onKeyPress={(e) => {
+            if (e.key === "Enter" && !e.shiftKey) {
+              e.preventDefault();
+              if (!waitingTime) {
+                if (state.inputEmoji.value) {
+                  if (!submitting) {
+                    setSubmitting(true);
+                    saveMessage({ message: state.inputEmoji.value }).then(() => {
+                      setState({
+                        ...state,
+                        inputEmoji: { ...state.inputEmoji, value: "" },
+                      });
+                      setSubmitting(false);
+                    });
+                  }
+                } else {
+                  setMsgNotifTopTime(
+                    "Vous ne pouvez pas poster un message vide.",
+                    5000
+                  );
+                }
+              } else {
+                setWaitingTimeError(true)
+              }
+            }
+          }}
           onClick={(e) => {
             if (!checkIsConnected()) {
               props.setState({ ...props.state, showModal: false });
