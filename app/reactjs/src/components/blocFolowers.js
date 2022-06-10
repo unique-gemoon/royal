@@ -8,6 +8,7 @@ import endPoints from "../config/endPoints";
 import connector from "../connector";
 import ItemListFolower from "./itemListFolower";
 import SpinnerLoading from "./spinnerLoading";
+import { useMediaQuery } from "react-responsive";
 
 export default function BlocFolowers({
   action,
@@ -24,6 +25,8 @@ export default function BlocFolowers({
   threads=[],
   setThreads= () => {} ,
 }) {
+
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const [value, setValue] = React.useState("1");
   const [endScroll, setEndScroll] = useState(false);
   const ref = useRef(null);
@@ -139,6 +142,7 @@ export default function BlocFolowers({
                     threads={threads}
                     setThreads={setThreads}
                     onClick={() => {
+                      if (!isTabletOrMobile) {
                       const cpAction = {
                         ...action,
                         notification: { ...action.notification, isOpen: false },
@@ -147,6 +151,16 @@ export default function BlocFolowers({
                         messagerie: { ...action.messagerie, isOpen: true },
                       };
                       setAction(cpAction);
+                      }else{
+                        const cpAction = {
+                          ...action,
+                          notification: { ...action.notification, isOpen: false },
+                          folower: { ...action.folower, isOpen: false },
+                          search: { ...action.search, isOpen: false },
+                          messagerie: { ...action.messagerie, isOpen: true },
+                        };
+                        setAction(cpAction);
+                      } 
                       setFolowersMessage({
                         ...folowersMessage,
                         activeItem: { id: item.id },
@@ -169,6 +183,7 @@ export default function BlocFolowers({
                     threads={threads}
                     setThreads={setThreads}
                     onClick={() => {
+                      if (!isTabletOrMobile) {
                       const cpAction = {
                         ...action,
                         notification: { ...action.notification, isOpen: false },
@@ -177,6 +192,16 @@ export default function BlocFolowers({
                         messagerie: { ...action.messagerie, isOpen: true },
                       };
                       setAction(cpAction);
+                      } else {
+                          const cpAction = {
+                            ...action,
+                            notification: { ...action.notification, isOpen: false },
+                            folower: { ...action.folower, isOpen: false },
+                            search: { ...action.search, isOpen: false },
+                            messagerie: { ...action.messagerie, isOpen: true },
+                          };
+                          setAction(cpAction);
+                      }
                       setFolowersMessage({
                         ...folowersMessage,
                         activeItem: { id: item.id },

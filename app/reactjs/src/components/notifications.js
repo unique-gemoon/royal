@@ -4,6 +4,7 @@ import { useHistory } from "react-router-dom";
 import { BlocNotification } from "../assets/styles/componentStyle";
 import { getDurationHM, scrollToElement } from "../helper/fonctions";
 import SpinnerLoading from "./spinnerLoading";
+import { useMediaQuery } from "react-responsive";
 
 export default function Notifications({
   notifications = [],
@@ -16,6 +17,7 @@ export default function Notifications({
   setActiveItemNV2 = () => {},
   plis = [],
 }) {
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const history = useHistory();
   const ref = useRef(null);
   const onScroll = () => {
@@ -32,8 +34,8 @@ export default function Notifications({
           <span className="count-notif">{countNewNotifications}</span>
         ) : null}
       </div>
-      <div className="content-notifs">
-        <div className="list-notifs" ref={ref} onScroll={onScroll}>
+      <div className="content-notifs" ref={ref} onScroll={(e) => { if (isTabletOrMobile) { onScroll(e) } }}>
+        <div className="list-notifs" ref={ref} onScroll={(e) => { if (!isTabletOrMobile){onScroll(e)}}}>
           {notifications.map((item, index) => (
             <div
               className={`item-notif ${item.seen ? "old-notif" : "new-notif"}`}

@@ -3,6 +3,7 @@ import { Form } from "react-bootstrap";
 import { InputForm } from "../../assets/styles/componentStyle";
 
 export default function Input({
+  autoFocus = false,
   label,
   name,
   type,
@@ -22,6 +23,7 @@ export default function Input({
       {label ? <label>{label}</label> : null}
 
       <InputForm
+        autoFocus={autoFocus}
         as={as}
         type={type}
         placeholder={placeholder}
