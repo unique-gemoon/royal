@@ -420,11 +420,11 @@ export const DetailsItems = styled.div`
 export const HeaderMobile = styled.div`
     position: sticky;
     top: 0;
-    z-index: 999;
+    z-index: 99999;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 10px 30px;
+    padding: 10px 20px;
     background-color: #FFF;
 `;
 
@@ -450,7 +450,7 @@ export const OptionsBtnAction = styled.div`
     }
     @media(max-width: 767px){
             background-color: #FFF;
-            padding: 9px 25px;
+            padding: 9px 20px;
             width: 100%;
     }
 `;
