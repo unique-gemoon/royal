@@ -239,7 +239,7 @@ export default function Home() {
                 const comment = pli.comments[j];
                 if (comment.id == data.comment.parentId) {
                   if (Array.isArray(cpPlis[i].comments[j].childs)) {
-                    cpPlis[i].comments[j].childs.push(data.comment);
+                    cpPlis[i].comments[j].childs.unshift(data.comment);
                   } else {
                     cpPlis[i].comments[j].childs = [data.comment];
                   }
@@ -247,7 +247,7 @@ export default function Home() {
                 }
               }
             } else {
-              cpPlis[i].comments.push(data.comment);
+              cpPlis[i].comments.unshift(data.comment);
             }
             cpPlis[i].totalComments++;
             break;
