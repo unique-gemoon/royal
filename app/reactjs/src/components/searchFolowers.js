@@ -154,7 +154,7 @@ export default function SearchFolowers({
       </div>
       <div className="content-search-results" ref={ref} onScroll={(e) => { if (isTabletOrMobile) { onScroll(e) } }}>
         {showResult && <div className="list-result-search" ref={ref} onScroll={(e) => { if (!isTabletOrMobile) { onScroll(e) } }}>
-          {users.length > 0 ? users.map((item, index) => (
+          {users.length > 0 && users.map((item, index) => (
             <div key={index}>
               {item.show && (
                 <ItemListFolower
@@ -188,9 +188,9 @@ export default function SearchFolowers({
                 />
               )}
             </div>
-            )) : 
-            <p className="message-not-result">Aucun resultat trouvé </p>
-          }
+            ))} 
+            {users.filter(user=>user.show).length == 0 && <p className="message-not-result">Aucun resultat trouvé </p>}
+                  
           {endScroll && <SpinnerLoading />}
         </div> 
         }
