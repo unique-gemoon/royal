@@ -36,7 +36,7 @@ export default function Notifications({
       </div>
       <div className="content-notifs" ref={ref} onScroll={(e) => { if (isTabletOrMobile) { onScroll(e) } }}>
         <div className="list-notifs" ref={ref} onScroll={(e) => { if (!isTabletOrMobile){onScroll(e)}}}>
-          {notifications.map((item, index) => (
+          {notifications.length > 0 ? notifications.map((item, index) => (
             <div
               className={`item-notif ${item.seen ? "old-notif" : "new-notif"}`}
               key={index}
@@ -69,7 +69,7 @@ export default function Notifications({
                 {getDurationHM(moment(), item.createdAt)}
               </span>
             </div>
-          ))}
+          )) : <p className="message-not-result">Je ne reçois aucune notification </p> }
           {loadingMore.notifications && <SpinnerLoading />}
         </div>
       </div>

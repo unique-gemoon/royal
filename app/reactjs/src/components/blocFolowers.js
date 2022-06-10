@@ -132,7 +132,7 @@ export default function BlocFolowers({
         <div className="content-tab-modal">
           <TabPanel value="1">
             <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
-              {subscribers.length > 0 &&
+              {subscribers.length > 0 ?
                 subscribers.map((item, index) => (
                   <ItemListFolower
                     key={index}
@@ -167,13 +167,13 @@ export default function BlocFolowers({
                       });
                     }}
                   />
-                ))}
+                )) : <p className="message-not-result" >Aucun abonné</p> }
               {endScroll && <SpinnerLoading />}
             </div>
           </TabPanel>
           <TabPanel value="2">
             <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
-              {subscriptions.length > 0 &&
+              {subscriptions.length > 0 ?
                 subscriptions.map((item, index) => (
                   <ItemListFolower
                     key={index}
@@ -208,7 +208,7 @@ export default function BlocFolowers({
                       });
                     }}
                   />
-                ))}
+                )) : <p className="message-not-result" >Aucun abonnement</p>}
               {endScroll && <SpinnerLoading />}
             </div>
           </TabPanel>
