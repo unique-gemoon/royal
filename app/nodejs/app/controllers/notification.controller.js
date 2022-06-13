@@ -52,7 +52,7 @@ export function findNotificationsNewAccount(req, res, next) {
             subscriberId: null,
             commentId: null,
             pliId: null,
-            message: "création du compte",
+            message: "Création du compte",
             createdAt: user.createdAt,
             seen: user.seenNotificationNewAccount,
           },
@@ -189,7 +189,7 @@ export function findNotifications(req, res) {
 }
 
 export function seenNotification(req, res) {
-  if (req.body.type == "newAccount" && req.body.userId == req.user.id) {
+  if (req.body.type == "newAccount") {
     User.update(
       { seenNotificationNewAccount: true },
       { where: { id: req.user.id } }
@@ -200,14 +200,10 @@ export function seenNotification(req, res) {
       .catch((err) => {
         res.status(500).send({ message: err.message });
       });
-  } else if (
-    req.body.type == "newSubscriber" &&
-    req.body.subscriberId == req.user.id &&
-    parseInt(req.body.id)
-  ) {
+  } else if (req.body.type == "newSubscriber" && parseInt(req.body.id)) {
     SubscriberNotifications.update(
       { seen: true },
-      { where: { id: req.body.id } }
+      { where: { id: req.body.id, subscriberId: req.user.id } }
     )
       .then((response) => {
         res.status(200).send({ message: "ok" });
@@ -215,24 +211,22 @@ export function seenNotification(req, res) {
       .catch((err) => {
         res.status(500).send({ message: err.message });
       });
-  } else if (
-    req.body.type == "newPli" &&
-    req.body.userId == req.user.id &&
-    parseInt(req.body.id)
-  ) {
-    PliNotifications.update({ seen: true }, { where: { id: req.body.id } })
+  } else if (req.body.type == "newPli" && parseInt(req.body.id)) {
+    PliNotifications.update(
+      { seen: true },
+      { where: { id: req.body.id, userId: req.user.id } }
+    )
       .then((response) => {
         res.status(200).send({ message: "ok" });
       })
       .catch((err) => {
         res.status(500).send({ message: err.message });
       });
-  } else if (
-    req.body.type == "newComment" &&
-    req.body.userId == req.user.id &&
-    parseInt(req.body.id)
-  ) {
-    CommentNotifications.update({ seen: true }, { where: { id: req.body.id } })
+  } else if (req.body.type == "newComment" && parseInt(req.body.id)) {
+    CommentNotifications.update(
+      { seen: true },
+      { where: { id: req.body.id, userId: req.user.id } }
+    )
       .then((response) => {
         res.status(200).send({ message: "ok" });
       })

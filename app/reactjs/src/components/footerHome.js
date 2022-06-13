@@ -36,6 +36,8 @@ export default function FooterHome({
   plis= [],
   threads= [],
   setThreads=() => {},
+  countNewMessages=0,
+  setCountNewMessages=()=>{},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
@@ -93,6 +95,8 @@ export default function FooterHome({
                 plis={plis}
                 threads={threads}
                 setThreads={setThreads}
+                countNewMessages={countNewMessages}
+                setCountNewMessages={setCountNewMessages}
               />
             </Col>
           </Row>
@@ -126,6 +130,8 @@ export default function FooterHome({
           plis={plis}
           threads={threads}
           setThreads={setThreads}
+          countNewMessages={countNewMessages}
+          setCountNewMessages={setCountNewMessages}
         />
       )}
     </FooterDefault>

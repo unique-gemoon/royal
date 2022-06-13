@@ -24,6 +24,7 @@ const endPoints = {
   NOTIFICATION_SEEN_SUBSCRIPTIONS : "/notification/seen/subscriptions", 
   MESSAGE_NEW : "/message/new",
   MESSAGE_LIST : "/message/list", 
+  MESSAGE_SEEN : "/message/seen", 
   THREAD_LIST : "/thread/list", 
   THREAD_NEW : "/thread/new", 
   THREAD_BLOCK : "/thread/block", 
