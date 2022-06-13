@@ -45,6 +45,8 @@ export default function Messagerie({
   subscriptions = [],
   setSubscriptions = () => {},
   updateSubscriberStatus = () => {},
+  countNewMessages = 0,
+  setCountNewMessages = () => {},
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -57,7 +59,6 @@ export default function Messagerie({
   const auth = useSelector((store) => store.auth);
   const ref = useRef(null);
   const [messages, setMessages] = useState([]);
-  //const [countNewMessages, setCountNewMessages] = useState(0);
   const [totalMessages, setTotalMessages] = useState(0);
   const [pageMessages, setPageMessages] = useState(1);
   const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
@@ -112,7 +113,6 @@ export default function Messagerie({
       getMessages();
     } else {
       setMessages([]);
-      //setCountNewMessages(0);
       setTotalMessages(0);
       setPageMessages(1);
     }
@@ -134,7 +134,7 @@ export default function Messagerie({
           } else {
             setMessages(getUniqueList([...data, ...messages], "id"));
           }
-          //setCountNewMessages(parseInt(response.data.totalNew));
+          setCountNewMessages(response.data.totalNewMessages);
           setTotalMessages(parseInt(response.data.total));
           setLoadingMoreMessages(false);
           scrollToElement("message_9");
@@ -190,8 +190,14 @@ export default function Messagerie({
       if (auth.isConnected) {
         if (auth.user.id == item.otherUser.id) {
           setMessages([...messages, item]);
+          if (
+            item.threadId &&
+            folowersMessage?.activeItem?.thread?.id &&
+            folowersMessage.activeItem.thread.id == item.threadId
+          ) {
+            seenMessages(item.threadId);
+          }
         }
-
         if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
           const cpThreads = [...threads];
           for (let i = 0; i < cpThreads.length; i++) {
@@ -219,7 +225,7 @@ export default function Messagerie({
                 blockedBy: item.thread.blockedBy,
               };
 
-              if(folowersMessage?.activeItem?.thread?.id == item.thread.id){
+              if (folowersMessage?.activeItem?.thread?.id == item.thread.id) {
                 const cpFolowersMessage = { ...folowersMessage };
                 cpFolowersMessage.activeItem.thread = {
                   ...cpFolowersMessage.activeItem.thread,
@@ -243,11 +249,31 @@ export default function Messagerie({
     };
     socket.on("SERVER_THREAD", updateThread);
 
+    const updateMessageSeen = (item) => {
+      if (auth.isConnected) {
+        if (auth.user.id == item.otherUser.id) {
+          if (
+            item.threadId &&
+            (folowersMessage?.activeItem?.thread &&
+              folowersMessage.activeItem.thread.id == item.threadId)
+          ) {
+            const cpMessages = [...messages];
+            for (let i = 0; i < cpMessages.length; i++) {
+              cpMessages[i]. seen = true;
+            }
+            setMessages(cpMessages);
+          }
+        }
+      }
+    };
+    socket.on("SERVER_MESSAGE_SEEN", updateMessageSeen);
+
     return () => {
       socket.off("SERVER_MESSAGE", updateMessage);
       socket.off("SERVER_THREAD", updateThread);
+      socket.off("SERVER_MESSAGE_SEEN", updateMessageSeen);
     };
-  }, [threads, messages, auth]);
+  }, [threads, messages, folowersMessage, auth]);
 
   const setItem = (item) => {
     if (item.index !== undefined) {
@@ -313,12 +339,17 @@ export default function Messagerie({
           setThreads(cpThreads);
           handleClose();
 
-          if(blocked){
-            setMsgNotifTopTime("L'utilisateur a bien été bloqué. Vous ne recevrez plus de message de sa part", 5000);
-          }else{
-            setMsgNotifTopTime("L'utilisateur a bien été débloqué. Vous pouvez à nouveau recevoir des messages de sa part", 5000);
+          if (blocked) {
+            setMsgNotifTopTime(
+              "L'utilisateur a bien été bloqué. Vous ne recevrez plus de message de sa part",
+              5000
+            );
+          } else {
+            setMsgNotifTopTime(
+              "L'utilisateur a bien été débloqué. Vous pouvez à nouveau recevoir des messages de sa part",
+              5000
+            );
           }
-
         },
         catch: (error) => {
           handleClose();
@@ -326,6 +357,23 @@ export default function Messagerie({
         },
       });
     }
+  };
+
+  const seenMessages = (threadId) => {
+    connector({
+      method: "post",
+      url: endPoints.MESSAGE_SEEN,
+      data: { threadId },
+      success: () => {
+        socket.emit("CLIENT_MESSAGE_SEEN", {
+          threadId,
+          otherUser: { id: folowersMessage.activeItem.userId },
+        });
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
   };
 
   const msgErrors = (e) => {
@@ -337,7 +385,10 @@ export default function Messagerie({
       {!folowersMessage.activeItem && !folowersMessage.showSearchFolower ? (
         <div className="bloc-lists-messagerie">
           <div className="header-messagerie">
-            <MailOutlineRoundedIcon /> Messages
+            <MailOutlineRoundedIcon /> Messages{" "}
+            {countNewMessages > 0 ? (
+              <span className="count-notif">{countNewMessages}</span>
+            ) : null}
           </div>
           <div className="content-messagerie">
             <div

@@ -33,6 +33,8 @@ export default function OptionsBtnFooter({
   plis=[],
   threads=[],
   setThreads=() => {},
+  countNewMessages = 0,
+  setCountNewMessages=() => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -57,7 +59,7 @@ export default function OptionsBtnFooter({
     <OptionsBtnAction>
       <ButtonAction
         className="messages-bloc-action"
-        countNewNotif={0}
+        countNewNotif={countNewMessages}
         action={action.messagerie}
         icon={action.messagerie.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
@@ -80,6 +82,8 @@ export default function OptionsBtnFooter({
           subscriptions={subscriptions}
           setSubscriptions={setSubscriptions}
           updateSubscriberStatus={updateSubscriberStatus}
+          countNewMessages={countNewMessages}
+          setCountNewMessages={setCountNewMessages}
         />
       </ButtonAction>
       <ButtonAction

@@ -128,6 +128,10 @@ io.on("connection", (socket) => {
     io.emit("SERVER_MESSAGE", data);
   });
 
+  socket.on("CLIENT_MESSAGE_SEEN", (data) => {
+    io.emit("SERVER_MESSAGE_SEEN", data);
+  });
+
   socket.on("CLIENT_THREAD", (data) => {
     io.emit("SERVER_THREAD", data);
   });

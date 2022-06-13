@@ -1505,6 +1505,23 @@ export const BlocMessagerie = styled.div`
                 margin-top: -3px;
             }
         }
+        .count-notif{
+            margin-left: 10px;
+            width: 22px;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            background-color: #d87a73;
+            box-shadow: 0px 0px 2px rgba(0, 0, 0, 0.1);
+            font-family: 'ProximaNovaSoftW03-Semibold';
+            font-size: 12px;
+            line-height: 16px;
+            text-align: left;
+            color: #fff;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
     }
     .header-messagerie{
         height: 47px;

@@ -12,7 +12,7 @@ import logoType from "../assets/images/Logotype.png";
 import {
   ContainerDef,
   DefaultMain,
-  HeaderMobile
+  HeaderMobile,
 } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -29,7 +29,7 @@ import {
   getUniqueList,
   scrollBottomById,
   sortObjects,
-  uniqid
+  uniqid,
 } from "../helper/fonctions";
 
 export default function Home() {
@@ -69,6 +69,7 @@ export default function Home() {
   });
   const [typingCitation, setTypingCitation] = useState({});
   const [totalThreads, setTotalThreads] = useState(0);
+  const [countNewMessages, setCountNewMessages] = useState(0);
   const [threads, setThreads] = useState([]);
 
   const breakpointColumnsObj = {
@@ -145,6 +146,7 @@ export default function Home() {
       setThreads([]);
       setTotalThreads(0);
       setPageThreads(1);
+      setCountNewMessages(0);
     }
   }, [pageThreads, auth.isConnected]);
 
@@ -305,6 +307,21 @@ export default function Home() {
     };
     socket.on("SERVER_TYPING_CITATION", updateTypingCitation);
 
+    const updateMessage = (item) => {
+      if (auth.isConnected) {
+        if (auth.user.id == item.otherUser.id) {
+          if (
+            item.threadId &&
+            (!folowersMessage?.activeItem?.thread ||
+              folowersMessage.activeItem.thread.id != item.threadId)
+          ) {
+            setCountNewMessages(countNewMessages + 1);
+          }
+        }
+      }
+    };
+    socket.on("SERVER_MESSAGE", updateMessage);
+
     return () => {
       socket.off("SERVER_PLI", updatePli);
       socket.off("SERVER_COUNT_CONNECTION", updateCountConnection);
@@ -313,9 +330,10 @@ export default function Home() {
       socket.off("SERVER_COMMENT", newComment);
       socket.off("SERVER_CITATION", newCitation);
       socket.off("SERVER_TYPING_CITATION", updateTypingCitation);
+      socket.off("SERVER_MESSAGE", updateMessage);
       //socket.disconnect();
     };
-  }, [plis, auth]);
+  }, [plis, auth, folowersMessage, countNewMessages]);
 
   const [stateModal, setStateModal] = useState({
     showModal: false,
@@ -670,12 +688,12 @@ export default function Home() {
 
   const setLoadingMoreCheck = (e) => {
     if (e.notifications) {
-      if(notifications.length < totalNotifications){
+      if (notifications.length < totalNotifications) {
         setLoadingMore({ ...loadingMore, notifications: true });
         setPageNotifications(pageNotifications + 1);
       }
-    }else if(e.threads){
-      if(threads.length < totalThreads){
+    } else if (e.threads) {
+      if (threads.length < totalThreads) {
         setLoadingMore({ ...loadingMore, threads: true });
         setPageThreads(pageThreads + 1);
       }
@@ -739,11 +757,10 @@ export default function Home() {
       method: "get",
       url: `${endPoints.THREAD_LIST}?page=${cpPageThreads}`,
       success: (response) => {
-        setThreads(
-          getUniqueList([...threads, ...response.data.threads], "id")
-        );
+        setThreads(getUniqueList([...threads, ...response.data.threads], "id"));
         setTotalThreads(parseInt(response.data.total));
         setLoadingMore({ ...loadingMore, threads: false });
+        setCountNewMessages(response.data.totalNewMessages || 0);
       },
       catch: (error) => {
         console.log(error);
@@ -846,6 +863,8 @@ export default function Home() {
             plis={plis}
             threads={threads}
             setThreads={setThreads}
+            countNewMessages={countNewMessages}
+            setCountNewMessages={setCountNewMessages}
           />
         )}
         <ModalMessage

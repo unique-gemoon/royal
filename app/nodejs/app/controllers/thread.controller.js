@@ -111,7 +111,7 @@ export function listThreads(req, res) {
     order: [["id", "DESC"]],
   })
     .then((threads) => {
-      res.status(200).send({ message: "ok", threads });
+      res.status(200).send({ message: "ok", threads, totalNewMessages: req.totalNewMessages });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -192,5 +192,47 @@ export function blockThread(req, res) {
     .catch((err) => {
       res.status(500).send({ message: err.message });
       return;
+    });
+}
+
+export function TotalNewMessages(req, res,next) {
+  ThreadUsers.count({
+    include: [
+      {
+        model: Thread,
+        association: ThreadUsersThread,
+        as: "thread",
+        required: true,
+        include: [
+          {
+            attributes: [],
+            model: ThreadUsers,
+            association: ThreadThreadUsers,
+            as: "threadUsers",
+            required: true,
+            where: {
+              userId: req.user.id,
+            },
+          },
+          {
+            model: Message,
+            association: ThreadMessages,
+            as: "messages",
+            where: {
+              userId: { [Op.ne]: req.user.id } ,
+              seen : false,
+            },
+          },
+        ],
+      }
+    ],
+    where: { userId: { [Op.ne]: req.user.id } },
+  })
+    .then((total) => {
+      req.totalNewMessages = total;
+      next();
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 }

@@ -3,6 +3,7 @@ import db from "../models/index.model.js";
 const Message = db.message;
 const User = db.user;
 const MessageUser = Message.belongsTo(User);
+const Op = db.Sequelize.Op;
 
 export function newMessage(req, res) {
   if (req.thread.blocked) {
@@ -17,19 +18,17 @@ export function newMessage(req, res) {
       message: req.body.message,
     })
       .then((message) => {
-        res
-          .status(200)
-          .send({
-            message: "ok.",
-            msg: {
-              id: message.id,
-              userId: message.userId,
-              threadId: message.threadId,
-              message: message.message,
-              createdAt : message.createdAt,
-              seen: message.seen
-            },
-          });
+        res.status(200).send({
+          message: "ok.",
+          msg: {
+            id: message.id,
+            userId: message.userId,
+            threadId: message.threadId,
+            message: message.message,
+            createdAt: message.createdAt,
+            seen: message.seen,
+          },
+        });
       })
       .catch((err) => {
         res.status(400).send({ message: err.message });
@@ -66,7 +65,7 @@ export function listMessages(req, res) {
     order: [["createdAt", "DESC"]],
   })
     .then((messages) => {
-      res.status(200).send({ message: "ok.", messages, total: req.total });
+      res.status(200).send({ message: "ok.", messages, total: req.total , totalNewMessages:req.totalNewMessages});
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
@@ -85,5 +84,18 @@ export function totalMessages(req, res, next) {
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });
+    });
+}
+
+export function seenMessages(req, res, next) {
+  Message.update(
+    { seen: true },
+    { where: { threadId: req.thread.id, userId: { [Op.ne]: req.user.id } } }
+  )
+    .then(() => {
+      next();
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
     });
 }
