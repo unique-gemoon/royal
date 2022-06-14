@@ -27,6 +27,7 @@ const endPoints = {
   MESSAGE_SEEN : "/message/seen", 
   THREAD_LIST : "/thread/list", 
   THREAD_NEW : "/thread/new", 
+  THREAD_CHECK : "/thread/check", 
   THREAD_BLOCK : "/thread/block", 
   COMMENT_NEW : "/comment/new",
   CITATION_NEW : "/citation/new",

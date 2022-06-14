@@ -84,6 +84,8 @@ export default function OptionsBtnFooter({
           updateSubscriberStatus={updateSubscriberStatus}
           countNewMessages={countNewMessages}
           setCountNewMessages={setCountNewMessages}
+          action={action}
+          setAction={setAction}
         />
       </ButtonAction>
       <ButtonAction

@@ -8,9 +8,37 @@ const ThreadThreadUsers = Thread.hasMany(ThreadUsers);
 const ThreadUsersThread = ThreadUsers.belongsTo(Thread);
 const ThreadUsersUser = ThreadUsers.belongsTo(User);
 const ThreadMessages = Thread.hasMany(Message);
+const MessageUser = Message.belongsTo(User);
 const Op = db.Sequelize.Op;
 
 export function newThread(req, res) {
+  if (req?.thread?.id) {
+    res.status(200).send({ message: "ok", thread: { id: req.thread.id ,blocked : req.thread.blocked} });
+  } else {
+    Thread.create(
+      {
+        threadUsers: [{ userId: req.user.id }, { userId: req.body.userId }],
+      },
+      {
+        include: [
+          {
+            model: ThreadUsers,
+            association: ThreadThreadUsers,
+            as: "threadUsers",
+          },
+        ],
+      }
+    )
+      .then((thread) => {
+        res.status(200).send({ message: "ok", thread: { id: thread.id , blocked : thread.blocked} });
+      })
+      .catch((err) => {
+        res.status(500).send({ message: err.message });
+      });
+  }
+}
+
+export function checkNewThread(req, res, next) {
   Thread.findOne({
     attributes: ["id"],
     include: [
@@ -32,30 +60,8 @@ export function newThread(req, res) {
     subQuery: false,
   })
     .then((thread) => {
-      if (thread) {
-        res.status(200).send({ message: "ok", thread: { id: thread.id } });
-      } else {
-        Thread.create(
-          {
-            threadUsers: [{ userId: req.user.id }, { userId: req.body.userId }],
-          },
-          {
-            include: [
-              {
-                model: ThreadUsers,
-                association: ThreadThreadUsers,
-                as: "threadUsers",
-              },
-            ],
-          }
-        )
-          .then((thread) => {
-            res.status(200).send({ message: "ok", thread: { id: thread.id } });
-          })
-          .catch((err) => {
-            res.status(500).send({ message: err.message });
-          });
-      }
+      req.thread = thread;
+      next();
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -71,7 +77,7 @@ export function listThreads(req, res) {
     attributes: { exclude: ["createdAt", "updatedAt", "threadId"] },
     include: [
       {
-        attributes: ["id","blocked","blockedBy"],
+        attributes: ["id", "blocked", "blockedBy"],
         model: Thread,
         association: ThreadUsersThread,
         as: "thread",
@@ -111,7 +117,13 @@ export function listThreads(req, res) {
     order: [["id", "DESC"]],
   })
     .then((threads) => {
-      res.status(200).send({ message: "ok", threads, totalNewMessages: req.totalNewMessages });
+      res
+        .status(200)
+        .send({
+          message: "ok",
+          threads,
+          totalNewMessages: req.totalNewMessages,
+        });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
@@ -195,7 +207,7 @@ export function blockThread(req, res) {
     });
 }
 
-export function TotalNewMessages(req, res,next) {
+export function TotalNewMessages(req, res, next) {
   ThreadUsers.count({
     include: [
       {
@@ -219,12 +231,12 @@ export function TotalNewMessages(req, res,next) {
             association: ThreadMessages,
             as: "messages",
             where: {
-              userId: { [Op.ne]: req.user.id } ,
-              seen : false,
+              userId: { [Op.ne]: req.user.id },
+              seen: false,
             },
           },
         ],
-      }
+      },
     ],
     where: { userId: { [Op.ne]: req.user.id } },
   })

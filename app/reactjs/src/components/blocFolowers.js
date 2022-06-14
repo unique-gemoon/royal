@@ -21,11 +21,10 @@ export default function BlocFolowers({
   subscribers = [],
   setSubscribers = () => {},
   subscriptions = [],
-  setSubscriptions= () => {} ,
-  threads=[],
-  setThreads= () => {} ,
+  setSubscriptions = () => {},
+  threads = [],
+  setThreads = () => {},
 }) {
-
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const [value, setValue] = React.useState("1");
   const [endScroll, setEndScroll] = useState(false);
@@ -132,7 +131,7 @@ export default function BlocFolowers({
         <div className="content-tab-modal">
           <TabPanel value="1">
             <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
-              {subscribers.length > 0 ?
+              {subscribers.length > 0 ? (
                 subscribers.map((item, index) => (
                   <ItemListFolower
                     key={index}
@@ -141,39 +140,21 @@ export default function BlocFolowers({
                     setMsgNotifTopTime={setMsgNotifTopTime}
                     threads={threads}
                     setThreads={setThreads}
-                    onClick={() => {
-                      if (!isTabletOrMobile) {
-                      const cpAction = {
-                        ...action,
-                        notification: { ...action.notification, isOpen: false },
-                        folower: { ...action.folower, isOpen: true },
-                        search: { ...action.search, isOpen: false },
-                        messagerie: { ...action.messagerie, isOpen: true },
-                      };
-                      setAction(cpAction);
-                      }else{
-                        const cpAction = {
-                          ...action,
-                          notification: { ...action.notification, isOpen: false },
-                          folower: { ...action.folower, isOpen: false },
-                          search: { ...action.search, isOpen: false },
-                          messagerie: { ...action.messagerie, isOpen: true },
-                        };
-                        setAction(cpAction);
-                      } 
-                      setFolowersMessage({
-                        ...folowersMessage,
-                        activeItem: { id: item.id },
-                      });
-                    }}
+                    action={action}
+                    setAction={setAction}
+                    folowersMessage={folowersMessage}
+                    setFolowersMessage={setFolowersMessage}
                   />
-                )) : <p className="message-not-result" >Aucun abonné</p> }
+                ))
+              ) : (
+                <p className="message-not-result">Aucun abonné</p>
+              )}
               {endScroll && <SpinnerLoading />}
             </div>
           </TabPanel>
           <TabPanel value="2">
             <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
-              {subscriptions.length > 0 ?
+              {subscriptions.length > 0 ? (
                 subscriptions.map((item, index) => (
                   <ItemListFolower
                     key={index}
@@ -182,33 +163,15 @@ export default function BlocFolowers({
                     setMsgNotifTopTime={setMsgNotifTopTime}
                     threads={threads}
                     setThreads={setThreads}
-                    onClick={() => {
-                      if (!isTabletOrMobile) {
-                      const cpAction = {
-                        ...action,
-                        notification: { ...action.notification, isOpen: false },
-                        folower: { ...action.folower, isOpen: true },
-                        search: { ...action.search, isOpen: false },
-                        messagerie: { ...action.messagerie, isOpen: true },
-                      };
-                      setAction(cpAction);
-                      } else {
-                          const cpAction = {
-                            ...action,
-                            notification: { ...action.notification, isOpen: false },
-                            folower: { ...action.folower, isOpen: false },
-                            search: { ...action.search, isOpen: false },
-                            messagerie: { ...action.messagerie, isOpen: true },
-                          };
-                          setAction(cpAction);
-                      }
-                      setFolowersMessage({
-                        ...folowersMessage,
-                        activeItem: { id: item.id },
-                      });
-                    }}
+                    action={action}
+                    setAction={setAction}
+                    folowersMessage={folowersMessage}
+                    setFolowersMessage={setFolowersMessage}
                   />
-                )) : <p className="message-not-result" >Aucun abonnement</p>}
+                ))
+              ) : (
+                <p className="message-not-result">Aucun abonnement</p>
+              )}
               {endScroll && <SpinnerLoading />}
             </div>
           </TabPanel>
