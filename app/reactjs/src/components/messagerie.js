@@ -35,6 +35,8 @@ import InputEmoji from "./ui-elements/inputEmoji";
 export default function Messagerie({
   setMsgNotifTopTime = () => {},
   folowersMessage,
+  action = {},
+  setAction = () => {},
   setFolowersMessage = () => {},
   loadingMore = {},
   setLoadingMore = () => {},
@@ -119,7 +121,10 @@ export default function Messagerie({
   }, [pageMessages, auth.isConnected]);
 
   const getMessages = (refresh = false) => {
-    if (folowersMessage?.activeItem?.thread?.id) {
+    if (
+      folowersMessage?.activeItem?.thread?.id &&
+      folowersMessage.activeItem.thread.id != -1
+    ) {
       const cpPageMessages = refresh ? 1 : pageMessages;
       if (pageMessages != cpPageMessages) {
         setPageMessages(cpPageMessages);
@@ -143,43 +148,61 @@ export default function Messagerie({
           console.log(error);
         },
       });
+    } else {
+      setMessages([]);
+      setTotalMessages(0);
+      setLoadingMoreMessages(false);
     }
   };
 
   const saveMessage = async (data) => {
-    if (
-      folowersMessage?.activeItem?.thread?.id &&
-      folowersMessage.activeItem?.userId
-    ) {
-      if (folowersMessage.activeItem.thread.blocked) {
-        setMsgNotifTopTime(
-          "Vous ne pouvez pas envoyer des messages cette discussion est bloquée.",
-          5000
-        );
-        return;
+    if (folowersMessage.activeItem?.userId) {
+      let cpActiveItem =
+        folowersMessage.activeItem?.thread?.id &&
+        folowersMessage.activeItem.thread.id != -1
+          ? folowersMessage.activeItem
+          : null;
+
+      if (!cpActiveItem) {
+        cpActiveItem = await getThread({
+          id: folowersMessage.activeItem.userId,
+          username: folowersMessage.activeItem.user.username,
+        });
       }
 
-      data = { ...data, threadId: folowersMessage.activeItem.thread.id };
-      return await connector({
-        method: "post",
-        url: endPoints.MESSAGE_NEW,
-        data,
-        success: (response) => {
-          if (response.data?.msg) {
-            socket.emit("CLIENT_MESSAGE", {
-              ...response.data.msg,
-              otherUser: { id: folowersMessage.activeItem.userId },
-            });
-            setMessages([...messages, response.data.msg]);
-            scrollChat();
-          }
-          return true;
-        },
-        catch: (error) => {
-          msgErrors({ msg: getMsgError(error) });
-          return false;
-        },
-      });
+      if (cpActiveItem && cpActiveItem?.thread?.id) {
+        if (cpActiveItem.thread.blocked) {
+          setMsgNotifTopTime(
+            "Vous ne pouvez pas envoyer des messages cette discussion est bloquée.",
+            5000
+          );
+          return;
+        }
+
+        data = { ...data, threadId: cpActiveItem.thread.id };
+        return await connector({
+          method: "post",
+          url: endPoints.MESSAGE_NEW,
+          data,
+          success: (response) => {
+            if (response.data?.msg) {
+              socket.emit("CLIENT_MESSAGE", {
+                ...response.data.msg,
+                otherUser: { id: folowersMessage.activeItem.userId },
+              });
+              setMessages([...messages, response.data.msg]);
+              scrollChat();
+            }
+            return true;
+          },
+          catch: (error) => {
+            msgErrors({ msg: getMsgError(error) });
+            return false;
+          },
+        });
+      } else {
+        return false;
+      }
     } else {
       return;
     }
@@ -198,68 +221,21 @@ export default function Messagerie({
             seenMessages(item.threadId);
           }
         }
-        if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
-          const cpThreads = [...threads];
-          for (let i = 0; i < cpThreads.length; i++) {
-            if (cpThreads[i].thread.id == item.threadId) {
-              cpThreads[i].thread.messages = [item];
-              setThreads(cpThreads);
-              break;
-            }
-          }
-        }
       }
     };
     socket.on("SERVER_MESSAGE", updateMessage);
-
-    const updateThread = (item) => {
-      if (auth.isConnected) {
-        if (item?.otherUser?.id && auth.user.id == item.otherUser.id) {
-          let existe = false;
-          const cpThreads = [...threads];
-          for (let i = 0; i < cpThreads.length; i++) {
-            if (cpThreads[i].thread.id === item.thread.id) {
-              cpThreads[i].thread = {
-                ...cpThreads[i].thread,
-                blocked: item.thread.blocked,
-                blockedBy: item.thread.blockedBy,
-              };
-
-              if (folowersMessage?.activeItem?.thread?.id == item.thread.id) {
-                const cpFolowersMessage = { ...folowersMessage };
-                cpFolowersMessage.activeItem.thread = {
-                  ...cpFolowersMessage.activeItem.thread,
-                  blocked: item.thread.blocked,
-                  blockedBy: item.thread.blockedBy,
-                };
-                setFolowersMessage(cpFolowersMessage);
-              }
-
-              existe = true;
-              break;
-            }
-          }
-          if (!existe) {
-            setThreads([item, ...threads]);
-          } else {
-            setThreads(cpThreads);
-          }
-        }
-      }
-    };
-    socket.on("SERVER_THREAD", updateThread);
 
     const updateMessageSeen = (item) => {
       if (auth.isConnected) {
         if (auth.user.id == item.otherUser.id) {
           if (
             item.threadId &&
-            (folowersMessage?.activeItem?.thread &&
-              folowersMessage.activeItem.thread.id == item.threadId)
+            folowersMessage?.activeItem?.thread &&
+            folowersMessage.activeItem.thread.id == item.threadId
           ) {
             const cpMessages = [...messages];
             for (let i = 0; i < cpMessages.length; i++) {
-              cpMessages[i]. seen = true;
+              cpMessages[i].seen = true;
             }
             setMessages(cpMessages);
           }
@@ -270,7 +246,6 @@ export default function Messagerie({
 
     return () => {
       socket.off("SERVER_MESSAGE", updateMessage);
-      socket.off("SERVER_THREAD", updateThread);
       socket.off("SERVER_MESSAGE_SEEN", updateMessageSeen);
     };
   }, [threads, messages, folowersMessage, auth]);
@@ -378,6 +353,64 @@ export default function Messagerie({
 
   const msgErrors = (e) => {
     if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
+  };
+
+  const getThread = async (item) => {
+    return await connector({
+      method: "post",
+      url: endPoints.THREAD_NEW,
+      data: { userId: item.id },
+      success: (response) => {
+        const thread = {
+          id: -1,
+          userId: item.id,
+          thread: {
+            id: response.data.thread.id,
+            messages: [],
+          },
+          user: {
+            username: item.username,
+          },
+        };
+        setFolowersMessage({
+          ...folowersMessage,
+          activeItem: thread,
+        });
+
+        let existe = false;
+        for (let i = 0; i < threads.length; i++) {
+          if (threads[i].thread.id == thread.thread.id) {
+            existe = true;
+            break;
+          }
+        }
+        if (!existe) {
+          setThreads([thread, ...threads]);
+          const otherThread = {
+            id: -1,
+            userId: auth.user.id,
+            thread: {
+              id: response.data.thread.id,
+              messages: [],
+            },
+            user: {
+              username: auth.user.username,
+            },
+            otherUser: {
+              id: item.id,
+              username: item.username,
+            },
+          };
+          console.log("test", otherThread);
+          socket.emit("CLIENT_THREAD", otherThread);
+        }
+        return thread;
+      },
+      catch: (error) => {
+        console.log(error);
+        return false;
+      },
+    });
   };
 
   return (
@@ -591,15 +624,16 @@ export default function Messagerie({
                     (item, index) =>
                       item.show && (
                         <ItemListFolower
-                          folowersMessage={folowersMessage}
-                          setFolowersMessage={setFolowersMessage}
-                          shwoButtonMessage={false}
                           key={index}
                           item={{ ...item, index }}
                           setItem={setItem}
                           setMsgNotifTopTime={setMsgNotifTopTime}
                           threads={threads}
                           setThreads={setThreads}
+                          action={action}
+                          setAction={setAction}
+                          folowersMessage={folowersMessage}
+                          setFolowersMessage={setFolowersMessage}
                         />
                       )
                   )

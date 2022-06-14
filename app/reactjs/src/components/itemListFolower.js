@@ -8,19 +8,18 @@ import { ItemFolower } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { getMsgError } from "../helper/fonctions";
-import { socket } from "./socket";
+import { useMediaQuery } from "react-responsive";
 
 export default function ItemListFolower({
   folowersMessage,
   setFolowersMessage = () => {},
+  action = {},
+  setAction = () => {},
   item,
   setItem = () => {},
-  onClick,
-  shwoButtonMessage = true,
   setMsgNotifTopTime = () => {},
-  threads = [],
-  setThreads = () => {},
 }) {
+  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const [submitting, setSubmitting] = useState(false);
   const auth = useSelector((store) => store.auth);
 
@@ -74,56 +73,27 @@ export default function ItemListFolower({
     }
   };
 
-  const getThread = (item) => {
+  const checkThread = (item) => {
     connector({
       method: "post",
-      url: endPoints.THREAD_NEW,
+      url: endPoints.THREAD_CHECK,
       data: { userId: item.id },
       success: (response) => {
-        if (response.data?.thread) {
-          const thread = {
-            id: -1,
-            userId: item.id,
-            thread: {
-              id: response.data.thread.id,
-              messages: [],
-            },
-            user: {
-              username: item.username,
-            },
-          };
-          setFolowersMessage({
-            ...folowersMessage,
-            activeItem: thread,
-          });
-
-          let existe = false;
-          for (let i = 0; i < threads.length; i++) {
-            if (threads[i].thread.id == thread.thread.id) {
-              existe = true;
-              break;
-            }
-          }
-          if (!existe) {
-            setThreads([thread, ...threads]);
-            const otherThread = {
-              id: -1,
-              userId: auth.user.id,
-              thread: {
-                id: response.data.thread.id,
-                messages: [],
-              },
-              user: {
-                username: auth.user.username,
-              },
-              otherUser:{
-                id: item.id,
-                username: item.username,
-              }
-            };
-            socket.emit("CLIENT_THREAD", otherThread);
-          }
-        }
+        const thread = {
+          id: -1,
+          userId: item.id,
+          thread: {
+            id: response.data?.thread?.id ? response.data.thread.id : -1,
+            messages: [],
+          },
+          user: {
+            username: item.username,
+          },
+        };
+        setFolowersMessage({
+          ...folowersMessage,
+          activeItem: thread,
+        });
       },
       catch: (error) => {
         console.log(error);
@@ -138,19 +108,42 @@ export default function ItemListFolower({
 
   return (
     <ItemFolower key={item.id}>
-      <span
-        onClick={() => {
-          getThread(item);
-        }}
-      >
-        {item.username}
-      </span>
+      <span>{item.username}</span>
       <div className="option-item-folower">
-        {shwoButtonMessage && (
-          <Button className="toggle-item-message" onClick={onClick}>
-            <MailOutlineRoundedIcon />
-          </Button>
-        )}
+        <Button
+          className="toggle-item-message"
+          onClick={() => {
+            if (!isTabletOrMobile) {
+              const cpAction = {
+                ...action,
+                notification: {
+                  ...action.notification,
+                  isOpen: false,
+                },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: true },
+                messagerie: { ...action.messagerie, isOpen: true },
+              };
+              setAction(cpAction);
+            } else {
+              const cpAction = {
+                ...action,
+                notification: {
+                  ...action.notification,
+                  isOpen: false,
+                },
+                folower: { ...action.folower, isOpen: false },
+                search: { ...action.search, isOpen: false },
+                messagerie: { ...action.messagerie, isOpen: true },
+              };
+              setAction(cpAction);
+            }
+
+            checkThread(item);
+          }}
+        >
+          <MailOutlineRoundedIcon />
+        </Button>
         {item.isSubscribed ? (
           <Button
             onClick={() => {

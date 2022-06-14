@@ -18,8 +18,8 @@ export default function SearchFolowers({
   setFolowersMessage = () => {},
   setMsgNotifTopTime = () => {},
   updateSubscriberStatus = () => {},
-  threads=[],
-  setThreads= () => {},
+  threads = [],
+  setThreads = () => {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const auth = useSelector((store) => store.auth);
@@ -31,7 +31,7 @@ export default function SearchFolowers({
       value: "",
       placeholder: "Qui recherchez-vous ?",
       className: "search-input",
-      autoFocus : false
+      autoFocus: false,
     },
     searching: false,
   });
@@ -39,7 +39,7 @@ export default function SearchFolowers({
   const [users, setUsers] = useState([]);
   useEffect(() => {
     if (action.search.isOpen) {
-      setState({ ...state, search: { ...state.search, autoFocus: true }});
+      setState({ ...state, search: { ...state.search, autoFocus: true } });
     }
   }, [action.search.isOpen]);
   useEffect(() => {
@@ -96,14 +96,14 @@ export default function SearchFolowers({
     };
   }, [users]);
 
-  const [endScroll, setEndScroll] = useState(false)
+  const [endScroll, setEndScroll] = useState(false);
   const ref = useRef(null);
   const onScroll = () => {
     const { scrollTop, scrollHeight, clientHeight } = ref.current;
     if (scrollTop + clientHeight === scrollHeight) {
       setEndScroll(true);
     }
-  }
+  };
   return (
     <FolowerSearch>
       <div className="form-search-folower">
@@ -152,50 +152,52 @@ export default function SearchFolowers({
           </span>
         )}
       </div>
-      <div className="content-search-results" ref={ref} onScroll={(e) => { if (isTabletOrMobile) { onScroll(e) } }}>
-        {showResult && <div className="list-result-search" ref={ref} onScroll={(e) => { if (!isTabletOrMobile) { onScroll(e) } }}>
-          {users.length > 0 && users.map((item, index) => (
-            <div key={index}>
-              {item.show && (
-                <ItemListFolower
-                  key={item.id}
-                  item={{ ...item, index }}
-                  setItem={setItem}
-                  setMsgNotifTopTime={setMsgNotifTopTime}
-                  threads={threads}
-                  setThreads={setThreads}
-                  onClick={() => {
-                    if (!isTabletOrMobile){
-                      const cpAction = {
-                        ...action,
-                        notification: { ...action.notification, isOpen: false },
-                        folower: { ...action.folower, isOpen: false },
-                        search: { ...action.search, isOpen: true },
-                        messagerie: { ...action.messagerie, isOpen: true },
-                      };
-                      setAction(cpAction);
-                    }else{
-                      const cpAction = {
-                        ...action,
-                        notification: { ...action.notification, isOpen: false },
-                        folower: { ...action.folower, isOpen: false },
-                        search: { ...action.search, isOpen: false },
-                        messagerie: { ...action.messagerie, isOpen: true },
-                      };
-                      setAction(cpAction);
-                    }
-                  }}
-                />
-              )}
-            </div>
-            ))} 
-            {users.filter(user=>user.show).length == 0 && <p className="message-not-result">Aucun resultat trouvé </p>}
-                  
-          {endScroll && <SpinnerLoading />}
-        </div> 
-        }
-          
-        </div>
+      <div
+        className="content-search-results"
+        ref={ref}
+        onScroll={(e) => {
+          if (isTabletOrMobile) {
+            onScroll(e);
+          }
+        }}
+      >
+        {showResult && (
+          <div
+            className="list-result-search"
+            ref={ref}
+            onScroll={(e) => {
+              if (!isTabletOrMobile) {
+                onScroll(e);
+              }
+            }}
+          >
+            {users.length > 0 &&
+              users.map((item, index) => (
+                <div key={index}>
+                  {item.show && (
+                    <ItemListFolower
+                      key={item.id}
+                      item={{ ...item, index }}
+                      setItem={setItem}
+                      setMsgNotifTopTime={setMsgNotifTopTime}
+                      threads={threads}
+                      setThreads={setThreads}
+                      action={action}
+                      setAction={setAction}
+                      folowersMessage={folowersMessage}
+                      setFolowersMessage={setFolowersMessage}
+                    />
+                  )}
+                </div>
+              ))}
+            {users.filter((user) => user.show).length == 0 && (
+              <p className="message-not-result">Aucun resultat trouvé </p>
+            )}
+
+            {endScroll && <SpinnerLoading />}
+          </div>
+        )}
+      </div>
     </FolowerSearch>
   );
 }

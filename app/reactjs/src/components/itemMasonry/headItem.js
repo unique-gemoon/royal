@@ -26,7 +26,11 @@ import {
 import { useOutsideAlerter } from "../../helper/events";
 import { useMediaQuery } from "react-responsive";
 import moment from "moment";
-import { copyToClipboard, getDurationHM, getMsgError } from "../../helper/fonctions";
+import {
+  copyToClipboard,
+  getDurationHM,
+  getMsgError,
+} from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
 
@@ -50,7 +54,6 @@ export default function HeadItem({
   const [submitting, setSubmitting] = useState(false);
   const handleTooltipClose = () => {
     setToggleProfile(false);
-
   };
 
   const handleTooltipOpen = () => {
@@ -141,7 +144,11 @@ export default function HeadItem({
             user: { ...item.user, isSubscribed: true },
             action: "update",
           });
-          updateSubscriberStatus({ ...item.user, isSubscribed: true, notification : response.data.notification });
+          updateSubscriberStatus({
+            ...item.user,
+            isSubscribed: true,
+            notification: response.data.notification,
+          });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -167,7 +174,11 @@ export default function HeadItem({
             user: { ...item.user, isSubscribed: false },
             action: "update",
           });
-          updateSubscriberStatus({ ...item.user, isSubscribed: false , notification : response.data.notification});
+          updateSubscriberStatus({
+            ...item.user,
+            isSubscribed: false,
+            notification: response.data.notification,
+          });
         },
         catch: (error) => {
           msgErrors({ msg: getMsgError(error), submit: false });
@@ -181,7 +192,6 @@ export default function HeadItem({
     if (e.msg !== undefined) setMsgNotifTopTime(e.msg, 5000);
   };
 
-
   const [createdAt, setCreatedAt] = useState(item.createdAt);
   const [seconds, setSeconds] = useState(0);
 
@@ -193,12 +203,40 @@ export default function HeadItem({
     const interval = setInterval(() => {
       setSeconds((seconds) => seconds + 1);
     }, 1000);
-    return () => clearInterval(interval); 
+    return () => clearInterval(interval);
   }, []);
 
   useEffect(() => {
-      setCreatedAt(getDurationHM(moment(), item.createdAt));
+    setCreatedAt(getDurationHM(moment(), item.createdAt));
   }, [seconds]);
+
+  const pliCheckThread = (item) => {
+    connector({
+      method: "post",
+      url: endPoints.THREAD_CHECK,
+      data: { userId: item.user.id },
+      success: (response) => {
+        const thread = {
+          id: -1,
+          userId: item.user.id,
+          thread: {
+            id: response.data?.thread?.id ? response.data.thread.id : -1,
+            messages: [],
+          },
+          user: {
+            username: item.user.username,
+          },
+        };
+        setFolowersMessage({
+          ...folowersMessage,
+          activeItem: thread,
+        });
+      },
+      catch: (error) => {
+        console.log(error);
+      },
+    });
+  };
 
   return (
     <HeadContentItem>
@@ -340,12 +378,10 @@ export default function HeadItem({
                                 },
                               };
                               setAction(cpAction);
-                              setFolowersMessage({
-                                ...folowersMessage,
-                                activeItem: { id: 4 },
-                              });
                               setState({ ...state, showModal: false });
                               setToggleProfile(false);
+
+                              pliCheckThread(item);
                             }}
                             className="toggle-item-message"
                           >
@@ -399,7 +435,8 @@ export default function HeadItem({
             </div>
           </ClickAwayListener>
           <span className="timer-post">
-            {'. '}{createdAt}
+            {". "}
+            {createdAt}
           </span>
         </div>
       </div>
@@ -438,14 +475,16 @@ export default function HeadItem({
         )}
         <div
           className={`nb-message-comment ${
-            (activeItem && activeItem.id == item.id )  || (state.showModal && state.showCitation)/* || (!state.showModal && state.showNV2)  */// verifier close in modale
+            (activeItem && activeItem.id == item.id) ||
+            (state.showModal &&
+              state.showCitation) /* || (!state.showModal && state.showNV2)  */ // verifier close in modale
               ? "comment-is-open"
               : ""
           }`}
           onClick={() => {
             if (state.showModal) {
               setState({ ...state, showCitation: !state.showCitation });
-            }else{
+            } else {
               const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -461,7 +500,7 @@ export default function HeadItem({
             }
           }}
         >
-          {item.totalComments}  <CommentOutlinedIcon /> <ArrowDownIcon/>
+          {item.totalComments} <CommentOutlinedIcon /> <ArrowDownIcon />
         </div>
         <div className="btn-copy">
           <ClickAwayListener onClickAway={handleCopyClose}>

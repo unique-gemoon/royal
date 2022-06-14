@@ -335,6 +335,66 @@ export default function Home() {
     };
   }, [plis, auth, folowersMessage, countNewMessages]);
 
+  useEffect(() => {
+    const updateThread = (item) => {
+      if (auth.isConnected) {
+        if (item?.otherUser?.id && auth.user.id == item.otherUser.id) {
+          let existe = false;
+          const cpThreads = [...threads];
+          for (let i = 0; i < cpThreads.length; i++) {
+            if (cpThreads[i].thread.id === item.thread.id) {
+              cpThreads[i].thread = {
+                ...cpThreads[i].thread,
+                blocked: item.thread.blocked,
+                blockedBy: item.thread.blockedBy,
+              };
+
+              if (folowersMessage?.activeItem?.thread?.id == item.thread.id) {
+                const cpFolowersMessage = { ...folowersMessage };
+                cpFolowersMessage.activeItem.thread = {
+                  ...cpFolowersMessage.activeItem.thread,
+                  blocked: item.thread.blocked,
+                  blockedBy: item.thread.blockedBy,
+                };
+                setFolowersMessage(cpFolowersMessage);
+              }
+
+              existe = true;
+              break;
+            }
+          }
+          if (!existe) {
+            setThreads([item, ...threads]);
+          } else {
+            setThreads(cpThreads);
+          }
+        }
+      }
+    };
+    socket.on("SERVER_THREAD", updateThread);
+
+    const updateMessage = (item) => {
+      if (auth.isConnected) {
+        if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
+          const cpThreads = [...threads];
+          for (let i = 0; i < cpThreads.length; i++) {
+            if (cpThreads[i].thread.id == item.threadId) {
+              cpThreads[i].thread.messages = [item];
+              setThreads(cpThreads);
+              break;
+            }
+          }
+        }
+      }
+    };
+    socket.on("SERVER_MESSAGE", updateMessage);
+
+    return () => {
+      socket.off("SERVER_THREAD", updateThread);
+      socket.off("SERVER_MESSAGE", updateMessage);
+    };
+  }, [threads, folowersMessage, auth]);
+
   const [stateModal, setStateModal] = useState({
     showModal: false,
     item: {},

@@ -1474,7 +1474,6 @@ export const MessageFindFolower = styled.div`
         & > div{
             padding: 0 14px 0 0;
             & > span{
-                    cursor: pointer;
                     display: block;
                     width: 100%;
                     padding: 13px 14px;
