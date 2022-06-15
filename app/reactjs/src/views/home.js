@@ -39,7 +39,6 @@ export default function Home() {
 
   const [plis, setPlis] = useState([]);
   const [activeItem, setActiveItem] = useState(null);
-  const [activeItemNV2, setActiveItemNV2] = useState(null);
   const [activeItemPlayer, setActiveItemPlayer] = useState(null);
   const [submitting, setSubmitting] = useState(false);
   const [showBlocModalMessage, setShowBlocModalMessage] = useState(null);
@@ -102,12 +101,6 @@ export default function Home() {
       checkTokenConfirmEmail();
     }
   }, [tokenConfirmEmail]);
-
-  useEffect(() => {
-    if (activeItem?.id) {
-      setActiveItemNV2({ ...activeItem });
-    }
-  }, [activeItem]);
 
   const [action, setAction] = useState({
     notification: {
@@ -871,7 +864,6 @@ export default function Home() {
                   folowersMessage={folowersMessage}
                   setFolowersMessage={setFolowersMessage}
                   updateSubscriberStatus={updateSubscriberStatus}
-                  activeItemNV2={activeItemNV2}
                   clearPliElapsed={clearPliElapsed}
                   typingCitation={typingCitation}
                 />
@@ -909,7 +901,7 @@ export default function Home() {
             setSubscriptions={setSubscriptions}
             loadingMore={loadingMore}
             setLoadingMore={setLoadingMoreCheck}
-            setActiveItemNV2={setActiveItemNV2}
+            setActiveItem={setActiveItem}
             plis={plis}
             threads={threads}
             setThreads={setThreads}

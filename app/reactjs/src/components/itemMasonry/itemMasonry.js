@@ -29,9 +29,8 @@ export default function ItemMasonry({
   folowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
-  activeItemNV2={},
-  clearPliElapsed=() => {},
-  typingCitation={}
+  clearPliElapsed = () => {},
+  typingCitation = {},
 }) {
   const initData = {
     media: {
@@ -53,14 +52,9 @@ export default function ItemMasonry({
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
 
-  const getShowNV2 = (i) => {
-    return activeItemNV2 && i.id == activeItemNV2.id && activeItemNV2.showNV2 ;
-  };
-
   const [state, setState] = useState({
     showModal: false,
-    showComment: true,
-    showCitation: false,
+    showCitation: true,
     showNV2: false,
     item: {},
   });
@@ -69,13 +63,8 @@ export default function ItemMasonry({
     setStateModal(state);
   }, [state]);
 
-
   useEffect(() => {
-    setState({...state, showNV2: !getShowNV2(item)});
-  }, [activeItemNV2]);
-
-  useEffect(() => {
-    if (refHeight?.current?.clientHeight){
+    if (refHeight?.current?.clientHeight) {
       setTimeout(() => {
         setHeight(refHeight.current.clientHeight);
       }, 1000);
@@ -103,11 +92,9 @@ export default function ItemMasonry({
     setData(cpData);
   }, [item.medias]);
 
-  const isOpenNV2 = (i) => {
-    return activeItemNV2 && i.id == activeItemNV2.id && state.showNV2 ;
+  const isOpenNV2 = () => {
+    return activeItem && item.id == activeItem.id && state.showNV2;
   };
-
-
 
   const setMedia = (media) => {
     let cpMedias = [...item.medias];
@@ -118,6 +105,15 @@ export default function ItemMasonry({
     }
     setItem({ ...item, medias: cpMedias, action: "update" });
   };
+
+  useEffect(() => {
+    if (activeItem && activeItem.showNV2!=undefined && item.id == activeItem.id) {
+       setState({
+        ...state,
+        showNV2: activeItem.showNV2,
+      }); 
+    }
+  }, [activeItem]);
 
   const renderContentNV1 = () => {
     return (
@@ -182,7 +178,7 @@ export default function ItemMasonry({
           setAction={setAction}
           activeItem={activeItem}
           setActiveItem={setActiveItem}
-          className={state.showModal ? "" : isOpenNV2(item) ? "" : "nv-hide"}
+          className={state.showModal ? "" : isOpenNV2() ? "" : "nv-hide"}
           setMsgNotifTopTime={setMsgNotifTopTime}
           clearPliElapsed={clearPliElapsed}
         />
@@ -266,7 +262,7 @@ export default function ItemMasonry({
                     <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
                   </span>
                 </div>
-                <div className={`${state.showCitation ? "d-none" : ""}`}>
+                <div className={`${state.showCitation ? "" : "d-none"}`}>
                   <BlocCitations
                     item={item}
                     state={state}
@@ -288,7 +284,7 @@ export default function ItemMasonry({
           {renderContentNV1()}
         </div>
         <div className="Bloc-NV2">
-          <div className={`${isOpenNV2(item) ? "" : "d-none"}`}>
+          <div className={`${isOpenNV2() ? "" : "d-none"}`}>
             {renderContentNV2()}
 
             <div

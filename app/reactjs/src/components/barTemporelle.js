@@ -155,10 +155,11 @@ export default function BarTemporelle({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setActiveItem(
-                activeItem && activeItem.id == item.id ? null : item
-              );
-              setState({ ...state, showNV2: !state.showNV2 });
+              if(activeItem && activeItem.id!=item.id ){
+                setActiveItem({...item, showNV2: true });
+              }else{
+                setActiveItem({...item, showNV2: !state.showNV2 });
+              }
             }
           }}
         >

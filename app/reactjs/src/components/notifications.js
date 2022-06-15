@@ -14,7 +14,7 @@ export default function Notifications({
   updateAction = () => {},
   loadingMore = {},
   setLoadingMore = () => {},
-  setActiveItemNV2 = () => {},
+  setActiveItem = () => {},
   plis = [],
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
@@ -86,7 +86,7 @@ export default function Notifications({
                     for (let i = 0; i < plis.length; i++) {
                       const pli = plis[i];
                       if (pli.id == item.pliId) {
-                        setActiveItemNV2({ ...pli, showNV2: true });
+                        setActiveItem({ ...pli, showNV2: true });
                         break;
                       }
                     }

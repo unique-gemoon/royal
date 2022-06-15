@@ -32,7 +32,7 @@ export default function FooterHome({
   setSubscriptions  = () => {},
   loadingMore={},
   setLoadingMore=() => {},
-  setActiveItemNV2=() => {},
+  setActiveItem=() => {},
   plis= [],
   threads= [],
   setThreads=() => {},
@@ -91,7 +91,7 @@ export default function FooterHome({
                 setSubscriptions={setSubscriptions}
                 loadingMore={loadingMore}
                 setLoadingMore={setLoadingMore}
-                setActiveItemNV2={setActiveItemNV2}
+                setActiveItem={setActiveItem}
                 plis={plis}
                 threads={threads}
                 setThreads={setThreads}
@@ -126,7 +126,7 @@ export default function FooterHome({
           setSubscriptions={setSubscriptions}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
-          setActiveItemNV2={setActiveItemNV2}
+          setActiveItem={setActiveItem}
           plis={plis}
           threads={threads}
           setThreads={setThreads}
