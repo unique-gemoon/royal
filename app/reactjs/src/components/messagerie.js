@@ -107,6 +107,10 @@ export default function Messagerie({
     if (folowersMessage.activeItem) {
       getMessages(true);
       setTimeout(() => scrollChat(), 100);
+      socket.emit("CLIENT_MESSAGE_SEEN", {
+        threadId : folowersMessage.activeItem.thread.id,
+        otherUser: { id: folowersMessage.activeItem.userId },
+      });
     }
   }, [folowersMessage.activeItem]);
 
@@ -401,7 +405,6 @@ export default function Messagerie({
               username: item.username,
             },
           };
-          console.log("test", otherThread);
           socket.emit("CLIENT_THREAD", otherThread);
         }
         return thread;
