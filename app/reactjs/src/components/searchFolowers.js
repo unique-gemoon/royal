@@ -42,25 +42,59 @@ export default function SearchFolowers({
       setState({ ...state, search: { ...state.search, autoFocus: true } });
     }
   }, [action.search.isOpen]);
+
+  const [endScroll, setEndScroll] = useState(false);
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [pageUsers, setPageUsers] = useState(1);
+  const ref = useRef(null);
+  const onScroll = () => {
+    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    if (scrollTop + clientHeight === scrollHeight) {
+      if (users.length < totalUsers) {
+        setEndScroll(true);
+        setPageUsers(pageUsers + 1);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (!auth.isConnected) {
+      setUsers([]);
+      setTotalUsers(0);
+    }
+  }, [auth.isConnected]);
+
   useEffect(() => {
     getUsers();
-  }, []);
+  }, [pageUsers]);
 
-  const getUsers = () => {
-    connector({
-      method: "get",
-      url: `${endPoints.USER_SEARCH_LIST}`,
-      success: (response) => {
-        let cpUsers = [];
-        for (let i = 0; i < response.data.users.length; i++) {
-          cpUsers.push({ ...response.data.users[i], show: true });
-        }
-        setUsers(cpUsers);
-      },
-      catch: (error) => {
-        console.log(error);
-      },
-    });
+  const getUsers = (refresh = false) => {
+    const cpPageUsers = refresh ? 1 : pageUsers;
+    if (pageUsers != cpPageUsers) {
+      setPageUsers(cpPageUsers);
+    }
+    if (state.search.value.length >= 3) {
+      connector({
+        method: "get",
+        url: `${endPoints.USER_SEARCH_LIST}?page=${pageUsers}&q=${state.search.value}`,
+        success: (response) => {
+          if(pageUsers== 1){
+            setUsers(response.data.users);
+          }else{
+            setUsers([...users,...response.data.users]);
+          }
+          
+          setTotalUsers(response.data.total);
+          setEndScroll(false);
+        },
+        catch: (error) => {
+          console.log(error);
+          setEndScroll(false);
+        },
+      });
+    } else {
+      setEndScroll(false);
+    }
   };
 
   const setItem = (item) => {
@@ -96,14 +130,6 @@ export default function SearchFolowers({
     };
   }, [users]);
 
-  const [endScroll, setEndScroll] = useState(false);
-  const ref = useRef(null);
-  const onScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } = ref.current;
-    if (scrollTop + clientHeight === scrollHeight) {
-      setEndScroll(true);
-    }
-  };
   return (
     <FolowerSearch>
       <div className="form-search-folower">
@@ -121,16 +147,7 @@ export default function SearchFolowers({
             if (cpState.search.value.length >= 3) {
               setShowResult(true);
               setState({ ...state, searching: true });
-              let cpUsers = [...users];
-              for (let i = 0; i < cpUsers.length; i++) {
-                const user = cpUsers[i];
-                let show = false;
-                if (String(user.username).indexOf(cpState.search.value) == 0) {
-                  show = true;
-                }
-                cpUsers[i].show = show;
-              }
-              setUsers(cpUsers);
+              getUsers(true);
             } else {
               setShowResult(false);
               setState({ ...state, searching: false });
@@ -171,26 +188,24 @@ export default function SearchFolowers({
               }
             }}
           >
-            {users.length > 0 &&
+            {users.length > 0 ? (
               users.map((item, index) => (
                 <div key={index}>
-                  {item.show && (
-                    <ItemListFolower
-                      key={item.id}
-                      item={{ ...item, index }}
-                      setItem={setItem}
-                      setMsgNotifTopTime={setMsgNotifTopTime}
-                      threads={threads}
-                      setThreads={setThreads}
-                      action={action}
-                      setAction={setAction}
-                      folowersMessage={folowersMessage}
-                      setFolowersMessage={setFolowersMessage}
-                    />
-                  )}
+                  <ItemListFolower
+                    key={item.id}
+                    item={{ ...item, index }}
+                    setItem={setItem}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
+                    threads={threads}
+                    setThreads={setThreads}
+                    action={action}
+                    setAction={setAction}
+                    folowersMessage={folowersMessage}
+                    setFolowersMessage={setFolowersMessage}
+                  />
                 </div>
-              ))}
-            {users.filter((user) => user.show).length == 0 && (
+              ))
+            ) : (
               <p className="message-not-result">Aucun resultat trouvé </p>
             )}
 

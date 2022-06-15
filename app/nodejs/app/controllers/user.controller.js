@@ -129,7 +129,7 @@ export function findSubscriptionsList(req, res) {
           id: subscription.user.id,
           username: subscription.user.username,
           isSubscribed: null,
-          seen: subscription.seen
+          seen: subscription.seen,
         });
       }
       res.status(200).send({ message: "ok", subscriptions: cpSubscriptions });
@@ -141,37 +141,59 @@ export function findSubscriptionsList(req, res) {
 }
 
 export function searchUsersList(req, res) {
-  User.findAll({
-    attributes: ["id", "username"],
-    include: [
-      {
-        model: Subscriber,
-        association: UserSubscribers,
-        as: "subscribers",
-        where: {
-          userId: req.user.id,
-        },
-        required: false,
-      },
-    ],
-    order: [["username", "ASC"]],
-    where: {
-      id: {
-        [Op.ne]: req.user.id,
-      },
+  const q = String(req.query.q);
+  let where = {
+    id: {
+      [Op.ne]: req.user.id,
     },
+  };
+  if (q.length) {
+    where = { ...where, username: { [Op.startsWith]: q } };
+  }
+
+  User.count({
+    where,
   })
-    .then((users) => {
-      const cpUsers = [];
-      for (let i = 0; i < users.length; i++) {
-        const user = users[i];
-        cpUsers.push({
-          id: user.id,
-          username: user.username,
-          isSubscribed: user.subscribers.length > 0,
+    .then((total) => {
+      const page = parseInt(req.query.page) || 1;
+      const perPage = 10;
+      const start = (page - 1) * perPage;
+
+      User.findAll({
+        attributes: ["id", "username"],
+        include: [
+          {
+            model: Subscriber,
+            association: UserSubscribers,
+            as: "subscribers",
+            where: {
+              userId: req.user.id,
+            },
+            required: false,
+          },
+        ],
+        order: [["username", "ASC"]],
+        where,
+        offset: start,
+        limit: perPage,
+        order: [["username", "ASC"]],
+      })
+        .then((users) => {
+          const cpUsers = [];
+          for (let i = 0; i < users.length; i++) {
+            const user = users[i];
+            cpUsers.push({
+              id: user.id,
+              username: user.username,
+              isSubscribed: user.subscribers.length > 0,
+            });
+          }
+          res.status(200).send({ message: "ok", users: cpUsers, total });
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+          return;
         });
-      }
-      res.status(200).send({ message: "ok", users: cpUsers });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
