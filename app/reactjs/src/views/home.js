@@ -731,6 +731,7 @@ export default function Home() {
       },
       catch: (error) => {
         console.log(error);
+        setLoadingMore({ ...loadingMore, notifications: false });
       },
     });
   };

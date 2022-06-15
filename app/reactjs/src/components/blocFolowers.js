@@ -8,7 +8,6 @@ import endPoints from "../config/endPoints";
 import connector from "../connector";
 import ItemListFolower from "./itemListFolower";
 import SpinnerLoading from "./spinnerLoading";
-import { useMediaQuery } from "react-responsive";
 
 export default function BlocFolowers({
   action,
@@ -25,15 +24,23 @@ export default function BlocFolowers({
   threads = [],
   setThreads = () => {},
 }) {
-  const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const [value, setValue] = React.useState("1");
-  const [endScroll, setEndScroll] = useState(false);
-  const ref = useRef(null);
-
-  const onScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+ 
+  const refSubscriber = useRef(null);
+  const [endScrollSubscriber, setEndScrollSubscriber] = useState(false);
+  const onScrollSubscriber = () => {
+    const { scrollTop, scrollHeight, clientHeight } = refSubscriber.current;
     if (scrollTop + clientHeight === scrollHeight) {
-      setEndScroll(true);
+      setEndScrollSubscriber(true);
+    }
+  };
+
+  const refSubscription = useRef(null);
+  const [endScrollSubscription, setEndScrollSubscription] = useState(false);
+  const onScrollSubscription = () => {
+    const { scrollTop, scrollHeight, clientHeight } = refSubscription.current;
+    if (scrollTop + clientHeight === scrollHeight) {
+      setEndScrollSubscription(true);
     }
   };
 
@@ -130,7 +137,7 @@ export default function BlocFolowers({
         </TabList>
         <div className="content-tab-modal">
           <TabPanel value="1">
-            <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
+            <div className="list-tab-modal" ref={refSubscriber} onScroll={onScrollSubscriber}>
               {subscribers.length > 0 ? (
                 subscribers.map((item, index) => (
                   <ItemListFolower
@@ -149,11 +156,11 @@ export default function BlocFolowers({
               ) : (
                 <p className="message-not-result">Aucun abonné</p>
               )}
-              {endScroll && <SpinnerLoading />}
+              {endScrollSubscriber && <SpinnerLoading />}
             </div>
           </TabPanel>
           <TabPanel value="2">
-            <div className="list-tab-modal" ref={ref} onScroll={onScroll}>
+            <div className="list-tab-modal" ref={refSubscription} onScroll={onScrollSubscription}>
               {subscriptions.length > 0 ? (
                 subscriptions.map((item, index) => (
                   <ItemListFolower
@@ -172,7 +179,7 @@ export default function BlocFolowers({
               ) : (
                 <p className="message-not-result">Aucun abonnement</p>
               )}
-              {endScroll && <SpinnerLoading />}
+              {endScrollSubscription && <SpinnerLoading />}
             </div>
           </TabPanel>
         </div>
