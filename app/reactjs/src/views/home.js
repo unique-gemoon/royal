@@ -168,6 +168,29 @@ export default function Home() {
     }
   }, [initOpenedPlis]);
 
+  const [stateModal, setStateModal] = useState({
+    showModal: false,
+    item: {},
+  });
+
+  useEffect(() => {
+    if (socket && plis.length > 0) {
+      socket.emit("CLIENT_OPEN_PLI", {
+        id: stateModal?.item?.id ? stateModal.item.id : null,
+        opened: stateModal.showModal,
+      });
+
+      if (auth.isConnected) {
+        const data = {
+          pliId: null,
+          username: auth.user.username,
+          userId: auth.user.id,
+        };
+        socket.emit("CLIENT_TYPING_CITATION", data);
+      }
+    }
+  }, [stateModal.showModal]);
+
   useEffect(() => {
     const updatePli = (item) => {
       if (channel != item.channel) {
@@ -318,24 +341,21 @@ export default function Home() {
             setCountNewMessages(countNewMessages + 1);
           }
         }
+
+        if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
+          const cpThreads = [...threads];
+          for (let i = 0; i < cpThreads.length; i++) {
+            if (cpThreads[i].thread.id == item.threadId) {
+              cpThreads[i].thread.messages = [item];
+              setThreads(cpThreads);
+              break;
+            }
+          }
+        }
       }
     };
     socket.on("SERVER_MESSAGE", updateMessage);
 
-    return () => {
-      socket.off("SERVER_PLI", updatePli);
-      socket.off("SERVER_COUNT_CONNECTION", updateCountConnection);
-      socket.off("SERVER_OPEN_PLI", updateOpenPlis);
-      socket.off("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
-      socket.off("SERVER_COMMENT", newComment);
-      socket.off("SERVER_CITATION", newCitation);
-      socket.off("SERVER_TYPING_CITATION", updateTypingCitation);
-      socket.off("SERVER_MESSAGE", updateMessage);
-      //socket.disconnect();
-    };
-  }, [plis, auth, folowersMessage, countNewMessages]);
-
-  useEffect(() => {
     const updateThread = (item) => {
       if (auth.isConnected) {
         if (item?.otherUser?.id && auth.user.id == item.otherUser.id) {
@@ -373,50 +393,19 @@ export default function Home() {
     };
     socket.on("SERVER_THREAD", updateThread);
 
-    const updateMessage = (item) => {
-      if (auth.isConnected) {
-        if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
-          const cpThreads = [...threads];
-          for (let i = 0; i < cpThreads.length; i++) {
-            if (cpThreads[i].thread.id == item.threadId) {
-              cpThreads[i].thread.messages = [item];
-              setThreads(cpThreads);
-              break;
-            }
-          }
-        }
-      }
-    };
-    socket.on("SERVER_MESSAGE", updateMessage);
-
     return () => {
-      socket.off("SERVER_THREAD", updateThread);
+      socket.off("SERVER_PLI", updatePli);
+      socket.off("SERVER_COUNT_CONNECTION", updateCountConnection);
+      socket.off("SERVER_OPEN_PLI", updateOpenPlis);
+      socket.off("SERVER_SUBSCRIBER_UPDATED", subscriberUpdated);
+      socket.off("SERVER_COMMENT", newComment);
+      socket.off("SERVER_CITATION", newCitation);
+      socket.off("SERVER_TYPING_CITATION", updateTypingCitation);
       socket.off("SERVER_MESSAGE", updateMessage);
+      socket.off("SERVER_THREAD", updateThread);
+      //socket.disconnect();
     };
-  }, [threads, folowersMessage, auth]);
-
-  const [stateModal, setStateModal] = useState({
-    showModal: false,
-    item: {},
-  });
-
-  useEffect(() => {
-    if (socket && plis.length > 0) {
-      socket.emit("CLIENT_OPEN_PLI", {
-        id: stateModal?.item?.id ? stateModal.item.id : null,
-        opened: stateModal.showModal,
-      });
-
-      if (auth.isConnected) {
-        const data = {
-          pliId: null,
-          username: auth.user.username,
-          userId: auth.user.id,
-        };
-        socket.emit("CLIENT_TYPING_CITATION", data);
-      }
-    }
-  }, [stateModal.showModal]);
+  }, [plis, auth, folowersMessage, threads, countNewMessages]);
 
   useEffect(() => {
     const updateSubscriber = (item) => {
