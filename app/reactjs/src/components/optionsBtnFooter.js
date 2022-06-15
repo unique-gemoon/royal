@@ -29,7 +29,7 @@ export default function OptionsBtnFooter({
   setSubscriptions = () => {},
   loadingMore={},
   setLoadingMore=() => {},
-  setActiveItemNV2=() => {},
+  setActiveItem=() => {},
   plis=[],
   threads=[],
   setThreads=() => {},
@@ -162,7 +162,7 @@ export default function OptionsBtnFooter({
           countNewNotifications={countNewNotifications}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
-          setActiveItemNV2={setActiveItemNV2}
+          setActiveItem={setActiveItem}
           plis={plis}
         />
       </ButtonAction>

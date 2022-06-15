@@ -1,25 +1,17 @@
-import React, { useState, useRef } from "react";
-import {
-  CommentsBloc,
-} from "../../assets/styles/componentStyle";
+import React, { useState } from "react";
+import { CommentsBloc } from "../../assets/styles/componentStyle";
 import InputEmoji from "../ui-elements/inputEmoji";
 import ListComments from "./listComments";
 import connector from "../../connector";
 import endPoints from "../../config/endPoints";
 import { socket } from "../../components/socket";
-import { useEffect } from "react";
 
 export default function BlocComments({
   item,
   state,
-  setState = () => {},
   setMsgNotifTopTime = () => {},
 }) {
   const [open, setOpen] = useState(false);
-
-  const [height, setHeight] = useState(0);
-  const refHeight = useRef(null);
-
 
   const saveMessage = async (data) => {
     data = { ...data, pliId: item.id };
@@ -53,10 +45,13 @@ export default function BlocComments({
     });
   };
 
-  
   return (
-    <CommentsBloc className={`${open ? "emoji-open" : ""} ${item.comments.length >= 2 ? "has-comments" : ""}`}>
-      {state.showComment && (
+    <CommentsBloc
+      className={`${open ? "emoji-open" : ""} ${
+        item.comments.length >= 2 ? "has-comments" : ""
+      }`}
+    >
+      {state.showNV2 && (
         <InputEmoji
           className="commentaire-form"
           name="comment-pli"

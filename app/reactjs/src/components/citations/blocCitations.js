@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import {
   CommentsBloc,
@@ -24,9 +24,6 @@ export default function BlocCitations({
   const [seconds, setSeconds] = useState(0);
   const [imTyping, setImTyping] = useState(false);
   const auth = useSelector((store) => store.auth);
-
-  const [height, setHeight] = useState(0);
-  const refHeight = useRef(null);
 
   useEffect(() => {
     if (waitingTime && waitingTime > 0) {

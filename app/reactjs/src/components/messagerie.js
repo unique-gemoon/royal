@@ -14,7 +14,7 @@ import {
   BlocMessagerie,
   ChatSpace,
   LoadingMessage,
-  MessageFindFolower,
+  MessageFindFolower
 } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
@@ -22,7 +22,7 @@ import {
   getDurationHM,
   getMsgError,
   getUniqueList,
-  scrollToElement,
+  scrollToElement
 } from "../helper/fonctions";
 import ItemListFolower from "./itemListFolower";
 import ItemSingleMessage from "./itemSingleMessage";
@@ -59,7 +59,6 @@ export default function Messagerie({
     setAnchorEl(null);
   };
   const auth = useSelector((store) => store.auth);
-  const ref = useRef(null);
   const [messages, setMessages] = useState([]);
   const [totalMessages, setTotalMessages] = useState(0);
   const [pageMessages, setPageMessages] = useState(1);
@@ -81,15 +80,17 @@ export default function Messagerie({
     setUsers(cpSubscriptions);
   }, [subscriptions, folowersMessage.search.value]);
 
+  const refThreads = useRef(null);
   const onScrollThreads = () => {
-    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+    const { scrollTop, scrollHeight, clientHeight } = refThreads.current;
     if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
       setLoadingMore({ ...loadingMore, threads: true });
     }
   };
 
+  const refMessages = useRef(null);
   const onScrollMessages = () => {
-    const { scrollTop } = ref.current;
+    const { scrollTop } = refMessages.current;
     if (parseInt(scrollTop) == 0) {
       if (messages.length < totalMessages) {
         setLoadingMoreMessages(true);
@@ -430,7 +431,7 @@ export default function Messagerie({
             <div
               className="list-messagerie"
               onScroll={onScrollThreads}
-              ref={ref}
+              ref={refThreads}
             >
               <ListMessagerie
                 threads={threads}
@@ -531,7 +532,7 @@ export default function Messagerie({
                 className="content-space-chat show-typing"
                 id="messages-container"
                 onScroll={onScrollMessages}
-                ref={ref}
+                ref={refMessages}
               >
                 {loadingMoreMessages && (
                   <SpinnerLoading className="is-top-spinner" />

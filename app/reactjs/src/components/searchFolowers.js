@@ -43,12 +43,24 @@ export default function SearchFolowers({
     }
   }, [action.search.isOpen]);
 
-  const [endScroll, setEndScroll] = useState(false);
   const [totalUsers, setTotalUsers] = useState(0);
   const [pageUsers, setPageUsers] = useState(1);
-  const ref = useRef(null);
-  const onScroll = () => {
-    const { scrollTop, scrollHeight, clientHeight } = ref.current;
+  const [endScroll, setEndScroll] = useState(false);
+  
+  const refContent = useRef(null);
+  const onScrollContent = () => {
+    const { scrollTop, scrollHeight, clientHeight } = refContent.current;
+    if (scrollTop + clientHeight === scrollHeight) {
+      if (users.length < totalUsers) {
+        setEndScroll(true);
+        setPageUsers(pageUsers + 1);
+      }
+    }
+  };
+
+  const refList = useRef(null);
+  const onScrollList = () => {
+    const { scrollTop, scrollHeight, clientHeight } = refList.current;
     if (scrollTop + clientHeight === scrollHeight) {
       if (users.length < totalUsers) {
         setEndScroll(true);
@@ -78,12 +90,12 @@ export default function SearchFolowers({
         method: "get",
         url: `${endPoints.USER_SEARCH_LIST}?page=${pageUsers}&q=${state.search.value}`,
         success: (response) => {
-          if(pageUsers== 1){
+          if (pageUsers == 1) {
             setUsers(response.data.users);
-          }else{
-            setUsers([...users,...response.data.users]);
+          } else {
+            setUsers([...users, ...response.data.users]);
           }
-          
+
           setTotalUsers(response.data.total);
           setEndScroll(false);
         },
@@ -171,20 +183,20 @@ export default function SearchFolowers({
       </div>
       <div
         className="content-search-results"
-        ref={ref}
+        ref={refContent}
         onScroll={(e) => {
           if (isTabletOrMobile) {
-            onScroll(e);
+            onScrollContent(e);
           }
         }}
       >
         {showResult && (
           <div
             className="list-result-search"
-            ref={ref}
+            ref={refList}
             onScroll={(e) => {
               if (!isTabletOrMobile) {
-                onScroll(e);
+                onScrollList(e);
               }
             }}
           >

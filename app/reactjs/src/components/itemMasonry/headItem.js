@@ -464,9 +464,7 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setActiveItem(
-                activeItem && activeItem.id == item.id ? null : item
-              );
+              setActiveItem(item);
             }}
           >
             {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />{" "}
@@ -475,9 +473,11 @@ export default function HeadItem({
         )}
         <div
           className={`nb-message-comment ${
-            (activeItem && activeItem.id == item.id) ||
-            (state.showModal &&
-              state.showCitation) /* || (!state.showModal && state.showNV2)  */ // verifier close in modale
+            (activeItem &&
+              activeItem.id == item.id &&
+              !state.showModal &&
+              state.showNV2) ||
+            (state.showModal && state.showCitation)
               ? "comment-is-open"
               : ""
           }`}
@@ -493,10 +493,11 @@ export default function HeadItem({
                 messagerie: { ...action.messagerie, isOpen: false },
               };
               setAction(cpAction);
-              setActiveItem(
-                activeItem && activeItem.id == item.id ? null : item
-              );
-              setState({ ...state, showNV2: !state.showNV2 });
+              if(activeItem && activeItem.id!=item.id ){
+                setActiveItem({...item, showNV2: true });
+              }else{
+                setActiveItem({...item, showNV2: !state.showNV2 });
+              }
             }
           }}
         >
