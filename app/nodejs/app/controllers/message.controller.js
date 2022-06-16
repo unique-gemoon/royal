@@ -1,7 +1,9 @@
+import { response } from "express";
 import db from "../models/index.model.js";
 
 const Message = db.message;
 const User = db.user;
+const ThreadUsers = db.threadUsers;
 const MessageUser = Message.belongsTo(User);
 const Op = db.Sequelize.Op;
 
@@ -18,17 +20,28 @@ export function newMessage(req, res) {
       message: req.body.message,
     })
       .then((message) => {
-        res.status(200).send({
-          message: "ok.",
-          msg: {
-            id: message.id,
-            userId: message.userId,
-            threadId: message.threadId,
-            message: message.message,
-            createdAt: message.createdAt,
-            seen: message.seen,
-          },
-        });
+        ThreadUsers.update(
+          { updatedAt: db.Sequelize.fn("NOW"), threadId: message.threadId },
+          {
+            where: { threadId: message.threadId }
+          }
+        )
+          .then(() => {
+            res.status(200).send({
+              message: "ok.",
+              msg: {
+                id: message.id,
+                userId: message.userId,
+                threadId: message.threadId,
+                message: message.message,
+                createdAt: message.createdAt,
+                seen: message.seen,
+              },
+            });
+          })
+          .catch((err) => {
+            res.status(400).send({ message: err.message });
+          });
       })
       .catch((err) => {
         res.status(400).send({ message: err.message });
@@ -65,7 +78,12 @@ export function listMessages(req, res) {
     order: [["createdAt", "DESC"]],
   })
     .then((messages) => {
-      res.status(200).send({ message: "ok.", messages, total: req.total , totalNewMessages:req.totalNewMessages});
+      res.status(200).send({
+        message: "ok.",
+        messages,
+        total: req.total,
+        totalNewMessages: req.totalNewMessages,
+      });
     })
     .catch((err) => {
       res.status(400).send({ message: err.message });

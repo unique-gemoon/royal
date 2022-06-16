@@ -8,12 +8,16 @@ const ThreadThreadUsers = Thread.hasMany(ThreadUsers);
 const ThreadUsersThread = ThreadUsers.belongsTo(Thread);
 const ThreadUsersUser = ThreadUsers.belongsTo(User);
 const ThreadMessages = Thread.hasMany(Message);
-const MessageUser = Message.belongsTo(User);
 const Op = db.Sequelize.Op;
 
 export function newThread(req, res) {
   if (req?.thread?.id) {
-    res.status(200).send({ message: "ok", thread: { id: req.thread.id ,blocked : req.thread.blocked} });
+    res
+      .status(200)
+      .send({
+        message: "ok",
+        thread: { id: req.thread.id, blocked: req.thread.blocked },
+      });
   } else {
     Thread.create(
       {
@@ -30,7 +34,12 @@ export function newThread(req, res) {
       }
     )
       .then((thread) => {
-        res.status(200).send({ message: "ok", thread: { id: thread.id , blocked : thread.blocked} });
+        res
+          .status(200)
+          .send({
+            message: "ok",
+            thread: { id: thread.id, blocked: thread.blocked },
+          });
       })
       .catch((err) => {
         res.status(500).send({ message: err.message });
@@ -112,18 +121,14 @@ export function listThreads(req, res) {
       },
     ],
     where: { userId: { [Op.ne]: req.user.id } },
-    offset: start,
-    limit: perPage,
-    order: [["id", "DESC"]],
+    order: [["updatedAt", "DESC"]],
   })
     .then((threads) => {
-      res
-        .status(200)
-        .send({
-          message: "ok",
-          threads,
-          totalNewMessages: req.totalNewMessages,
-        });
+      res.status(200).send({
+        message: "ok",
+        threads,
+        totalNewMessages: req.totalNewMessages,
+      });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
