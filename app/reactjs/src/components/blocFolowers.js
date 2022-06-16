@@ -31,7 +31,8 @@ export default function BlocFolowers({
   const onScrollSubscriber = () => {
     const { scrollTop, scrollHeight, clientHeight } = refSubscriber.current;
     if (scrollTop + clientHeight === scrollHeight) {
-      setEndScrollSubscriber(true);
+      //TODO: PAGINATION
+      //setEndScrollSubscriber(true);
     }
   };
 
@@ -40,7 +41,8 @@ export default function BlocFolowers({
   const onScrollSubscription = () => {
     const { scrollTop, scrollHeight, clientHeight } = refSubscription.current;
     if (scrollTop + clientHeight === scrollHeight) {
-      setEndScrollSubscription(true);
+       //TODO: PAGINATION
+      //setEndScrollSubscription(true);
     }
   };
 
