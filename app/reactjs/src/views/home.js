@@ -67,6 +67,7 @@ export default function Home() {
     threads: false,
   });
   const [typingCitation, setTypingCitation] = useState({});
+  const [typingMessage, setTypingMessage] = useState({});
   const [totalThreads, setTotalThreads] = useState(0);
   const [countNewMessages, setCountNewMessages] = useState(0);
   const [threads, setThreads] = useState([]);
@@ -323,6 +324,13 @@ export default function Home() {
     };
     socket.on("SERVER_TYPING_CITATION", updateTypingCitation);
 
+    const updateTypingMessage = (item) => {
+      if (auth.isConnected && auth.user.id != item.userId) {
+        setTypingMessage(item);
+      }
+    };
+    socket.on("SERVER_TYPING_MESSAGE", updateTypingMessage);
+
     const updateMessage = (item) => {
       if (auth.isConnected) {
         if (auth.user.id == item.otherUser.id) {
@@ -396,9 +404,20 @@ export default function Home() {
       socket.off("SERVER_TYPING_CITATION", updateTypingCitation);
       socket.off("SERVER_MESSAGE", updateMessage);
       socket.off("SERVER_THREAD", updateThread);
+      socket.off("SERVER_TYPING_MESSAGE", updateTypingMessage);
       //socket.disconnect();
     };
-  }, [plis, auth, folowersMessage, threads, countNewMessages]);
+  }, [
+    plis,
+    auth,
+    folowersMessage,
+    threads,
+    countNewMessages,
+    notifications,
+    countNewNotifications,
+    totalNotifications,
+    pageNotifications
+  ]);
 
   useEffect(() => {
     const updateSubscriber = (item) => {
@@ -570,7 +589,7 @@ export default function Home() {
             ...notifications,
           ]);
           if (cpNotifications.length > notifications.length) {
-            setNotifications([response.data.notification, ...notifications]);
+            setNotifications(cpNotifications);
             setCountNewNotifications(countNewNotifications + 1);
             setTotalNotifications(totalNotifications + 1);
           }
@@ -593,7 +612,7 @@ export default function Home() {
             ...notifications,
           ]);
           if (cpNotifications.length > notifications.length) {
-            setNotifications([response.data.notification, ...notifications]);
+            setNotifications(cpNotifications);
             setCountNewNotifications(countNewNotifications + 1);
             setTotalNotifications(totalNotifications + 1);
           }
@@ -713,10 +732,7 @@ export default function Home() {
       url: `${endPoints.NOTIFICATION_LIST}?page=${cpPageNotifications}`,
       success: (response) => {
         setNotifications(
-          getUniqueList(
-            [...notifications, ...response.data.notifications],
-            "id"
-          )
+          getUniqueList([...notifications, ...response.data.notifications])
         );
         setCountNewNotifications(parseInt(response.data.totalNew));
         setTotalNotifications(parseInt(response.data.total));
@@ -800,7 +816,7 @@ export default function Home() {
       method: "get",
       url: `${endPoints.THREAD_LIST}?page=${cpPageThreads}`,
       success: (response) => {
-        setThreads(getUniqueList([...threads, ...response.data.threads], "id"));
+        setThreads(getUniqueList([...threads, ...response.data.threads]));
         setTotalThreads(parseInt(response.data.total));
         setLoadingMore({ ...loadingMore, threads: false });
         setCountNewMessages(response.data.totalNewMessages || 0);
@@ -907,6 +923,7 @@ export default function Home() {
             setThreads={setThreads}
             countNewMessages={countNewMessages}
             setCountNewMessages={setCountNewMessages}
+            typingMessage={typingMessage}
           />
         )}
         <ModalMessage

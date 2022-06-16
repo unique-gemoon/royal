@@ -29,19 +29,56 @@ export default function FooterHome({
   subscribers = [],
   setSubscribers = () => {},
   subscriptions = [],
-  setSubscriptions  = () => {},
-  loadingMore={},
-  setLoadingMore=() => {},
-  setActiveItem=() => {},
-  plis= [],
-  threads= [],
-  setThreads=() => {},
-  countNewMessages=0,
-  setCountNewMessages=()=>{},
+  setSubscriptions = () => {},
+  loadingMore = {},
+  setLoadingMore = () => {},
+  setActiveItem = () => {},
+  plis = [],
+  threads = [],
+  setThreads = () => {},
+  countNewMessages = 0,
+  setCountNewMessages = () => {},
+  typingMessage = {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
   const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 1200px)" });
   const auth = useSelector((store) => store.auth);
+
+  const renderOptionsBtnFooter = () => {
+    return (
+      <OptionsBtnFooter
+        action={action}
+        setAction={setAction}
+        setMsgNotifTop={setMsgNotifTop}
+        getPlis={getPlis}
+        setItem={setItem}
+        setMsgNotifTopTime={setMsgNotifTopTime}
+        publishPli={publishPli}
+        setPublishPli={setPublishPli}
+        folowersMessage={folowersMessage}
+        setFolowersMessage={setFolowersMessage}
+        updateSubscriberStatus={updateSubscriberStatus}
+        notifications={notifications}
+        isSeenNotification={isSeenNotification}
+        countNewNotifications={countNewNotifications}
+        setCountNewNotifications={setCountNewNotifications}
+        countNewSubscriptions={countNewSubscriptions}
+        subscribers={subscribers}
+        setSubscribers={setSubscribers}
+        subscriptions={subscriptions}
+        setSubscriptions={setSubscriptions}
+        loadingMore={loadingMore}
+        setLoadingMore={setLoadingMore}
+        setActiveItem={setActiveItem}
+        plis={plis}
+        threads={threads}
+        setThreads={setThreads}
+        countNewMessages={countNewMessages}
+        setCountNewMessages={setCountNewMessages}
+        typingMessage={typingMessage}
+      />
+    );
+  };
 
   return (
     <FooterDefault>
@@ -67,73 +104,11 @@ export default function FooterHome({
                 setItem={setItem}
               />
             </Col>
-            <Col md={3}>
-              <OptionsBtnFooter
-                action={action}
-                setAction={setAction}
-                setMsgNotifTop={setMsgNotifTop}
-                getPlis={getPlis}
-                setItem={setItem}
-                setMsgNotifTopTime={setMsgNotifTopTime}
-                publishPli={publishPli}
-                setPublishPli={setPublishPli}
-                folowersMessage={folowersMessage}
-                setFolowersMessage={setFolowersMessage}
-                updateSubscriberStatus={updateSubscriberStatus}
-                notifications={notifications}
-                isSeenNotification={isSeenNotification}
-                countNewNotifications={countNewNotifications}
-                setCountNewNotifications={setCountNewNotifications}
-                countNewSubscriptions={countNewSubscriptions}
-                subscribers={subscribers}
-                setSubscribers={setSubscribers}
-                subscriptions={subscriptions}
-                setSubscriptions={setSubscriptions}
-                loadingMore={loadingMore}
-                setLoadingMore={setLoadingMore}
-                setActiveItem={setActiveItem}
-                plis={plis}
-                threads={threads}
-                setThreads={setThreads}
-                countNewMessages={countNewMessages}
-                setCountNewMessages={setCountNewMessages}
-              />
-            </Col>
+            <Col md={3}>{renderOptionsBtnFooter()}</Col>
           </Row>
         </ContainerDef>
       )}
-      {isTabletOrMobile && (
-        <OptionsBtnFooter
-          action={action}
-          setAction={setAction}
-          setMsgNotifTop={setMsgNotifTop}
-          getPlis={getPlis}
-          setItem={setItem}
-          setMsgNotifTopTime={setMsgNotifTopTime}
-          publishPli={publishPli}
-          setPublishPli={setPublishPli}
-          folowersMessage={folowersMessage}
-          setFolowersMessage={setFolowersMessage}
-          updateSubscriberStatus={updateSubscriberStatus}
-          notifications={notifications}
-          isSeenNotification={isSeenNotification}
-          countNewNotifications={countNewNotifications}
-          setCountNewNotifications={setCountNewNotifications}
-          countNewSubscriptions={countNewSubscriptions}
-          subscribers={subscribers}
-          setSubscribers={setSubscribers}
-          subscriptions={subscriptions}
-          setSubscriptions={setSubscriptions}
-          loadingMore={loadingMore}
-          setLoadingMore={setLoadingMore}
-          setActiveItem={setActiveItem}
-          plis={plis}
-          threads={threads}
-          setThreads={setThreads}
-          countNewMessages={countNewMessages}
-          setCountNewMessages={setCountNewMessages}
-        />
-      )}
+      {isTabletOrMobile && renderOptionsBtnFooter()}
     </FooterDefault>
   );
 }

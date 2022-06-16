@@ -14,7 +14,7 @@ import {
   BlocMessagerie,
   ChatSpace,
   LoadingMessage,
-  MessageFindFolower
+  MessageFindFolower,
 } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
@@ -22,7 +22,7 @@ import {
   getDurationHM,
   getMsgError,
   getUniqueList,
-  scrollToElement
+  scrollToElement,
 } from "../helper/fonctions";
 import ItemListFolower from "./itemListFolower";
 import ItemSingleMessage from "./itemSingleMessage";
@@ -49,6 +49,7 @@ export default function Messagerie({
   updateSubscriberStatus = () => {},
   countNewMessages = 0,
   setCountNewMessages = () => {},
+  typingMessage = {}
 }) {
   const [anchorEl, setAnchorEl] = useState(null);
   const open = Boolean(anchorEl);
@@ -64,6 +65,22 @@ export default function Messagerie({
   const [pageMessages, setPageMessages] = useState(1);
   const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
   const [users, setUsers] = useState([]);
+  const [imTyping, setImTyping] = useState(false);
+
+  useEffect(() => {
+    if (auth.isConnected && folowersMessage?.activeItem?.thread?.id) {
+      const data = {
+          threadId: folowersMessage.activeItem.thread.id,
+          username: auth.user.username,
+          userId: auth.user.id,
+        };
+      if (imTyping) {
+        socket.emit("CLIENT_TYPING_MESSAGE", data);
+      } else {
+        socket.emit("CLIENT_TYPING_MESSAGE", {...data,threadId:null});
+      }
+    }
+  }, [imTyping, auth, folowersMessage.activeItem]);
 
   useEffect(() => {
     const cpSubscriptions = [];
@@ -109,7 +126,7 @@ export default function Messagerie({
       getMessages(true);
       setTimeout(() => scrollChat(), 100);
       socket.emit("CLIENT_MESSAGE_SEEN", {
-        threadId : folowersMessage.activeItem.thread.id,
+        threadId: folowersMessage.activeItem.thread.id,
         otherUser: { id: folowersMessage.activeItem.userId },
       });
     }
@@ -553,19 +570,20 @@ export default function Messagerie({
                       }
                     />
                   ))}
-
-                {/* TODO TYPING USER
-                <div className="d-flex justify-content-start is-teyping">
-                  <div className="msg_cotainer">
-                    <div className="content-msg">
-                      <LoadingMessage>
-                        <li></li>
-                        <li></li>
-                        <li></li>
-                      </LoadingMessage>
+                {typingMessage && typingMessage.threadId == folowersMessage.activeItem.thread.id &&
+                  typingMessage.userId != auth.user.id && (
+                    <div className="d-flex justify-content-start is-teyping">
+                      <div className="msg_cotainer">
+                        <div className="content-msg">
+                          <LoadingMessage>
+                            <li></li>
+                            <li></li>
+                            <li></li>
+                          </LoadingMessage>
+                        </div>
+                      </div>
                     </div>
-                  </div>
-                </div> */}
+                  )}
               </div>
             </ChatSpace>
             <InputEmoji
@@ -573,6 +591,7 @@ export default function Messagerie({
               setMsgNotifTopTime={setMsgNotifTopTime}
               setFolowersMessage={setFolowersMessage}
               saveMessage={saveMessage}
+              setImTyping={setImTyping}
             />
           </div>
         </div>

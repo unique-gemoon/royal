@@ -35,6 +35,7 @@ export default function OptionsBtnFooter({
   setThreads=() => {},
   countNewMessages = 0,
   setCountNewMessages=() => {},
+  typingMessage={}
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -86,6 +87,7 @@ export default function OptionsBtnFooter({
           setCountNewMessages={setCountNewMessages}
           action={action}
           setAction={setAction}
+          typingMessage={typingMessage}
         />
       </ButtonAction>
       <ButtonAction
