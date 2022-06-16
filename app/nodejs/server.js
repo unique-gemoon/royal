@@ -190,6 +190,8 @@ io.on("connection", (socket) => {
       io.emit("SERVER_OPEN_PLI", countPlisOpened(plisOpened));
 
       io.emit("SERVER_TYPING_CITATION", {});
+
+      io.emit("SERVER_TYPING_MESSAGE", {});
     }
   });
 });
