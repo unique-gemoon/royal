@@ -37,8 +37,6 @@ export default function ListMessagerie({
     return etat;
   };
 
-  // TODO: pagination and scroll
-
   return (
     <ListItemsMessagerie>
       {threads.length > 0 &&

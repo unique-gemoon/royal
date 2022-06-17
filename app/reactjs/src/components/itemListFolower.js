@@ -3,7 +3,6 @@ import PersonAddAltOutlinedIcon from "@mui/icons-material/PersonAddAltOutlined";
 import PersonRemoveOutlinedIcon from "@mui/icons-material/PersonRemoveOutlined";
 import { Button } from "@mui/material";
 import React, { useState } from "react";
-import { useSelector } from "react-redux";
 import { ItemFolower } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
@@ -21,7 +20,6 @@ export default function ItemListFolower({
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const [submitting, setSubmitting] = useState(false);
-  const auth = useSelector((store) => store.auth);
 
   const subscribe = () => {
     if (!submitting) {

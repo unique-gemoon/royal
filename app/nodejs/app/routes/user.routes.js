@@ -8,6 +8,9 @@ import {
   unsubscribe,
   findSubscriptionsList,
   searchUsersList,
+  totalSubscribers,
+  totalSubscriptions,
+  totalNewSubscriptions,
 } from "../controllers/user.controller.js";
 
 const userRoutes = Router();
@@ -30,12 +33,15 @@ userRoutes.post(
 userRoutes.get(
   "/subscribers/list",
   passport.authenticate("jwt", { session: false }),
+  totalSubscribers,
   findSubscribersList
 );
 
 userRoutes.get(
   "/subscriptions/list",
   passport.authenticate("jwt", { session: false }),
+  totalSubscriptions,
+  totalNewSubscriptions,
   findSubscriptionsList
 );
 

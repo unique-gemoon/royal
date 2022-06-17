@@ -10,6 +10,7 @@ import MenuItem from "@mui/material/MenuItem";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
 import { useSelector } from "react-redux";
+import { useMediaQuery } from "react-responsive";
 import { BlocMessagerie, ChatSpace, LoadingMessage, MessageFindFolower } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
@@ -41,6 +42,7 @@ export default function Messagerie({
     setCountNewMessages = () => {},
     typingMessage = {},
 }) {
+    const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
     const [anchorEl, setAnchorEl] = useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -53,9 +55,24 @@ export default function Messagerie({
     const [messages, setMessages] = useState([]);
     const [totalMessages, setTotalMessages] = useState(0);
     const [pageMessages, setPageMessages] = useState(1);
-    const [loadingMoreMessages, setLoadingMoreMessages] = useState(false);
-    const [users, setUsers] = useState([]);
+    const [loadingMessages, setLoadingMessages] = useState(false);
     const [imTyping, setImTyping] = useState(false);
+
+    const [users, setUsers] = useState([]);
+    const [totalUsers, setTotalUsers] = useState(0);
+    const [pageUsers, setPageUsers] = useState(1);
+    const [loadingUsers, setLoadingUsers] = useState(false);
+
+    useEffect(() => {
+        if (!auth.isConnected) {
+            setUsers([]);
+            setTotalUsers(0);
+        }
+    }, [auth.isConnected]);
+
+    useEffect(() => {
+        getUsers();
+    }, [pageUsers]);
 
     useEffect(() => {
         if (auth.isConnected && folowersMessage?.activeItem?.thread?.id) {
@@ -72,19 +89,6 @@ export default function Messagerie({
         }
     }, [imTyping, auth, folowersMessage.activeItem]);
 
-    useEffect(() => {
-        const cpSubscriptions = [];
-        for (let i = 0; i < subscriptions.length; i++) {
-            const user = subscriptions[i];
-            let show = false;
-            if (String(user.username).indexOf(String(folowersMessage.search.value)) == 0) {
-                show = true;
-            }
-            cpSubscriptions.push({ ...user, show });
-        }
-        setUsers(cpSubscriptions);
-    }, [subscriptions, folowersMessage.search.value]);
-
     const refThreads = useRef(null);
     const onScrollThreads = () => {
         const { scrollTop, scrollHeight, clientHeight } = refThreads.current;
@@ -98,7 +102,6 @@ export default function Messagerie({
         const { scrollTop } = refMessages.current;
         if (parseInt(scrollTop) == 0) {
             if (messages.length < totalMessages) {
-                setLoadingMoreMessages(true);
                 setPageMessages(pageMessages + 1);
             }
         }
@@ -107,6 +110,26 @@ export default function Messagerie({
     const scrollChat = () => {
         const container = document.getElementById("messages-container");
         if (container) container.scrollTop = container.scrollHeight;
+    };
+
+    const refContent = useRef(null);
+    const onScrollContent = () => {
+        const { scrollTop, scrollHeight, clientHeight } = refContent.current;
+        if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
+            if (users.length < totalUsers) {
+                setPageUsers(pageUsers + 1);
+            }
+        }
+    };
+
+    const refList = useRef(null);
+    const onScrollList = () => {
+        const { scrollTop, scrollHeight, clientHeight } = refList.current;
+        if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
+            if (users.length < totalUsers) {
+                setPageUsers(pageUsers + 1);
+            }
+        }
     };
 
     useEffect(() => {
@@ -130,35 +153,85 @@ export default function Messagerie({
         }
     }, [pageMessages, auth.isConnected]);
 
-    const getMessages = (refresh = false) => {
-        if (folowersMessage?.activeItem?.thread?.id && folowersMessage.activeItem.thread.id != -1) {
-            const cpPageMessages = refresh ? 1 : pageMessages;
-            if (pageMessages != cpPageMessages) {
-                setPageMessages(cpPageMessages);
+    useEffect(() => {
+        let cpUsers = [...users];
+        for (let i = 0; i < cpUsers.length; i++) {
+            let user = cpUsers[i];
+            for (let j = 0; j < subscriptions.length; j++) {
+                const subscription = subscriptions[j];
+                if (user.id == subscription.id) {
+                    cpUsers[i].isSubscribed = subscription.isSubscribed;
+                    break;
+                }
             }
-            connector({
-                method: "get",
-                url: `${endPoints.MESSAGE_LIST}?page=${cpPageMessages}&threadId=${folowersMessage.activeItem.thread.id}`,
-                success: (response) => {
-                    const data = [...response.data.messages].reverse();
-                    if (refresh) {
-                        setMessages(data);
-                    } else {
-                        setMessages(getUniqueList([...data, ...messages], "id"));
-                    }
-                    setCountNewMessages(response.data.totalNewMessages);
-                    setTotalMessages(parseInt(response.data.total));
-                    setLoadingMoreMessages(false);
-                    scrollToElement("message_9");
-                },
-                catch: (error) => {
-                    console.log(error);
-                },
-            });
-        } else {
-            setMessages([]);
-            setTotalMessages(0);
-            setLoadingMoreMessages(false);
+        }
+        setUsers(cpUsers);
+    }, [subscriptions]);
+
+    const getUsers = (refresh = false) => {
+        if (!loadingUsers) {
+            setLoadingUsers(true);
+            const cpPageUsers = refresh ? 1 : pageUsers;
+            if (pageUsers != cpPageUsers) {
+                setPageUsers(cpPageUsers);
+            }
+            if (folowersMessage.search.value.length >= 3) {
+                connector({
+                    method: "get",
+                    url: `${endPoints.USER_SUBSCRIPTIONS}?page=${pageUsers}&q=${folowersMessage.search.value}`,
+                    success: (response) => {
+                        if (pageUsers == 1) {
+                            setUsers(response.data.subscriptions);
+                        } else {
+                            setUsers([...users, ...response.data.subscriptions]);
+                        }
+                        setTotalUsers(response.data.total);
+                        setLoadingUsers(false);
+                    },
+                    catch: (error) => {
+                        console.log(error);
+                        setLoadingUsers(false);
+                    },
+                });
+            } else {
+                setLoadingUsers(false);
+            }
+        }
+    };
+
+    const getMessages = (refresh = false) => {
+        if (!loadingMessages) {
+            setLoadingMessages(true);
+            if (folowersMessage?.activeItem?.thread?.id && folowersMessage.activeItem.thread.id != -1) {
+                const cpPageMessages = refresh ? 1 : pageMessages;
+                if (pageMessages != cpPageMessages) {
+                    setPageMessages(cpPageMessages);
+                }
+                connector({
+                    method: "get",
+                    url: `${endPoints.MESSAGE_LIST}?page=${cpPageMessages}&threadId=${folowersMessage.activeItem.thread.id}`,
+                    success: (response) => {
+                        const data = [...response.data.messages].reverse();
+                        if (refresh) {
+                            setMessages(data);
+                        } else {
+                            setMessages(getUniqueList([...data, ...messages], "id"));
+                        }
+                        setCountNewMessages(response.data.totalNewMessages);
+                        setTotalMessages(parseInt(response.data.total));
+                        setLoadingMessages(false);
+                        scrollToElement("message_9");
+                    },
+                    catch: (error) => {
+                        console.log(error);
+                        setLoadingMessages(false);
+                    },
+                });
+            } else {
+                setMessages([]);
+                setTotalMessages(0);
+                setLoadingMessages(false);
+            }
         }
     };
 
@@ -308,7 +381,7 @@ export default function Messagerie({
                 }
 
                 if (!existe) {
-                    cpSubscribers.push({ ...item, type: "subscriber" });
+                    cpSubscribers = [{ ...item, type: "subscriber" }, ...cpSubscribers];
                 }
                 setSubscribers(cpSubscribers);
             }
@@ -464,9 +537,9 @@ export default function Messagerie({
                             className="back-to-list"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const cpState = { ...folowersMessage };
-                                cpState.activeItem = false;
-                                setFolowersMessage(cpState);
+                                const cpFolowersMessage = { ...folowersMessage };
+                                cpFolowersMessage.activeItem = false;
+                                setFolowersMessage(cpFolowersMessage);
                             }}
                         >
                             <KeyboardArrowLeftIcon />
@@ -532,7 +605,7 @@ export default function Messagerie({
                                 onScroll={onScrollMessages}
                                 ref={refMessages}
                             >
-                                {loadingMoreMessages && <SpinnerLoading className="is-top-spinner" />}
+                                {loadingMessages && <SpinnerLoading className="is-top-spinner" />}
 
                                 {messages.length > 0 &&
                                     messages.map((row, index) => (
@@ -547,7 +620,8 @@ export default function Messagerie({
                                     ))}
                                 {typingMessage &&
                                     typingMessage.threadId == folowersMessage.activeItem.thread.id &&
-                                    typingMessage.userId != auth.user.id && !folowersMessage.activeItem.thread.blocked && (
+                                    typingMessage.userId != auth.user.id &&
+                                    !folowersMessage.activeItem.thread.blocked && (
                                         <div className="d-flex justify-content-start is-teyping">
                                             <div className="msg_cotainer">
                                                 <div className="content-msg">
@@ -579,9 +653,9 @@ export default function Messagerie({
                             className="back-to-list"
                             onClick={(e) => {
                                 e.preventDefault();
-                                const cpState = { ...folowersMessage };
-                                cpState.showSearchFolower = false;
-                                setFolowersMessage(cpState);
+                                const cpFolowersMessage = { ...folowersMessage };
+                                cpFolowersMessage.showSearchFolower = false;
+                                setFolowersMessage(cpFolowersMessage);
                             }}
                         >
                             <KeyboardArrowLeftIcon />
@@ -595,14 +669,15 @@ export default function Messagerie({
                         <Input
                             {...folowersMessage.search}
                             onChange={(e) => {
-                                const cpState = { ...folowersMessage };
-                                cpState.search.value = e.target.value;
-                                setFolowersMessage(cpState);
-                                if (cpState.search.value.length >= 3) {
+                                const cpFolowersMessage = { ...folowersMessage };
+                                cpFolowersMessage.search.value = e.target.value;
+                                setFolowersMessage(cpFolowersMessage);
+                                if (cpFolowersMessage.search.value.length >= 3) {
                                     setFolowersMessage({
                                         ...folowersMessage,
                                         resultSearch: true,
                                     });
+                                    getUsers(true);
                                 } else {
                                     setFolowersMessage({
                                         ...folowersMessage,
@@ -616,29 +691,43 @@ export default function Messagerie({
                         <PeopleOutlineRoundedIcon /> Abonnements
                     </div>
                     {folowersMessage.resultSearch ? (
-                        <div className="content-search-results">
-                            <div className="list-result-search">
+                        <div
+                            className="content-search-results"
+                            ref={refContent}
+                            onScroll={(e) => {
+                                if (isTabletOrMobile) {
+                                    onScrollContent(e);
+                                }
+                            }}
+                        >
+                            <div
+                                className="list-result-search"
+                                ref={refList}
+                                onScroll={(e) => {
+                                    if (!isTabletOrMobile) {
+                                        onScrollList(e);
+                                    }
+                                }}
+                            >
                                 {users.length > 0 ? (
-                                    users.map(
-                                        (item, index) =>
-                                            item.show && (
-                                                <ItemListFolower
-                                                    key={index}
-                                                    item={{ ...item, index }}
-                                                    setItem={setItem}
-                                                    setMsgNotifTopTime={setMsgNotifTopTime}
-                                                    threads={threads}
-                                                    setThreads={setThreads}
-                                                    action={action}
-                                                    setAction={setAction}
-                                                    folowersMessage={folowersMessage}
-                                                    setFolowersMessage={setFolowersMessage}
-                                                />
-                                            )
-                                    )
+                                    users.map((item, index) => (
+                                        <ItemListFolower
+                                            key={index}
+                                            item={{ ...item, index }}
+                                            setItem={setItem}
+                                            setMsgNotifTopTime={setMsgNotifTopTime}
+                                            threads={threads}
+                                            setThreads={setThreads}
+                                            action={action}
+                                            setAction={setAction}
+                                            folowersMessage={folowersMessage}
+                                            setFolowersMessage={setFolowersMessage}
+                                        />
+                                    ))
                                 ) : (
                                     <p className="message-not-result">Aucun resultat trouvé </p>
                                 )}
+                                {loadingUsers && <SpinnerLoading />}
                             </div>
                         </div>
                     ) : null}
