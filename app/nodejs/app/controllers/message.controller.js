@@ -35,6 +35,7 @@ export function newMessage(req, res) {
                 threadId: message.threadId,
                 message: message.message,
                 createdAt: message.createdAt,
+                updatedAt: message.updatedAt,
                 seen: message.seen,
               },
             });

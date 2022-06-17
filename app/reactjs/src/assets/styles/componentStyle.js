@@ -347,6 +347,14 @@ export const BlocActionButton = styled.div`
           }
         }
       }
+      
+      @media (min-height: 1000px) {
+        & > div {
+          .content-search-results {
+            max-height: 800px !important;
+          }
+        }
+      }
       & > div {
         max-height: calc(50vh - 296px + 25px + 90px);
       }
@@ -451,6 +459,13 @@ export const BlocActionButton = styled.div`
             .list-notifs {
               overflow: initial;
             }
+          }
+        }
+      }
+      @media (min-height: 1000px) {
+        & > div {
+          .content-notifs {
+            max-height: 800px !important;
           }
         }
       }
@@ -1550,7 +1565,7 @@ export const BlocMessagerie = styled.div`
   .content-messagerie {
     height: calc(100% - 47px);
     .list-messagerie {
-      height: 100%;
+      height: calc(100% + 1px);
       overflow-y: auto;
     }
     .show-more-folower {

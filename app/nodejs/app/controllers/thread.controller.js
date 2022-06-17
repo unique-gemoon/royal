@@ -12,12 +12,10 @@ const Op = db.Sequelize.Op;
 
 export function newThread(req, res) {
   if (req?.thread?.id) {
-    res
-      .status(200)
-      .send({
-        message: "ok",
-        thread: { id: req.thread.id, blocked: req.thread.blocked },
-      });
+    res.status(200).send({
+      message: "ok",
+      thread: { id: req.thread.id, blocked: req.thread.blocked ,updatedAt : req.thread.updatedAt},
+    });
   } else {
     Thread.create(
       {
@@ -34,12 +32,10 @@ export function newThread(req, res) {
       }
     )
       .then((thread) => {
-        res
-          .status(200)
-          .send({
-            message: "ok",
-            thread: { id: thread.id, blocked: thread.blocked },
-          });
+        res.status(200).send({
+          message: "ok",
+          thread: { id: thread.id, blocked: thread.blocked ,updatedAt : thread.updatedAt},
+        });
       })
       .catch((err) => {
         res.status(500).send({ message: err.message });
@@ -79,11 +75,11 @@ export function checkNewThread(req, res, next) {
 
 export function listThreads(req, res) {
   const page = parseInt(req.query.page) || 1;
-  const perPage = 10;
+  const perPage = 20;
   const start = (page - 1) * perPage;
 
   ThreadUsers.findAll({
-    attributes: { exclude: ["createdAt", "updatedAt", "threadId"] },
+    attributes: { exclude: ["createdAt", "threadId"] },
     include: [
       {
         attributes: ["id", "blocked", "blockedBy"],
@@ -123,11 +119,17 @@ export function listThreads(req, res) {
     where: { userId: { [Op.ne]: req.user.id } },
     order: [["updatedAt", "DESC"]],
   })
-    .then((threads) => {
+    .then((allThreads) => {
+      const total = allThreads.length;
+      let threads = [];
+      if (allThreads.length > 0) {
+        threads = allThreads.splice(start, perPage);
+      }
       res.status(200).send({
         message: "ok",
         threads,
         totalNewMessages: req.totalNewMessages,
+        total,
       });
     })
     .catch((err) => {
@@ -141,7 +143,7 @@ export function checkThread(req, res, next) {
       ? parseInt(req.body.threadId)
       : parseInt(req.query.threadId);
     Thread.findOne({
-      attributes: ["id", "blocked", "blockedBy"],
+      attributes: ["id", "blocked", "blockedBy", "updatedAt"],
       include: [
         {
           attributes: [],

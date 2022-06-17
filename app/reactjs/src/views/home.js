@@ -141,6 +141,7 @@ export default function Home() {
       setTotalThreads(0);
       setPageThreads(1);
       setCountNewMessages(0);
+      setFolowersMessage({...folowersMessage, activeItem : false});
     }
   }, [pageThreads, auth.isConnected]);
 
@@ -360,7 +361,6 @@ export default function Home() {
     const updateThread = (item) => {
       if (auth.isConnected) {
         if (item?.otherUser?.id && auth.user.id == item.otherUser.id) {
-          let existe = false;
           const cpThreads = [...threads];
           for (let i = 0; i < cpThreads.length; i++) {
             if (cpThreads[i].thread.id === item.thread.id) {
@@ -369,7 +369,7 @@ export default function Home() {
                 blocked: item.thread.blocked,
                 blockedBy: item.thread.blockedBy,
               };
-
+              
               if (folowersMessage?.activeItem?.thread?.id == item.thread.id) {
                 const cpFolowersMessage = { ...folowersMessage };
                 cpFolowersMessage.activeItem.thread = {
@@ -379,16 +379,13 @@ export default function Home() {
                 };
                 setFolowersMessage(cpFolowersMessage);
               }
-
-              existe = true;
+              //TODO check messages
+              item = {...cpThreads[i], updatedAt: item.updatedAt};
+              cpThreads.splice(i, 1);
               break;
             }
           }
-          if (!existe) {
-            setThreads([item, ...threads]);
-          } else {
-            setThreads(cpThreads);
-          }
+          setThreads([item, ...cpThreads]);
         }
       }
     };
