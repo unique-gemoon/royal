@@ -2190,6 +2190,9 @@ export const ModalItem = styled(Modal)`
     border-radius: 20px;
     max-height: 100%;
     padding-top: 30px;
+    @media(max-width: 1200px){
+      padding-top: 70px;
+    }
     .modal-content {
       border-radius: 0px;
       background-color: transparent;
@@ -2203,6 +2206,9 @@ export const ModalItem = styled(Modal)`
         max-height: calc(100vh - 60px);
         overflow-y: auto;
         margin: auto;
+        @media(max-width: 1200px){
+          max-height: calc(100vh - 90px);
+        }
       }
       .Bloc-NV2 {
         max-height: initial;
