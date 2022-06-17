@@ -104,7 +104,7 @@ export default function Notifications({
               Je ne reçois aucune notification{" "}
             </p>
           )}
-          {loadingMore.notifications && <SpinnerLoading />}
+          {loadingMore.notifications && <SpinnerLoading className='border-loader-bottom' />}
         </div>
       </div>
     </BlocNotification>
