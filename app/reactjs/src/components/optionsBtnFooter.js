@@ -145,6 +145,8 @@ export default function OptionsBtnFooter({
           setSubscriptions={setSubscriptions}
           threads={threads}
           setThreads={setThreads}
+          loadingMore={loadingMore}
+          setLoadingMore={setLoadingMore}
         />
       </ButtonAction>
       <ButtonAction

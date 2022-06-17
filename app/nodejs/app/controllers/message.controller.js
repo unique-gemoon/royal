@@ -57,7 +57,7 @@ export function newMessage(req, res) {
 
 export function listMessages(req, res) {
   const page = parseInt(req.query.page) || 1;
-  const perPage = 10;
+  const perPage = 20;
   const start = (page - 1) * perPage;
 
   Message.findAll({

@@ -23,26 +23,24 @@ export default function BlocFolowers({
   setSubscriptions = () => {},
   threads = [],
   setThreads = () => {},
+  loadingMore={},
+  setLoadingMore= () => {},
 }) {
   const [value, setValue] = React.useState("1");
  
   const refSubscriber = useRef(null);
-  const [endScrollSubscriber, setEndScrollSubscriber] = useState(false);
   const onScrollSubscriber = () => {
     const { scrollTop, scrollHeight, clientHeight } = refSubscriber.current;
-    if (scrollTop + clientHeight === scrollHeight) {
-      //TODO: PAGINATION
-      //setEndScrollSubscriber(true);
+    if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
+      setLoadingMore({ ...loadingMore, subscribers: true }); 
     }
   };
 
   const refSubscription = useRef(null);
-  const [endScrollSubscription, setEndScrollSubscription] = useState(false);
   const onScrollSubscription = () => {
     const { scrollTop, scrollHeight, clientHeight } = refSubscription.current;
-    if (scrollTop + clientHeight === scrollHeight) {
-       //TODO: PAGINATION
-      //setEndScrollSubscription(true);
+    if (parseInt(scrollTop + clientHeight) === parseInt(scrollHeight)) {
+      setLoadingMore({ ...loadingMore, subscriptions: true });
     }
   };
 
@@ -88,7 +86,7 @@ export default function BlocFolowers({
           }
 
           if (!existe) {
-            cpSubscribers.push({ ...item, type: "subscriber" });
+            cpSubscribers = [{ ...item, type: "subscriber" }, ...cpSubscribers];
           }
           setSubscribers(cpSubscribers);
         }
@@ -158,7 +156,7 @@ export default function BlocFolowers({
               ) : (
                 <p className="message-not-result">Aucun abonné</p>
               )}
-              {endScrollSubscriber && <SpinnerLoading />}
+              {loadingMore.subscribers && <SpinnerLoading />}
             </div>
           </TabPanel>
           <TabPanel value="2">
@@ -181,7 +179,7 @@ export default function BlocFolowers({
               ) : (
                 <p className="message-not-result">Aucun abonnement</p>
               )}
-              {endScrollSubscription && <SpinnerLoading />}
+              {loadingMore.subscriptions && <SpinnerLoading />}
             </div>
           </TabPanel>
         </div>
