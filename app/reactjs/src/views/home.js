@@ -417,7 +417,7 @@ export default function Home() {
         //TODO
         const updateSubscriber = (item) => {
             if (auth.user.id == item.user.id) {
-                const cpSubscribers = [...subscribers];
+                let cpSubscribers = [...subscribers];
                 let existe = false;
                 for (let i = 0; i < cpSubscribers.length; i++) {
                     const subscriber = cpSubscribers[i];
@@ -441,7 +441,7 @@ export default function Home() {
                 }
                 setSubscribers(cpSubscribers);
 
-                const cpSubscriptions = [...subscriptions];
+                let cpSubscriptions = [...subscriptions];
                 for (let i = 0; i < cpSubscriptions.length; i++) {
                     const subscription = cpSubscriptions[i];
                     if (subscription.id == item.subscriber.id) {
