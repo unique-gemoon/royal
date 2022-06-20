@@ -50,7 +50,7 @@ export default function SearchFolowers({
     const refContent = useRef(null);
     const onScrollContent = () => {
         const { scrollTop, scrollHeight, clientHeight } = refContent.current;
-        if (scrollTop + clientHeight === scrollHeight) {
+        if (parseInt(scrollTop + clientHeight) >= parseInt(scrollHeight)) {
             if (users.length < totalUsers) {
                 setPageUsers(pageUsers + 1);
             }
@@ -60,7 +60,7 @@ export default function SearchFolowers({
     const refList = useRef(null);
     const onScrollList = () => {
         const { scrollTop, scrollHeight, clientHeight } = refList.current;
-        if (scrollTop + clientHeight === scrollHeight) {
+        if(parseInt(scrollTop + clientHeight) >= parseInt(scrollHeight)) {
             if (users.length < totalUsers) {
                 setPageUsers(pageUsers + 1);
             }
