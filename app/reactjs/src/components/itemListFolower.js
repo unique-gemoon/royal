@@ -114,12 +114,6 @@ export default function ItemListFolower({
             if (!isTabletOrMobile) {
               const cpAction = {
                 ...action,
-                notification: {
-                  ...action.notification,
-                  isOpen: false,
-                },
-                folower: { ...action.folower, isOpen: false },
-                search: { ...action.search, isOpen: true },
                 messagerie: { ...action.messagerie, isOpen: true },
               };
               setAction(cpAction);
