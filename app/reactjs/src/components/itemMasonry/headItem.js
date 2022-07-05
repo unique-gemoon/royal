@@ -338,11 +338,11 @@ export default function HeadItem({
                                             <div className="detail-ifo-post">
                                                 <div className="folowers-post">
                                                     <p className="abonnes-post">
-                                                        <span>{item.abonnes}</span>
+                                                        <span>100</span>
                                                         abonnés
                                                     </p>
                                                     <p className="abonnes-post">
-                                                        <span>{item.abonnes}</span>
+                                                        <span>50</span>
                                                         abonnements
                                                     </p>
                                                 </div>
