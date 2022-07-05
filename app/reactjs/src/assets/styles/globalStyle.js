@@ -111,6 +111,24 @@ export const HeadContentItem = styled.div`
             z-index: 999;
         }
     }
+    .no-media-overture{
+        .user-info-tooltip{
+            @media(max-width: 993px){
+                .MuiTooltip-popper {
+                    .MuiTooltip-arrow{
+                        transform: translateX(-50%) !important;
+                        left: 50% !important;
+                    }
+                }
+            }
+            @media(max-width: 375px){
+                max-width:136px;
+            }
+            @media(max-width: 335px){
+                max-width: 85px;
+            }
+        }
+    }
     .user-info-tooltip{
         @media(max-width: 375px){
             max-width: 62px;
