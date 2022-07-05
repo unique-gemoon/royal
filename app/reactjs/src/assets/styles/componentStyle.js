@@ -252,7 +252,7 @@ export const CountSee = styled.div`
   display: flex;
   align-items: center;
   & > svg {
-    margin-left: 10px;
+    margin-left: 2px;
   }
 `;
 export const DropZoneBloc = styled.div`
