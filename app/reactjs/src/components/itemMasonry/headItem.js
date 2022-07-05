@@ -84,16 +84,15 @@ export default function HeadItem({
             return false;
         }
     };
-
     useEffect(() => {
         if (item) {
             let cpMediaIcons = [];
-            if (item.content != "" || item.ouverture != "") {
+            if (item.ouverture != "") {
                 cpMediaIcons.push("description");
             }
-            if (item.medias.length > 0) {
+            if (item.medias.length > 0 ) {
                 for (let i = 0; i < item.medias.length; i++) {
-                    if (!cpMediaIcons.includes(item.medias[i].type)) {
+                    if (item.medias[i].isOuverture == true && !cpMediaIcons.includes(item.medias[i].type)) {
                         cpMediaIcons.push(item.medias[i].type);
                     }
                 }
@@ -233,7 +232,7 @@ export default function HeadItem({
 
     return (
         <HeadContentItem>
-            <div className="bloc-content-item">
+            <div className={`bloc-content-item ${mediaIcons.length == 0 ? "no-media-overture" :""}`}>
                 <DetailsItems className={mediaIcons.length > 1 && "is-other-media"}>
                     {mediaIcons.length > 0 &&
                         mediaIcons.map((media, index) => (
