@@ -52,7 +52,7 @@ export default function BlocFolowers({
     if (item.index !== undefined) {
       if (item.type == "subscriber") {
         if (subscribers[item.index]) {
-          const cpSubscribers = [...subscribers];
+          let cpSubscribers = [...subscribers];
           cpSubscribers[item.index] = item;
           setSubscribers(cpSubscribers);
 
@@ -75,7 +75,7 @@ export default function BlocFolowers({
           setSubscriptions(cpSubscriptions);
 
           let existe = false;
-          const cpSubscribers = [...subscribers];
+          let cpSubscribers = [...subscribers];
           for (let i = 0; i < cpSubscribers.length; i++) {
             const subscriber = cpSubscribers[i];
             if (subscriber.id == item.id) {

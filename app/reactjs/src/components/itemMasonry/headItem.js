@@ -162,7 +162,7 @@ export default function HeadItem({
                     });
                     setItem({
                         ...item,
-                        user: { ...item.user, isSubscribed: false },
+                        user: { ...item.user, isSubscribed: false  },
                         action: "update",
                     });
                     updateSubscriberStatus({
@@ -338,11 +338,11 @@ export default function HeadItem({
                                             <div className="detail-ifo-post">
                                                 <div className="folowers-post">
                                                     <p className="abonnes-post">
-                                                        <span>100</span>
+                                                        <span>{item.user.totalSubscribers || "0"}</span>
                                                         abonnés
                                                     </p>
                                                     <p className="abonnes-post">
-                                                        <span>50</span>
+                                                        <span>{item.user.totalSubscriptions || "0"}</span>
                                                         abonnements
                                                     </p>
                                                 </div>
