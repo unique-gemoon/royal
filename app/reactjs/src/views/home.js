@@ -414,7 +414,6 @@ export default function Home() {
     ]);
 
     useEffect(() => {
-        //TODO
         const updateSubscriber = (item) => {
             if (auth.user.id == item.user.id) {
                 let cpSubscribers = [...subscribers];
@@ -494,13 +493,34 @@ export default function Home() {
                 }
                 setSubscriptions(cpSubscriptions);
             }
+
+            const cpPlis = [...plis];
+            let isChanged = false;
+            for (let i = 0; i < cpPlis.length; i++) {
+                const pli = cpPlis[i];
+
+                if (pli.user.id == item.user.id) {
+                    isChanged = true;
+                    pli.user.totalSubscribers = item.isSubscribed
+                        ? pli.user.totalSubscribers + 1
+                        : pli.user.totalSubscribers - 1;
+                } else if (pli.user.id == item.subscriber.id) {
+                    isChanged = true;
+                    pli.user.totalSubscriptions = item.isSubscribed
+                        ? pli.user.totalSubscriptions + 1
+                        : pli.user.totalSubscriptions - 1;
+                }
+            }
+            if (isChanged) {
+                setPlis(cpPlis);
+            }
         };
         socket.on("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
 
         return () => {
             socket.off("SERVER_SUBSCRIBER_UPDATED", updateSubscriber);
         };
-    }, [subscribers, subscriptions, countNewSubscriptions]);
+    }, [plis, subscribers, subscriptions, countNewSubscriptions]);
 
     const getPlis = (refresh = false) => {
         connector({
@@ -675,7 +695,10 @@ export default function Home() {
             if (pli.user.id === item.id) {
                 refreshItem({
                     ...pli,
-                    user: { ...pli.user, isSubscribed: item.isSubscribed },
+                    user: {
+                        ...pli.user,
+                        isSubscribed: item.isSubscribed,
+                    },
                     action: "update",
                 });
                 break;
@@ -685,7 +708,7 @@ export default function Home() {
             user: { id: auth.user.id, username: auth.user.username },
             subscriber: { id: item.id, username: item.username },
             isSubscribed: item.isSubscribed,
-            notification: item.notification,
+            notification: item.notification
         });
     };
 
