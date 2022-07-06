@@ -10,6 +10,7 @@ const endPoints = {
   PLI : "/pli",
   PLI_NEW : "/pli/new",
   PLI_TIME : "/pli/time",
+  PLI_TIME_CANCEL : "/pli/time/cancel",
   PLIS : "/pli/list",
   PLI_SONDAGE_VOTE : "/pli/sondage/vote",
   PLI_SONDAGE_NOTE_VOTE : "/pli/sondage/not-vote",
