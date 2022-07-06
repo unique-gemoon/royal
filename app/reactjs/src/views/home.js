@@ -924,6 +924,7 @@ export default function Home() {
                         isSeenNotification={isSeenNotification}
                         countNewNotifications={countNewNotifications}
                         setCountNewNotifications={setCountNewNotifications}
+                        setCountNewSubscriptions={setCountNewSubscriptions}
                         countNewSubscriptions={countNewSubscriptions}
                         subscribers={subscribers}
                         setSubscribers={setSubscribers}

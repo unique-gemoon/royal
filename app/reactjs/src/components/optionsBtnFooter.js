@@ -23,6 +23,7 @@ export default function OptionsBtnFooter({
   isSeenNotification = () => {},
   countNewNotifications = 0,
   countNewSubscriptions = 0,
+  setCountNewSubscriptions = () => {},
   subscribers = [],
   setSubscribers = () => {},
   subscriptions = [],
@@ -139,6 +140,7 @@ export default function OptionsBtnFooter({
           setMsgNotifTopTime={setMsgNotifTopTime}
           updateSubscriberStatus={updateSubscriberStatus}
           countNewSubscriptions={countNewSubscriptions}
+          setCountNewSubscriptions={setCountNewSubscriptions}
           subscribers={subscribers}
           setSubscribers={setSubscribers}
           subscriptions={subscriptions}
