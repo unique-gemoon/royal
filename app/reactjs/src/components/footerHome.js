@@ -26,6 +26,7 @@ export default function FooterHome({
   countNewNotifications,
   setCountNewNotifications = () => {},
   countNewSubscriptions = 0,
+  setCountNewSubscriptions = () => {},
   subscribers = [],
   setSubscribers = () => {},
   subscriptions = [],
@@ -63,6 +64,7 @@ export default function FooterHome({
         countNewNotifications={countNewNotifications}
         setCountNewNotifications={setCountNewNotifications}
         countNewSubscriptions={countNewSubscriptions}
+        setCountNewSubscriptions={setCountNewSubscriptions}
         subscribers={subscribers}
         setSubscribers={setSubscribers}
         subscriptions={subscriptions}

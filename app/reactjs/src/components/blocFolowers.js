@@ -17,6 +17,7 @@ export default function BlocFolowers({
   setMsgNotifTopTime = () => {},
   updateSubscriberStatus = () => {},
   countNewSubscriptions = 0,
+  setCountNewSubscriptions = () => {},
   subscribers = [],
   setSubscribers = () => {},
   subscriptions = [],
@@ -131,6 +132,7 @@ export default function BlocFolowers({
             onClick={() => {
               if (countNewSubscriptions > 0) {
                 seenSubscriptions();
+                setCountNewSubscriptions(0);
               }
             }}
           />
