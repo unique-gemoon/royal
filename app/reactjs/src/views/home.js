@@ -310,9 +310,7 @@ export default function Home() {
                     }
                 }
                 setPlis(cpPlis);
-                if (data.citation.userId != undefined && auth.user && data.citation.userId == auth.user.id) {
-                    scrollBottomById("citations-container");
-                }
+                scrollBottomById("citations-container");
             }
         };
         socket.on("SERVER_CITATION", newCitation);
