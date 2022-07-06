@@ -85,6 +85,40 @@ export default function BarTemporelle({
     }
   };
 
+  const cancelTime = () => {
+    if (!isPending) {
+      setIsPending(true);
+      connector({
+        method: "post",
+        url: endPoints.PLI_TIME_CANCEL,
+        data: { id: item.id },
+        success: (response) => {
+          setIsPending(false);
+          const appearances = {
+            ...item.appearances,
+            alreadyUpdated: false,
+            signe : response.data.pli.signe,
+          };
+          if (response.data.pli.signe) {
+            appearances.countUp = getInt(item.appearances.countUp) - 1;
+          } else {
+            appearances.countDown = getInt(item.appearances.countDown) - 1;
+          }
+          setItem({
+            ...item,
+            duration: response.data.pli.duration,
+            allottedTime: response.data.pli.allottedTime,
+            appearances,
+            action: "update",
+          });
+        },
+        catch: () => {
+          setIsPending(false);
+        },
+      });
+    }
+  };
+
   const checkIsConnected = () => {
     if (auth.isConnected) {
       return true;
@@ -99,6 +133,7 @@ export default function BarTemporelle({
 
   const upTime = () => {
     if (item.appearances.alreadyUpdated) {
+      cancelTime();
       return;
     }
     saveTime({ signe: true });
@@ -106,6 +141,7 @@ export default function BarTemporelle({
 
   const downTime = () => {
     if (item.appearances.alreadyUpdated) {
+      cancelTime();
       return;
     }
     saveTime({ signe: false });

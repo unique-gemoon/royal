@@ -5,6 +5,7 @@ import { pliNotifications } from "../controllers/notification.controller.js";
 import {
   addNotVoteSondagePli,
   addVoteSondagePli,
+  cancelTimeAppearancePli,
   findAllPlisNotElapsed,
   findPliAppearancesById,
   findPliUserNotElapsed,
@@ -41,6 +42,13 @@ pliRoutes.post(
   checkDataPliTime,
   findPliAppearancesById,
   updateAppearancePli
+);
+
+pliRoutes.post(
+  "/time/cancel",
+  passport.authenticate("jwt", { session: false }),
+  findPliAppearancesById,
+  cancelTimeAppearancePli
 );
 
 pliRoutes.post(

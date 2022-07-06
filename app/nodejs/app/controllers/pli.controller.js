@@ -173,7 +173,7 @@ export function newPli(req, res, next) {
                     alreadyUpdated: false,
                     signe: null,
                 },
-                user: { username: req.user.username, id: req.user.id, totalSubscriptions: 1, totalSubscribers: 2 },
+                user: { username: req.user.username, id: req.user.id, totalSubscriptions: 0, totalSubscribers: 0 },
                 createdAt: pli.createdAt,
                 comments: [],
                 citations: [],
@@ -684,6 +684,72 @@ export function updateAppearancePli(req, res) {
             .catch((err) => {
                 res.status(500).send({ message: err.message });
             });
+    }
+}
+
+export function cancelTimeAppearancePli(req, res) {
+    let alreadyUpdated = false;
+    for (let i = 0; i < req.pli.appearances.length; i++) {
+        const appearance = req.pli.appearances[i];
+        if (req.user && appearance.userId == req.user.id) {
+            alreadyUpdated = true;
+            break;
+        }
+    }
+
+    if (alreadyUpdated) {
+        AppearancePli.findOne({
+            where: {
+                pliId: req.pli.id,
+                userId: req.user.id,
+            },
+        })
+            .then((appearancePli) => {
+                if (appearancePli) {
+                    AppearancePli.destroy({
+                        where: { id: appearancePli.id },
+                    })
+                        .then((response) => {
+                            let allottedTime = 0;
+                            if (req.pli.allottedTime > 0) {
+                                allottedTime = appearancePli.signe
+                                    ? Number(req.pli.allottedTime) - Number(appearancePli.allottedTime)
+                                    : Number(req.pli.allottedTime) + Number(appearancePli.allottedTime);
+                            }
+
+                            Pli.update(
+                                {
+                                    allottedTime,
+                                },
+                                { where: { id: req.pli.id } }
+                            )
+                                .then((resp) => {
+                                    const duration = durationTime(req.pli.createdAt, allottedTime);
+                                    res.status(200).json({
+                                        message: "ok",
+                                        pli: {
+                                            duration,
+                                            allottedTime,
+                                            signe: appearancePli.signe,
+                                        },
+                                    });
+                                })
+                                .catch((err) => {
+                                    res.status(500).send({ message: err.message });
+                                });
+                        })
+                        .catch((err) => {
+                            res.status(500).send({ message: err.message });
+                        });
+                } else {
+                    res.status(400).send({ message: "Le temps alloué du pli non existe." });
+                }
+            })
+            .catch((err) => {
+                res.status(500).send({ message: err.message });
+            });
+    } else {
+        res.status(400).json({ message: "Le temps alloué du pli est déjà annulé." });
     }
 }
 
