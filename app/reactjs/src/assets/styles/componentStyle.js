@@ -592,18 +592,33 @@ export const BlocProfileMenu = styled.div`
       margin-right: 5px;
     }
     span {
-      font-family: "ProximaNovaSoftW03-Regular";
-      color: #7caad6;
-      font-size: 14px;
+        &:not(.name-profile) {
+        font-family: "ProximaNovaSoftW03-Regular";
+        color: #7caad6;
+        font-size: 14px;
+      }
+    }
+    .name-profile{
+      overflow: hidden;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      width: 100%;
+      display: inline-block;
     }
     @media (max-width: 993px) {
       margin-right: 0;
+    }
+    @media (max-width: 575px) {
+      width: 122px;
+    }
+    @media (max-width: 320px) {
+      width: 88px;
     }
   }
   .paper-menu-profile {
     background-color: transparent;
     border-radius: 12px;
-    width: 232px;
+    min-width: 180px;
     margin: 10px 0;
   }
   .profil-menu-options {
@@ -2223,8 +2238,8 @@ export const ModalItem = styled(Modal)`
         text-align: center;
         color: #fff;
         .qst-confirm {
-          font-size: 16px;
-          line-height: 27px;
+          font-size: 18px;
+          line-height: 25px;
           font-family: "ProximaNovaSoftW03-Semibold";
           margin-bottom: 30px;
         }
