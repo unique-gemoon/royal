@@ -1,4 +1,4 @@
-import { durationTime, isObject } from "../middleware/functions.js";
+import { durationTime, isObject, sortByKey } from "../middleware/functions.js";
 import db from "../models/index.model.js";
 import sendEmail from "../services/sendEmail.js";
 
@@ -483,7 +483,9 @@ export function findAllPlisNotElapsed(req, res) {
                             totalComments += cpPli.comments[j].childs.length;
                         }
                         totalComments++;
+                        cpPli.comments[j].childs  = [...cpPli.comments[j].childs.sort(sortByKey("-createdAt"))];
                     }
+                    let comments  = [...cpPli.comments.sort(sortByKey("-createdAt"))];
 
                     cpPlis.push({
                         id,
@@ -495,7 +497,7 @@ export function findAllPlisNotElapsed(req, res) {
                         user,
                         appearances,
                         createdAt,
-                        comments: cpPli.comments,
+                        comments,
                         citations: cpPli.citations,
                         totalComments: totalComments,
                         totalCitations: cpPli.citations.length,
