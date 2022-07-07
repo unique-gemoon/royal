@@ -77,7 +77,7 @@ export default function ProfileMenu({ setMsgNotifTop = () => {} }) {
         aria-haspopup="true"
         onClick={handleToggle}
       >
-        <i></i> {auth?.user?.username}
+        <i></i> <span className="name-profile">{auth?.user?.username}</span>
       </Button>
       <Popper
         open={open}
