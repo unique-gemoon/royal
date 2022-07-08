@@ -354,12 +354,12 @@ export default function HeadItem({
                                                             }
                                                             const cpAction = {
                                                                 ...action,
-                                                                notification: {
-                                                                    ...action.notification,
-                                                                    isOpen: false,
-                                                                },
-                                                                folower: { ...action.folower, isOpen: false },
-                                                                search: { ...action.search, isOpen: false },
+                                                                // notification: {
+                                                                //     ...action.notification,
+                                                                //     isOpen: false,
+                                                                // },
+                                                                // folower: { ...action.folower, isOpen: false },
+                                                                // search: { ...action.search, isOpen: false },
                                                                 messagerie: {
                                                                     ...action.messagerie,
                                                                     isOpen: true,
@@ -441,14 +441,14 @@ export default function HeadItem({
                         className="users-enligne-pli"
                         onClick={() => {
                             setState({ ...state, showModal: true, item });
-                            const cpAction = {
-                                ...action,
-                                notification: { ...action.notification, isOpen: false },
-                                folower: { ...action.folower, isOpen: false },
-                                search: { ...action.search, isOpen: false },
-                                messagerie: { ...action.messagerie, isOpen: false },
-                            };
-                            setAction(cpAction);
+                            // const cpAction = {
+                            //     ...action,
+                            //     notification: { ...action.notification, isOpen: false },
+                            //     folower: { ...action.folower, isOpen: false },
+                            //     search: { ...action.search, isOpen: false },
+                            //     messagerie: { ...action.messagerie, isOpen: false },
+                            // };
+                            // setAction(cpAction);
                             setActiveItem(item);
                         }}
                     >
@@ -467,14 +467,14 @@ export default function HeadItem({
                         if (state.showModal) {
                             setState({ ...state, showCitation: !state.showCitation });
                         } else {
-                            const cpAction = {
-                                ...action,
-                                notification: { ...action.notification, isOpen: false },
-                                folower: { ...action.folower, isOpen: false },
-                                search: { ...action.search, isOpen: false },
-                                messagerie: { ...action.messagerie, isOpen: false },
-                            };
-                            setAction(cpAction);
+                            // const cpAction = {
+                            //     ...action,
+                            //     notification: { ...action.notification, isOpen: false },
+                            //     folower: { ...action.folower, isOpen: false },
+                            //     search: { ...action.search, isOpen: false },
+                            //     messagerie: { ...action.messagerie, isOpen: false },
+                            // };
+                            // setAction(cpAction);
                             if (activeItem && activeItem.id != item.id) {
                                 setActiveItem({ ...item, showNV2: true });
                             } else {

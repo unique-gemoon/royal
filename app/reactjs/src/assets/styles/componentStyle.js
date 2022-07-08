@@ -450,7 +450,7 @@ export const BlocActionButton = styled.div`
             overflow: hidden;
           }
           .content-notifs {
-            overflow-y: scroll;
+            overflow-y: auto;
             background: linear-gradient(#2d7fc3 0%, #579be9 100%);
             border-radius: 0 0 13px 13px;
             max-height: calc(100% - 47px);
@@ -572,7 +572,7 @@ export const NotificationMessage = styled.div`
 `;
 export const BlocProfileMenu = styled.div`
   position: relative;
-  z-index: 11;
+  z-index: 9999;
   #composition-button {
     border-radius: 11.5px;
     background: #fff;
@@ -607,12 +607,13 @@ export const BlocProfileMenu = styled.div`
     }
     @media (max-width: 993px) {
       margin-right: 0;
+      padding-right: 0;
     }
     @media (max-width: 575px) {
-      width: 122px;
+      max-width: 122px;
     }
     @media (max-width: 320px) {
-      width: 88px;
+      max-width: 88px;
     }
   }
   .paper-menu-profile {
@@ -1648,7 +1649,7 @@ export const BlocMessagerie = styled.div`
       flex-direction: column;
       .content-view-messagerie {
         height: 100%;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
       ${FormEmoji} {
         padding: 0 14px 3px;
@@ -1794,14 +1795,14 @@ export const MasonryItem = styled.div`
     &.is-larg-nv1 {
       .bloc-miniature {
         max-height: 700px;
-        overflow-y: scroll;
+        overflow-y: auto;
       }
     }
   }
   .Bloc-NV2 {
     max-height: ${({ height }) =>
       height < 700 ? `calc(700px - ${height}px)` : `initial`};
-    overflow-y: scroll;
+    overflow-y: auto;
     border-radius: 0 0 20px 20px;
   }
   .content-bloc-NV2 {

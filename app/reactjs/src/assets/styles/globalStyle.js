@@ -444,6 +444,12 @@ export const HeaderMobile = styled.div`
     justify-content: space-between;
     padding: 10px 20px;
     background-color: #FFF;
+    @media (max-width: 993px) {
+        padding: 6px 20px;
+    }
+    @media (max-width: 767px) {
+        padding: 6px 15px;
+    }
 `;
 
 export const FooterDefault = styled.div`

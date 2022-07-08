@@ -163,14 +163,14 @@ export default function BarTemporelle({
           }`}
           onClick={() => {
             if (!checkIsConnected()) {
-              const cpAction = {
-                ...action,
-                notification: { ...action.notification, isOpen: false },
-                folower: { ...action.folower, isOpen: false },
-                search: { ...action.search, isOpen: false },
-                messagerie: { ...action.messagerie, isOpen: false },
-              };
-              setAction(cpAction);
+              // const cpAction = {
+              //   ...action,
+              //   notification: { ...action.notification, isOpen: false },
+              //   folower: { ...action.folower, isOpen: false },
+              //   search: { ...action.search, isOpen: false },
+              //   messagerie: { ...action.messagerie, isOpen: false },
+              // };
+              // setAction(cpAction);
               setShowModal(false);
             } else {
               downTime();
@@ -183,14 +183,14 @@ export default function BarTemporelle({
           className="content-timer-bar"
           onClick={() => {
             if (!showModal) {
-              const cpAction = {
-                ...action,
-                notification: { ...action.notification, isOpen: false },
-                folower: { ...action.folower, isOpen: false },
-                search: { ...action.search, isOpen: false },
-                messagerie: { ...action.messagerie, isOpen: false },
-              };
-              setAction(cpAction);
+              // const cpAction = {
+              //   ...action,
+              //   notification: { ...action.notification, isOpen: false },
+              //   folower: { ...action.folower, isOpen: false },
+              //   search: { ...action.search, isOpen: false },
+              //   messagerie: { ...action.messagerie, isOpen: false },
+              // };
+              // setAction(cpAction);
               if(activeItem && activeItem.id!=item.id ){
                 setActiveItem({...item, showNV2: true });
               }else{
@@ -213,14 +213,14 @@ export default function BarTemporelle({
           }`}
           onClick={() => {
             if (!checkIsConnected()) {
-              const cpAction = {
-                ...action,
-                notification: { ...action.notification, isOpen: false },
-                folower: { ...action.folower, isOpen: false },
-                search: { ...action.search, isOpen: false },
-                messagerie: { ...action.messagerie, isOpen: false },
-              };
-              setAction(cpAction);
+              // const cpAction = {
+              //   ...action,
+              //   notification: { ...action.notification, isOpen: false },
+              //   folower: { ...action.folower, isOpen: false },
+              //   search: { ...action.search, isOpen: false },
+              //   messagerie: { ...action.messagerie, isOpen: false },
+              // };
+              // setAction(cpAction);
               setShowModal(false);
             } else {
               upTime();
