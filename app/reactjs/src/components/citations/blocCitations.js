@@ -115,7 +115,7 @@ export default function BlocCitations({
       <InputEmoji
         className="commentaire-form comment-def-modal"
         name="comment-pli"
-        placeholder="Mon commentaire"
+        placeholder="Mon message"
         open={open}
         setOpen={setOpen}
         setMsgNotifTopTime={setMsgNotifTopTime}
