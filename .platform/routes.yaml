@@ -1,0 +1,22 @@
+# Each route describes how an incoming URL is going to be processed by Platform.sh.
+"https://www.{default}/":
+    cache:
+        cookies:
+            - '*'
+        default_ttl: 0
+        enabled: true
+        headers:
+            - Accept
+            - Accept-Language
+    ssi:
+        enabled: false
+    type: upstream
+    upstream: "app:http"
+
+"https://{default}/":
+    type: redirect
+    to: "https://www.{default}/"
+
+https://api.{default}/:
+    type: upstream
+    upstream: "api:http"
