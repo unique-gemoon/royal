@@ -1,3 +1,4 @@
+import config from "platformsh-config";
 import dotenv from "dotenv";
 dotenv.config();
 import { Sequelize } from "sequelize";
@@ -18,19 +19,26 @@ import commentNotifications from './commentNotifications.model.js';
 import pliNotifications from './pliNotifications.model.js'; 
 import citation from './citation.model.js';
 
+const platform = config.config();
+
 let db = {};
+let credentials = {};
+
+if (platform.hasRelationship('database')) {
+  credentials = platform.credentials('database');
+}
 
 const sequelize = new Sequelize(
-  process.env.DB_NAME,
-  process.env.DB_USER,
-  process.env.DB_PASSWORD,
+  credentials && credentials.path ? credentials.path : process.env.DB_NAME,
+  credentials && credentials.username ? credentials.username : process.env.DB_USER,
+  credentials && credentials.password ? credentials.password : process.env.DB_PASSWORD,
   {
-    host: process.env.DB_HOST,
+    host: credentials && credentials.host ? credentials.host : process.env.DB_HOST,
     dialect: "mysql",
     dialectOptions: {
       charset: "utf8mb4",
     },
-    port: process.env.DB_PORT,
+    port: credentials && credentials.port ? credentials.port : process.env.DB_PORT,
     operatorsAliases: 0,
     pool: {
       max: 5,

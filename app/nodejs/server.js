@@ -1,3 +1,4 @@
+import config from "platformsh-config";
 import express from "express";
 import session from "express-session";
 import expressListRoutes from "express-list-routes";
@@ -12,6 +13,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import { arrayRemove, countPlisOpened } from "./app/middleware/functions.js";
 
+const platform = config.config();
 const User = db.user;
 
 passport.use(
@@ -38,7 +40,7 @@ passport.use(
 );
 
 const app = express();
-const PORT = process.env.NODE_DOCKER_PORT;
+const PORT = platform && platform.port ? platform.port : process.env.NODE_DOCKER_PORT;
 
 var corsOptions = {
   origin: process.env.CLIENT_ORIGIN,
