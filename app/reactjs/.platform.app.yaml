@@ -30,4 +30,4 @@ web:
             # The front-controller script to send non-static requests to.
             passthru: "/index.html"
             headers:
-                Access-Control-Allow-Origins: *
+                Access-Control-Allow-Origins: '*'
