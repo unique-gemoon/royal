@@ -4,3 +4,4 @@ app/nodejs/node_modules
 *.DS_Store
 **/.DS_Store
 .vscode
+.idea
