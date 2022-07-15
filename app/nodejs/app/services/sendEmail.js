@@ -1,5 +1,5 @@
 import nodemailer from "nodemailer";
-import AWS from "aws-sdk";
+import mailjetTransport from "nodemailer-mailjet-transport";
 import ejs from "ejs";
 
 export default function sendEmail({
@@ -25,9 +25,12 @@ export default function sendEmail({
       port: 1025,
     });
   } else {
-    mailer = nodemailer.createTransport({
-      SES: new AWS.SES(),
-    });
+    mailer = nodemailer.createTransport(mailjetTransport({
+      auth: {
+        apiKey: '1dfa3417f68ec7fdc28c28e6d70db496',
+        apiSecret: '311ddff8163eb793bdc6db37f8c2c865'
+      }
+    }));
   }
 
   return ejs.renderFile(process.cwd() + "/app/templates/" + tmp, params, function (err, data) {
