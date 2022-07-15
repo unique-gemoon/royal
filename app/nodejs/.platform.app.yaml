@@ -36,5 +36,8 @@ web:
         start: "node server.js"
     locations:
         "/":
+            passthru: true
+            request_buffering:
+                enabled: false
             headers:
                 Access-Control-Allow-Origins: '*'
