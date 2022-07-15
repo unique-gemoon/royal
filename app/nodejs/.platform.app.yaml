@@ -34,3 +34,7 @@ hooks:
 web:
     commands:
         start: "node server.js"
+    locations:
+        "/":
+            headers:
+                Access-Control-Allow-Origins: '*'
