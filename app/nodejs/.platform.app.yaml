@@ -18,6 +18,11 @@ dependencies:
 # The size of the persistent disk of the application (in MB).
 disk: 256
 
+mounts:
+    'public/uploads/media':
+        source: local
+        source_path: 'media'
+
 # The relationships of the application with services or other applications.
 #
 # The left-hand side is the name of the relationship as it will be exposed

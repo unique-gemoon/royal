@@ -134,7 +134,7 @@ export function restPassword(req, res) {
   User.update(
     {
       password,
-      passwordResetToken: "",
+      passwordResetToken: null,
       passwordResetTokenAt: null,
     },
     { where: { id: res.user.id } }
