@@ -715,6 +715,11 @@ export const ToolBarEditor = styled.div`
             &:hover {
               color: ${OrangeColor};
             }
+            &[data-value=small]{
+              &::before{
+                font-size: 12px;
+              }
+            }
           }
         }
       }
@@ -1788,8 +1793,11 @@ export const MasonryItem = styled.div`
     line-height: 22px;
   }
   .descripton-miniature {
-    margin-bottom: 15px;
+    margin-bottom: 20px;
     white-space: pre-wrap;
+    p{
+      margin-bottom: 10px;
+    }
   }
   .bloc-NV1 {
     &.is-larg-nv1 {
@@ -1807,8 +1815,22 @@ export const MasonryItem = styled.div`
   }
   .content-bloc-NV2 {
     padding: 22px 23px 0px;
-    font-size: 15px;
+    font-size: 18px;
     line-height: 22px;
+    blockquote {
+      border-left: 4px solid rgba(21, 52, 79, 0.7);
+      background-color: #3270AC;
+      border-radius: 4px;
+      padding: 10px 10px 10px 16px;
+      color: #FFF;
+      margin-bottom: 10px;
+    }
+    .ql-size-large {
+      font-size: 24px;
+    }
+    .ql-size-small {
+      font-size: 14px;
+    }
   }
   .toggle-pli2 {
     display: flex;
