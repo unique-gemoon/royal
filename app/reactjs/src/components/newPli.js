@@ -133,6 +133,7 @@ export default function NewPli({
         value: [],
         file: [],
         maxFiles: 40,
+        balise:"img"
       },
       video: {
         name: "video",
@@ -143,6 +144,7 @@ export default function NewPli({
         value: [],
         file: [],
         maxFiles: 10,
+        balise:"video"
       },
       music: {
         name: "music",
@@ -153,6 +155,7 @@ export default function NewPli({
         value: [],
         file: [],
         maxFiles: 10,
+        balise:"audio"
       },
     },
     duration: {
@@ -198,9 +201,16 @@ export default function NewPli({
   const getMediaFiles = (name) => {
     return state.media[name].file.filter((f) => f !== "" && f !== null);
   };
+
   const getMediaOuvertureFiles = (name) => {
     return state.mediaOuverture[name].file.filter(
       (f) => f !== "" && f !== null
+    );
+  };
+
+  const getMediaOuvertureValues = (name) => {
+    return state.mediaOuverture[name].value.filter(
+      (v) => v !== "" && v !== null
     );
   };
 
@@ -264,13 +274,30 @@ export default function NewPli({
         for (let i = 0; i < files.length; i++) {
           data.append("imagesOuverture", files[i]);
         }
+
+        const imagesBlob = getMediaOuvertureValues("images");
+        if(imagesBlob.length>0){
+          data.append( "imagesOuvertureBlob",JSON.stringify(imagesBlob));
+        }
+
         files = getMediaOuvertureFiles("video");
         for (let i = 0; i < files.length; i++) {
           data.append("videoOuverture", files[i]);
         }
+
+        const videoBlob = getMediaOuvertureValues("video");
+        if(videoBlob.length>0){
+          data.append( "videoOuvertureBlob",JSON.stringify(videoBlob));
+        }
+
         files = getMediaOuvertureFiles("music");
         for (let i = 0; i < files.length; i++) {
           data.append("musicOuverture", files[i]);
+        }
+
+        const musicBlob = getMediaOuvertureValues("music");
+        if(musicBlob.length>0){
+          data.append( "musicOuvertureBlob",JSON.stringify(musicBlob));
         }
 
         connector({
@@ -292,7 +319,7 @@ export default function NewPli({
               ...response.data.pli,
               action: "create",
               subscribers: response.data.subscribers,
-            });
+            }); 
           },
           catch: (error) => {
             msgErrors({ msg: getMsgError(error), submit: false });

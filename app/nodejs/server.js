@@ -40,7 +40,7 @@ passport.use(
 );
 
 const app = express();
-const PORT = platform && platform.port ? platform.port : process.env.NODE_DOCKER_PORT;
+const PORT = process.env.NODE_ENV=="production" && platform && platform.port ? platform.port : process.env.NODE_DOCKER_PORT;
 
 var corsOptions = {
   origin: process.env.CLIENT_ORIGIN,

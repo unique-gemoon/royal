@@ -3,7 +3,6 @@ import noImage from "../assets/images/noImage.png";
 import { pathImage } from "../config/vars";
 
 export function removeTags(val) {
-    // return val.replace("/(&nbsp;|<([^>]+)>)/ig,", "")
     return val.replace(/<(?:.|\n)*?>/gm, "");
 }
 

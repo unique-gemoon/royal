@@ -1,6 +1,7 @@
 import { durationTime, isObject, sortByKey } from "../middleware/functions.js";
 import db from "../models/index.model.js";
 import sendEmail from "../services/sendEmail.js";
+import path from "path";
 
 const Pli = db.pli;
 const User = db.user;
@@ -43,8 +44,12 @@ const Op = db.Sequelize.Op;
 
 export function newPli(req, res, next) {
     const content = req.body.content || "";
-    const ouverture = req.body.contentOuverture || "";
+    let ouverture = req.body.contentOuverture || "";
     const duration = req.body.duration || "00:00:00";
+
+    let imagesOuverturePath = [];
+    let videoOuverturePath = [];
+    let musicOuverturePath = [];
 
     let medias = [];
     for (const key in req.files) {
@@ -57,16 +62,19 @@ export function newPli(req, res, next) {
             } else if (file.fieldname === "imagesOuverture") {
                 type = "image";
                 isOuverture = true;
+                imagesOuverturePath.push(file.path);
             } else if (file.fieldname === "video") {
                 type = "video";
             } else if (file.fieldname === "videoOuverture") {
                 type = "video";
                 isOuverture = true;
+                videoOuverturePath.push(file.path);
             } else if (file.fieldname === "music") {
                 type = "music";
             } else if (file.fieldname === "musicOuverture") {
                 type = "music";
                 isOuverture = true;
+                musicOuverturePath.push(file.path);
             }
             if (type) {
                 medias.push({
@@ -76,6 +84,44 @@ export function newPli(req, res, next) {
                     path: file.path,
                     isOuverture,
                 });
+            }
+        }
+    }
+
+    const URL_MEDIA = path.dirname(process.env.URL_PUBLIC);
+
+    if (req.body.imagesOuvertureBlob) {
+        const imagesOuvertureBlob = JSON.parse(req.body.imagesOuvertureBlob);
+        if (imagesOuvertureBlob.length > 0) {
+            console.log("ok");
+            for (let i = 0; i < imagesOuvertureBlob.length; i++) {
+                const blob = imagesOuvertureBlob[i];
+                const path = URL_MEDIA + "/" + imagesOuverturePath[i];
+                ouverture = ouverture.replace(blob, path);
+            }
+        }
+    }
+
+    if (req.body.videoOuvertureBlob) {
+        const videoOuvertureBlob = JSON.parse(req.body.videoOuvertureBlob);
+        if (videoOuvertureBlob.length > 0) {
+            console.log("ok");
+            for (let i = 0; i < videoOuvertureBlob.length; i++) {
+                const blob = videoOuvertureBlob[i];
+                const path = URL_MEDIA + "/" + videoOuverturePath[i];
+                ouverture = ouverture.replace(blob, path);
+            }
+        }
+    }
+
+    if (req.body.musicOuvertureBlob) {
+        const musicOuvertureBlob = JSON.parse(req.body.musicOuvertureBlob);
+        if (musicOuvertureBlob.length > 0) {
+            console.log("ok");
+            for (let i = 0; i < musicOuvertureBlob.length; i++) {
+                const blob = musicOuvertureBlob[i];
+                const path = URL_MEDIA + "/" + musicOuverturePath[i];
+                ouverture = ouverture.replace(blob, path);
             }
         }
     }
@@ -483,9 +529,9 @@ export function findAllPlisNotElapsed(req, res) {
                             totalComments += cpPli.comments[j].childs.length;
                         }
                         totalComments++;
-                        cpPli.comments[j].childs  = [...cpPli.comments[j].childs.sort(sortByKey("-createdAt"))];
+                        cpPli.comments[j].childs = [...cpPli.comments[j].childs.sort(sortByKey("-createdAt"))];
                     }
-                    let comments  = [...cpPli.comments.sort(sortByKey("-createdAt"))];
+                    let comments = [...cpPli.comments.sort(sortByKey("-createdAt"))];
 
                     cpPlis.push({
                         id,
