@@ -133,7 +133,7 @@ export default function NewPli({
         value: [],
         file: [],
         maxFiles: 40,
-        balise:"img"
+        blotName:"image"
       },
       video: {
         name: "video",
@@ -144,7 +144,7 @@ export default function NewPli({
         value: [],
         file: [],
         maxFiles: 10,
-        balise:"video"
+        blotName:"video"
       },
       music: {
         name: "music",
@@ -155,7 +155,7 @@ export default function NewPli({
         value: [],
         file: [],
         maxFiles: 10,
-        balise:"audio"
+        blotName:"audio"
       },
     },
     duration: {
