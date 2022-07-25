@@ -113,6 +113,12 @@ export default function ItemMasonry({
 
     const getDataOuverture = (ouverture) => {
         let el = document.createElement("html");
+        if (ouverture.indexOf("blockquote")) {
+            ouverture = ouverture
+                .replace("<blockquote>", '<p class="blockquote">')
+                .replace("</blockquote>", "</p>");
+        }
+
         el.innerHTML = ouverture;
         const listP = el.getElementsByTagName("p");
         let newOuverture = [];
@@ -154,7 +160,10 @@ export default function ItemMasonry({
                     newOuverture.push({ type: "music", data: [music] });
                 }
                 currentElement = "audio";
-            } else if (p.innerHTML == "<br>" && currentElement == "image") {
+            }else if (p.classList.contains("blockquote")) {
+              currentElement = "blockquote";
+              newOuverture.push({ type: "blockquote", content: p.innerHTML });
+            }else if (p.innerHTML == "<br>" && currentElement == "image") {
             } else {
                 currentElement = "text";
                 newOuverture.push({ type: "text", content: p.innerHTML });
@@ -257,7 +266,8 @@ export default function ItemMasonry({
                                 {dataOuverture.length > 0 &&
                                     dataOuverture.map((media, index) => (
                                         <span key={index}>
-                                            {media.type == "text" && (<p>{parse(media.content)}</p>)}
+                                            {media.type == "text" && <p>{parse(media.content)}</p>}
+                                            {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
                                             {media.type == "image" && <ImagesGallery items={media.data} />}
                                             {media.type == "video" &&
                                                 media.data.map((video, index) => (

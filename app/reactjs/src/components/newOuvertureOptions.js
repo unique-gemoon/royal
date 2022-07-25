@@ -21,9 +21,9 @@ import DropZone from "./dropZone";
 export default function NewOuvertureOptions({ state, setState = () => {}, submitting, setMessage = () => {} }) {
     const [openDrop, setOpenDrop] = useState(false);
     const [loadingMedia, setLoadingMedia] = useState(false);
+    const [reactQuillRef, setReactQuillRef] = useState(null);
 
     const ref = useRef(null);
-    let reactQuillRef = null;
 
     useOutsideAlerter(ref, () => {
         setOpenDrop(false);
@@ -58,12 +58,13 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
         if (reactQuillRef) {
             const quillRef = reactQuillRef.getEditor();
             const range = { index: 0, ...quillRef.getSelection() };
+
             Array.from(files).map((file, index) => {
                 const url = URL.createObjectURL(file);
                 cpState.mediaOuverture[key].value.push(url);
                 quillRef.insertEmbed(range.index, cpState.mediaOuverture[key].blotName, url);
                 range.index += 1;
-                quillRef.setSelection(range.index);
+                quillRef.setSelection(range.index, 0);
             });
         }
         return cpState;
@@ -71,7 +72,6 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
 
     const checkDeletedMedias = (cpState) => {
         if (!loadingMedia) {
-            return cpState;
             for (const key in cpState.mediaOuverture) {
                 if (cpState.mediaOuverture[key].file.length > 0) {
                     Array.from(cpState.mediaOuverture[key].file).map((file, index) => {
@@ -90,7 +90,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
         <BlocNewPliContent className="pli2-ouverture-bloc" ref={ref}>
             <ReactQuill
                 ref={(el) => {
-                    reactQuillRef = el;
+                    setReactQuillRef(el);
                 }}
                 className="wisiwyg-pli2"
                 theme="snow"
