@@ -4,10 +4,9 @@ import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { Button } from "@mui/material";
 import React, { useRef, useState } from "react";
-import { useDropzone } from "react-dropzone";
-import ReactQuill, { Quill } from "react-quill";
+import ReactQuill from "react-quill";
 import BallotIcon from "../assets/images/icons/ballotIcon";
-import { BlocNewPliContent, DropZoneBloc, ToolBarEditor } from "../assets/styles/componentStyle";
+import { BlocNewPliContent, ToolBarEditor } from "../assets/styles/componentStyle";
 import { DetailsItems } from "../assets/styles/globalStyle";
 import { useDragover, useDrop, useOutsideAlerter } from "../helper/events";
 import { removeTags } from "../helper/fonctions";
@@ -17,50 +16,27 @@ import ButtonDef from "./ui-elements/buttonDef";
 import CountDown from "./ui-elements/countDown";
 import EditorToolbar, { formats, modules } from "./ui-elements/editorToolBar";
 import InputFile from "./ui-elements/inputFile";
+import DropZone from "./dropZone";
 
 export default function NewOuvertureOptions({ state, setState = () => {}, submitting, setMessage = () => {} }) {
-    const [openDrop, setopenDrop] = useState(false);
-
-    const { getRootProps } = useDropzone({
-        accept: "image/jpeg, image/png, video/mp4,video/x-m4v,video/*, audio/mpeg",
-        multiple: true,
-        onDrop: (acceptedFiles) => {
-            acceptedFiles.map((file) => {
-                for (const key in state.mediaOuverture) {
-                    if (state.mediaOuverture[key].accept.indexOf(file.type) !== -1) {
-                        if (state.mediaOuverture[key].file.length < state.mediaOuverture[key].maxFiles) {
-                            let cpState = { ...state };
-                            cpState.mediaOuverture[key].file = [...cpState.mediaOuverture[key].file, file];
-                            cpState = addMediaToWysiwyg(file, key, cpState);
-                            setState(cpState);
-                        } else {
-                            setMessage(
-                                <>
-                                    Veuillez sélectionner maximun {state.mediaOuverture[key].maxFiles}{" "}
-                                    {state.mediaOuverture[key].name}{" "}
-                                </>
-                            );
-                        }
-                        break;
-                    }
-                }
-            });
-            setopenDrop(false);
-        },
-    });
+    const [openDrop, setOpenDrop] = useState(false);
+    const [loadingMedia, setLoadingMedia] = useState(false);
 
     const ref = useRef(null);
-    let quillObj = null;
+    let reactQuillRef = null;
 
     useOutsideAlerter(ref, () => {
-        setopenDrop(false);
+        setOpenDrop(false);
     });
 
     useDragover(ref, () => {
-        setopenDrop(true);
+        if (reactQuillRef) {
+            setOpenDrop(true);
+        }
     });
+
     useDrop(ref, () => {
-        setopenDrop(false);
+        setOpenDrop(false);
     });
 
     const removeFile = (file, current, cpState) => {
@@ -77,27 +53,36 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
         return cpState;
     };
 
-    const addMediaToWysiwyg = (file, key, cpState) => {
-        const url = URL.createObjectURL(file);
-        cpState.mediaOuverture[key].value.push(url);
-        cpState.inputEmojiOuverture.value += "<" + state.mediaOuverture[key].balise + ' src="' + url + '"/>';
+    const addMediaToWysiwyg = (files, key, cpState) => {
+        setLoadingMedia(true);
+        if (reactQuillRef) {
+            const quillRef = reactQuillRef.getEditor();
+            const range = { index: 0, ...quillRef.getSelection() };
+            Array.from(files).map((file, index) => {
+                const url = URL.createObjectURL(file);
+                cpState.mediaOuverture[key].value.push(url);
+                quillRef.insertEmbed(range.index, cpState.mediaOuverture[key].blotName, url);
+                range.index += 1;
+                quillRef.setSelection(range.index);
+            });
+        }
         return cpState;
     };
 
     const checkDeletedMedias = (cpState) => {
-        console.log("checkDeletedMedias");
-        return cpState;
-        for (const key in cpState.mediaOuverture) {
-            if (cpState.mediaOuverture[key].file.length > 0) {
-                Array.from(cpState.mediaOuverture[key].file).map((file, index) => {
-                    const url = state.mediaOuverture[key].value[index];
-                    if (cpState.inputEmojiOuverture.value.indexOf(url) == -1) {
-                        cpState = removeFile(file, key, cpState);
-                    }
-                });
+        if (!loadingMedia) {
+            return cpState;
+            for (const key in cpState.mediaOuverture) {
+                if (cpState.mediaOuverture[key].file.length > 0) {
+                    Array.from(cpState.mediaOuverture[key].file).map((file, index) => {
+                        const url = state.mediaOuverture[key].value[index];
+                        if (cpState.inputEmojiOuverture.value.indexOf(url) == -1) {
+                            cpState = removeFile(file, key, cpState);
+                        }
+                    });
+                }
             }
         }
-        console.log(cpState.mediaOuverture);
         return cpState;
     };
 
@@ -105,13 +90,12 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
         <BlocNewPliContent className="pli2-ouverture-bloc" ref={ref}>
             <ReactQuill
                 ref={(el) => {
-                    quillObj = el;
+                    reactQuillRef = el;
                 }}
                 className="wisiwyg-pli2"
                 theme="snow"
                 value={state.inputEmojiOuverture.value || ""}
                 onChange={(e) => {
-                    // TODO:
                     let cpState = { ...state };
                     const value = e || "";
                     if (removeTags(value).length <= 2000) {
@@ -122,16 +106,20 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                         inputEmojiOuverture: { ...cpState.inputEmojiOuverture, value },
                     });
                     setState(cpState);
-                    console.log("inputEmojiOuverture", cpState.inputEmojiOuverture.value);
                 }}
                 placeholder={state.inputEmojiOuverture.placeholder}
                 modules={modules}
                 formats={formats}
             />
             {openDrop && (
-                <DropZoneBloc {...getRootProps({ className: "dropzone" })}>
-                    <p>Déposez les fichiers ici</p>
-                </DropZoneBloc>
+                <DropZone
+                    state={state}
+                    setState={setState}
+                    setMessage={setMessage}
+                    setOpenDrop={setOpenDrop}
+                    addMediaToWysiwyg={addMediaToWysiwyg}
+                    setLoadingMedia={setLoadingMedia}
+                />
             )}
 
             <div className="options-new-pli">
@@ -177,12 +165,11 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                                                 ...e.currentTarget.files,
                                             ];
 
-                                            Array.from(e.currentTarget.files).map((file, index) => {
-                                                cpState = addMediaToWysiwyg(file, "images", cpState);
-                                            });
+                                            cpState = addMediaToWysiwyg(e.currentTarget.files, "images", cpState);
 
                                             setState(cpState);
                                             setMessage(null);
+                                            setLoadingMedia(false);
                                         } else {
                                             setMessage(
                                                 <>
@@ -211,20 +198,10 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                                                 ...e.currentTarget.files,
                                             ];
 
-                                            //TODO
-                                            const range = { index: 0, ...quillObj.getEditor().getSelection() };
-
-                                            Array.from(e.currentTarget.files).map((file, index) => {
-                                                const url = URL.createObjectURL(file);
-                                                cpState.mediaOuverture.video.value.push(url);
-                                                range.index += 1;
-                                                quillObj.getEditor().insertEmbed(range.index, "video", url);
-                                                quillObj.getEditor().setSelection(range.index+1);
-                                                console.log(range);
-                                            });
-
+                                            cpState = addMediaToWysiwyg(e.currentTarget.files, "video", cpState);
                                             setState(cpState);
                                             setMessage(null);
+                                            setLoadingMedia(false);
                                         } else {
                                             setMessage(
                                                 <>
@@ -267,12 +244,11 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                                                 ...e.currentTarget.files,
                                             ];
 
-                                            Array.from(e.currentTarget.files).map((file, index) => {
-                                                cpState = addMediaToWysiwyg(file, "music", cpState);
-                                            });
+                                            cpState = addMediaToWysiwyg(e.currentTarget.files, "music", cpState);
 
                                             setState(cpState);
                                             setMessage(null);
+                                            setLoadingMedia(false);
                                         } else {
                                             setMessage(
                                                 <>
