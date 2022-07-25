@@ -67,7 +67,7 @@ Quill.register(AudioBlot);
 
 // Add sizes to whitelist and register them
 const Size = Quill.import("formats/size");
-Size.whitelist = ["medium", "large"];
+Size.whitelist = ["small","medium", "large"];
 Quill.register(Size, true);
 
 export const modules = {
@@ -89,6 +89,7 @@ export const QuillToolbar = () => (
     <div id="toolbar">
         <span className="ql-formats">
             <select className="ql-size" defaultValue="medium">
+                <option value="small">T</option>
                 <option value="medium">T</option>
                 <option value="large">T</option>
             </select>
