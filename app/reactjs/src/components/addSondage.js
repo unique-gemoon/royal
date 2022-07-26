@@ -9,7 +9,7 @@ export default function AddSondage({
   setSondage,
   maxOption,
   showSondage,
-  setShowSondage = () => {},
+  setShowSondage
 }) {
 
   const removeOption = (option) => {
@@ -25,6 +25,7 @@ export default function AddSondage({
         <HighlightOffIcon
           onClick={() => {
             setShowSondage(!showSondage);
+            setSondage({ ...sondage, value:[] });
           }}
         />
       </p>
