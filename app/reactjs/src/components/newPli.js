@@ -246,10 +246,15 @@ export default function NewPli({
         data.append("contentOuverture", state.inputEmojiOuverture.value);
         data.append("duration", getDurationTime());
 
-        for (let i = 0; i < state.sondage.value.length; i++) {
+        let countTypesMedia = 0;
+
+        if(state.sondage.value.length) { 
+          countTypesMedia++; 
+          for (let i = 0; i < state.sondage.value.length; i++) {
           data.append("sondage", JSON.stringify(state.sondage.value[i]));
         }
-
+        }
+        
         for (let i = 0; i < state.sondageOuverture.value.length; i++) {
           data.append(
             "sondageOuverture",
@@ -258,17 +263,33 @@ export default function NewPli({
         }
 
         files = getMediaFiles("images");
+        if(files.length) { 
+          countTypesMedia++; 
         for (let i = 0; i < files.length; i++) {
           data.append("images", files[i]);
         }
+      }
+
         files = getMediaFiles("video");
+      if(files.length) { 
+        countTypesMedia++; 
         for (let i = 0; i < files.length; i++) {
           data.append("video", files[i]);
         }
-        files = getMediaFiles("music");
+      }
+
+      files = getMediaFiles("music");
+      if(files.length) { 
+        countTypesMedia++; 
         for (let i = 0; i < files.length; i++) {
           data.append("music", files[i]);
         }
+      }
+
+      if(countTypesMedia > 1){
+        msgErrors({ msg: "Vous ne pouvez ajouter qu’un seul type de média, accompagné de texte (ou pas).", submit: false });
+        return;
+      }
 
         files = getMediaOuvertureFiles("images");
         for (let i = 0; i < files.length; i++) {
@@ -469,10 +490,9 @@ export default function NewPli({
                         }}
                         showSondage={state.sondage.open}
                         setShowSondage={(e) => {
-                          setState({
-                            ...state,
-                            sondage: { ...state.sondage, open: e },
-                          });
+                          const cpState = { ...state };
+                          cpState.sondage.open = e;
+                          setState(cpState);
                         }}
                       />
                     )}

@@ -401,6 +401,10 @@ export const DetailsItems = styled.div`
         align-items: center;
         justify-content: center;
         margin-right: 5px;
+        &.disabled {
+            background: #B2BAD3 !important;
+            pointer-events: none;
+        }
         & > svg{
             font-size: 15px;
         }
