@@ -285,6 +285,7 @@ export default function ItemMasonry({
                                                         activeItemMusic={activeItemPlayer}
                                                         item={music}
                                                         key={index}
+                                                        isOpenOuverture={isOpenNV2()}
                                                     />
                                                 ))}
                                         </span>

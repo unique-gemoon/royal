@@ -8,8 +8,8 @@ import { getPathMedia } from "../../helper/fonctions";
 
 export default function PlayerMusic({
   item,
-  isClick = false,
-  activeItemMusic,
+  isOpenOuverture = false,
+  activeItemMusic = {},
   setActiveItemMusic = () => {},
 }) {
   const formWaveSurferOptions = (ref) => ({
@@ -64,12 +64,12 @@ export default function PlayerMusic({
   }, [item, refresh]);
 
   useEffect(() => {
-    if (!isClick) {
+    if (isOpenOuverture) {
       setTimeout(() => {
         setRefresh(true);
       }, 100);
     }
-  }, []);
+  }, [isOpenOuverture]);
 
   useEffect(() => {
     if (wavesurfer && activeItemMusic && activeItemMusic.id !== item.id) {

@@ -93,7 +93,6 @@ export function newPli(req, res, next) {
     if (req.body.imagesOuvertureBlob) {
         const imagesOuvertureBlob = JSON.parse(req.body.imagesOuvertureBlob);
         if (imagesOuvertureBlob.length > 0) {
-            console.log("ok");
             for (let i = 0; i < imagesOuvertureBlob.length; i++) {
                 const blob = imagesOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + imagesOuverturePath[i];
@@ -105,7 +104,6 @@ export function newPli(req, res, next) {
     if (req.body.videoOuvertureBlob) {
         const videoOuvertureBlob = JSON.parse(req.body.videoOuvertureBlob);
         if (videoOuvertureBlob.length > 0) {
-            console.log("ok");
             for (let i = 0; i < videoOuvertureBlob.length; i++) {
                 const blob = videoOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + videoOuverturePath[i];
@@ -117,7 +115,6 @@ export function newPli(req, res, next) {
     if (req.body.musicOuvertureBlob) {
         const musicOuvertureBlob = JSON.parse(req.body.musicOuvertureBlob);
         if (musicOuvertureBlob.length > 0) {
-            console.log("ok");
             for (let i = 0; i < musicOuvertureBlob.length; i++) {
                 const blob = musicOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + musicOuverturePath[i];
@@ -167,6 +164,8 @@ export function newPli(req, res, next) {
 
     let [hour, minute] = String(duration).split(":");
     const allottedTime = parseInt(minute) + 60 * parseInt(hour);
+
+    console.log(content, ouverture, medias);
 
     Pli.create(
         {
