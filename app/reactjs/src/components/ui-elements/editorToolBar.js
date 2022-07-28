@@ -1,5 +1,4 @@
-import { padding } from "@mui/system";
-import React, { useState } from "react";
+import React from "react";
 import { Quill } from "react-quill";
 
 const BlockEmbed = Quill.import("blots/block/embed");
@@ -8,9 +7,11 @@ const BlockEmbed = Quill.import("blots/block/embed");
 class ImageBlot extends BlockEmbed {
     static create(value) {
         const node = super.create(value);
+        node.dataset.url = value.url;
+        node.dataset.title = value.title;
         let p = document.createElement('p');
         p.setAttribute("class", "block-image");
-        node.setAttribute("src", value);
+        node.setAttribute("src", value.url);
         node.setAttribute("width", 300);
         node.setAttribute("height", 300);
         node.setAttribute("align", "center");
@@ -18,8 +19,10 @@ class ImageBlot extends BlockEmbed {
         return p;
     }
     static value(node) {
-        return node.getAttribute("src");
-    }
+        const url = node.dataset.url;
+        const title = node.dataset.title;
+        return { url, title };
+      }
 }
 ImageBlot.blotName = "image";
 ImageBlot.tagName = "IMG";
@@ -29,17 +32,21 @@ Quill.register(ImageBlot);
 class VideoBlot extends BlockEmbed {
     static create(value) {
         let node = super.create(value);
+        node.dataset.url = value.url;
+        node.dataset.title = value.title;
         let p = document.createElement('p');
         p.setAttribute("class", "block-video");
-        node.setAttribute("src", value);
+        node.setAttribute("src", value.url);
         node.setAttribute("width", "100%");
         node.setAttribute("controls", "");
         p.appendChild(node);
         return p;
     }
     static value(node) {
-        return node.getAttribute("src");
-    }
+        const url = node.dataset.url;
+        const title = node.dataset.title;
+        return { url, title };
+      }
 }
 VideoBlot.blotName = "video";
 VideoBlot.tagName = "VIDEO";
@@ -49,16 +56,23 @@ Quill.register(VideoBlot);
 class AudioBlot extends BlockEmbed {
     static create(value) {
         const node = super.create();
+        node.dataset.url = value.url;
+        node.dataset.title = value.title;
         let p = document.createElement('p');
+        let span = document.createElement('span');
+        span.dataset.title = value.title;
         p.setAttribute("class", "block-audio");
-        node.setAttribute("src", value);
+        node.setAttribute("src", value.url);
         node.setAttribute("controls", "");
+        p.appendChild(span);
         p.appendChild(node);
         return p;
     }
     static value(node) {
-        return node.getAttribute("src");
-    }
+        const url = node.dataset.url;
+        const title = node.dataset.title;
+        return { url, title };
+      }
 }
 
 AudioBlot.blotName = "audio";

@@ -73,3 +73,7 @@ export function sortByKey(property) {
     return result * sortOrder;
   };
 }
+
+export function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace);
+}

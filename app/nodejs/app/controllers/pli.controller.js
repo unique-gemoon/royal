@@ -1,4 +1,4 @@
-import { durationTime, isObject, sortByKey } from "../middleware/functions.js";
+import { durationTime, isObject, replaceAll, sortByKey } from "../middleware/functions.js";
 import db from "../models/index.model.js";
 import sendEmail from "../services/sendEmail.js";
 import path from "path";
@@ -96,7 +96,7 @@ export function newPli(req, res, next) {
             for (let i = 0; i < imagesOuvertureBlob.length; i++) {
                 const blob = imagesOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + imagesOuverturePath[i];
-                ouverture = ouverture.replace(blob, path);
+                ouverture = replaceAll(ouverture,blob, path);
             }
         }
     }
@@ -107,7 +107,7 @@ export function newPli(req, res, next) {
             for (let i = 0; i < videoOuvertureBlob.length; i++) {
                 const blob = videoOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + videoOuverturePath[i];
-                ouverture = ouverture.replace(blob, path);
+                ouverture = replaceAll(ouverture,blob, path);
             }
         }
     }
@@ -118,7 +118,7 @@ export function newPli(req, res, next) {
             for (let i = 0; i < musicOuvertureBlob.length; i++) {
                 const blob = musicOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + musicOuverturePath[i];
-                ouverture = ouverture.replace(blob, path);
+                ouverture = replaceAll(ouverture,blob, path);
             }
         }
     }
