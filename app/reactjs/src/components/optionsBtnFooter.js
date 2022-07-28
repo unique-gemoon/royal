@@ -7,6 +7,7 @@ import BlocFolowers from "./blocFolowers";
 import SearchFolowers from "./searchFolowers";
 import Notifications from "./notifications";
 import Messagerie from "./messagerie";
+import ButtonActionNotification from './ui-elements/buttonActionNotification';
 
 export default function OptionsBtnFooter({
   action,
@@ -19,9 +20,7 @@ export default function OptionsBtnFooter({
   folowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
-  notifications = [],
   isSeenNotification = () => {},
-  countNewNotifications = 0,
   countNewSubscriptions = 0,
   setCountNewSubscriptions = () => {},
   subscribers = [],
@@ -151,10 +150,9 @@ export default function OptionsBtnFooter({
           setLoadingMore={setLoadingMore}
         />
       </ButtonAction>
-      <ButtonAction
+      <ButtonActionNotification
         className="notification-bloc-action"
         action={action.notification}
-        countNewNotif={countNewNotifications}
         icon={action.notification.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
@@ -164,15 +162,13 @@ export default function OptionsBtnFooter({
         <Notifications
           action={action.notification}
           updateAction={updateAction}
-          notifications={notifications}
           isSeenNotification={isSeenNotification}
-          countNewNotifications={countNewNotifications}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
           setActiveItem={setActiveItem}
           plis={plis}
         />
-      </ButtonAction>
+      </ButtonActionNotification>
     </OptionsBtnAction>
   );
 }

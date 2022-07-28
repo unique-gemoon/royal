@@ -21,10 +21,7 @@ export default function FooterHome({
   setPublishPli = () => {},
   countConnection = 0,
   updateSubscriberStatus = () => {},
-  notifications = [],
   isSeenNotification = () => {},
-  countNewNotifications,
-  setCountNewNotifications = () => {},
   countNewSubscriptions = 0,
   setCountNewSubscriptions = () => {},
   subscribers = [],
@@ -59,10 +56,7 @@ export default function FooterHome({
         folowersMessage={folowersMessage}
         setFolowersMessage={setFolowersMessage}
         updateSubscriberStatus={updateSubscriberStatus}
-        notifications={notifications}
         isSeenNotification={isSeenNotification}
-        countNewNotifications={countNewNotifications}
-        setCountNewNotifications={setCountNewNotifications}
         countNewSubscriptions={countNewSubscriptions}
         setCountNewSubscriptions={setCountNewSubscriptions}
         subscribers={subscribers}
