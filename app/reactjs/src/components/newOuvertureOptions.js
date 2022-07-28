@@ -61,10 +61,11 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
 
             Array.from(files).map((file, index) => {
                 const url = URL.createObjectURL(file);
+                const title = file.name;
                 cpState.mediaOuverture[key].value.push(url);
-                quillRef.insertEmbed(range.index, cpState.mediaOuverture[key].blotName, url);
+                quillRef.insertEmbed(range.index, cpState.mediaOuverture[key].blotName, {  url, title });
                 range.index += 1;
-                quillRef.setSelection(range.index, 0);
+                quillRef.setSelection(range.index);
             });
         }
         return cpState;
