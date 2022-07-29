@@ -28,14 +28,12 @@ if (platform.hasRelationship('database')) {
   credentials = platform.credentials('database');
 }
 
-console.log(credentials);
-
 const sequelize = new Sequelize(
   credentials && credentials.path ? credentials.path : process.env.DB_NAME,
   credentials && credentials.username ? credentials.username : process.env.DB_USER,
-  credentials  && credentials.password ? credentials.password : process.env.DB_PASSWORD,
+  credentials && credentials.password ? credentials.password : process.env.DB_PASSWORD,
   {
-    host:  process.env.DB_HOST,
+    host: credentials && credentials.host ? credentials.host : process.env.DB_HOST,
     dialect: "mysql",
     dialectOptions: {
       charset: "utf8mb4",
