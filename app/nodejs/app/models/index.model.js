@@ -28,6 +28,8 @@ if (platform.hasRelationship('database')) {
   credentials = platform.credentials('database');
 }
 
+console.log(credentials);
+
 const sequelize = new Sequelize(
   credentials && credentials.path ? credentials.path : process.env.DB_NAME,
   credentials && credentials.username ? credentials.username : process.env.DB_USER,
