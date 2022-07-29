@@ -32,10 +32,6 @@ export default function FooterHome({
   setLoadingMore = () => {},
   setActiveItem = () => {},
   plis = [],
-  threads = [],
-  setThreads = () => {},
-  countNewMessages = 0,
-  setCountNewMessages = () => {},
   typingMessage = {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -67,10 +63,6 @@ export default function FooterHome({
         setLoadingMore={setLoadingMore}
         setActiveItem={setActiveItem}
         plis={plis}
-        threads={threads}
-        setThreads={setThreads}
-        countNewMessages={countNewMessages}
-        setCountNewMessages={setCountNewMessages}
         typingMessage={typingMessage}
       />
     );

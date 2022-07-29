@@ -8,7 +8,6 @@ import Masonry from "react-masonry-css";
 import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
-import logoType from "../assets/images/Logotype.png";
 import { ContainerDef, DefaultMain, HeaderMobile } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -29,6 +28,7 @@ export default function Home() {
     const dispatch = useDispatch();
     const auth = useSelector((store) => store.auth);
     const notification = useSelector((store) => store.notification);
+    const thread = useSelector((store) => store.thread);
 
     const [plis, setPlis] = useState([]);
     const [activeItem, setActiveItem] = useState(null);
@@ -38,7 +38,6 @@ export default function Home() {
     const [openModalMessage, setOpenModalMessage] = useState(false);
     const [publishPli, setPublishPli] = useState(null);
     const [channel] = useState(uniqid());
-    const [countNewMessages, setCountNewMessages] = useState(0);
     const [countConnection, setCountConnection] = useState(0);
     const [initOpenedPlis, setInitOpenedPlis] = useState(0);
     const [msgNotifTop, setMsgNotifTop] = useState(null);
@@ -55,8 +54,6 @@ export default function Home() {
     const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
 
     const [threads, setThreads] = useState([]);
-    const [totalThreads, setTotalThreads] = useState(0);
-    const [pageThreads, setPageThreads] = useState(1);
 
     const query = new URLSearchParams(useLocation().search);
     const tokenRestPassword = query.get("tokenRestPassword") || null;
@@ -133,13 +130,16 @@ export default function Home() {
         if (auth.isConnected) {
             getThreads();
         } else {
-            setThreads([]);
-            setTotalThreads(0);
-            setPageThreads(1);
-            setCountNewMessages(0);
+            dispatch({
+                type: actionTypes.LOAD_THREADS,
+                threads: [],
+                totalThreads: 0,
+                pageThreads: 1,
+                countNewMessages: 0,
+            }); 
             setFolowersMessage({ ...folowersMessage, activeItem: false });
         }
-    }, [pageThreads, auth.isConnected]);
+    }, [thread.pageThreads, auth.isConnected]);
 
     useEffect(() => {
         getPlis(true);
@@ -340,16 +340,22 @@ export default function Home() {
                         item.threadId &&
                         (!folowersMessage?.activeItem?.thread || folowersMessage.activeItem.thread.id != item.threadId)
                     ) {
-                        setCountNewMessages(countNewMessages + 1);
+                        dispatch({
+                            type: actionTypes.LOAD_THREADS,
+                            countNewMessages: thread.countNewMessages + 1,
+                        });
                     }
                 }
 
                 if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
-                    const cpThreads = [...threads];
+                    const cpThreads = [...thread.threads];
                     for (let i = 0; i < cpThreads.length; i++) {
                         if (cpThreads[i].thread.id == item.threadId) {
                             cpThreads[i].thread.messages = [item];
-                            setThreads(cpThreads);
+                            dispatch({
+                                type: actionTypes.LOAD_THREADS,
+                                threads: cpThreads
+                            }); 
                             break;
                         }
                     }
@@ -384,7 +390,10 @@ export default function Home() {
                             break;
                         }
                     }
-                    setThreads([item, ...cpThreads]);
+                    dispatch({
+                        type: actionTypes.LOAD_THREADS,
+                        threads: [item, ...cpThreads],
+                    });
                 }
             }
         };
@@ -407,8 +416,8 @@ export default function Home() {
         plis,
         auth,
         folowersMessage,
-        threads,
-        countNewMessages,
+        thread.threads,
+        thread.countNewMessages,
         notification.notifications,
         notification.countNewNotifications,
         notification.totalNotifications,
@@ -725,12 +734,16 @@ export default function Home() {
         if (e.notifications) {
             if (notification.notifications.length < notification.totalNotifications) {
                 dispatch({
+                    type: actionTypes.LOAD_NOTIFICATIONS,
                     pageNotifications: notification.pageNotifications + 1,
                 });
             }
         } else if (e.threads) {
-            if (threads.length < totalThreads) {
-                setPageThreads(pageThreads + 1);
+            if (thread.threads.length < thread.totalThreads) {
+                dispatch({
+                    type: actionTypes.LOAD_THREADS,
+                    pageThreads: thread.pageThreads + 1,
+                });
             }
         } else if (e.subscribers) {
             if (subscribers.length < totalSubscribers) {
@@ -770,7 +783,6 @@ export default function Home() {
         if (!loadingMore.notifications) {
             setLoadingMore({ ...loadingMore, notifications: true });
             const cpPageNotifications = refresh ? 1 : notification.pageNotifications;
-
             connector({
                 method: "get",
                 url: `${endPoints.NOTIFICATION_LIST}?page=${cpPageNotifications}`,
@@ -842,18 +854,19 @@ export default function Home() {
     const getThreads = (refresh = false) => {
         if (!loadingMore.threads) {
             setLoadingMore({ ...loadingMore, threads: true });
-            const cpPageThreads = refresh ? 1 : pageThreads;
-            if (pageThreads != cpPageThreads) {
-                setPageThreads(cpPageThreads);
-            }
+            const cpPageThreads = refresh ? 1 : thread.pageThreads;
             connector({
                 method: "get",
                 url: `${endPoints.THREAD_LIST}?page=${cpPageThreads}`,
                 success: (response) => {
-                    setThreads(getUniqueList([...threads, ...response.data.threads]));
-                    setTotalThreads(parseInt(response.data.total));
+                   dispatch({
+                        type: actionTypes.LOAD_THREADS,
+                        threads: getUniqueList([...thread.threads, ...response.data.threads]),
+                        totalThreads: parseInt(response.data.total),
+                        pageThreads: cpPageThreads,
+                        countNewMessages: parseInt(response.data.totalNewMessages || 0),
+                    }); 
                     setLoadingMore({ ...loadingMore, threads: false });
-                    setCountNewMessages(response.data.totalNewMessages || 0);
                 },
                 catch: (error) => {
                     console.log(error);
@@ -1004,10 +1017,6 @@ export default function Home() {
                         setLoadingMore={setLoadingMoreCheck}
                         setActiveItem={setActiveItem}
                         plis={plis}
-                        threads={threads}
-                        setThreads={setThreads}
-                        countNewMessages={countNewMessages}
-                        setCountNewMessages={setCountNewMessages}
                         typingMessage={typingMessage}
                     />
                 )}

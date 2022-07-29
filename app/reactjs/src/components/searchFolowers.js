@@ -18,8 +18,6 @@ export default function SearchFolowers({
     setFolowersMessage = () => {},
     setMsgNotifTopTime = () => {},
     updateSubscriberStatus = () => {},
-    threads = [],
-    setThreads = () => {},
 }) {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
     const auth = useSelector((store) => store.auth);
@@ -208,8 +206,6 @@ export default function SearchFolowers({
                                         item={{ ...item, index }}
                                         setItem={setItem}
                                         setMsgNotifTopTime={setMsgNotifTopTime}
-                                        threads={threads}
-                                        setThreads={setThreads}
                                         action={action}
                                         setAction={setAction}
                                         folowersMessage={folowersMessage}
