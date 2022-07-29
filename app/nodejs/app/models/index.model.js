@@ -24,7 +24,7 @@ const platform = config.config();
 let db = {};
 let credentials = {};
 
-if (platform.hasRelationship('database') && process.env.NODE_ENV=="production") {
+if (platform.hasRelationship('database')) {
   credentials = platform.credentials('database');
 }
 
