@@ -3,7 +3,7 @@ import ImageIcon from "@mui/icons-material/Image";
 import PlayArrowIcon from "@mui/icons-material/PlayArrow";
 import SendRoundedIcon from "@mui/icons-material/SendRounded";
 import { Button } from "@mui/material";
-import React, { useRef, useState } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import ReactQuill from "react-quill";
 import BallotIcon from "../assets/images/icons/ballotIcon";
 import { BlocNewPliContent, ToolBarEditor } from "../assets/styles/componentStyle";
@@ -22,6 +22,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
     const [openDrop, setOpenDrop] = useState(false);
     const [loadingMedia, setLoadingMedia] = useState(false);
     const [reactQuillRef, setReactQuillRef] = useState(null);
+    const [range, setRange] = useState({ index: 0 });
 
     const ref = useRef(null);
 
@@ -53,20 +54,16 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
         return cpState;
     };
 
-    const addMediaToWysiwyg = (files, key, cpState) => {
-        setLoadingMedia(true);
+    const addMediaToWysiwyg = (file, key, cpState) => {
         if (reactQuillRef) {
             const quillRef = reactQuillRef.getEditor();
-            const range = { index: 0, ...quillRef.getSelection() };
-
-            Array.from(files).map((file, index) => {
-                const url = URL.createObjectURL(file);
-                const title = file.name;
-                cpState.mediaOuverture[key].value.push(url);
-                quillRef.insertEmbed(range.index, cpState.mediaOuverture[key].blotName, {  url, title });
-                range.index += 1;
-                quillRef.setSelection(range.index);
-            });
+            let index = range.index;
+            const url = URL.createObjectURL(file);
+            const title = file.name;
+            cpState.mediaOuverture[key].value.push(url);
+            quillRef.insertEmbed(index, cpState.mediaOuverture[key].blotName, { url, title });
+            index += 1;
+            quillRef.setSelection(index);
         }
         return cpState;
     };
@@ -131,8 +128,17 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                 placeholder={state.inputEmojiOuverture.placeholder}
                 modules={modules}
                 formats={formats}
+                onChangeSelection={(e) => {
+                    if (reactQuillRef) {
+                        const quillRef = reactQuillRef.getEditor();
+                        if(quillRef.getSelection()){
+                            setRange({index:0,...quillRef.getSelection()});
+                        }
+                        
+                    }
+                }}
             />
-            {openDrop && (
+            {openDrop &&  (
                 <DropZone
                     state={state}
                     setState={setState}
@@ -140,9 +146,9 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                     setOpenDrop={setOpenDrop}
                     addMediaToWysiwyg={addMediaToWysiwyg}
                     setLoadingMedia={setLoadingMedia}
+                    showText={true}
                 />
             )}
-
 
             <div className="bloc-footer">
                 <ToolBarEditor>
@@ -152,68 +158,31 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                     <div className="toggle-action-dropzone">
                         <DetailsItems>
                             <div className={`item-detail image-detail`}>
-                                <InputFile
-                                    {...state.mediaOuverture.images}
-                                    onChange={(e) => {
-                                        if (
-                                            state.mediaOuverture.images.file.length + e.currentTarget.files.length <=
-                                            state.mediaOuverture.images.maxFiles
-                                        ) {
-                                            let cpState = { ...state };
-                                            cpState.mediaOuverture.images.file = [
-                                                ...cpState.mediaOuverture.images.file,
-                                                ...e.currentTarget.files,
-                                            ];
-
-                                            cpState = addMediaToWysiwyg(e.currentTarget.files, "images", cpState);
-
-                                            setState(cpState);
-                                            setMessage(null);
-                                            setLoadingMedia(false);
-                                        } else {
-                                            setMessage(
-                                                <>
-                                                    Veuillez sélectionner maximun {state.mediaOuverture.images.maxFiles}{" "}
-                                                    {state.mediaOuverture.images.name}{" "}
-                                                </>
-                                            );
-                                        }
-                                    }}
-                                />
-                                <label htmlFor="file-images-nv2">
+                                <label>
                                     <ImageIcon />
+                                    <DropZone
+                                        state={state}
+                                        setState={setState}
+                                        setMessage={setMessage}
+                                        setOpenDrop={setOpenDrop}
+                                        addMediaToWysiwyg={addMediaToWysiwyg}
+                                        setLoadingMedia={setLoadingMedia}
+                                        accept={state.mediaOuverture.images.accept}
+                                    />
                                 </label>
                             </div>
                             <div className={`item-detail video-detail`}>
-                                <InputFile
-                                    {...state.mediaOuverture.video}
-                                    onChange={(e) => {
-                                        if (
-                                            state.mediaOuverture.video.file.length + e.currentTarget.files.length <=
-                                            state.mediaOuverture.video.maxFiles
-                                        ) {
-                                            let cpState = { ...state };
-                                            cpState.mediaOuverture.video.file = [
-                                                ...cpState.mediaOuverture.video.file,
-                                                ...e.currentTarget.files,
-                                            ];
-
-                                            cpState = addMediaToWysiwyg(e.currentTarget.files, "video", cpState);
-                                            setState(cpState);
-                                            setMessage(null);
-                                            setLoadingMedia(false);
-                                        } else {
-                                            setMessage(
-                                                <>
-                                                    Veuillez sélectionner maximun {state.mediaOuverture.video.maxFiles}{" "}
-                                                    {state.mediaOuverture.video.name}{" "}
-                                                </>
-                                            );
-                                        }
-                                    }}
-                                />
-                                <label htmlFor="file-video-nv2">
+                                <label>
                                     <PlayArrowIcon />
+                                    <DropZone
+                                        state={state}
+                                        setState={setState}
+                                        setMessage={setMessage}
+                                        setOpenDrop={setOpenDrop}
+                                        addMediaToWysiwyg={addMediaToWysiwyg}
+                                        setLoadingMedia={setLoadingMedia}
+                                        accept={state.mediaOuverture.video.accept}
+                                    />
                                 </label>
                             </div>
                             <Button
@@ -225,43 +194,24 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                                             open: !state.sondageOuverture.open,
                                         },
                                     });
-                                    scrollTop()
+                                    scrollTop();
                                 }}
                                 className={`item-detail sondage-detail`}
                             >
                                 <BallotIcon />
                             </Button>
                             <div className={`item-detail sound-detail`}>
-                                <InputFile
-                                    {...state.mediaOuverture.music}
-                                    onChange={(e) => {
-                                        if (
-                                            state.mediaOuverture.music.file.length + e.currentTarget.files.length <=
-                                            state.mediaOuverture.music.maxFiles
-                                        ) {
-                                            let cpState = { ...state };
-                                            cpState.mediaOuverture.music.file = [
-                                                ...cpState.mediaOuverture.music.file,
-                                                ...e.currentTarget.files,
-                                            ];
-
-                                            cpState = addMediaToWysiwyg(e.currentTarget.files, "music", cpState);
-
-                                            setState(cpState);
-                                            setMessage(null);
-                                            setLoadingMedia(false);
-                                        } else {
-                                            setMessage(
-                                                <>
-                                                    Veuillez sélectionner maximun {state.mediaOuverture.music.maxFiles}{" "}
-                                                    {state.mediaOuverture.music.name}{" "}
-                                                </>
-                                            );
-                                        }
-                                    }}
-                                />
-                                <label htmlFor="file-music-nv2">
+                                <label>
                                     <GraphicEqIcon />
+                                    <DropZone
+                                        state={state}
+                                        setState={setState}
+                                        setMessage={setMessage}
+                                        setOpenDrop={setOpenDrop}
+                                        addMediaToWysiwyg={addMediaToWysiwyg}
+                                        setLoadingMedia={setLoadingMedia}
+                                        accept={state.mediaOuverture.music.accept}
+                                    />
                                 </label>
                             </div>
                         </DetailsItems>
