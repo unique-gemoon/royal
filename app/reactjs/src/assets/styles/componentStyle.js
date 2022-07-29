@@ -732,7 +732,7 @@ export const ToolBarEditor = styled.div`
       color: #fff !important;
       transition: 0.3s all;
       border: 0;
-      &:hover {
+      &:hover, &[data-value="large"], &[data-value="small"] {
         background: rgba(21, 52, 79, 0.5);
         border-radius: 6px;
       }
@@ -2641,8 +2641,10 @@ export const BlocNewPliContent = styled.div`
   }
   &.pli2-ouverture-bloc {
     .options-new-pli {
-      margin-bottom: 30px;
       display: block;
+      & > div{
+        margin-bottom: 35px;
+      }
       .bloc-item-image-file {
         display: inline-flex;
         flex-wrap: wrap;

@@ -102,10 +102,9 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                         }}
                         showSondage={state.sondageOuverture.open}
                         setShowSondage={(e) => {
-                            setState({
-                                ...state,
-                                sondageOuverture: { ...state.sondageOuverture, open: e },
-                            });
+                            const cpState = { ...state };
+                            cpState.sondageOuverture.open = e;
+                            setState(cpState);
                         }}
                     />
                 )}
@@ -223,7 +222,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                                         ...state,
                                         sondageOuverture: {
                                             ...state.sondageOuverture,
-                                            open: true,
+                                            open: !state.sondageOuverture.open,
                                         },
                                     });
                                     scrollTop()
