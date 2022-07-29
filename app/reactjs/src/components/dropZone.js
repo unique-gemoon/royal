@@ -9,11 +9,13 @@ export default function DropZone({
     setOpenDrop = () => {},
     addMediaToWysiwyg = () => {},
     setLoadingMedia = () => {},
+    accept= "image/jpeg, image/png, video/mp4,video/x-m4v,video/*, audio/mpeg" ,
+    showText=false
 }) {
     const ref = useRef(null);
 
     const { getRootProps } = useDropzone({
-        accept: "image/jpeg, image/png, video/mp4,video/x-m4v,video/*, audio/mpeg",
+        accept ,
         multiple: true,
         onDrop: (acceptedFiles) => {
             acceptedFiles.map((file) => {
@@ -23,7 +25,9 @@ export default function DropZone({
                             let cpState = { ...state };
                             cpState.mediaOuverture[key].file = [...cpState.mediaOuverture[key].file, file];
 
-                            cpState = addMediaToWysiwyg([file], key, cpState);
+                            setLoadingMedia(true);
+
+                            cpState = addMediaToWysiwyg(file, key, cpState);
                             
                             setState(cpState);
                             setOpenDrop(false);
@@ -45,7 +49,7 @@ export default function DropZone({
 
     return (
         <DropZoneBloc {...getRootProps({ className: "dropzone" })} ref={ref}>
-            <p>Déposez les fichiers ici</p>
+           { showText && (<p>Déposez les fichiers ici</p>)}
         </DropZoneBloc>
     );
 }
