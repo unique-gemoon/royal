@@ -261,6 +261,20 @@ export default function ItemMasonry({
             <>
                 {item.ouverture || data.mediaOuverture.count > 0 ? (
                     <div className="content-bloc-NV2">
+
+                        {data.mediaOuverture.count > 0 && (
+                            <div>
+                                {data.mediaOuverture.sondage.map((sondage) => (
+                                    <Sondage
+                                        name={`bloc_${sondage.id}`}
+                                        item={sondage}
+                                        setItem={setMedia}
+                                        key={sondage.id}
+                                        setMsgNotifTopTime={setMsgNotifTopTime}
+                                    />
+                                ))}
+                            </div>
+                        )}
                         {item.ouverture && (
                             <div className="descripton-miniature">
                                 {dataOuverture.length > 0 &&
@@ -293,19 +307,6 @@ export default function ItemMasonry({
                             </div>
                         )}
 
-                        {data.mediaOuverture.count > 0 && (
-                            <div>
-                                {data.mediaOuverture.sondage.map((sondage) => (
-                                    <Sondage
-                                        name={`bloc_${sondage.id}`}
-                                        item={sondage}
-                                        setItem={setMedia}
-                                        key={sondage.id}
-                                        setMsgNotifTopTime={setMsgNotifTopTime}
-                                    />
-                                ))}
-                            </div>
-                        )}
                     </div>
                 ) : null}
             </>
