@@ -15,7 +15,7 @@ class ImageBlot extends BlockEmbed {
         node.setAttribute("width", 300);
         node.setAttribute("height", 300);
         node.setAttribute("align", "center");
-        p.appendChild(node);
+        p.appendChild(node)
         return p;
     }
     static value(node) {
@@ -89,8 +89,8 @@ export const modules = {
         container: "#toolbar",
     },
     history: {
-        delay: 500,
-        maxStack: 100,
+        delay: 2000,
+        maxStack: 500,
         userOnly: true,
     },
 };
