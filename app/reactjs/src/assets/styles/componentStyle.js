@@ -2593,6 +2593,7 @@ export const BlocNewPliContent = styled.div`
       width: 34px;
       min-width: 34px;
       margin-right: 9px;
+      position: relative;
       input {
         display: none;
       }
@@ -2603,6 +2604,17 @@ export const BlocNewPliContent = styled.div`
         width: 100%;
         height: 100%;
         cursor: pointer;
+        .dropzone{
+          position: absolute;
+          top: 0;
+          left: 0;
+          bottom: 0;
+          right: 0;
+          border-radius: 50%;
+          padding: 0;
+          border: 0;
+          opacity: 0;
+        }
       }
       svg {
         font-size: 20px;
