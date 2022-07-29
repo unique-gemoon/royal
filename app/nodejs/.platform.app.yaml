@@ -21,7 +21,7 @@ disk: 256
 mounts:
     'public/uploads/media':
         source: local
-        source_path: 'media'
+        source_path: media
 
 # The relationships of the application with services or other applications.
 #
