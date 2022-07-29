@@ -1,7 +1,8 @@
 import { Button, TextField } from "@mui/material";
 import { Form, Modal } from "react-bootstrap";
 import styled from "styled-components";
-import { BleuColor, OrangeColor } from "./globalStyle";
+import { BleuColor, mixinIcon, OrangeColor } from "./globalStyle";
+import iconSound from "../images/icons/icon-sound.svg";
 
 export const GroupInput = styled(Form.Group)`
   margin-bottom: 20px;
@@ -2096,7 +2097,7 @@ export const SondageBloc = styled.div`
       color: ${BleuColor};
     }
   }
-  margin-bottom: 10px;
+  margin-bottom: 25px;
 `;
 export const BlocGalleryImages = styled.div`
   display: flex;
@@ -2568,6 +2569,10 @@ export const CommentsBloc = styled.div`
   }
 `;
 export const BlocNewPliContent = styled.div`
+  &.pli2-ouverture-bloc{
+    max-height: 350px;
+    overflow: auto;
+  }
   .toggle-action-dropzone {
     .is-active-dropzone {
       .item-detail {
@@ -2636,7 +2641,7 @@ export const BlocNewPliContent = styled.div`
   }
   &.pli2-ouverture-bloc {
     .options-new-pli {
-      margin-bottom: 50px;
+      margin-bottom: 30px;
       display: block;
       .bloc-item-image-file {
         display: inline-flex;
@@ -3093,8 +3098,6 @@ export const BlocAddPli = styled.div`
   }
 
   .wisiwyg-pli2 {
-    max-height: 200px;
-    overflow-y: auto;
     .ql-snow {
       border: 0;
     }
@@ -3106,6 +3109,16 @@ export const BlocAddPli = styled.div`
       font-family: "ProximaNovaSoftW03-Regular";
       min-height: 36px;
       margin-bottom: 5px;
+      p{
+        &:not(){
+          &:last-of-type{
+            margin-bottom: 15px;
+          }
+        }
+      }
+      p, blockquote{
+        margin-bottom: 15px;
+      }
       &.ql-blank {
         &::before {
           left: 0;
@@ -3122,6 +3135,64 @@ export const BlocAddPli = styled.div`
         background-color: rgba(21, 52, 79, 0.3);
         border-radius: 4px;
         padding: 10px 10px 10px 16px;
+      }
+      .block-video, .block-image {
+        video, img{
+          width: 180px;
+          height: 130px;
+          object-fit: cover;
+          display: inline-block;
+          vertical-align: middle;
+          outline: none;
+        }
+      }
+      .block-audio{
+        position: relative;
+        display: flex;
+        align-items: center;
+        &:before{
+          content: "";
+          position: relative;
+          display: inline-block;
+          background: linear-gradient(#fc6965 0.01%,#fc9765 92.44%);
+          width: 46px;
+          height: 46px;
+          border-radius: 10px 0 0 10px;
+        }
+        &:after{
+          content: "";
+          position: absolute;
+          left: 14px;
+          top: 50%;
+          transform: translateY(-50%);
+          ${mixinIcon({ urlIcon: iconSound, width: 18, height: 20 })};
+        }
+        & > span{
+            display: inline-flex;
+            background-color: #fff;
+            height: 46px;
+            border-radius: 0 10px 10px 0;
+            font-size: 18px;
+            line-height: 21px;
+            color: #565c6b;
+            padding: 12px;
+            margin: 0;
+          &:before{
+            content: attr(data-title);
+            position: relative;
+            display: inline-block;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 145px;
+          }
+          &:after{
+            content: ".mp3";
+          }
+        }
+        audio{
+          display: none;
+        }
       }
     }
   }

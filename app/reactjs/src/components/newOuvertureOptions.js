@@ -9,7 +9,7 @@ import BallotIcon from "../assets/images/icons/ballotIcon";
 import { BlocNewPliContent, ToolBarEditor } from "../assets/styles/componentStyle";
 import { DetailsItems } from "../assets/styles/globalStyle";
 import { useDragover, useDrop, useOutsideAlerter } from "../helper/events";
-import { removeTags } from "../helper/fonctions";
+import { removeTags, scrollTop } from "../helper/fonctions";
 import AddSondage from "./addSondage";
 import Emojis from "./emojis";
 import ButtonDef from "./ui-elements/buttonDef";
@@ -88,7 +88,28 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
     };
 
     return (
-        <BlocNewPliContent className="pli2-ouverture-bloc" ref={ref}>
+        <BlocNewPliContent className="pli2-ouverture-bloc has-scroll" ref={ref}>
+            <div className="options-new-pli">
+                {state.sondageOuverture.open && (
+                    <AddSondage
+                        maxOption={state.sondageOuverture.maxOptions}
+                        sondage={state.sondageOuverture}
+                        setSondage={(e) => {
+                            setState({
+                                ...state,
+                                sondageOuverture: e,
+                            });
+                        }}
+                        showSondage={state.sondageOuverture.open}
+                        setShowSondage={(e) => {
+                            setState({
+                                ...state,
+                                sondageOuverture: { ...state.sondageOuverture, open: e },
+                            });
+                        }}
+                    />
+                )}
+            </div>
             <ReactQuill
                 ref={(el) => {
                     setReactQuillRef(el);
@@ -123,27 +144,6 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                 />
             )}
 
-            <div className="options-new-pli">
-                {state.sondageOuverture.open && (
-                    <AddSondage
-                        maxOption={state.sondageOuverture.maxOptions}
-                        sondage={state.sondageOuverture}
-                        setSondage={(e) => {
-                            setState({
-                                ...state,
-                                sondageOuverture: e,
-                            });
-                        }}
-                        showSondage={state.sondageOuverture.open}
-                        setShowSondage={(e) => {
-                            setState({
-                                ...state,
-                                sondageOuverture: { ...state.sondageOuverture, open: e },
-                            });
-                        }}
-                    />
-                )}
-            </div>
 
             <div className="bloc-footer">
                 <ToolBarEditor>
@@ -226,6 +226,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                                             open: true,
                                         },
                                     });
+                                    scrollTop()
                                 }}
                                 className={`item-detail sondage-detail`}
                             >

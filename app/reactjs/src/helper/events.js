@@ -45,9 +45,6 @@ export function ScrollBottom(ref, handler) {
 export function useDragover(ref, handler) {
   useEffect(() => {
     const listener = event => {
-      if (!ref.current || ref.current.contains(event.target)) {
-        return;
-      }
       handler(event);
     };
 
@@ -61,9 +58,6 @@ export function useDragover(ref, handler) {
 export function useDrop(ref, handler) {
   useEffect(() => {
     const listener = event => {
-      if (!ref.current || ref.current.contains(event.target)) {
-        return;
-      }
       handler(event);
     };
 

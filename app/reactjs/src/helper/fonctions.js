@@ -152,3 +152,11 @@ export function decrementDurationTime(duration) {
     }
     return false;
 }
+
+export function scrollTop(className = "has-scroll") {
+    if (document.querySelector(`.${className}`))
+        document.querySelector(`.${className}`).scrollTo({
+            top: 0,
+            behavior: "smooth",
+        });
+}
