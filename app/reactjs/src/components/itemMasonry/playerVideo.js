@@ -29,7 +29,6 @@ export default function PlayerVideo({
   
   const handlePlayerReady = (player) => {
     playerRef.current = player;
-    console.log(playerRef.current)
     // you can handle player events here
     player.on("waiting", () => {
       setActiveItemPlayer(item);
@@ -74,8 +73,7 @@ export default function PlayerVideo({
   return (
     <BlocVideoPlayer  height={height} className={`${height > 500 ? "is-larg-video" : ""}`}>
       <div ref={refHeight} >
-
-      <VideoJs options={videoJsOptions} onReady={handlePlayerReady} />
+        <VideoJs options={videoJsOptions} onReady={handlePlayerReady} />
       </div>
     </BlocVideoPlayer>
   );

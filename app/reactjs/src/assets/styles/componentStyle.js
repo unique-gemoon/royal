@@ -2582,8 +2582,11 @@ export const CommentsBloc = styled.div`
 `;
 export const BlocNewPliContent = styled.div`
   &.pli2-ouverture-bloc{
-    max-height: 350px;
+    max-height: 300px;
     overflow: auto;
+    @media(max-width: 993px){
+      max-height: initial;
+    }
   }
   .toggle-action-dropzone {
     .is-active-dropzone {
@@ -3083,10 +3086,10 @@ export const BlocAddPli = styled.div`
       pointer-events: none;
     }
     .cadre-content-pli {
-      padding: 25px 20px 74px;
+      padding: 25px 20px 60px;
       .bloc-footer {
         position: absolute;
-        bottom: 10px;
+        bottom: 0px;
         left: 20px;
         right: 20px;
         z-index: 9;
@@ -3124,6 +3127,15 @@ export const BlocAddPli = styled.div`
   }
 
   .wisiwyg-pli2 {
+    &.fixed-quill{
+      .ql-snow {
+        height: 250px;
+        overflow-y: auto;
+        @media(max-width: 993px){
+          height: auto;
+        }
+      }
+    }
     .ql-snow {
       border: 0;
     }
@@ -3134,7 +3146,7 @@ export const BlocAddPli = styled.div`
       color: #fff;
       font-family: "ProximaNovaSoftW03-Regular";
       min-height: 36px;
-      margin-bottom: 5px;
+      margin-bottom: 0px;
       p{
         &:not(){
           &:last-of-type{

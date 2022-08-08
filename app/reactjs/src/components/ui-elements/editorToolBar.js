@@ -93,6 +93,10 @@ export const modules = {
         maxStack: 500,
         userOnly: true,
     },
+    clipboard: {
+        // toggle to add extra line breaks when pasting HTML:
+        matchVisual: false,
+    }
 };
 
 // Formats objects for setting up the Quill editor
