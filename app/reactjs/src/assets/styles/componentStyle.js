@@ -2176,6 +2176,17 @@ export const BlocGalleryImages = styled.div`
 `;
 export const BlocVideoPlayer = styled.div`
   margin-bottom: 15px;
+  max-height: 400px;
+  overflow: hidden;
+  &.is-larg-video{
+    max-height: initial;
+    [class*="-dimensions"]{
+      &.vjs-fluid {
+        padding-top: 90%;
+        background-color: #000 ;
+      }
+    }
+  }
   .vjs-big-play-button {
     border: 0;
     background: transparent !important;
@@ -2184,6 +2195,7 @@ export const BlocVideoPlayer = styled.div`
   .video-js {
     border-radius: 10px;
     overflow: hidden;
+    width: 100%;
     background-color: transparent;
     & > video,
     .vjs-control-bar {
