@@ -75,5 +75,12 @@ export function sortByKey(property) {
 }
 
 export function replaceAll(str, find, replace) {
-  return str.replace(new RegExp(find, 'g'), replace);
+  return str.replace(new RegExp(find, "g"), replace);
+}
+
+export function getArrayString($table) {
+  if (Array.isArray($table)) {
+    return $table;
+  }
+  return JSON.parse($table);
 }
