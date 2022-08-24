@@ -3,6 +3,7 @@ import db from "../models/index.model.js";
 import sendEmail from "../services/sendEmail.js";
 import crypto from "crypto";
 import bcrypt from "bcryptjs";
+import { getArrayString } from "../middleware/functions.js";
 
 const User = db.user;
 const Op = db.Sequelize.Op;
@@ -13,7 +14,7 @@ function generateTokens(user) {
     sub: user.id,
     username: user.username,
     email: user.email,
-    roles: user.roles,
+    roles: getArrayString(user.roles),
     iat: new Date().getTime(),
     exp: new Date().setDate(new Date().getDate() + 3),
   };
