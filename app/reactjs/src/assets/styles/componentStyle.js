@@ -280,6 +280,13 @@ export const DropZoneBloc = styled.div`
   p {
     margin-bottom: 0;
   }
+  button{
+    background-color: transparent !important;
+    border: 0 !important;
+    outline: none !important;
+    box-shadow:none !important;
+    color: #bdbdbd;
+  }
 `;
 export const WysiwygDefault = styled.div``;
 
@@ -2611,6 +2618,15 @@ export const BlocNewPliContent = styled.div`
       position: relative;
       input {
         display: none;
+      }
+      ${DropZoneBloc}{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0;
+        opacity: 0;
       }
       label {
         display: flex;
