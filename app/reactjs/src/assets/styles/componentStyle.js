@@ -1817,7 +1817,7 @@ export const MasonryItem = styled.div`
   }
   .Bloc-NV2 {
     max-height: ${({ height }) =>
-      height < 700 ? `calc(700px - ${height}px)` : `initial`};
+      height < 700 ? `calc(850px - ${height}px)` : `initial`};
     overflow-y: auto;
     border-radius: 0 0 20px 20px;
   }
