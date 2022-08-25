@@ -22,6 +22,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
     const [openDrop, setOpenDrop] = useState(false);
     const [loadingMedia, setLoadingMedia] = useState(false);
     const [reactQuillRef, setReactQuillRef] = useState(null);
+    const [quillHeight, setQuillHeight] = useState(false);
     const [range, setRange] = useState({ index: 0 });
 
     const ref = useRef(null);
@@ -110,7 +111,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                 ref={(el) => {
                     setReactQuillRef(el);
                 }}
-                className="wisiwyg-pli2"
+                className={`wisiwyg-pli2 ${quillHeight ? "fixed-quill" : ""}`}
                 theme="snow"
                 value={state.inputEmojiOuverture.value || ""}
                 onChange={(e) => {
@@ -118,19 +119,27 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                     const value = e || "";
                     if (removeTags(value).length <= 2000) {
                         cpState.inputEmojiOuverture.value = value;
+
+                        cpState = checkDeletedMedias({
+                            ...cpState,
+                            inputEmojiOuverture: { ...cpState.inputEmojiOuverture, value },
+                        });
+                        setState(cpState);
                     }
-                    cpState = checkDeletedMedias({
-                        ...cpState,
-                        inputEmojiOuverture: { ...cpState.inputEmojiOuverture, value },
-                    });
-                    setState(cpState);
+                    
                 }}
                 placeholder={state.inputEmojiOuverture.placeholder}
                 modules={modules}
                 formats={formats}
                 onChangeSelection={(e) => {
+                    
                     if (reactQuillRef) {
                         const quillRef = reactQuillRef.getEditor();
+                        if (quillRef.getLength() > 250){
+                            setQuillHeight(true);
+                        }else{
+                            setQuillHeight(false);
+                        }
                         if(quillRef.getSelection()){
                             setRange({index:0,...quillRef.getSelection()});
                         }

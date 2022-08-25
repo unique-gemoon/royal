@@ -2176,6 +2176,17 @@ export const BlocGalleryImages = styled.div`
 `;
 export const BlocVideoPlayer = styled.div`
   margin-bottom: 15px;
+  max-height: 400px;
+  overflow: hidden;
+  &.is-larg-video{
+    max-height: initial;
+    [class*="-dimensions"]{
+      &.vjs-fluid {
+        padding-top: 90%;
+        background-color: #000 ;
+      }
+    }
+  }
   .vjs-big-play-button {
     border: 0;
     background: transparent !important;
@@ -2184,6 +2195,7 @@ export const BlocVideoPlayer = styled.div`
   .video-js {
     border-radius: 10px;
     overflow: hidden;
+    width: 100%;
     background-color: transparent;
     & > video,
     .vjs-control-bar {
@@ -2570,8 +2582,11 @@ export const CommentsBloc = styled.div`
 `;
 export const BlocNewPliContent = styled.div`
   &.pli2-ouverture-bloc{
-    max-height: 350px;
+    max-height: 300px;
     overflow: auto;
+    @media(max-width: 993px){
+      max-height: initial;
+    }
   }
   .toggle-action-dropzone {
     .is-active-dropzone {
@@ -3071,10 +3086,10 @@ export const BlocAddPli = styled.div`
       pointer-events: none;
     }
     .cadre-content-pli {
-      padding: 25px 20px 74px;
+      padding: 25px 20px 60px;
       .bloc-footer {
         position: absolute;
-        bottom: 10px;
+        bottom: 0px;
         left: 20px;
         right: 20px;
         z-index: 9;
@@ -3112,6 +3127,15 @@ export const BlocAddPli = styled.div`
   }
 
   .wisiwyg-pli2 {
+    &.fixed-quill{
+      .ql-snow {
+        height: 250px;
+        overflow-y: auto;
+        @media(max-width: 993px){
+          height: auto;
+        }
+      }
+    }
     .ql-snow {
       border: 0;
     }
@@ -3122,7 +3146,7 @@ export const BlocAddPli = styled.div`
       color: #fff;
       font-family: "ProximaNovaSoftW03-Regular";
       min-height: 36px;
-      margin-bottom: 5px;
+      margin-bottom: 0px;
       p{
         &:not(){
           &:last-of-type{
