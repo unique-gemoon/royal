@@ -68,7 +68,7 @@ export default function ItemMasonry({
         if (refHeight?.current?.clientHeight) {
             setTimeout(() => {
                 setHeight(refHeight.current.clientHeight);
-            }, 1000);
+            }, 1100);
         }
     }, []);
 
@@ -290,6 +290,7 @@ export default function ItemMasonry({
                                                         activeItemPlayer={activeItemPlayer}
                                                         item={video}
                                                         key={index}
+                                                        isOpenOuverture={isOpenNV2()}
                                                     />
                                                 ))}
                                             {media.type == "music" &&

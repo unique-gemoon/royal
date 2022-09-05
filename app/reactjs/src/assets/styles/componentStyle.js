@@ -280,6 +280,13 @@ export const DropZoneBloc = styled.div`
   p {
     margin-bottom: 0;
   }
+  button{
+    background-color: transparent !important;
+    border: 0 !important;
+    outline: none !important;
+    box-shadow:none !important;
+    color: #bdbdbd;
+  }
 `;
 export const WysiwygDefault = styled.div``;
 
@@ -1810,7 +1817,7 @@ export const MasonryItem = styled.div`
   }
   .Bloc-NV2 {
     max-height: ${({ height }) =>
-      height < 700 ? `calc(700px - ${height}px)` : `initial`};
+      height < 700 ? `calc(850px - ${height}px)` : `initial`};
     overflow-y: auto;
     border-radius: 0 0 20px 20px;
   }
@@ -2176,6 +2183,17 @@ export const BlocGalleryImages = styled.div`
 `;
 export const BlocVideoPlayer = styled.div`
   margin-bottom: 15px;
+  max-height: 400px;
+  overflow: hidden;
+  &.is-larg-video{
+    max-height: initial;
+    [class*="-dimensions"]{
+      &.vjs-fluid {
+        padding-top: 90%;
+        background-color: #000 ;
+      }
+    }
+  }
   .vjs-big-play-button {
     border: 0;
     background: transparent !important;
@@ -2184,6 +2202,7 @@ export const BlocVideoPlayer = styled.div`
   .video-js {
     border-radius: 10px;
     overflow: hidden;
+    width: 100%;
     background-color: transparent;
     & > video,
     .vjs-control-bar {
@@ -2570,8 +2589,11 @@ export const CommentsBloc = styled.div`
 `;
 export const BlocNewPliContent = styled.div`
   &.pli2-ouverture-bloc{
-    max-height: 350px;
+    max-height: 300px;
     overflow: auto;
+    @media(max-width: 993px){
+      max-height: initial;
+    }
   }
   .toggle-action-dropzone {
     .is-active-dropzone {
@@ -2596,6 +2618,15 @@ export const BlocNewPliContent = styled.div`
       position: relative;
       input {
         display: none;
+      }
+      ${DropZoneBloc}{
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 0;
+        opacity: 0;
       }
       label {
         display: flex;
@@ -3071,10 +3102,10 @@ export const BlocAddPli = styled.div`
       pointer-events: none;
     }
     .cadre-content-pli {
-      padding: 25px 20px 74px;
+      padding: 25px 20px 60px;
       .bloc-footer {
         position: absolute;
-        bottom: 10px;
+        bottom: 0px;
         left: 20px;
         right: 20px;
         z-index: 9;
@@ -3112,6 +3143,15 @@ export const BlocAddPli = styled.div`
   }
 
   .wisiwyg-pli2 {
+    &.fixed-quill{
+      .ql-snow {
+        height: 250px;
+        overflow-y: auto;
+        @media(max-width: 993px){
+          height: auto;
+        }
+      }
+    }
     .ql-snow {
       border: 0;
     }
@@ -3122,7 +3162,7 @@ export const BlocAddPli = styled.div`
       color: #fff;
       font-family: "ProximaNovaSoftW03-Regular";
       min-height: 36px;
-      margin-bottom: 5px;
+      margin-bottom: 0px;
       p{
         &:not(){
           &:last-of-type{
