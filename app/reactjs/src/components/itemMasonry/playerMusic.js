@@ -98,7 +98,7 @@ export default function PlayerMusic({
         </Button>
         <div>
           <span className="name-player">
-            {item.name}
+            {item.originalname || item.name}
           </span>
         </div>
       </div>
