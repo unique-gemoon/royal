@@ -4,6 +4,7 @@ import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { StyledEngineProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import Masonry from "react-masonry-css";
 import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
@@ -883,6 +884,10 @@ export default function Home() {
 
     return (
         <DefaultMain>
+            <Helmet>
+                <title>Royalis : Le Réseaux social Français Privé</title>
+                <meta name="description" content="Réseau social Français et indépendant qui privilégie l’expérience collective à l’exposition individuelle." />
+            </Helmet>
             <StyledEngineProvider injectFirst>
                 {isTabletOrMobile && (
                     <HeaderMobile>
