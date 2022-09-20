@@ -370,7 +370,6 @@ export function seenSubscriptionsNotification(req, res) {
 export function commentNotifications(req, res) {
   let data = [];
   let users = [];
-  users.push(req.user.id);
   if (req.user.id != req.pli.userId) {
     users.push(req.pli.userId);
   }
