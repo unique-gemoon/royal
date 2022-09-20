@@ -1816,10 +1816,12 @@ export const MasonryItem = styled.div`
     }
   }
   .Bloc-NV2 {
-    max-height: ${({ height }) =>
-      height < 700 ? `calc(850px - ${height}px)` : `initial`};
-    overflow-y: auto;
+    overflow: hidden;
     border-radius: 0 0 20px 20px;
+    .content-Bloc-NV2{
+      max-height: ${({ height }) =>  height < 700 ? `calc(850px - ${height}px)` : `initial`};
+      overflow-y: auto;
+    }
   }
   .content-bloc-NV2 {
     padding: 22px 23px 0px;
@@ -2183,7 +2185,7 @@ export const BlocGalleryImages = styled.div`
 `;
 export const BlocVideoPlayer = styled.div`
   margin-bottom: 15px;
-  max-height: 400px;
+  max-height: 471px;
   overflow: hidden;
   &.is-larg-video{
     max-height: initial;

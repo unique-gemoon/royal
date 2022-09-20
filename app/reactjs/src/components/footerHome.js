@@ -21,10 +21,7 @@ export default function FooterHome({
   setPublishPli = () => {},
   countConnection = 0,
   updateSubscriberStatus = () => {},
-  notifications = [],
   isSeenNotification = () => {},
-  countNewNotifications,
-  setCountNewNotifications = () => {},
   countNewSubscriptions = 0,
   setCountNewSubscriptions = () => {},
   subscribers = [],
@@ -35,10 +32,6 @@ export default function FooterHome({
   setLoadingMore = () => {},
   setActiveItem = () => {},
   plis = [],
-  threads = [],
-  setThreads = () => {},
-  countNewMessages = 0,
-  setCountNewMessages = () => {},
   typingMessage = {},
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -59,10 +52,7 @@ export default function FooterHome({
         folowersMessage={folowersMessage}
         setFolowersMessage={setFolowersMessage}
         updateSubscriberStatus={updateSubscriberStatus}
-        notifications={notifications}
         isSeenNotification={isSeenNotification}
-        countNewNotifications={countNewNotifications}
-        setCountNewNotifications={setCountNewNotifications}
         countNewSubscriptions={countNewSubscriptions}
         setCountNewSubscriptions={setCountNewSubscriptions}
         subscribers={subscribers}
@@ -73,10 +63,6 @@ export default function FooterHome({
         setLoadingMore={setLoadingMore}
         setActiveItem={setActiveItem}
         plis={plis}
-        threads={threads}
-        setThreads={setThreads}
-        countNewMessages={countNewMessages}
-        setCountNewMessages={setCountNewMessages}
         typingMessage={typingMessage}
       />
     );

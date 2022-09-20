@@ -4,11 +4,11 @@ import PeopleOutlineRoundedIcon from "@mui/icons-material/PeopleOutlineRounded";
 import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { StyledEngineProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
+import { Helmet } from "react-helmet";
 import Masonry from "react-masonry-css";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
-import logoType from "../assets/images/Logotype.png";
 import { ContainerDef, DefaultMain, HeaderMobile } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
@@ -21,11 +21,15 @@ import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { getMsgError, getUniqueList, scrollBottomById, sortObjects, uniqid } from "../helper/fonctions";
+import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Home() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
+    const dispatch = useDispatch();
     const auth = useSelector((store) => store.auth);
+    const notification = useSelector((store) => store.notification);
+    const thread = useSelector((store) => store.thread);
 
     const [plis, setPlis] = useState([]);
     const [activeItem, setActiveItem] = useState(null);
@@ -35,7 +39,6 @@ export default function Home() {
     const [openModalMessage, setOpenModalMessage] = useState(false);
     const [publishPli, setPublishPli] = useState(null);
     const [channel] = useState(uniqid());
-    const [countNewMessages, setCountNewMessages] = useState(0);
     const [countConnection, setCountConnection] = useState(0);
     const [initOpenedPlis, setInitOpenedPlis] = useState(0);
     const [msgNotifTop, setMsgNotifTop] = useState(null);
@@ -52,13 +55,6 @@ export default function Home() {
     const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
 
     const [threads, setThreads] = useState([]);
-    const [totalThreads, setTotalThreads] = useState(0);
-    const [pageThreads, setPageThreads] = useState(1);
-
-    const [notifications, setNotifications] = useState([]);
-    const [countNewNotifications, setCountNewNotifications] = useState(0);
-    const [totalNotifications, setTotalNotifications] = useState(0);
-    const [pageNotifications, setPageNotifications] = useState(1);
 
     const query = new URLSearchParams(useLocation().search);
     const tokenRestPassword = query.get("tokenRestPassword") || null;
@@ -121,24 +117,30 @@ export default function Home() {
         if (auth.isConnected) {
             getNotifications();
         } else {
-            setNotifications([]);
-            setCountNewNotifications(0);
-            setTotalNotifications(0);
-            setPageNotifications(1);
+            dispatch({
+                type: actionTypes.LOAD_NOTIFICATIONS,
+                notifications: [],
+                totalNotifications: 0,
+                pageNotifications: 1,
+                countNewNotifications: 0,
+            });
         }
-    }, [pageNotifications, auth.isConnected]);
+    }, [notification.pageNotifications, auth.isConnected]);
 
     useEffect(() => {
         if (auth.isConnected) {
             getThreads();
         } else {
-            setThreads([]);
-            setTotalThreads(0);
-            setPageThreads(1);
-            setCountNewMessages(0);
+            dispatch({
+                type: actionTypes.LOAD_THREADS,
+                threads: [],
+                totalThreads: 0,
+                pageThreads: 1,
+                countNewMessages: 0,
+            }); 
             setFolowersMessage({ ...folowersMessage, activeItem: false });
         }
-    }, [pageThreads, auth.isConnected]);
+    }, [thread.pageThreads, auth.isConnected]);
 
     useEffect(() => {
         getPlis(true);
@@ -243,9 +245,12 @@ export default function Home() {
                     auth.user.id == data.notification.subscriberId &&
                     data.notification.type == "newSubscriber"
                 ) {
-                    setNotifications([data.notification, ...notifications]);
-                    setCountNewNotifications(countNewNotifications + 1);
-                    setTotalNotifications(totalNotifications + 1);
+                    dispatch({
+                        type: actionTypes.LOAD_NOTIFICATIONS,
+                        notifications: [data.notification, ...notification.notifications],
+                        totalNotifications: notification.totalNotifications + 1,
+                        countNewNotifications: notification.countNewNotifications + 1,
+                    });
                 }
             }
         };
@@ -336,16 +341,22 @@ export default function Home() {
                         item.threadId &&
                         (!folowersMessage?.activeItem?.thread || folowersMessage.activeItem.thread.id != item.threadId)
                     ) {
-                        setCountNewMessages(countNewMessages + 1);
+                        dispatch({
+                            type: actionTypes.LOAD_THREADS,
+                            countNewMessages: thread.countNewMessages + 1,
+                        });
                     }
                 }
 
                 if (auth.user.id == item.otherUser.id || auth.user.id == item.userId) {
-                    const cpThreads = [...threads];
+                    const cpThreads = [...thread.threads];
                     for (let i = 0; i < cpThreads.length; i++) {
                         if (cpThreads[i].thread.id == item.threadId) {
                             cpThreads[i].thread.messages = [item];
-                            setThreads(cpThreads);
+                            dispatch({
+                                type: actionTypes.LOAD_THREADS,
+                                threads: cpThreads
+                            }); 
                             break;
                         }
                     }
@@ -380,7 +391,10 @@ export default function Home() {
                             break;
                         }
                     }
-                    setThreads([item, ...cpThreads]);
+                    dispatch({
+                        type: actionTypes.LOAD_THREADS,
+                        threads: [item, ...cpThreads],
+                    });
                 }
             }
         };
@@ -403,12 +417,12 @@ export default function Home() {
         plis,
         auth,
         folowersMessage,
-        threads,
-        countNewMessages,
-        notifications,
-        countNewNotifications,
-        totalNotifications,
-        pageNotifications,
+        thread.threads,
+        thread.countNewMessages,
+        notification.notifications,
+        notification.countNewNotifications,
+        notification.totalNotifications,
+        notification.pageNotifications,
     ]);
 
     useEffect(() => {
@@ -576,11 +590,15 @@ export default function Home() {
             url: `${endPoints.NOTIFICATION_NEW}?pliId=${pliId}`,
             success: (response) => {
                 if (response.data.notification) {
-                    const cpNotifications = getUniqueList([response.data.notification, ...notifications]);
-                    if (cpNotifications.length > notifications.length) {
-                        setNotifications(cpNotifications);
-                        setCountNewNotifications(countNewNotifications + 1);
-                        setTotalNotifications(totalNotifications + 1);
+                    const cpNotifications = getUniqueList([response.data.notification, ...notification.notifications]);
+
+                    if (cpNotifications.length > notification.notifications.length) {
+                        dispatch({
+                            type: actionTypes.LOAD_NOTIFICATIONS,
+                            notifications: cpNotifications,
+                            totalNotifications: notification.totalNotifications + 1,
+                            countNewNotifications: notification.countNewNotifications + 1,
+                        });
                     }
                 }
             },
@@ -596,11 +614,14 @@ export default function Home() {
             url: `${endPoints.NOTIFICATION_NEW}?commentId=${commentId}`,
             success: (response) => {
                 if (response.data.notification) {
-                    const cpNotifications = getUniqueList([response.data.notification, ...notifications]);
-                    if (cpNotifications.length > notifications.length) {
-                        setNotifications(cpNotifications);
-                        setCountNewNotifications(countNewNotifications + 1);
-                        setTotalNotifications(totalNotifications + 1);
+                    const cpNotifications = getUniqueList([response.data.notification, ...notification.notifications]);
+                    if (cpNotifications.length > notification.notifications.length) {
+                        dispatch({
+                            type: actionTypes.LOAD_NOTIFICATIONS,
+                            notifications: cpNotifications,
+                            totalNotifications: notification.totalNotifications + 1,
+                            countNewNotifications: notification.countNewNotifications + 1,
+                        });
                     }
                 }
             },
@@ -706,18 +727,24 @@ export default function Home() {
             user: { id: auth.user.id, username: auth.user.username },
             subscriber: { id: item.id, username: item.username },
             isSubscribed: item.isSubscribed,
-            notification: item.notification
+            notification: item.notification,
         });
     };
 
     const setLoadingMoreCheck = (e) => {
         if (e.notifications) {
-            if (notifications.length < totalNotifications) {
-                setPageNotifications(pageNotifications + 1);
+            if (notification.notifications.length < notification.totalNotifications) {
+                dispatch({
+                    type: actionTypes.LOAD_NOTIFICATIONS,
+                    pageNotifications: notification.pageNotifications + 1,
+                });
             }
         } else if (e.threads) {
-            if (threads.length < totalThreads) {
-                setPageThreads(pageThreads + 1);
+            if (thread.threads.length < thread.totalThreads) {
+                dispatch({
+                    type: actionTypes.LOAD_THREADS,
+                    pageThreads: thread.pageThreads + 1,
+                });
             }
         } else if (e.subscribers) {
             if (subscribers.length < totalSubscribers) {
@@ -731,17 +758,20 @@ export default function Home() {
     };
 
     const isSeenNotification = (index) => {
-        let cpNotifications = [...notifications];
+        let cpNotifications = [...notification.notifications];
         if (cpNotifications[index]) {
-            const notification = cpNotifications[index];
+            const data = cpNotifications[index];
             connector({
                 method: "post",
                 url: `${endPoints.NOTIFICATION_SEEN}`,
-                data: { ...notification },
+                data: { ...data },
                 success: (response) => {
                     cpNotifications[index].seen = true;
-                    setCountNewNotifications(countNewNotifications - 1);
-                    setNotifications(cpNotifications);
+                    dispatch({
+                        type: actionTypes.LOAD_NOTIFICATIONS,
+                        notifications: cpNotifications,
+                        countNewNotifications: notification.countNewNotifications - 1,
+                    });
                 },
                 catch: (error) => {
                     console.log(error);
@@ -753,18 +783,18 @@ export default function Home() {
     const getNotifications = (refresh = false) => {
         if (!loadingMore.notifications) {
             setLoadingMore({ ...loadingMore, notifications: true });
-            const cpPageNotifications = refresh ? 1 : pageNotifications;
-            if (pageNotifications != cpPageNotifications) {
-                setPageNotifications(cpPageNotifications);
-            }
-
+            const cpPageNotifications = refresh ? 1 : notification.pageNotifications;
             connector({
                 method: "get",
                 url: `${endPoints.NOTIFICATION_LIST}?page=${cpPageNotifications}`,
                 success: (response) => {
-                    setNotifications(getUniqueList([...notifications, ...response.data.notifications]));
-                    setCountNewNotifications(parseInt(response.data.totalNew));
-                    setTotalNotifications(parseInt(response.data.total));
+                    dispatch({
+                        type: actionTypes.LOAD_NOTIFICATIONS,
+                        notifications: getUniqueList([...notification.notifications, ...response.data.notifications]),
+                        totalNotifications: parseInt(response.data.total),
+                        pageNotifications: cpPageNotifications,
+                        countNewNotifications: parseInt(response.data.totalNew),
+                    });
                     setLoadingMore({ ...loadingMore, notifications: false });
                 },
                 catch: (error) => {
@@ -825,18 +855,19 @@ export default function Home() {
     const getThreads = (refresh = false) => {
         if (!loadingMore.threads) {
             setLoadingMore({ ...loadingMore, threads: true });
-            const cpPageThreads = refresh ? 1 : pageThreads;
-            if (pageThreads != cpPageThreads) {
-                setPageThreads(cpPageThreads);
-            }
+            const cpPageThreads = refresh ? 1 : thread.pageThreads;
             connector({
                 method: "get",
                 url: `${endPoints.THREAD_LIST}?page=${cpPageThreads}`,
                 success: (response) => {
-                    setThreads(getUniqueList([...threads, ...response.data.threads]));
-                    setTotalThreads(parseInt(response.data.total));
+                   dispatch({
+                        type: actionTypes.LOAD_THREADS,
+                        threads: getUniqueList([...thread.threads, ...response.data.threads]),
+                        totalThreads: parseInt(response.data.total),
+                        pageThreads: cpPageThreads,
+                        countNewMessages: parseInt(response.data.totalNewMessages || 0),
+                    }); 
                     setLoadingMore({ ...loadingMore, threads: false });
-                    setCountNewMessages(response.data.totalNewMessages || 0);
                 },
                 catch: (error) => {
                     console.log(error);
@@ -853,21 +884,57 @@ export default function Home() {
 
     return (
         <DefaultMain>
+            <Helmet>
+                <title>Royalis : Le Réseaux social Français Privé</title>
+                <meta name="description" content="Réseau social Français et indépendant qui privilégie l’expérience collective à l’exposition individuelle." />
+            </Helmet>
             <StyledEngineProvider injectFirst>
                 {isTabletOrMobile && (
                     <HeaderMobile>
                         <div className="logo">
-                            <svg width="136px" height="40px" viewBox="0 0 136 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
+                            <svg
+                                width="136px"
+                                height="40px"
+                                viewBox="0 0 136 40"
+                                version="1.1"
+                                xmlns="http://www.w3.org/2000/svg"
+                            >
                                 <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                                    <g id="Logo-avec-texte" transform="translate(0.245606, 0.100000)" fill="#EDB97B" fillRule="nonzero">
+                                    <g
+                                        id="Logo-avec-texte"
+                                        transform="translate(0.245606, 0.100000)"
+                                        fill="#EDB97B"
+                                        fillRule="nonzero"
+                                    >
                                         <g id="Group" transform="translate(42.754394, 11.900000)">
-                                            <path d="M8.33171913,14.775 L5.10411622,9.375 L2.55205811,9.375 L2.55205811,14.775 L0,14.775 L0,0.225 L6.38014528,0.225 C9.23244552,0.225 11.1840194,2.1 11.1840194,4.8 C11.1840194,7.35 9.45762712,8.775 7.73123487,9.075 L11.3341404,14.775 L8.33171913,14.775 L8.33171913,14.775 Z M8.55690073,4.8 C8.55690073,3.375 7.50605327,2.55 6.07990315,2.55 L2.55205811,2.55 L2.55205811,7.125 L6.07990315,7.125 C7.50605327,7.125 8.55690073,6.15 8.55690073,4.8 Z" id="Shape" />
-                                            <path d="M14.6368039,7.5 C14.6368039,3.15 17.7142857,3.55271368e-15 22.0677966,3.55271368e-15 C26.4213075,3.55271368e-15 29.4987893,3.15 29.4987893,7.5 C29.4987893,11.85 26.4213075,15 22.0677966,15 C17.7142857,15 14.6368039,11.85 14.6368039,7.5 Z M26.8716707,7.5 C26.8716707,4.5 24.9951574,2.25 22.0677966,2.25 C19.1404358,2.25 17.2639225,4.5 17.2639225,7.5 C17.2639225,10.5 19.1404358,12.75 22.0677966,12.75 C24.9951574,12.75 26.8716707,10.5 26.8716707,7.5 Z" id="Shape" />
-                                            <polygon id="Path" points="36.7046005 14.775 36.7046005 8.775 31.0750605 0.3 34.0024213 0.3 37.9806295 6.525 41.9588378 0.3 44.8861985 0.3 39.2566586 8.775 39.2566586 14.775" />
-                                            <path d="M56.7457627,14.775 L55.6949153,12 L49.0145278,12 L47.9636804,14.775 L45.0363196,14.775 L50.7409201,0.3 L53.8934625,0.3 L59.598063,14.775 L56.7457627,14.775 Z M52.3171913,2.775 L49.6900726,9.675 L54.9443099,9.675 L52.3171913,2.775 Z" id="Shape" />
-                                            <polygon id="Path" points="62.5254237 14.775 62.5254237 0.225 65.0774818 0.225 65.0774818 12.525 71.4576271 12.525 71.4576271 14.775" />
-                                            <polygon id="Path" points="75.2106538 14.775 75.2106538 0.225 77.7627119 0.225 77.7627119 14.7 75.2106538 14.7" />
-                                            <path d="M81.440678,12.675 L82.8668281,10.725 C83.842615,11.775 85.4188862,12.75 87.4455206,12.75 C89.5472155,12.75 90.3728814,11.7 90.3728814,10.725 C90.3728814,7.65 81.8910412,9.6 81.8910412,4.275 C81.8910412,1.875 83.9927361,0 87.1452785,0 C89.3970944,0 91.2736077,0.75 92.5496368,2.025 L91.1234867,3.9 C89.9975787,2.775 88.4213075,2.25 86.9200969,2.25 C85.4188862,2.25 84.5181598,3 84.5181598,4.05 C84.5181598,6.75 93,5.1 93,10.5 C93,12.9 91.2736077,15 87.37046,15 C84.7433414,15 82.7917676,14.025 81.440678,12.675 Z" id="Path" />
+                                            <path
+                                                d="M8.33171913,14.775 L5.10411622,9.375 L2.55205811,9.375 L2.55205811,14.775 L0,14.775 L0,0.225 L6.38014528,0.225 C9.23244552,0.225 11.1840194,2.1 11.1840194,4.8 C11.1840194,7.35 9.45762712,8.775 7.73123487,9.075 L11.3341404,14.775 L8.33171913,14.775 L8.33171913,14.775 Z M8.55690073,4.8 C8.55690073,3.375 7.50605327,2.55 6.07990315,2.55 L2.55205811,2.55 L2.55205811,7.125 L6.07990315,7.125 C7.50605327,7.125 8.55690073,6.15 8.55690073,4.8 Z"
+                                                id="Shape"
+                                            />
+                                            <path
+                                                d="M14.6368039,7.5 C14.6368039,3.15 17.7142857,3.55271368e-15 22.0677966,3.55271368e-15 C26.4213075,3.55271368e-15 29.4987893,3.15 29.4987893,7.5 C29.4987893,11.85 26.4213075,15 22.0677966,15 C17.7142857,15 14.6368039,11.85 14.6368039,7.5 Z M26.8716707,7.5 C26.8716707,4.5 24.9951574,2.25 22.0677966,2.25 C19.1404358,2.25 17.2639225,4.5 17.2639225,7.5 C17.2639225,10.5 19.1404358,12.75 22.0677966,12.75 C24.9951574,12.75 26.8716707,10.5 26.8716707,7.5 Z"
+                                                id="Shape"
+                                            />
+                                            <polygon
+                                                id="Path"
+                                                points="36.7046005 14.775 36.7046005 8.775 31.0750605 0.3 34.0024213 0.3 37.9806295 6.525 41.9588378 0.3 44.8861985 0.3 39.2566586 8.775 39.2566586 14.775"
+                                            />
+                                            <path
+                                                d="M56.7457627,14.775 L55.6949153,12 L49.0145278,12 L47.9636804,14.775 L45.0363196,14.775 L50.7409201,0.3 L53.8934625,0.3 L59.598063,14.775 L56.7457627,14.775 Z M52.3171913,2.775 L49.6900726,9.675 L54.9443099,9.675 L52.3171913,2.775 Z"
+                                                id="Shape"
+                                            />
+                                            <polygon
+                                                id="Path"
+                                                points="62.5254237 14.775 62.5254237 0.225 65.0774818 0.225 65.0774818 12.525 71.4576271 12.525 71.4576271 14.775"
+                                            />
+                                            <polygon
+                                                id="Path"
+                                                points="75.2106538 14.775 75.2106538 0.225 77.7627119 0.225 77.7627119 14.7 75.2106538 14.7"
+                                            />
+                                            <path
+                                                d="M81.440678,12.675 L82.8668281,10.725 C83.842615,11.775 85.4188862,12.75 87.4455206,12.75 C89.5472155,12.75 90.3728814,11.7 90.3728814,10.725 C90.3728814,7.65 81.8910412,9.6 81.8910412,4.275 C81.8910412,1.875 83.9927361,0 87.1452785,0 C89.3970944,0 91.2736077,0.75 92.5496368,2.025 L91.1234867,3.9 C89.9975787,2.775 88.4213075,2.25 86.9200969,2.25 C85.4188862,2.25 84.5181598,3 84.5181598,4.05 C84.5181598,6.75 93,5.1 93,10.5 C93,12.9 91.2736077,15 87.37046,15 C84.7433414,15 82.7917676,14.025 81.440678,12.675 Z"
+                                                id="Path"
+                                            />
                                         </g>
                                         <g id="Path">
                                             <g transform="translate(8.454394, 27.200000)">
@@ -882,7 +949,6 @@ export default function Home() {
                                     </g>
                                 </g>
                             </svg>
-
                         </div>
                         <div className="d-flex">
                             <SeeCounter countSee={countConnection} />
@@ -945,10 +1011,7 @@ export default function Home() {
                         folowersMessage={folowersMessage}
                         setFolowersMessage={setFolowersMessage}
                         updateSubscriberStatus={updateSubscriberStatus}
-                        notifications={notifications}
                         isSeenNotification={isSeenNotification}
-                        countNewNotifications={countNewNotifications}
-                        setCountNewNotifications={setCountNewNotifications}
                         setCountNewSubscriptions={setCountNewSubscriptions}
                         countNewSubscriptions={countNewSubscriptions}
                         subscribers={subscribers}
@@ -959,10 +1022,6 @@ export default function Home() {
                         setLoadingMore={setLoadingMoreCheck}
                         setActiveItem={setActiveItem}
                         plis={plis}
-                        threads={threads}
-                        setThreads={setThreads}
-                        countNewMessages={countNewMessages}
-                        setCountNewMessages={setCountNewMessages}
                         typingMessage={typingMessage}
                     />
                 )}

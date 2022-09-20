@@ -7,6 +7,8 @@ import BlocFolowers from "./blocFolowers";
 import SearchFolowers from "./searchFolowers";
 import Notifications from "./notifications";
 import Messagerie from "./messagerie";
+import ButtonActionNotification from './ui-elements/buttonActionNotification';
+import { useSelector } from "react-redux";
 
 export default function OptionsBtnFooter({
   action,
@@ -19,9 +21,7 @@ export default function OptionsBtnFooter({
   folowersMessage,
   setFolowersMessage = () => {},
   updateSubscriberStatus = () => {},
-  notifications = [],
   isSeenNotification = () => {},
-  countNewNotifications = 0,
   countNewSubscriptions = 0,
   setCountNewSubscriptions = () => {},
   subscribers = [],
@@ -32,12 +32,10 @@ export default function OptionsBtnFooter({
   setLoadingMore=() => {},
   setActiveItem=() => {},
   plis=[],
-  threads=[],
-  setThreads=() => {},
-  countNewMessages = 0,
-  setCountNewMessages=() => {},
   typingMessage={}
 }) {
+
+  const thread = useSelector((store) => store.thread);
   
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
 
@@ -62,7 +60,7 @@ export default function OptionsBtnFooter({
     <OptionsBtnAction>
       <ButtonAction
         className="messages-bloc-action"
-        countNewNotif={countNewMessages}
+        countNewNotif={thread.countNewMessages}
         action={action.messagerie}
         icon={action.messagerie.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
@@ -78,15 +76,11 @@ export default function OptionsBtnFooter({
           setFolowersMessage={setFolowersMessage}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
-          threads={threads}
-          setThreads={setThreads}
           subscribers={subscribers}
           setSubscribers={setSubscribers}
           subscriptions={subscriptions}
           setSubscriptions={setSubscriptions}
           updateSubscriberStatus={updateSubscriberStatus}
-          countNewMessages={countNewMessages}
-          setCountNewMessages={setCountNewMessages}
           action={action}
           setAction={setAction}
           typingMessage={typingMessage}
@@ -108,8 +102,6 @@ export default function OptionsBtnFooter({
           setAction={setAction}
           setMsgNotifTopTime={setMsgNotifTopTime}
           updateSubscriberStatus={updateSubscriberStatus}
-          threads={threads}
-          setThreads={setThreads}
         />
       </ButtonAction>
       {isTabletOrMobile && (
@@ -145,16 +137,13 @@ export default function OptionsBtnFooter({
           setSubscribers={setSubscribers}
           subscriptions={subscriptions}
           setSubscriptions={setSubscriptions}
-          threads={threads}
-          setThreads={setThreads}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
         />
       </ButtonAction>
-      <ButtonAction
+      <ButtonActionNotification
         className="notification-bloc-action"
         action={action.notification}
-        countNewNotif={countNewNotifications}
         icon={action.notification.icon}
         setMsgNotifTopTime={setMsgNotifTopTime}
         setAction={(e) => {
@@ -164,15 +153,13 @@ export default function OptionsBtnFooter({
         <Notifications
           action={action.notification}
           updateAction={updateAction}
-          notifications={notifications}
           isSeenNotification={isSeenNotification}
-          countNewNotifications={countNewNotifications}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
           setActiveItem={setActiveItem}
           plis={plis}
         />
-      </ButtonAction>
+      </ButtonActionNotification>
     </OptionsBtnAction>
   );
 }
