@@ -8,22 +8,23 @@ import thunk from "redux-thunk";
 import App from "./app";
 import logger from "./store/middlewares/logger";
 import AuthReducer from "./store/reducers/authReducer";
+import NotificationReducer from "./store/reducers/notificationReducer";
+import ThreadReducer from "./store/reducers/threadReducer";
 
 const REACT_VERSION = React.version;
 console.log("[React Version] ", REACT_VERSION);
 
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 const rootReducer = combineReducers({
-  auth: AuthReducer,
+    auth: AuthReducer,
+    notification: NotificationReducer,
+    thread: ThreadReducer,
 });
-const store = createStore(
-  rootReducer,
-  composeEnhancers(applyMiddleware(logger, thunk))
-);
+const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, thunk)));
 
 ReactDOM.render(
-  <Provider store={store}>
-    <App />
-  </Provider>,
-  document.getElementById("root")
+    <Provider store={store}>
+        <App />
+    </Provider>,
+    document.getElementById("root")
 );

@@ -5,11 +5,10 @@ import { BlocNotification } from "../assets/styles/componentStyle";
 import { getDurationHM, scrollToElement } from "../helper/fonctions";
 import SpinnerLoading from "./spinnerLoading";
 import { useMediaQuery } from "react-responsive";
+import { useSelector } from "react-redux";
 
 export default function Notifications({
-  notifications = [],
   isSeenNotification = () => {},
-  countNewNotifications = 0,
   action = {},
   updateAction = () => {},
   loadingMore = {},
@@ -19,6 +18,7 @@ export default function Notifications({
 }) {
   const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
   const history = useHistory();
+  const notification = useSelector((store) => store.notification);
 
   const refContent = useRef(null);
   const onScrollContent = () => {
@@ -40,8 +40,8 @@ export default function Notifications({
     <BlocNotification>
       <div className="header-notif">
         Notifications{" "}
-        {countNewNotifications > 0 ? (
-          <span className="count-notif">{countNewNotifications}</span>
+        {notification.countNewNotifications > 0 ? (
+          <span className="count-notif">{notification.countNewNotifications}</span>
         ) : null}
       </div>
       <div
@@ -62,8 +62,8 @@ export default function Notifications({
             }
           }}
         >
-          {notifications.length > 0 ? (
-            notifications.map((item, index) => (
+          {notification.notifications.length > 0 ? (
+            notification.notifications.map((item, index) => (
               <div
                 className={`item-notif ${
                   item.seen ? "old-notif" : "new-notif"

@@ -9,7 +9,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { BlocMessagerie, ChatSpace, LoadingMessage, MessageFindFolower } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
@@ -22,6 +22,7 @@ import { socket } from "./socket";
 import SpinnerLoading from "./spinnerLoading";
 import Input from "./ui-elements/input";
 import InputEmoji from "./ui-elements/inputEmoji";
+import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Messagerie({
     setMsgNotifTopTime = () => {},
@@ -31,15 +32,11 @@ export default function Messagerie({
     setFolowersMessage = () => {},
     loadingMore = {},
     setLoadingMore = () => {},
-    threads = [],
-    setThreads = () => {},
     subscribers = [],
     setSubscribers = () => {},
     subscriptions = [],
     setSubscriptions = () => {},
     updateSubscriberStatus = () => {},
-    countNewMessages = 0,
-    setCountNewMessages = () => {},
     typingMessage = {},
 }) {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 993px)" });
@@ -51,7 +48,10 @@ export default function Messagerie({
     const handleClose = () => {
         setAnchorEl(null);
     };
+    const dispatch = useDispatch();
     const auth = useSelector((store) => store.auth);
+    const thread = useSelector((store) => store.thread);
+
     const [messages, setMessages] = useState([]);
     const [totalMessages, setTotalMessages] = useState(0);
     const [pageMessages, setPageMessages] = useState(1);
@@ -217,7 +217,12 @@ export default function Messagerie({
                         } else {
                             setMessages(getUniqueList([...data, ...messages], "id"));
                         }
-                        setCountNewMessages(response.data.totalNewMessages);
+
+                        dispatch({
+                            type: actionTypes.LOAD_THREADS,
+                            countNewMessages: response.data.totalNewMessages,
+                        });
+
                         setTotalMessages(parseInt(response.data.total));
                         setLoadingMessages(false);
                         scrollToElement("message_9");
@@ -279,14 +284,18 @@ export default function Messagerie({
                                 },
                                 updatedAt: response.data.msg.updatedAt,
                             };
-                            let cpThreads = [...threads];
+                            let cpThreads = [...thread.threads];
                             for (let i = 0; i < cpThreads.length; i++) {
                                 if (cpThreads[i].thread.id == threadUser.thread.id) {
                                     cpThreads.splice(i, 1);
                                     break;
                                 }
                             }
-                            setThreads([threadUser, ...cpThreads]);
+                            
+                            dispatch({
+                                type: actionTypes.LOAD_THREADS,
+                                threads: [threadUser, ...cpThreads],
+                            });
 
                             const otherThread = {
                                 ...threadUser,
@@ -360,7 +369,7 @@ export default function Messagerie({
             socket.off("SERVER_MESSAGE", updateMessage);
             socket.off("SERVER_MESSAGE_SEEN", updateMessageSeen);
         };
-    }, [threads, messages, folowersMessage, auth]);
+    }, [thread.threads, messages, folowersMessage, auth]);
 
     const setItem = (item) => {
         if (item.index !== undefined) {
@@ -396,7 +405,7 @@ export default function Messagerie({
                 url: endPoints.THREAD_BLOCK,
                 data: { threadId: folowersMessage.activeItem.thread.id, blocked },
                 success: (response) => {
-                    const cpThreads = [...threads];
+                    const cpThreads = [...thread.threads];
                     for (let i = 0; i < cpThreads.length; i++) {
                         if (cpThreads[i].thread.id == folowersMessage.activeItem.thread.id) {
                             cpThreads[i] = {
@@ -421,7 +430,12 @@ export default function Messagerie({
                             break;
                         }
                     }
-                    setThreads(cpThreads);
+
+                    dispatch({
+                        type: actionTypes.LOAD_THREADS,
+                        threads: cpThreads,
+                    });
+
                     handleClose();
 
                     if (blocked) {
@@ -502,13 +516,13 @@ export default function Messagerie({
                 <div className="bloc-lists-messagerie">
                     <div className="header-messagerie">
                         <MailOutlineRoundedIcon /> Messages{" "}
-                        {countNewMessages > 0 ? <span className="count-notif">{countNewMessages}</span> : null}
+                        {thread.countNewMessages > 0 ? (
+                            <span className="count-notif">{thread.countNewMessages}</span>
+                        ) : null}
                     </div>
                     <div className="content-messagerie">
                         <div className="list-messagerie" onScroll={onScrollThreads} ref={refThreads}>
                             <ListMessagerie
-                                threads={threads}
-                                setThreads={setThreads}
                                 folowersMessage={folowersMessage}
                                 setFolowersMessage={setFolowersMessage}
                             />
@@ -716,8 +730,6 @@ export default function Messagerie({
                                             item={{ ...item, index }}
                                             setItem={setItem}
                                             setMsgNotifTopTime={setMsgNotifTopTime}
-                                            threads={threads}
-                                            setThreads={setThreads}
                                             action={action}
                                             setAction={setAction}
                                             folowersMessage={folowersMessage}

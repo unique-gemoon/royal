@@ -221,7 +221,7 @@ export default function NewPli({
         if (!submitting) {
             msgErrors({ submit: true, msg: null });
 
-            if (state.inputEmoji.value || state.sondage.value.length) {
+            if (state.inputEmoji.value || state.sondage.value.length || getMediaFiles("images").length || getMediaFiles("video").length || getMediaFiles("music").length) {
                 let files = [];
                 const data = new FormData();
 

@@ -22,8 +22,6 @@ export default function BlocFolowers({
   setSubscribers = () => {},
   subscriptions = [],
   setSubscriptions = () => {},
-  threads = [],
-  setThreads = () => {},
   loadingMore={},
   setLoadingMore= () => {},
 }) {
@@ -147,8 +145,6 @@ export default function BlocFolowers({
                     item={{ ...item, type: "subscriber", index }}
                     setItem={setItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}
-                    threads={threads}
-                    setThreads={setThreads}
                     action={action}
                     setAction={setAction}
                     folowersMessage={folowersMessage}
@@ -170,8 +166,6 @@ export default function BlocFolowers({
                     item={{ ...item, type: "subscription", index }}
                     setItem={setItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}
-                    threads={threads}
-                    setThreads={setThreads}
                     action={action}
                     setAction={setAction}
                     folowersMessage={folowersMessage}

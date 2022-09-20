@@ -6,3 +6,5 @@ export const SET_TOKEN = "SET_TOKEN";
 export const REFRESH_TOKEN = "REFRESH_TOKEN";
 export const REFRESH_TOKEN_FAIL = "REFRESH_TOKEN_FAIL";
 export const LOGOUT = "LOGOUT";
+export const LOAD_NOTIFICATIONS = "LOAD_NOTIFICATIONS";
+export const LOAD_THREADS = "LOAD_THREADS";
