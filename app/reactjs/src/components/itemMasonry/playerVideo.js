@@ -59,26 +59,14 @@ export default function PlayerVideo({
       playerRef?.current?.pause();
     }
     if (refHeight?.current?.clientHeight) {
-      if (refHeight.current.clientHeight > 500) {
+      if (refHeight.current.clientHeight>470) {
         setHeight(refHeight.current.clientHeight);
-        playerRef.current.pause();
       }
     }
-    
-  }, [refHeight, isOpenOuverture]);
-  useEffect(() => {
-    setTimeout(() => {
-
-      if (refHeight?.current?.clientHeight) {
-        if (refHeight.current.clientHeight > 500) {
-          setHeight(refHeight.current.clientHeight);
-        }
-      }
-    }, 2500);
-  }, []);
+  }, [isOpenOuverture,activeItemPlayer,refHeight?.current?.clientHeight]);
 
   return (
-    <BlocVideoPlayer height={height} className={`${height > 500 ? "is-larg-video" : ""}`}>
+    <BlocVideoPlayer  className={`${height > 470 ? "is-larg-video" : ""}`}>
       <div ref={refHeight} >
         <VideoJs options={videoJsOptions} onReady={handlePlayerReady} />
       </div>

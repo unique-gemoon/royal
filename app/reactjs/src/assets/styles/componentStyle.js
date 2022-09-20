@@ -2185,7 +2185,7 @@ export const BlocGalleryImages = styled.div`
 `;
 export const BlocVideoPlayer = styled.div`
   margin-bottom: 15px;
-  max-height: 400px;
+  max-height: 471px;
   overflow: hidden;
   &.is-larg-video{
     max-height: initial;
