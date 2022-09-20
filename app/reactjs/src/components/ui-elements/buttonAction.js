@@ -59,9 +59,7 @@ export default function ButtonAction({
         onClick={() => {
           if (checkIsConnected()) {
             setAction({ ...action, isOpen: !action.isOpen });
-            setTimeout(() => {
-              setCountNotif("");
-            }, 1000);
+            
           }
           setFolowersMessage({ ...folowersMessage, activeItem: false });
         }}

@@ -361,6 +361,7 @@ export default function ItemMasonry({
                     {renderContentNV1()}
                 </div>
                 <div className="Bloc-NV2">
+                    <div className="content-Bloc-NV2">
                     <div className={`${isOpenNV2() ? "" : "d-none"}`}>
                         {renderContentNV2()}
 
@@ -385,6 +386,7 @@ export default function ItemMasonry({
                             setState={setState}
                             setMsgNotifTopTime={setMsgNotifTopTime}
                         />
+                    </div>
                     </div>
                 </div>
             </MasonryItem>

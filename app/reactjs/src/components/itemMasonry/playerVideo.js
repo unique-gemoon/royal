@@ -7,7 +7,7 @@ export default function PlayerVideo({
   item,
   activeItemPlayer,
   isOpenOuverture = false,
-  setActiveItemPlayer = () => {},
+  setActiveItemPlayer = () => { },
 }) {
   const [height, setHeight] = useState(0);
   const refHeight = useRef(null);
@@ -26,7 +26,7 @@ export default function PlayerVideo({
       },
     ],
   };
-  
+
   const handlePlayerReady = (player) => {
     playerRef.current = player;
     // you can handle player events here
@@ -55,23 +55,30 @@ export default function PlayerVideo({
   }, [activeItemPlayer]);
 
   useEffect(() => {
-    if (refHeight?.current?.clientHeight) {
-      setTimeout(() => {
-        setHeight(refHeight.current.clientHeight);
-      }, 2500);
+    if(!isOpenOuverture){
+      playerRef?.current?.pause();
     }
-  }, []);
-  useEffect(() => {
-    if (isOpenOuverture) {
-      if (refHeight?.current?.clientHeight) {
-        setTimeout(() => {
-          setHeight(refHeight.current.clientHeight);
-        }, 100);
+    if (refHeight?.current?.clientHeight) {
+      if (refHeight.current.clientHeight > 500) {
+        setHeight(refHeight.current.clientHeight);
+        playerRef.current.pause();
       }
     }
-  }, [isOpenOuverture]);
+    
+  }, [refHeight, isOpenOuverture]);
+  useEffect(() => {
+    setTimeout(() => {
+
+      if (refHeight?.current?.clientHeight) {
+        if (refHeight.current.clientHeight > 500) {
+          setHeight(refHeight.current.clientHeight);
+        }
+      }
+    }, 2500);
+  }, []);
+
   return (
-    <BlocVideoPlayer  height={height} className={`${height > 500 ? "is-larg-video" : ""}`}>
+    <BlocVideoPlayer height={height} className={`${height > 500 ? "is-larg-video" : ""}`}>
       <div ref={refHeight} >
         <VideoJs options={videoJsOptions} onReady={handlePlayerReady} />
       </div>
