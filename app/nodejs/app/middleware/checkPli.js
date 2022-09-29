@@ -5,7 +5,7 @@ const pliOptions = {
     maxLength: 280,
   },
   contentOuverture: {
-    maxLength: 2000,
+    maxLength: 4000,
   },
   sondage: {
     maxOptions: 4,

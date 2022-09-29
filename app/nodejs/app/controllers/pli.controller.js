@@ -165,8 +165,6 @@ export function newPli(req, res, next) {
     let [hour, minute] = String(duration).split(":");
     const allottedTime = parseInt(minute) + 60 * parseInt(hour);
 
-    console.log(content, ouverture, medias);
-
     Pli.create(
         {
             content,
