@@ -8,7 +8,6 @@ export default function ListCitations({
   activeCitation = {},
   setActiveCitation = () => {},
 }) {
-
   return (
     <div className="list-comments liste-comment-modal"  id="citations-container">
       {items &&
