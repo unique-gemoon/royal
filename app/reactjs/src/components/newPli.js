@@ -155,8 +155,8 @@ export default function NewPli({
             },
         },
         duration: {
-            hour: 1,
-            minute: 0,
+            hour: 0,
+            minute: 10,
             second: 0,
             countDown: 0,
             countUp: 0,

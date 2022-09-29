@@ -50,7 +50,7 @@ export default function BlocCitations({
 
   const saveMessage = async (data) => {
     if (!waitingTime) {
-      setWaitingTime(5);
+      setWaitingTime(1);
       data = {
         ...data,
         pliId: item.id,

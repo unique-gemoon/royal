@@ -117,7 +117,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                 onChange={(e) => {
                     let cpState = { ...state };
                     const value = e || "";
-                    if (removeTags(value).length <= 2000) {
+                    if (removeTags(value).length <= 4000) {
                         cpState.inputEmojiOuverture.value = value;
 
                         cpState = checkDeletedMedias({
@@ -231,7 +231,7 @@ export default function NewOuvertureOptions({ state, setState = () => {}, submit
                     />
                 </div>
                 <div className="count-publish-pli2">
-                    <CountDown maxCount={2000} size={removeTags(String(state.inputEmojiOuverture.value)).length} />
+                    <CountDown maxCount={4000} size={removeTags(String(state.inputEmojiOuverture.value)).length} />
                     <div className="bloc-btn-publish">
                         <ButtonDef
                             spinner={submitting}
