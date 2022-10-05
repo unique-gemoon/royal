@@ -5,7 +5,7 @@ import { CommentItem } from "../../assets/styles/componentStyle";
 import { ReplyIcon, ReplyIconGreen } from "../../assets/styles/globalStyle";
 import InputEmoji from "../ui-elements/inputEmoji";
 import moment from "moment";
-import { getDurationHM } from "../../helper/fonctions";
+import { getDurationHM, sortObjects } from "../../helper/fonctions";
 
 export default function ItemComment({
   item,
@@ -88,7 +88,7 @@ export default function ItemComment({
           {state.openReponces ? (
             <div className="reponces-list">
               {item.childs &&
-                item.childs.map((rep, index) => (
+                sortObjects(item.childs, "createdAt", "asc").map((rep, index) => (
                   <CommentItem key={index}>
                     <div className="head-comment">
                       <span className="name-user-comment">
