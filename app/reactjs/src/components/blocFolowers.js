@@ -150,7 +150,7 @@ export default function BlocFolowers({
                                     />
                                 ))
                             ) : (
-                                <p className="message-not-result">Aucun abonné</p>
+                                <p className="message-not-result">Aucun abonnement</p>
                             )}
                             {loadingMore.subscribers && <SpinnerLoading />}
                         </div>
@@ -171,7 +171,7 @@ export default function BlocFolowers({
                                     />
                                 ))
                             ) : (
-                                <p className="message-not-result">Aucun abonnement</p>
+                                <p className="message-not-result">Aucun abonné</p>
                             )}
                             {loadingMore.subscriptions && <SpinnerLoading />}
                         </div>
