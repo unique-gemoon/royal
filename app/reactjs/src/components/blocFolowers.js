@@ -137,27 +137,6 @@ export default function BlocFolowers({
         </TabList>
         <div className="content-tab-modal">
           <TabPanel value="1">
-            <div className="list-tab-modal" ref={refSubscriber} onScroll={onScrollSubscriber}>
-              {subscribers.length > 0 ? (
-                subscribers.map((item, index) => (
-                  <ItemListFolower
-                    key={index}
-                    item={{ ...item, type: "subscriber", index }}
-                    setItem={setItem}
-                    setMsgNotifTopTime={setMsgNotifTopTime}
-                    action={action}
-                    setAction={setAction}
-                    folowersMessage={folowersMessage}
-                    setFolowersMessage={setFolowersMessage}
-                  />
-                ))
-              ) : (
-                <p className="message-not-result">Aucun abonné</p>
-              )}
-              {loadingMore.subscribers && <SpinnerLoading />}
-            </div>
-          </TabPanel>
-          <TabPanel value="2">
             <div className="list-tab-modal" ref={refSubscription} onScroll={onScrollSubscription}>
               {subscriptions.length > 0 ? (
                 subscriptions.map((item, index) => (
@@ -178,6 +157,28 @@ export default function BlocFolowers({
               {loadingMore.subscriptions && <SpinnerLoading />}
             </div>
           </TabPanel>
+          <TabPanel value="2">
+            <div className="list-tab-modal" ref={refSubscriber} onScroll={onScrollSubscriber}>
+              {subscribers.length > 0 ? (
+                subscribers.map((item, index) => (
+                  <ItemListFolower
+                    key={index}
+                    item={{ ...item, type: "subscriber", index }}
+                    setItem={setItem}
+                    setMsgNotifTopTime={setMsgNotifTopTime}
+                    action={action}
+                    setAction={setAction}
+                    folowersMessage={folowersMessage}
+                    setFolowersMessage={setFolowersMessage}
+                  />
+                ))
+              ) : (
+                <p className="message-not-result">Aucun abonné</p>
+              )}
+              {loadingMore.subscribers && <SpinnerLoading />}
+            </div>
+          </TabPanel>
+          
         </div>
       </TabContext>
     </FolowersModal>
