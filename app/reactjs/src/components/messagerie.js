@@ -9,12 +9,13 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import moment from "moment";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { BlocMessagerie, ChatSpace, LoadingMessage, MessageFindFolower } from "../assets/styles/componentStyle";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
-import { getDurationHM, getMsgError, getUniqueList, scrollToElement, sortObjects } from "../helper/fonctions";
+import { getDurationMessage, getMsgError, getUniqueList, scrollToElement } from "../helper/fonctions";
+import * as actionTypes from "../store/functions/actionTypes";
 import ItemListFolower from "./itemListFolower";
 import ItemSingleMessage from "./itemSingleMessage";
 import ListMessagerie from "./listMessagerie";
@@ -22,7 +23,6 @@ import { socket } from "./socket";
 import SpinnerLoading from "./spinnerLoading";
 import Input from "./ui-elements/input";
 import InputEmoji from "./ui-elements/inputEmoji";
-import * as actionTypes from "../store/functions/actionTypes";
 
 export default function Messagerie({
     setMsgNotifTopTime = () => {},
@@ -242,10 +242,7 @@ export default function Messagerie({
 
     const saveMessage = async (data) => {
         if (folowersMessage.activeItem?.userId) {
-            let cpActiveItem =
-                folowersMessage.activeItem?.thread?.id && folowersMessage.activeItem.thread.id != -1
-                    ? folowersMessage.activeItem
-                    : null;
+            let cpActiveItem = folowersMessage.activeItem?.thread?.id && folowersMessage.activeItem.thread.id != -1 ? folowersMessage.activeItem : null;
 
             if (!cpActiveItem) {
                 cpActiveItem = await getThread({
@@ -291,7 +288,7 @@ export default function Messagerie({
                                     break;
                                 }
                             }
-                            
+
                             dispatch({
                                 type: actionTypes.LOAD_THREADS,
                                 threads: [threadUser, ...cpThreads],
@@ -334,11 +331,7 @@ export default function Messagerie({
             if (auth.isConnected) {
                 if (auth.user.id == item.otherUser.id) {
                     setMessages([...messages, item]);
-                    if (
-                        item.threadId &&
-                        folowersMessage?.activeItem?.thread?.id &&
-                        folowersMessage.activeItem.thread.id == item.threadId
-                    ) {
+                    if (item.threadId && folowersMessage?.activeItem?.thread?.id && folowersMessage.activeItem.thread.id == item.threadId) {
                         seenMessages(item.threadId);
                     }
                 }
@@ -349,11 +342,7 @@ export default function Messagerie({
         const updateMessageSeen = (item) => {
             if (auth.isConnected) {
                 if (auth.user.id == item.otherUser.id) {
-                    if (
-                        item.threadId &&
-                        folowersMessage?.activeItem?.thread &&
-                        folowersMessage.activeItem.thread.id == item.threadId
-                    ) {
+                    if (item.threadId && folowersMessage?.activeItem?.thread && folowersMessage.activeItem.thread.id == item.threadId) {
                         const cpMessages = [...messages];
                         for (let i = 0; i < cpMessages.length; i++) {
                             cpMessages[i].seen = true;
@@ -439,15 +428,9 @@ export default function Messagerie({
                     handleClose();
 
                     if (blocked) {
-                        setMsgNotifTopTime(
-                            "L'utilisateur a bien été bloqué. Vous ne recevrez plus de message de sa part",
-                            5000
-                        );
+                        setMsgNotifTopTime("L'utilisateur a bien été bloqué. Vous ne recevrez plus de message de sa part", 5000);
                     } else {
-                        setMsgNotifTopTime(
-                            "L'utilisateur a bien été débloqué. Vous pouvez à nouveau recevoir des messages de sa part",
-                            5000
-                        );
+                        setMsgNotifTopTime("L'utilisateur a bien été débloqué. Vous pouvez à nouveau recevoir des messages de sa part", 5000);
                     }
                 },
                 catch: (error) => {
@@ -515,17 +498,11 @@ export default function Messagerie({
             {!folowersMessage.activeItem && !folowersMessage.showSearchFolower ? (
                 <div className="bloc-lists-messagerie">
                     <div className="header-messagerie">
-                        <MailOutlineRoundedIcon /> Messages{" "}
-                        {thread.countNewMessages > 0 ? (
-                            <span className="count-notif">{thread.countNewMessages}</span>
-                        ) : null}
+                        <MailOutlineRoundedIcon /> Messages {thread.countNewMessages > 0 ? <span className="count-notif">{thread.countNewMessages}</span> : null}
                     </div>
                     <div className="content-messagerie">
                         <div className="list-messagerie" onScroll={onScrollThreads} ref={refThreads}>
-                            <ListMessagerie
-                                folowersMessage={folowersMessage}
-                                setFolowersMessage={setFolowersMessage}
-                            />
+                            <ListMessagerie folowersMessage={folowersMessage} setFolowersMessage={setFolowersMessage} />
                             {loadingMore.threads && <SpinnerLoading />}
                         </div>
                     </div>
@@ -613,12 +590,7 @@ export default function Messagerie({
                     </div>
                     <div className="bloc-view-message">
                         <ChatSpace>
-                            <div
-                                className="content-space-chat show-typing"
-                                id="messages-container"
-                                onScroll={onScrollMessages}
-                                ref={refMessages}
-                            >
+                            <div className="content-space-chat show-typing" id="messages-container" onScroll={onScrollMessages} ref={refMessages}>
                                 {loadingMessages && <SpinnerLoading className="is-top-spinner" />}
 
                                 {messages.length > 0 &&
@@ -627,36 +599,27 @@ export default function Messagerie({
                                             key={index}
                                             typeSend={row.userId == auth.user.id ? "user-send" : ""}
                                             message={row.message}
-                                            date={getDurationHM(moment(), row.message.createdAt)}
+                                            date={getDurationMessage(moment(), row.createdAt)}
                                             index={index}
                                             stautVu={row.userId == auth.user.id && row.seen ? "vuReading" : ""}
                                         />
                                     ))}
-                                {typingMessage &&
-                                    typingMessage.threadId == folowersMessage.activeItem.thread.id &&
-                                    typingMessage.userId != auth.user.id &&
-                                    !folowersMessage.activeItem.thread.blocked && (
-                                        <div className="d-flex justify-content-start is-teyping">
-                                            <div className="msg_cotainer">
-                                                <div className="content-msg">
-                                                    <LoadingMessage>
-                                                        <li></li>
-                                                        <li></li>
-                                                        <li></li>
-                                                    </LoadingMessage>
-                                                </div>
+                                {typingMessage && typingMessage.threadId == folowersMessage.activeItem.thread.id && typingMessage.userId != auth.user.id && !folowersMessage.activeItem.thread.blocked && (
+                                    <div className="d-flex justify-content-start is-teyping">
+                                        <div className="msg_cotainer">
+                                            <div className="content-msg">
+                                                <LoadingMessage>
+                                                    <li></li>
+                                                    <li></li>
+                                                    <li></li>
+                                                </LoadingMessage>
                                             </div>
                                         </div>
-                                    )}
+                                    </div>
+                                )}
                             </div>
                         </ChatSpace>
-                        <InputEmoji
-                            typeInput="textarea"
-                            setMsgNotifTopTime={setMsgNotifTopTime}
-                            setFolowersMessage={setFolowersMessage}
-                            saveMessage={saveMessage}
-                            setImTyping={setImTyping}
-                        />
+                        <InputEmoji typeInput="textarea" setMsgNotifTopTime={setMsgNotifTopTime} setFolowersMessage={setFolowersMessage} saveMessage={saveMessage} setImTyping={setImTyping} />
                     </div>
                 </div>
             ) : null}
