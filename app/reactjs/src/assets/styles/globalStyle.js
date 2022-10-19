@@ -189,6 +189,8 @@ export const HeadContentItem = styled.div`
                 color: #225282;
                 width: 1.6em;
                 height: 1.1em;
+                transform: none !important;
+                left: 75px !important;
             }
             .name-post{
                 color: #FFF;

@@ -8,7 +8,9 @@ body {
   background-size: cover;
   min-height: 100vh;
 }
-
+.content-wrapper-epr::before{
+  content: none !important;
+  }
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
