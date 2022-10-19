@@ -93,6 +93,26 @@ export function getDurationHM(from, to) {
     }
 }
 
+export function getDurationMessage(from, to) {
+    if (!from || !to) {
+        return "";
+    }
+    const d = from.diff(to, "days");
+    const h = from.diff(to, "hours") % 24;
+    const m = from.diff(to, "minutes") % 60;
+    if (d == 0 && h == 0 && m == 0) {
+        return "1m";
+    } else if (d == 1) {
+        return "Hier " + moment(to).format("h:mm");;
+    } else if (d > 1) {
+        return moment(to).format("DD MMM YYYY h:mm");
+    } else {
+        const hour = String(h).length == 1 ? "0" + h : h;
+        const minute = String(m).length == 1 ? "0" + m : m;
+        return `${h > 0 ? hour + "h" : ""}${m > 0 ? minute + "m" : ""}`;
+    }
+}
+
 export function getUniqueListBy(arr, key) {
     return [...new Map(arr.map((item) => [item[key], item])).values()];
 }
