@@ -25,6 +25,7 @@ const MediaSondageNotVotes = Media.hasMany(SondageNotVotes, {
 });
 const UserSubscriber = User.hasMany(Subscriber, { foreignKey: "subscriberId" });
 const UserSubscriptions = User.hasMany(Subscriber, { foreignKey: "userId", as: "subscriptions" });
+const SubscriberUser = Subscriber.belongsTo(User, { foreignKey: "userId" });
 const PliComments = Pli.hasMany(Comment);
 const CommentChilds = Comment.hasMany(Comment, { as: "childs", foreignKey: "parentId" });
 const CommentUser = Comment.belongsTo(User, { foreignKey: "userId" });
@@ -96,7 +97,7 @@ export function newPli(req, res, next) {
             for (let i = 0; i < imagesOuvertureBlob.length; i++) {
                 const blob = imagesOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + imagesOuverturePath[i];
-                ouverture = replaceAll(ouverture,blob, path);
+                ouverture = replaceAll(ouverture, blob, path);
             }
         }
     }
@@ -107,7 +108,7 @@ export function newPli(req, res, next) {
             for (let i = 0; i < videoOuvertureBlob.length; i++) {
                 const blob = videoOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + videoOuverturePath[i];
-                ouverture = replaceAll(ouverture,blob, path);
+                ouverture = replaceAll(ouverture, blob, path);
             }
         }
     }
@@ -118,7 +119,7 @@ export function newPli(req, res, next) {
             for (let i = 0; i < musicOuvertureBlob.length; i++) {
                 const blob = musicOuvertureBlob[i];
                 const path = URL_MEDIA + "/" + musicOuverturePath[i];
-                ouverture = replaceAll(ouverture,blob, path);
+                ouverture = replaceAll(ouverture, blob, path);
             }
         }
     }
@@ -192,39 +193,62 @@ export function newPli(req, res, next) {
         }
     )
         .then((pli) => {
-            sendEmail({
-                from: "",
-                to: req.user.email,
-                subject: "Nouveau pli",
-                tmp: "emails/posted_pli.ejs",
-                params: {
-                    user: req.user,
-                    url: process.env.CLIENT_ORIGIN + "?pli=" + pli.id,
-                },
-            });
+            Subscriber.findAll({
+                attributes: { exclude: ["updatedAt", "subscriberId"] },
+                include: [
+                    {
+                        model: User,
+                        association: SubscriberUser,
+                        as: "user",
+                        attributes: ["id", "username", "email"],
+                        where: { enabled: true },
+                    },
+                ],
+                where: { subscriberId: req.user.id },
+            })
+                .then((subscriptions) => {
 
-            req.pli = {
-                id: pli.id,
-                content: pli.content,
-                ouverture: pli.ouverture,
-                duration: pli.duration,
-                allottedTime,
-                medias: pli.medias,
-                appearances: {
-                    countDown: 0,
-                    countUp: 0,
-                    alreadyUpdated: false,
-                    signe: null,
-                },
-                user: { username: req.user.username, id: req.user.id, totalSubscriptions: 0, totalSubscribers: 0 },
-                createdAt: pli.createdAt,
-                comments: [],
-                citations: [],
-                totalComments: 0,
-                totalCitations: 0,
-            };
+                    for (let i = 0; i < subscriptions.length; i++) {
+                        const subscriber = subscriptions[i];
 
-            next();
+                        sendEmail({
+                            from: "",
+                            to: subscriber.user.email,
+                            subject: "Nouveau pli",
+                            tmp: "emails/posted_pli.ejs",
+                            params: {
+                                user: req.user,
+                                url: process.env.CLIENT_ORIGIN + "?pli=" + pli.id,
+                            },
+                        });
+                    }
+
+                    req.pli = {
+                        id: pli.id,
+                        content: pli.content,
+                        ouverture: pli.ouverture,
+                        duration: pli.duration,
+                        allottedTime,
+                        medias: pli.medias,
+                        appearances: {
+                            countDown: 0,
+                            countUp: 0,
+                            alreadyUpdated: false,
+                            signe: null,
+                        },
+                        user: { username: req.user.username, id: req.user.id, totalSubscriptions: 0, totalSubscribers: 0 },
+                        createdAt: pli.createdAt,
+                        comments: [],
+                        citations: [],
+                        totalComments: 0,
+                        totalCitations: 0,
+                    };
+
+                    next();
+                })
+                .catch((err) => {
+                    res.status(500).send({ message: err.message });
+                });
         })
         .catch((err) => {
             res.status(400).send({ message: err.message });
@@ -245,8 +269,7 @@ export function findPliUserNotElapsed(req, res, next) {
                 next();
             } else {
                 res.status(400).send({
-                    message:
-                        "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
+                    message: "Vous ne pouvez pas publier un nouveau pli. Tant que le temps d’apparition des anciens plis n’a pas écoulé.",
                 });
                 return;
             }
@@ -701,9 +724,7 @@ export function updateAppearancePli(req, res) {
             .then((response) => {
                 let allottedTime = 0;
                 if (req.pli.allottedTime > 0) {
-                    allottedTime = req.body.signe
-                        ? Number(req.pli.allottedTime) + Number(req.body.allottedTime)
-                        : Number(req.pli.allottedTime) - Number(req.body.allottedTime);
+                    allottedTime = req.body.signe ? Number(req.pli.allottedTime) + Number(req.body.allottedTime) : Number(req.pli.allottedTime) - Number(req.body.allottedTime);
                 }
 
                 Pli.update(
