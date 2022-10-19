@@ -178,12 +178,12 @@ export default function Messagerie({
             if (folowersMessage.search.value.length >= 3) {
                 connector({
                     method: "get",
-                    url: `${endPoints.USER_SUBSCRIPTIONS}?page=${pageUsers}&q=${folowersMessage.search.value}`,
+                    url: `${endPoints.USER_SUBSCRICERS}?page=${pageUsers}&q=${folowersMessage.search.value}`,
                     success: (response) => {
                         if (pageUsers == 1) {
-                            setUsers(response.data.subscriptions);
+                            setUsers(response.data.subscribers);
                         } else {
-                            setUsers([...users, ...response.data.subscriptions]);
+                            setUsers([...users, ...response.data.subscribers]);
                         }
                         setTotalUsers(response.data.total);
                         setLoadingUsers(false);
