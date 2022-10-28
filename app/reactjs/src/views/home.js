@@ -137,7 +137,7 @@ export default function Home() {
                 totalThreads: 0,
                 pageThreads: 1,
                 countNewMessages: 0,
-            }); 
+            });
             setFolowersMessage({ ...folowersMessage, activeItem: false });
         }
     }, [thread.pageThreads, auth.isConnected]);
@@ -145,6 +145,8 @@ export default function Home() {
     useEffect(() => {
         getPlis(true);
     }, [auth.isConnected]);
+
+    const [countDeleteUnsubscribe, setCountDeleteUnsubscribe] = useState(0);
 
     useEffect(() => {
         if (auth.isConnected) {
@@ -154,7 +156,7 @@ export default function Home() {
             setTotalSubscribers(0);
             setPageSubscribers(1);
         }
-    }, [pageSubscribers, auth.isConnected]);
+    }, [pageSubscribers, auth.isConnected, countDeleteUnsubscribe]);
 
     useEffect(() => {
         if (auth.isConnected) {
@@ -199,12 +201,7 @@ export default function Home() {
         const updatePli = (item) => {
             if (channel != item.channel) {
                 getPli(item.id, item.action);
-                if (
-                    item.subscribers != undefined &&
-                    item.subscribers.length > 0 &&
-                    auth?.user?.id &&
-                    item.subscribers.includes(auth.user.id)
-                ) {
+                if (item.subscribers != undefined && item.subscribers.length > 0 && auth?.user?.id && item.subscribers.includes(auth.user.id)) {
                     if (item.action == "create") {
                         getNotificationNewPli(item.id);
                     }
@@ -240,11 +237,7 @@ export default function Home() {
 
         const subscriberUpdated = (data) => {
             if (data?.notification?.id) {
-                if (
-                    auth.user &&
-                    auth.user.id == data.notification.subscriberId &&
-                    data.notification.type == "newSubscriber"
-                ) {
+                if (auth.user && auth.user.id == data.notification.subscriberId && data.notification.type == "newSubscriber") {
                     dispatch({
                         type: actionTypes.LOAD_NOTIFICATIONS,
                         notifications: [data.notification, ...notification.notifications],
@@ -283,12 +276,7 @@ export default function Home() {
                 }
                 setPlis(cpPlis);
 
-                if (
-                    data.users != undefined &&
-                    data.users.length > 0 &&
-                    auth?.user?.id &&
-                    data.users.includes(auth.user.id)
-                ) {
+                if (data.users != undefined && data.users.length > 0 && auth?.user?.id && data.users.includes(auth.user.id)) {
                     getNotificationNewComment(data.comment.id);
                 }
             }
@@ -296,11 +284,7 @@ export default function Home() {
         socket.on("SERVER_COMMENT", newComment);
 
         const newCitation = (data) => {
-            if (
-                data.citation.id != undefined &&
-                data.citation.message != undefined &&
-                data.citation.pliId != undefined
-            ) {
+            if (data.citation.id != undefined && data.citation.message != undefined && data.citation.pliId != undefined) {
                 const cpPlis = [...plis];
                 for (let i = 0; i < cpPlis.length; i++) {
                     const pli = cpPlis[i];
@@ -337,10 +321,7 @@ export default function Home() {
         const updateMessage = (item) => {
             if (auth.isConnected) {
                 if (auth.user.id == item.otherUser.id) {
-                    if (
-                        item.threadId &&
-                        (!folowersMessage?.activeItem?.thread || folowersMessage.activeItem.thread.id != item.threadId)
-                    ) {
+                    if (item.threadId && (!folowersMessage?.activeItem?.thread || folowersMessage.activeItem.thread.id != item.threadId)) {
                         dispatch({
                             type: actionTypes.LOAD_THREADS,
                             countNewMessages: thread.countNewMessages + 1,
@@ -355,8 +336,8 @@ export default function Home() {
                             cpThreads[i].thread.messages = [item];
                             dispatch({
                                 type: actionTypes.LOAD_THREADS,
-                                threads: cpThreads
-                            }); 
+                                threads: cpThreads,
+                            });
                             break;
                         }
                     }
@@ -513,14 +494,10 @@ export default function Home() {
 
                 if (pli.user.id == item.user.id) {
                     isChanged = true;
-                    pli.user.totalSubscribers = item.isSubscribed
-                        ? pli.user.totalSubscribers + 1
-                        : pli.user.totalSubscribers - 1;
+                    pli.user.totalSubscribers = item.isSubscribed ? pli.user.totalSubscribers + 1 : pli.user.totalSubscribers - 1;
                 } else if (pli.user.id == item.subscriber.id) {
                     isChanged = true;
-                    pli.user.totalSubscriptions = item.isSubscribed
-                        ? pli.user.totalSubscriptions + 1
-                        : pli.user.totalSubscriptions - 1;
+                    pli.user.totalSubscriptions = item.isSubscribed ? pli.user.totalSubscriptions + 1 : pli.user.totalSubscriptions - 1;
                 }
             }
             if (isChanged) {
@@ -681,10 +658,7 @@ export default function Home() {
         if (auth.isConnected) {
             return true;
         } else {
-            setMsgNotifTopTime(
-                "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
-                5000
-            );
+            setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages", 5000);
             return false;
         }
     };
@@ -709,6 +683,10 @@ export default function Home() {
     };
 
     const updateSubscriberStatus = (item) => {
+        if (item.isSubscribed == false) {
+            deleteUnsubscribe(item);
+        }
+
         for (let i = 0; i < plis.length; i++) {
             const pli = plis[i];
             if (pli.user.id === item.id) {
@@ -729,6 +707,18 @@ export default function Home() {
             isSubscribed: item.isSubscribed,
             notification: item.notification,
         });
+    };
+
+    const deleteUnsubscribe = (item) => {
+        let cpSubscribers = [...subscribers];
+        for (let i = 0; i < cpSubscribers.length; i++) {
+            if (item.id == cpSubscribers[i].id) {
+                cpSubscribers.splice(i, 1);
+                setSubscribers(cpSubscribers);
+                setCountDeleteUnsubscribe(countDeleteUnsubscribe + 1);
+                break;
+            }
+        }
     };
 
     const setLoadingMoreCheck = (e) => {
@@ -860,13 +850,13 @@ export default function Home() {
                 method: "get",
                 url: `${endPoints.THREAD_LIST}?page=${cpPageThreads}`,
                 success: (response) => {
-                   dispatch({
+                    dispatch({
                         type: actionTypes.LOAD_THREADS,
                         threads: getUniqueList([...thread.threads, ...response.data.threads]),
                         totalThreads: parseInt(response.data.total),
                         pageThreads: cpPageThreads,
                         countNewMessages: parseInt(response.data.totalNewMessages || 0),
-                    }); 
+                    });
                     setLoadingMore({ ...loadingMore, threads: false });
                 },
                 catch: (error) => {
@@ -892,20 +882,9 @@ export default function Home() {
                 {isTabletOrMobile && (
                     <HeaderMobile>
                         <div className="logo">
-                            <svg
-                                width="136px"
-                                height="40px"
-                                viewBox="0 0 136 40"
-                                version="1.1"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
+                            <svg width="136px" height="40px" viewBox="0 0 136 40" version="1.1" xmlns="http://www.w3.org/2000/svg">
                                 <g id="Page-1" stroke="none" strokeWidth={1} fill="none" fillRule="evenodd">
-                                    <g
-                                        id="Logo-avec-texte"
-                                        transform="translate(0.245606, 0.100000)"
-                                        fill="#EDB97B"
-                                        fillRule="nonzero"
-                                    >
+                                    <g id="Logo-avec-texte" transform="translate(0.245606, 0.100000)" fill="#EDB97B" fillRule="nonzero">
                                         <g id="Group" transform="translate(42.754394, 11.900000)">
                                             <path
                                                 d="M8.33171913,14.775 L5.10411622,9.375 L2.55205811,9.375 L2.55205811,14.775 L0,14.775 L0,0.225 L6.38014528,0.225 C9.23244552,0.225 11.1840194,2.1 11.1840194,4.8 C11.1840194,7.35 9.45762712,8.775 7.73123487,9.075 L11.3341404,14.775 L8.33171913,14.775 L8.33171913,14.775 Z M8.55690073,4.8 C8.55690073,3.375 7.50605327,2.55 6.07990315,2.55 L2.55205811,2.55 L2.55205811,7.125 L6.07990315,7.125 C7.50605327,7.125 8.55690073,6.15 8.55690073,4.8 Z"
@@ -923,14 +902,8 @@ export default function Home() {
                                                 d="M56.7457627,14.775 L55.6949153,12 L49.0145278,12 L47.9636804,14.775 L45.0363196,14.775 L50.7409201,0.3 L53.8934625,0.3 L59.598063,14.775 L56.7457627,14.775 Z M52.3171913,2.775 L49.6900726,9.675 L54.9443099,9.675 L52.3171913,2.775 Z"
                                                 id="Shape"
                                             />
-                                            <polygon
-                                                id="Path"
-                                                points="62.5254237 14.775 62.5254237 0.225 65.0774818 0.225 65.0774818 12.525 71.4576271 12.525 71.4576271 14.775"
-                                            />
-                                            <polygon
-                                                id="Path"
-                                                points="75.2106538 14.775 75.2106538 0.225 77.7627119 0.225 77.7627119 14.7 75.2106538 14.7"
-                                            />
+                                            <polygon id="Path" points="62.5254237 14.775 62.5254237 0.225 65.0774818 0.225 65.0774818 12.525 71.4576271 12.525 71.4576271 14.775" />
+                                            <polygon id="Path" points="75.2106538 14.775 75.2106538 0.225 77.7627119 0.225 77.7627119 14.7 75.2106538 14.7" />
                                             <path
                                                 d="M81.440678,12.675 L82.8668281,10.725 C83.842615,11.775 85.4188862,12.75 87.4455206,12.75 C89.5472155,12.75 90.3728814,11.7 90.3728814,10.725 C90.3728814,7.65 81.8910412,9.6 81.8910412,4.275 C81.8910412,1.875 83.9927361,0 87.1452785,0 C89.3970944,0 91.2736077,0.75 92.5496368,2.025 L91.1234867,3.9 C89.9975787,2.775 88.4213075,2.25 86.9200969,2.25 C85.4188862,2.25 84.5181598,3 84.5181598,4.05 C84.5181598,6.75 93,5.1 93,10.5 C93,12.9 91.2736077,15 87.37046,15 C84.7433414,15 82.7917676,14.025 81.440678,12.675 Z"
                                                 id="Path"
@@ -965,11 +938,7 @@ export default function Home() {
                             message={msgNotifTop}
                         />
                     )}
-                    <Masonry
-                        breakpointCols={breakpointColumnsObj}
-                        className="pli-masonry-grid"
-                        columnClassName="pli-masonry-grid_column"
-                    >
+                    <Masonry breakpointCols={breakpointColumnsObj} className="pli-masonry-grid" columnClassName="pli-masonry-grid_column">
                         {plis &&
                             plis.map((item, index) => (
                                 <ItemMasonry
@@ -1025,13 +994,7 @@ export default function Home() {
                         typingMessage={typingMessage}
                     />
                 )}
-                <ModalMessage
-                    showBloc={showBlocModalMessage}
-                    setShowBloc={setShowBlocModalMessage}
-                    checkIsConnected={checkIsConnected}
-                    open={openModalMessage}
-                    setOpen={setOpenModalMessage}
-                />
+                <ModalMessage showBloc={showBlocModalMessage} setShowBloc={setShowBlocModalMessage} checkIsConnected={checkIsConnected} open={openModalMessage} setOpen={setOpenModalMessage} />
             </StyledEngineProvider>
         </DefaultMain>
     );

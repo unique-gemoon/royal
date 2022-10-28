@@ -63,6 +63,8 @@ export default function Messagerie({
     const [pageUsers, setPageUsers] = useState(1);
     const [loadingUsers, setLoadingUsers] = useState(false);
 
+    const [countDeleteUnsubscribe, setCountDeleteUnsubscribe] = useState(0);
+
     useEffect(() => {
         if (!auth.isConnected) {
             setUsers([]);
@@ -72,7 +74,7 @@ export default function Messagerie({
 
     useEffect(() => {
         getUsers();
-    }, [pageUsers]);
+    }, [pageUsers,countDeleteUnsubscribe]);
 
     useEffect(() => {
         if (auth.isConnected && folowersMessage?.activeItem?.thread?.id) {
@@ -175,27 +177,23 @@ export default function Messagerie({
             if (pageUsers != cpPageUsers) {
                 setPageUsers(cpPageUsers);
             }
-            if (folowersMessage.search.value.length >= 3) {
-                connector({
-                    method: "get",
-                    url: `${endPoints.USER_SUBSCRICERS}?page=${pageUsers}&q=${folowersMessage.search.value}`,
-                    success: (response) => {
-                        if (pageUsers == 1) {
-                            setUsers(response.data.subscribers);
-                        } else {
-                            setUsers([...users, ...response.data.subscribers]);
-                        }
-                        setTotalUsers(response.data.total);
-                        setLoadingUsers(false);
-                    },
-                    catch: (error) => {
-                        console.log(error);
-                        setLoadingUsers(false);
-                    },
-                });
-            } else {
-                setLoadingUsers(false);
-            }
+            connector({
+                method: "get",
+                url: `${endPoints.USER_SUBSCRICERS}?page=${pageUsers}&q=${folowersMessage.search.value}`,
+                success: (response) => {
+                    if (pageUsers == 1) {
+                        setUsers(response.data.subscribers);
+                    } else {
+                        setUsers([...users, ...response.data.subscribers]);
+                    }
+                    setTotalUsers(response.data.total);
+                    setLoadingUsers(false);
+                },
+                catch: (error) => {
+                    console.log(error);
+                    setLoadingUsers(false);
+                },
+            });
         }
     };
 
@@ -493,6 +491,17 @@ export default function Messagerie({
         });
     };
 
+    const deleteUnsubscribe = (index) => {
+        let cpUsers = [...users];
+        if (index!= undefined && cpUsers?.[index] != undefined) {
+            cpUsers.splice(index, 1);
+            setUsers(cpUsers);
+            setCountDeleteUnsubscribe(countDeleteUnsubscribe+1);
+        } else {
+            getUsers(true);
+        }
+    };
+
     return (
         <BlocMessagerie>
             {!folowersMessage.activeItem && !folowersMessage.showSearchFolower ? (
@@ -649,63 +658,52 @@ export default function Messagerie({
                                 const cpFolowersMessage = { ...folowersMessage };
                                 cpFolowersMessage.search.value = e.target.value;
                                 setFolowersMessage(cpFolowersMessage);
-                                if (cpFolowersMessage.search.value.length >= 3) {
-                                    setFolowersMessage({
-                                        ...folowersMessage,
-                                        resultSearch: true,
-                                    });
-                                    getUsers(true);
-                                } else {
-                                    setFolowersMessage({
-                                        ...folowersMessage,
-                                        resultSearch: false,
-                                    });
-                                }
+                                getUsers(true);
                             }}
                         />
                     </div>
                     <div className="header-info-search">
                         <PeopleOutlineRoundedIcon /> Abonnements
                     </div>
-                    {folowersMessage.resultSearch ? (
+                    <div
+                        className="content-search-results"
+                        ref={refContent}
+                        onScroll={(e) => {
+                            if (isTabletOrMobile) {
+                                onScrollContent(e);
+                            }
+                        }}
+                    >
                         <div
-                            className="content-search-results"
-                            ref={refContent}
+                            className="list-result-search"
+                            ref={refList}
                             onScroll={(e) => {
-                                if (isTabletOrMobile) {
-                                    onScrollContent(e);
+                                if (!isTabletOrMobile) {
+                                    onScrollList(e);
                                 }
                             }}
                         >
-                            <div
-                                className="list-result-search"
-                                ref={refList}
-                                onScroll={(e) => {
-                                    if (!isTabletOrMobile) {
-                                        onScrollList(e);
-                                    }
-                                }}
-                            >
-                                {users.length > 0 ? (
-                                    users.map((item, index) => (
-                                        <ItemListFolower
-                                            key={index}
-                                            item={{ ...item, index }}
-                                            setItem={setItem}
-                                            setMsgNotifTopTime={setMsgNotifTopTime}
-                                            action={action}
-                                            setAction={setAction}
-                                            folowersMessage={folowersMessage}
-                                            setFolowersMessage={setFolowersMessage}
-                                        />
-                                    ))
-                                ) : (
-                                    <p className="message-not-result">Aucun resultat trouvé </p>
-                                )}
-                                {loadingUsers && <SpinnerLoading />}
-                            </div>
+                            {users.length > 0 ? (
+                                users.map((item, index) => (
+                                    <ItemListFolower
+                                        key={index}
+                                        index={index}
+                                        item={{ ...item, index }}
+                                        setItem={setItem}
+                                        setMsgNotifTopTime={setMsgNotifTopTime}
+                                        action={action}
+                                        setAction={setAction}
+                                        folowersMessage={folowersMessage}
+                                        setFolowersMessage={setFolowersMessage}
+                                        deleteUnsubscribe={deleteUnsubscribe}
+                                    />
+                                ))
+                            ) : (
+                                <p className="message-not-result">Aucun resultat trouvé </p>
+                            )}
+                            {loadingUsers && <SpinnerLoading />}
                         </div>
-                    ) : null}
+                    </div>
                     <span className="name-messagerie">{folowersMessage.activeItem.name}</span>
                 </MessageFindFolower>
             )}
