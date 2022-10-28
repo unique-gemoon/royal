@@ -71,6 +71,12 @@ export function findSubscriber(req, res, next) {
 }
 
 export function findSubscribersList(req, res) {
+    const q = String(req.query.q);
+    let whereUsername = {};
+    if (req.query.q != undefined && q.length) {
+        whereUsername = { username: { [Op.startsWith]: q } };
+    }
+
     const page = parseInt(req.query.page) || 1;
     const perPage = 20;
     const start = (page - 1) * perPage;
@@ -83,6 +89,7 @@ export function findSubscribersList(req, res) {
                 association: SubscriberUserSubscriber,
                 as: "user",
                 attributes: ["id", "username"],
+                where : whereUsername
             },
         ],
         order: [["createdAt", "DESC"],["id", "DESC"]],
@@ -111,9 +118,25 @@ export function findSubscribersList(req, res) {
 }
 
 export function totalSubscribers(req, res, next) {
+    const q = String(req.query.q);
+    let whereUsername = {};
+
+    if (req.query.q != undefined && q.length) {
+        whereUsername = { username: { [Op.startsWith]: q } };
+    }
+
     Subscriber.count({
+        include: [
+            {
+                model: User,
+                association: SubscriberUserSubscriber,
+                as: "user",
+                attributes: ["id", "username"],
+                where: whereUsername
+            },
+        ],
         where: {
-            userId: req.user.id,
+            userId: req.user.id
         },
     })
         .then((total) => {
