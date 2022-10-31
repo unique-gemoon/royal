@@ -157,7 +157,7 @@ export function decrementDurationTime(duration) {
 
         const d = getInt(hour) * 3600 + getInt(minute) * 60 + getInt(second) - 1;
 
-        if (d <= 0) {
+        if (d < 0) {
             return false;
         }
 
