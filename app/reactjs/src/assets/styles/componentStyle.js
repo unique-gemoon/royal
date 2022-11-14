@@ -2117,23 +2117,6 @@ export const BlocGalleryImages = styled.div`
   .item-gallery {
     padding: 2px;
     position: relative;
-    &:before {
-      content: "";
-      position: absolute;
-      top: 2px;
-      left: 2px;
-      right: 2px;
-      bottom: 2px;
-      background: #000;
-      opacity: 0.22;
-      transition: 0.3s ease-in-out;
-      border-radius: 10px;
-    }
-    &:hover {
-      &::before {
-        opacity: 0;
-      }
-    }
     img {
       width: 100%;
       height: 100%;
