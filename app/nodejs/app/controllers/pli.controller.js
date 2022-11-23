@@ -42,11 +42,14 @@ const CitationAncestry = Citation.belongsTo(Citation, {
     as: "ancestry",
 });
 const Op = db.Sequelize.Op;
+const allottedTimePli = 1;
+const allottedTimeDurationPli = "00:01:00";
+const durationPli = "00:10:00";
 
 export function newPli(req, res, next) {
     const content = req.body.content || "";
     let ouverture = req.body.contentOuverture || "";
-    const duration = req.body.duration || "00:00:00";
+    const duration = durationPli;
 
     let imagesOuverturePath = [];
     let videoOuverturePath = [];
@@ -207,7 +210,6 @@ export function newPli(req, res, next) {
                 where: { subscriberId: req.user.id },
             })
                 .then((subscriptions) => {
-
                     for (let i = 0; i < subscriptions.length; i++) {
                         const subscriber = subscriptions[i];
 
@@ -715,16 +717,16 @@ export function updateAppearancePli(req, res) {
         res.status(400).json({ message: "Le temps alloué du pli est déjà modifié." });
     } else {
         AppearancePli.create({
-            allottedTime: req.body.allottedTime,
+            allottedTime: allottedTimePli,
             pliId: req.pli.id,
-            duration: req.body.duration,
+            duration: allottedTimeDurationPli,
             signe: req.body.signe,
             userId: req.user.id,
         })
             .then((response) => {
                 let allottedTime = 0;
                 if (req.pli.allottedTime > 0) {
-                    allottedTime = req.body.signe ? Number(req.pli.allottedTime) + Number(req.body.allottedTime) : Number(req.pli.allottedTime) - Number(req.body.allottedTime);
+                    allottedTime = req.body.signe ? Number(req.pli.allottedTime) + Number(allottedTimePli) : Number(req.pli.allottedTime) - Number(allottedTimePli);
                 }
 
                 Pli.update(
