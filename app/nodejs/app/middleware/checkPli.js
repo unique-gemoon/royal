@@ -29,12 +29,7 @@ export function checkDataPli(req, res, next) {
   ) {
     error.name = "contentOuverture";
     error.message = `Vous ne pouvez pas ajouter plus que ${pliOptions.contentOuverture.maxLength} caractères maximum  pour le texte de l’ouverture.`;
-  } else if (!String(req.body.duration) || !validateTime(req.body.duration)) {
-    error.name = "duration";
-    error.message =
-      "La durée du pli ne peut pas être vide ou format invalide." +
-      req.body.duration;
-  } else {
+  }  else {
     let sondage = [];
     if (req.body.sondage != undefined) {
       let sondageList = [];
@@ -112,15 +107,9 @@ export function checkDataPli(req, res, next) {
 
 export function checkDataPliTime(req, res, next) {
   const error = { name: "", message: "" };
-  if (!String(req.body.duration) || !validateTime(req.body.duration)) {
-    error.name = "duration";
-    error.message = "La durée du pli ne peut pas être vide ou format invalide.";
-  } else if (req.body.signe == undefined) {
+  if (req.body.signe == undefined) {
     error.name = "action";
     error.message = "Action non validé.";
-  } else if (!parseInt(req.body.allottedTime)) {
-    error.name = "temps";
-    error.message = "Le temps alloué est non valide.";
   }
 
   if (!error.name) {

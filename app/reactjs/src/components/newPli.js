@@ -206,16 +206,6 @@ export default function NewPli({
         return state.mediaOuverture[name].value.filter((v) => v !== "" && v !== null);
     };
 
-    const getDurationTime = () => {
-        if (state.duration) {
-            const h = String(state.duration.hour).length == 1 ? "0" + state.duration.hour : state.duration.hour;
-            const m = String(state.duration.minute).length == 1 ? "0" + state.duration.minute : state.duration.minute;
-            const s = String(state.duration.second).length == 1 ? "0" + state.duration.second : state.duration.second;
-            return h + ":" + m + ":" + s;
-        }
-        return null;
-    };
-
     const submitPli = (e) => {
         e.preventDefault();
         if (!submitting) {
@@ -227,7 +217,6 @@ export default function NewPli({
 
                 data.append("content", state.inputEmoji.value);
                 data.append("contentOuverture", state.inputEmojiOuverture.value);
-                data.append("duration", getDurationTime());
 
                 let countTypesMedia = 0;
 
@@ -312,7 +301,7 @@ export default function NewPli({
                         msgErrors({ submit: false });
                         clearPli();
                         setMsgNotifTopTime(
-                            "Votre pli a bien été publié sur la page universelle ! Il reste 1 heure avant qu’il ne disparaisse si aucun délai supplémentaire ne lui est ajouté ou enlevé par les utilisateurs.",
+                            "Votre pli a bien été publié sur la page universelle ! Il reste 10 minutes avant qu’il ne disparaisse si aucun délai supplémentaire ne lui est ajouté ou enlevé par les utilisateurs.",
                             5000
                         );
                         setTogglePli(false);
@@ -370,8 +359,8 @@ export default function NewPli({
         };
         cpState.duration = {
             ...cpState.duration,
-            hour: 1,
-            minute: 0,
+            hour: 0,
+            minute: 10,
             second: 0,
             countDown: 0,
             countUp: 0,
