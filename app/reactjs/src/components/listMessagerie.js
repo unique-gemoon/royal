@@ -12,26 +12,6 @@ export default function ListMessagerie({ folowersMessage, setFolowersMessage = (
     const auth = useSelector((store) => store.auth);
     const thread = useSelector((store) => store.thread);
 
-    const getEtat = (row) => {
-        let message = row.thread.messages.length > 0 ? row.thread.messages[0] : {};
-        let etat = "";
-
-        if (message) {
-            if (message.userId == auth.user.id) {
-                if (message.seen) {
-                    etat = "read";
-                } else {
-                    etat = "send";
-                }
-            } else {
-                if (!message.seen) {
-                    etat = "receive";
-                }
-            }
-        }
-        return etat;
-    };
-
     return (
         <ListItemsMessagerie>
             {thread.threads.length > 0 &&
@@ -53,27 +33,20 @@ export default function ListMessagerie({ folowersMessage, setFolowersMessage = (
                                 dispatch({
                                     type: actionTypes.LOAD_THREADS,
                                     threads: cpThreads,
+                                    user: auth.user,
                                 });
                             }
                         }}
                     >
                         <div className="head-item-list-message">
-                            <span className={`name-item-message ${getEtat(row) == "receive" ? "hasMesaage" : ""}`}>
-                                {row.user.username}
-                            </span>
+                            <span className={`name-item-message ${row.thread?.status == "receive" ? "hasMesaage" : ""}`}>{row.user.username}</span>
                             <span className="date-message">
-                                {getEtat(row) === "send" ? (
-                                    <DoneIcon />
-                                ) : getEtat(row) === "reading" ? (
-                                    <DoneAllIcon />
-                                ) : null}
-                                {row.thread.messages.length > 0 &&
-                                    getDurationHM(moment(), row.thread.messages[0].createdAt)}
+                                {row.thread?.status == "send" && <DoneIcon />}
+                                {row.thread?.status == "read" && <DoneAllIcon />}
+                                {row.thread.messages.length > 0 && getDurationHM(moment(), row.thread.messages[0].createdAt)}
                             </span>
                         </div>
-                        <div className="last-item-message">
-                            {row.thread.messages.length > 0 && row.thread.messages[0].message}
-                        </div>
+                        <div className="last-item-message">{row.thread.messages.length > 0 && row.thread.messages[0].message}</div>
                     </ItemListMessagerie>
                 ))}
 
