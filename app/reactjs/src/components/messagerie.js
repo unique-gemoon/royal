@@ -74,7 +74,7 @@ export default function Messagerie({
 
     useEffect(() => {
         getUsers();
-    }, [pageUsers,countDeleteUnsubscribe]);
+    }, [pageUsers, countDeleteUnsubscribe]);
 
     useEffect(() => {
         if (auth.isConnected && folowersMessage?.activeItem?.thread?.id) {
@@ -219,6 +219,7 @@ export default function Messagerie({
                         dispatch({
                             type: actionTypes.LOAD_THREADS,
                             countNewMessages: response.data.totalNewMessages,
+                            user: auth.user,
                         });
 
                         setTotalMessages(parseInt(response.data.total));
@@ -290,6 +291,7 @@ export default function Messagerie({
                             dispatch({
                                 type: actionTypes.LOAD_THREADS,
                                 threads: [threadUser, ...cpThreads],
+                                user: auth.user,
                             });
 
                             const otherThread = {
@@ -340,12 +342,28 @@ export default function Messagerie({
         const updateMessageSeen = (item) => {
             if (auth.isConnected) {
                 if (auth.user.id == item.otherUser.id) {
-                    if (item.threadId && folowersMessage?.activeItem?.thread && folowersMessage.activeItem.thread.id == item.threadId) {
-                        const cpMessages = [...messages];
-                        for (let i = 0; i < cpMessages.length; i++) {
-                            cpMessages[i].seen = true;
+                    if (item.threadId) {
+                        if (folowersMessage?.activeItem?.thread && folowersMessage.activeItem.thread.id == item.threadId) {
+                            const cpMessages = [...messages];
+                            for (let i = 0; i < cpMessages.length; i++) {
+                                cpMessages[i].seen = true;
+                            }
+                            setMessages(cpMessages);
                         }
-                        setMessages(cpMessages);
+
+                        let cpThreads = [...thread.threads];
+                        for (let i = 0; i < cpThreads.length; i++) {
+                            let cpThread = cpThreads[i];
+                            if (cpThread.thread.id == item.threadId && cpThread.thread.messages.length > 0) {
+                                cpThread.thread.messages[0].seen = true;
+                            }
+                            cpThreads[i] = cpThread;
+                        }
+                        dispatch({
+                            type: actionTypes.LOAD_THREADS,
+                            threads: cpThreads,
+                            user: auth.user,
+                        });
                     }
                 }
             }
@@ -421,6 +439,7 @@ export default function Messagerie({
                     dispatch({
                         type: actionTypes.LOAD_THREADS,
                         threads: cpThreads,
+                        user: auth.user,
                     });
 
                     handleClose();
@@ -493,10 +512,10 @@ export default function Messagerie({
 
     const deleteUnsubscribe = (index) => {
         let cpUsers = [...users];
-        if (index!= undefined && cpUsers?.[index] != undefined) {
+        if (index != undefined && cpUsers?.[index] != undefined) {
             cpUsers.splice(index, 1);
             setUsers(cpUsers);
-            setCountDeleteUnsubscribe(countDeleteUnsubscribe+1);
+            setCountDeleteUnsubscribe(countDeleteUnsubscribe + 1);
         } else {
             getUsers(true);
         }

@@ -54,8 +54,6 @@ export default function Home() {
     const [pageSubscriptions, setPageSubscriptions] = useState(1);
     const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
 
-    const [threads, setThreads] = useState([]);
-
     const query = new URLSearchParams(useLocation().search);
     const tokenRestPassword = query.get("tokenRestPassword") || null;
     const tokenConfirmEmail = query.get("tokenConfirmEmail") || null;
@@ -137,6 +135,7 @@ export default function Home() {
                 totalThreads: 0,
                 pageThreads: 1,
                 countNewMessages: 0,
+                user: auth.user,
             });
             setFolowersMessage({ ...folowersMessage, activeItem: false });
         }
@@ -325,6 +324,7 @@ export default function Home() {
                         dispatch({
                             type: actionTypes.LOAD_THREADS,
                             countNewMessages: thread.countNewMessages + 1,
+                            user: auth.user,
                         });
                     }
                 }
@@ -337,6 +337,7 @@ export default function Home() {
                             dispatch({
                                 type: actionTypes.LOAD_THREADS,
                                 threads: cpThreads,
+                                user: auth.user
                             });
                             break;
                         }
@@ -349,7 +350,8 @@ export default function Home() {
         const updateThread = (item) => {
             if (auth.isConnected) {
                 if (item?.otherUser?.id && auth.user.id == item.otherUser.id) {
-                    const cpThreads = [...threads];
+                    const cpThreads = [...thread.threads];
+
                     for (let i = 0; i < cpThreads.length; i++) {
                         if (cpThreads[i].thread.id === item.thread.id) {
                             cpThreads[i].thread = {
@@ -375,7 +377,8 @@ export default function Home() {
                     dispatch({
                         type: actionTypes.LOAD_THREADS,
                         threads: [item, ...cpThreads],
-                    });
+                        user: auth.user
+                    }); 
                 }
             }
         };
@@ -734,6 +737,7 @@ export default function Home() {
                 dispatch({
                     type: actionTypes.LOAD_THREADS,
                     pageThreads: thread.pageThreads + 1,
+                    user: auth.user
                 });
             }
         } else if (e.subscribers) {
@@ -856,6 +860,7 @@ export default function Home() {
                         totalThreads: parseInt(response.data.total),
                         pageThreads: cpPageThreads,
                         countNewMessages: parseInt(response.data.totalNewMessages || 0),
+                        user: auth.user,
                     });
                     setLoadingMore({ ...loadingMore, threads: false });
                 },
