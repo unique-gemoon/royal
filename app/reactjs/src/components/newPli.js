@@ -307,7 +307,6 @@ export default function NewPli({
                         setTogglePli(false);
                         const pli = response.data.pli;
                         setPublishPli(pli);
-                        localStorage.setItem("publishPli", pli.id); 
                         setItem({
                             ...response.data.pli,
                             action: "create",
