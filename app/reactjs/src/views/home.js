@@ -522,9 +522,8 @@ export default function Home() {
                 setPlis(response.data.plis || []);
                 if (response.data.plis.length == 0) {
                     setPublishPli(null);
-                    localStorage.removeItem("publishPli");
                 } else {
-                    refreshpPublishPli(response.data.plis);
+                    refreshPublishPli(response.data.plis);
                 }
                 if (refresh) {
                     setInitOpenedPlis(initOpenedPlis + 1);
@@ -536,12 +535,11 @@ export default function Home() {
         });
     };
 
-    const refreshpPublishPli = (data) => {
-        if (localStorage.getItem("publishPli")) {
-            const id = Number(localStorage.getItem("publishPli"));
+    const refreshPublishPli = (data) => {
+        if(auth?.user){
             for (let i = 0; i < data.length; i++) {
                 const cpPli = { ...data[i] };
-                if (id === cpPli.id) {
+                if(auth.user.id == cpPli.user.id){
                     setPublishPli(cpPli);
                     break;
                 }
@@ -626,15 +624,13 @@ export default function Home() {
             for (var i = 0; i < cpPlis.length; i++) {
                 if (cpPlis[i].id == item.id) {
                     cpPlis[i] = item;
-                    if (publishPli && publishPli.id === item.id) {
-                        setPublishPli(item);
-                    }
                     break;
                 }
             }
         }
         cpPlis = sortObjects(cpPlis, "duration", "desc");
         setPlis(cpPlis);
+        refreshPublishPli(cpPlis);
     };
 
     const clearPliElapsed = (index) => {
@@ -642,7 +638,6 @@ export default function Home() {
             const pli = { ...plis[index] };
             if (publishPli && publishPli.id === pli.id) {
                 setPublishPli(null);
-                localStorage.removeItem("publishPli");
             }
             let cpPlis = [...plis];
             cpPlis.splice(index, 1);
