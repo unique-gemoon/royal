@@ -29,6 +29,11 @@ export default function pli(sequelize, Sequelize) {
       allowNull: false,
       onDelete: "cascade",
     },
+
+    cleanedMedia: {
+      type: Sequelize.BOOLEAN,
+      defaultValue: false,
+    },
   });
 
   Pli.associate = function (models) {

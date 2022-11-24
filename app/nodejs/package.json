@@ -38,6 +38,7 @@
     "multer": "^1.4.4",
     "mysql": "^2.18.1",
     "mysql2": "^2.0.2",
+    "node-cron": "^3.0.2",
     "nodemailer": "^6.7.2",
     "nodemailer-mailjet-transport": "^1.0.4",
     "passport": "^0.5.2",

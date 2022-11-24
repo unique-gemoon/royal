@@ -88,3 +88,14 @@ export function ucfirst(str) {
     if (String(str).length == 0) return "";
     return String(str).charAt(0).toUpperCase() + String(str).slice(1);
 }
+
+export function getArgs() {
+    const args = process.argv
+    .slice(2)
+    .map(arg => arg.split('='))
+    .reduce((args, [value, key]) => {
+        args[value] = key;
+        return args;
+    }, {});
+    return args;
+}
