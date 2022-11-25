@@ -30,6 +30,7 @@ export default function Home() {
     const auth = useSelector((store) => store.auth);
     const notification = useSelector((store) => store.notification);
     const thread = useSelector((store) => store.thread);
+    const pli = useSelector((store) => store.pli);
 
     const [plis, setPlis] = useState([]);
     const [submitting, setSubmitting] = useState(false);
@@ -171,16 +172,11 @@ export default function Home() {
         }
     }, [initOpenedPlis]);
 
-    const [stateModal, setStateModal] = useState({
-        showModal: false,
-        item: {},
-    });
-
     useEffect(() => {
         if (socket && plis.length > 0) {
             socket.emit("CLIENT_OPEN_PLI", {
-                id: stateModal?.item?.id ? stateModal.item.id : null,
-                opened: stateModal.showModal,
+                id: pli.activeItem?.id ? pli.activeItem.id : null,
+                opened: pli.showModal,
             });
 
             if (auth.isConnected) {
@@ -192,7 +188,7 @@ export default function Home() {
                 socket.emit("CLIENT_TYPING_CITATION", data);
             }
         }
-    }, [stateModal.showModal]);
+    }, [pli.showModal]);
 
     useEffect(() => {
         const updatePli = (item) => {
@@ -250,11 +246,11 @@ export default function Home() {
             if (data.comment.id != undefined && data.comment.message != undefined && data.comment.pliId != undefined) {
                 const cpPlis = [...plis];
                 for (let i = 0; i < cpPlis.length; i++) {
-                    const pli = cpPlis[i];
-                    if (pli.id == data.comment.pliId) {
+                    const cpPli = cpPlis[i];
+                    if (cpPli.id == data.comment.pliId) {
                         if (data.comment.parentId) {
-                            for (let j = 0; j < pli.comments.length; j++) {
-                                const comment = pli.comments[j];
+                            for (let j = 0; j < cpPli.comments.length; j++) {
+                                const comment = cpPli.comments[j];
                                 if (comment.id == data.comment.parentId) {
                                     if (Array.isArray(cpPlis[i].comments[j].childs)) {
                                         cpPlis[i].comments[j].childs.unshift(data.comment);
@@ -284,8 +280,8 @@ export default function Home() {
             if (data.citation.id != undefined && data.citation.message != undefined && data.citation.pliId != undefined) {
                 const cpPlis = [...plis];
                 for (let i = 0; i < cpPlis.length; i++) {
-                    const pli = cpPlis[i];
-                    if (pli.id == data.citation.pliId) {
+                    const cpPli = cpPlis[i];
+                    if (cpPli.id == data.citation.pliId) {
                         if (Array.isArray(cpPlis[i].citations)) {
                             cpPlis[i].citations.push(data.citation);
                         } else {
@@ -491,14 +487,14 @@ export default function Home() {
             const cpPlis = [...plis];
             let isChanged = false;
             for (let i = 0; i < cpPlis.length; i++) {
-                const pli = cpPlis[i];
+                const cpPli = cpPlis[i];
 
-                if (pli.user.id == item.user.id) {
+                if (cpPli.user.id == item.user.id) {
                     isChanged = true;
-                    pli.user.totalSubscribers = item.isSubscribed ? pli.user.totalSubscribers + 1 : pli.user.totalSubscribers - 1;
-                } else if (pli.user.id == item.subscriber.id) {
+                    cpPli.user.totalSubscribers = item.isSubscribed ? cpPli.user.totalSubscribers + 1 : cpPli.user.totalSubscribers - 1;
+                } else if (cpPli.user.id == item.subscriber.id) {
                     isChanged = true;
-                    pli.user.totalSubscriptions = item.isSubscribed ? pli.user.totalSubscriptions + 1 : pli.user.totalSubscriptions - 1;
+                    cpPli.user.totalSubscriptions = item.isSubscribed ? cpPli.user.totalSubscriptions + 1 : cpPli.user.totalSubscriptions - 1;
                 }
             }
             if (isChanged) {
@@ -633,8 +629,8 @@ export default function Home() {
 
     const clearPliElapsed = (index) => {
         if (plis[index]) {
-            const pli = { ...plis[index] };
-            if (publishPli && publishPli.id === pli.id) {
+            const cpPli = { ...plis[index] };
+            if (publishPli && publishPli.id === cpPli.id) {
                 setPublishPli(null);
             }
             let cpPlis = [...plis];
@@ -684,12 +680,12 @@ export default function Home() {
         }
 
         for (let i = 0; i < plis.length; i++) {
-            const pli = plis[i];
-            if (pli.user.id === item.id) {
+            const cpPli = plis[i];
+            if (cpPli.user.id === item.id) {
                 refreshItem({
-                    ...pli,
+                    ...cpPli,
                     user: {
-                        ...pli.user,
+                        ...cpPli.user,
                         isSubscribed: item.isSubscribed,
                     },
                     action: "update",
@@ -947,7 +943,6 @@ export default function Home() {
                                     action={action}
                                     setAction={setAction}
                                     setMsgNotifTopTime={setMsgNotifTopTime}
-                                    setStateModal={setStateModal}
                                     folowersMessage={folowersMessage}
                                     setFolowersMessage={setFolowersMessage}
                                     updateSubscriberStatus={updateSubscriberStatus}

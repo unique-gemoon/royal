@@ -8,7 +8,7 @@ import { MusicPlayer } from "../../assets/styles/componentStyle";
 import { getPathMedia } from "../../helper/fonctions";
 import * as actionTypes from "../../store/functions/actionTypes";
 
-export default function PlayerMusic({ item, isOpenOuverture = false }) {
+export default function PlayerMusic({ item }) {
     const dispatch = useDispatch();
     const pli = useSelector((store) => store.pli);
 
@@ -31,7 +31,6 @@ export default function PlayerMusic({ item, isOpenOuverture = false }) {
     const wavesurfer = useRef(null);
     const [playingMusic, setPlayingMusic] = useState(false);
     const [volumeMusic, setVolumeMusic] = useState(1);
-    const [refresh, setRefresh] = useState(false);
 
     // create new WaveSurfer instance
     // On component mount and when lien changes
@@ -64,18 +63,10 @@ export default function PlayerMusic({ item, isOpenOuverture = false }) {
         // Removes events, elements and disconnects Web Audio nodes.
         // when component unmount
         return () => wavesurfer.current.destroy();
-    }, [item, refresh]);
+    }, [item,  pli.activeItem, pli.showNV2]);
 
     useEffect(() => {
-        if (isOpenOuverture) {
-            setTimeout(() => {
-                setRefresh(true);
-            }, 100);
-        }
-    }, [isOpenOuverture]);
-
-    useEffect(() => {
-        if (wavesurfer && pli.activeItemPlayer && pli.activeItemPlayer.id !== item.id) {
+        if (wavesurfer && pli.activeItemPlayer?.id !== item.id) {
             wavesurfer.current.stop();
             setPlayingMusic(false);
         }
@@ -84,11 +75,9 @@ export default function PlayerMusic({ item, isOpenOuverture = false }) {
     const handlePlayPause = () => {
         if (wavesurfer && playingMusic) {
             setPlayingMusic(false);
-
             wavesurfer.current.pause();
         } else {
             setPlayingMusic(true);
-
             wavesurfer.current.play();
         }
     };

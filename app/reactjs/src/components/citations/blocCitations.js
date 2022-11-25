@@ -13,8 +13,6 @@ import ListCitations from "./listCitations";
 
 export default function BlocCitations({
   item,
-  state,
-  setState = () => {},
   setMsgNotifTopTime = () => {},
   typingCitation,
 }) {
@@ -96,7 +94,6 @@ export default function BlocCitations({
     <CommentsBloc className={`${open ? "emoji-open" : ""} ${item.citations.length >= 3 ? "has-comments-citations" : ""}`}>
       <ListCitations
         items={item.citations}
-        state={state.showModal}
         setMsgNotifTopTime={setMsgNotifTopTime}
         activeCitation={activeCitation}
         setActiveCitation={setActiveCitation}
@@ -119,7 +116,6 @@ export default function BlocCitations({
         open={open}
         setOpen={setOpen}
         setMsgNotifTopTime={setMsgNotifTopTime}
-        setState={setState}
         saveMessage={saveMessage}
         waitingTime={waitingTime}
         setImTyping={setImTyping}

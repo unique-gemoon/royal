@@ -3,6 +3,10 @@ import * as actionTypes from "../functions/actionTypes";
 const initState = {
     activeItem: null,
     activeItemPlayer: null,
+    showModal:false,
+    showNV2:false,
+    showCitation:false,
+    showComment:false,
 };
 
 const updateObject = (oldObject, newObject) => {

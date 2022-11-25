@@ -11,20 +11,7 @@ import connector from "../connector";
 import { decrementDurationTime, getInt, getPercentDuration } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 
-export default function BarTemporelle({
-    state = {},
-    setState = () => {},
-    item = {},
-    indexItem,
-    setItem = {},
-    showModal = false,
-    setShowModal = () => {},
-    action = {},
-    setAction = () => {},
-    setMsgNotifTopTime = () => {},
-    clearPliElapsed = () => {},
-    ...props
-}) {
+export default function BarTemporelle({ state = {}, item = {}, indexItem, setItem = {}, action = {}, setAction = () => {}, setMsgNotifTopTime = () => {}, clearPliElapsed = () => {}, ...props }) {
     const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
     const auth = useSelector((store) => store.auth);
@@ -153,7 +140,10 @@ export default function BarTemporelle({
                     className={`${item.appearances.alreadyUpdated && !item.appearances.signe ? "active" : ""}`}
                     onClick={() => {
                         if (!checkIsConnected()) {
-                            setShowModal(false);
+                            dispatch({
+                                type: actionTypes.LOAD_PLI,
+                                showModal: false,
+                            });
                         } else {
                             downTime();
                         }
@@ -164,16 +154,18 @@ export default function BarTemporelle({
                 <div
                     className="content-timer-bar"
                     onClick={() => {
-                        if (!showModal) {
-                            if (pli.activeItem && pli.activeItem.id != item.id) {
+                        if (!pli.showModal) {
+                            if (pli.activeItem?.id != item.id) {
                                 dispatch({
                                     type: actionTypes.LOAD_PLI,
-                                    activeItem: { ...item, showNV2: true },
+                                    activeItem: item,
+                                    showNV2: true,
                                 });
                             } else {
                                 dispatch({
                                     type: actionTypes.LOAD_PLI,
-                                    activeItem: { ...item, showNV2: !state.showNV2 },
+                                    activeItem: item,
+                                    showNV2: !pli.showNV2,
                                 });
                             }
                         }
@@ -189,7 +181,10 @@ export default function BarTemporelle({
                     className={`${item.appearances.alreadyUpdated && item.appearances.signe ? "active" : ""}`}
                     onClick={() => {
                         if (!checkIsConnected()) {
-                            setShowModal(false);
+                            dispatch({
+                                type: actionTypes.LOAD_PLI,
+                                showModal: false,
+                            });
                         } else {
                             upTime();
                         }

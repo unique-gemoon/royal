@@ -5,7 +5,7 @@ import { getPathMedia } from "../../helper/fonctions";
 import * as actionTypes from "../../store/functions/actionTypes";
 import VideoJs from "../videoJs";
 
-export default function PlayerVideo({ item, isOpenOuverture = false }) {
+export default function PlayerVideo({ item }) {
     const dispatch = useDispatch();
     const pli = useSelector((store) => store.pli);
 
@@ -52,7 +52,7 @@ export default function PlayerVideo({ item, isOpenOuverture = false }) {
         });
     };
     useEffect(() => {
-        if (pli.activeItemPlayer && pli.activeItemPlayer.path && pli.activeItemPlayer.id !== item.id) {
+        if (pli.activeItemPlayer?.path && pli.activeItemPlayer?.id !== item.id) {
             if (playerRef.current !== null) {
                 playerRef.current.pause();
             }
@@ -60,7 +60,7 @@ export default function PlayerVideo({ item, isOpenOuverture = false }) {
     }, [pli.activeItemPlayer]);
 
     useEffect(() => {
-        if (!isOpenOuverture) {
+        if (!(pli.showNV2 && pli.activeItem?.id == item.id)) {
             playerRef?.current?.pause();
         }
         if (refHeight?.current?.clientHeight) {
@@ -68,7 +68,7 @@ export default function PlayerVideo({ item, isOpenOuverture = false }) {
                 setHeight(refHeight.current.clientHeight);
             }
         }
-    }, [isOpenOuverture, pli.activeItemPlayer, refHeight?.current?.clientHeight]);
+    }, [pli.showNV2, pli.activeItem, pli.activeItemPlayer, refHeight?.current?.clientHeight]);
 
     return (
         <BlocVideoPlayer className={`${height > 470 ? "is-larg-video" : ""}`}>
