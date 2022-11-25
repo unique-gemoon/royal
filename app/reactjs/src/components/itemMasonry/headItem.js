@@ -452,7 +452,8 @@ export default function HeadItem({
                                 type: actionTypes.LOAD_PLI,
                                 activeItem: item,
                                 showModal: true,
-                                showNV2 : pli.activeItem?.id != item.id ? false : pli.showNV2
+                                showNV2 : pli.activeItem?.id != item.id ? false : pli.showNV2,
+                                showCitation : pli.activeItem?.id != item.id ? true : pli.showCitation,
                             });
                         }}
                     >
