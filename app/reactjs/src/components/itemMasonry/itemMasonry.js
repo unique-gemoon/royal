@@ -114,9 +114,7 @@ export default function ItemMasonry({
     const getDataOuverture = (ouverture) => {
         let el = document.createElement("html");
         if (ouverture.indexOf("blockquote")) {
-            ouverture = ouverture
-                .replace("<blockquote>", '<p class="blockquote">')
-                .replace("</blockquote>", "</p>");
+            ouverture = ouverture.replace("<blockquote>", '<p class="blockquote">').replace("</blockquote>", "</p>");
         }
 
         el.innerHTML = ouverture;
@@ -134,10 +132,7 @@ export default function ItemMasonry({
                     const image = getMediaOuvertureByUrl(url, "image");
 
                     if (currentElement == "image") {
-                        newOuverture[newOuverture.length - 1].data = [
-                            ...newOuverture[newOuverture.length - 1].data,
-                            image,
-                        ];
+                        newOuverture[newOuverture.length - 1].data = [...newOuverture[newOuverture.length - 1].data, image];
                     } else {
                         newOuverture.push({ type: "image", data: [image] });
                     }
@@ -160,10 +155,10 @@ export default function ItemMasonry({
                     newOuverture.push({ type: "music", data: [music] });
                 }
                 currentElement = "audio";
-            }else if (p.classList.contains("blockquote")) {
-              currentElement = "blockquote";
-              newOuverture.push({ type: "blockquote", content: p.innerHTML });
-            }else if (p.innerHTML == "<br>" && currentElement == "image") {
+            } else if (p.classList.contains("blockquote")) {
+                currentElement = "blockquote";
+                newOuverture.push({ type: "blockquote", content: p.innerHTML });
+            } else if (p.innerHTML == "<br>" && currentElement == "image") {
             } else {
                 currentElement = "text";
                 newOuverture.push({ type: "text", content: p.innerHTML });
@@ -210,31 +205,15 @@ export default function ItemMasonry({
                     {data.media.count > 0 && (
                         <div>
                             {data.media.sondage.map((sondage, index) => (
-                                <Sondage
-                                    name={`bloc_${sondage.id}`}
-                                    item={sondage}
-                                    setItem={setMedia}
-                                    key={index}
-                                    setMsgNotifTopTime={setMsgNotifTopTime}
-                                />
+                                <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={index} setMsgNotifTopTime={setMsgNotifTopTime} />
                             ))}
                             <ImagesGallery items={data.media.image} />
-                            {data.media.video.map((video, index) => (
-                                <PlayerVideo
-                                    setActiveItemPlayer={setActiveItemPlayer}
-                                    activeItemPlayer={activeItemPlayer}
-                                    item={video}
-                                    key={index}
-                                />
-                            ))}
-                            {data.media.music.map((music, index) => (
-                                <PlayerMusic
-                                    setActiveItemMusic={setActiveItemPlayer}
-                                    activeItemMusic={activeItemPlayer}
-                                    item={music}
-                                    key={index}
-                                />
-                            ))}
+                            {data.media.video.map(
+                                (video, index) => video?.path && <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={video} key={index} />
+                            )}
+                            {data.media.music.map(
+                                (music, index) => music?.path && <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={music} key={index} />
+                            )}
                         </div>
                     )}
                 </div>
@@ -261,17 +240,10 @@ export default function ItemMasonry({
             <>
                 {item.ouverture || data.mediaOuverture.count > 0 ? (
                     <div className="content-bloc-NV2">
-
                         {data.mediaOuverture.count > 0 && (
                             <div>
                                 {data.mediaOuverture.sondage.map((sondage) => (
-                                    <Sondage
-                                        name={`bloc_${sondage.id}`}
-                                        item={sondage}
-                                        setItem={setMedia}
-                                        key={sondage.id}
-                                        setMsgNotifTopTime={setMsgNotifTopTime}
-                                    />
+                                    <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={sondage.id} setMsgNotifTopTime={setMsgNotifTopTime} />
                                 ))}
                             </div>
                         )}
@@ -284,30 +256,35 @@ export default function ItemMasonry({
                                             {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
                                             {media.type == "image" && <ImagesGallery items={media.data} />}
                                             {media.type == "video" &&
-                                                media.data.map((video, index) => (
-                                                    <PlayerVideo
-                                                        setActiveItemPlayer={setActiveItemPlayer}
-                                                        activeItemPlayer={activeItemPlayer}
-                                                        item={video}
-                                                        key={index}
-                                                        isOpenOuverture={isOpenNV2()}
-                                                    />
-                                                ))}
+                                                media.data.map(
+                                                    (video, index) =>
+                                                        video?.path && (
+                                                            <PlayerVideo
+                                                                setActiveItemPlayer={setActiveItemPlayer}
+                                                                activeItemPlayer={activeItemPlayer}
+                                                                item={video}
+                                                                key={index}
+                                                                isOpenOuverture={isOpenNV2()}
+                                                            />
+                                                        )
+                                                )}
                                             {media.type == "music" &&
-                                                media.data.map((music, index) => (
-                                                    <PlayerMusic
-                                                        setActiveItemMusic={setActiveItemPlayer}
-                                                        activeItemMusic={activeItemPlayer}
-                                                        item={music}
-                                                        key={index}
-                                                        isOpenOuverture={isOpenNV2()}
-                                                    />
-                                                ))}
+                                                media.data.map(
+                                                    (music, index) =>
+                                                        music?.path && (
+                                                            <PlayerMusic
+                                                                setActiveItemMusic={setActiveItemPlayer}
+                                                                activeItemMusic={activeItemPlayer}
+                                                                item={music}
+                                                                key={index}
+                                                                isOpenOuverture={isOpenNV2()}
+                                                            />
+                                                        )
+                                                )}
                                         </span>
                                     ))}
                             </div>
                         )}
-
                     </div>
                 ) : null}
             </>
@@ -330,10 +307,7 @@ export default function ItemMasonry({
                         <div className="Bloc-NV2">
                             <>
                                 {renderContentNV2()}
-                                <div
-                                    className="toggle-pli2"
-                                    onClick={() => setState({ ...state, showModal: false, item })}
-                                >
+                                <div className="toggle-pli2" onClick={() => setState({ ...state, showModal: false, item })}>
                                     <span className="users-views">
                                         {item.totalCitations} <CommentOutlinedIcon />
                                     </span>{" "}
@@ -343,13 +317,7 @@ export default function ItemMasonry({
                                     </span>
                                 </div>
                                 <div className={`${state.showCitation ? "" : "d-none"}`}>
-                                    <BlocCitations
-                                        item={item}
-                                        state={state}
-                                        setState={setState}
-                                        setMsgNotifTopTime={setMsgNotifTopTime}
-                                        typingCitation={typingCitation}
-                                    />
+                                    <BlocCitations item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime} typingCitation={typingCitation} />
                                 </div>
                             </>
                         </div>
@@ -362,31 +330,26 @@ export default function ItemMasonry({
                 </div>
                 <div className="Bloc-NV2">
                     <div className="content-Bloc-NV2">
-                    <div className={`${isOpenNV2() ? "" : "d-none"}`}>
-                        {renderContentNV2()}
+                        <div className={`${isOpenNV2() ? "" : "d-none"}`}>
+                            {renderContentNV2()}
 
-                        <div
-                            className="toggle-pli2"
-                            onClick={() => {
-                                setState({ ...state, showModal: true });
-                            }}
-                        >
-                            <span className="users-views">
-                                {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />
-                            </span>{" "}
-                            .{" "}
-                            <span className="toggle-zoom">
-                                Etendre le pli
-                                <OpenInFullOutlinedIcon className="open-zoom-icon" />
-                            </span>
+                            <div
+                                className="toggle-pli2"
+                                onClick={() => {
+                                    setState({ ...state, showModal: true });
+                                }}
+                            >
+                                <span className="users-views">
+                                    {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />
+                                </span>{" "}
+                                .{" "}
+                                <span className="toggle-zoom">
+                                    Etendre le pli
+                                    <OpenInFullOutlinedIcon className="open-zoom-icon" />
+                                </span>
+                            </div>
+                            <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime} />
                         </div>
-                        <BlocComments
-                            item={item}
-                            state={state}
-                            setState={setState}
-                            setMsgNotifTopTime={setMsgNotifTopTime}
-                        />
-                    </div>
                     </div>
                 </div>
             </MasonryItem>
