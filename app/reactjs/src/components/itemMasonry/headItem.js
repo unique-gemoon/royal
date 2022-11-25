@@ -14,7 +14,7 @@ import { Button } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import BallotIcon from "../../assets/images/icons/ballotIcon";
@@ -25,6 +25,7 @@ import moment from "moment";
 import { copyToClipboard, getDurationHM, getMsgError } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
+import * as actionTypes from "../../store/functions/actionTypes";
 
 export default function HeadItem({
     item,
@@ -33,8 +34,6 @@ export default function HeadItem({
     setState,
     action,
     setAction = () => {},
-    activeItem,
-    setActiveItem = () => {},
     setMsgNotifTopTime = () => {},
     folowersMessage,
     setFolowersMessage = () => {},
@@ -51,6 +50,9 @@ export default function HeadItem({
     const handleTooltipOpen = () => {
         setToggleProfile(!toggleProfile);
     };
+
+    const dispatch = useDispatch();
+    const pli = useSelector((store) => store.pli);
     const auth = useSelector((store) => store.auth);
 
     const history = useHistory();
@@ -441,7 +443,10 @@ export default function HeadItem({
                         className="users-enligne-pli"
                         onClick={() => {
                             setState({ ...state, showModal: true, item });
-                            setActiveItem(item);
+                            dispatch({
+                                type: actionTypes.LOAD_PLI,
+                                activeItem: item ,
+                            });
                         }}
                     >
                         {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />{" "}
@@ -450,7 +455,7 @@ export default function HeadItem({
                 )}
                 <div
                     className={`nb-message-comment ${
-                        (activeItem && activeItem.id == item.id && !state.showModal && state.showNV2) ||
+                        (pli.activeItem && pli.activeItem.id == item.id && !state.showModal && state.showNV2) ||
                         (state.showModal && state.showCitation)
                             ? "comment-is-open"
                             : ""
@@ -459,10 +464,16 @@ export default function HeadItem({
                         if (state.showModal) {
                             setState({ ...state, showCitation: !state.showCitation });
                         } else {
-                            if (activeItem && activeItem.id != item.id) {
-                                setActiveItem({ ...item, showNV2: true });
+                            if (pli.activeItem && pli.activeItem.id != item.id) {
+                                dispatch({
+                                    type: actionTypes.LOAD_PLI,
+                                    activeItem: { ...item, showNV2: true } ,
+                                });
                             } else {
-                                setActiveItem({ ...item, showNV2: !state.showNV2 });
+                                dispatch({
+                                    type: actionTypes.LOAD_PLI,
+                                    activeItem: { ...item, showNV2: !state.showNV2 } ,
+                                });
                             }
                         }
                     }}

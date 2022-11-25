@@ -13,6 +13,7 @@ import PlayerMusic from "./playerMusic";
 import PlayerVideo from "./playerVideo";
 import Sondage from "./sondage";
 import BlocCitations from "../citations/blocCitations";
+import { useSelector } from "react-redux";
 
 export default function ItemMasonry({
     item,
@@ -20,10 +21,6 @@ export default function ItemMasonry({
     setItem = () => {},
     action,
     setAction = () => {},
-    activeItem = null,
-    setActiveItem = () => {},
-    setActiveItemPlayer = () => {},
-    activeItemPlayer = null,
     setMsgNotifTopTime = () => {},
     setStateModal = () => {},
     folowersMessage,
@@ -52,6 +49,7 @@ export default function ItemMasonry({
     const [dataOuverture, setDataOuverture] = useState([]);
     const [height, setHeight] = useState(0);
     const refHeight = useRef(null);
+    const pli = useSelector((store) => store.pli);
 
     const [state, setState] = useState({
         showModal: false,
@@ -89,7 +87,7 @@ export default function ItemMasonry({
     }, [item.medias]);
 
     const isOpenNV2 = () => {
-        return activeItem && item.id == activeItem.id && state.showNV2;
+        return pli.activeItem && item.id == pli.activeItem.id && state.showNV2;
     };
 
     const setMedia = (media) => {
@@ -103,13 +101,13 @@ export default function ItemMasonry({
     };
 
     useEffect(() => {
-        if (activeItem && activeItem.showNV2 != undefined && item.id == activeItem.id) {
+        if (pli.activeItem && pli.activeItem.showNV2 != undefined && item.id == pli.activeItem.id) {
             setState({
                 ...state,
-                showNV2: activeItem.showNV2,
+                showNV2: pli.activeItem.showNV2,
             });
         }
-    }, [activeItem]);
+    }, [pli.activeItem]);
 
     const getDataOuverture = (ouverture) => {
         let el = document.createElement("html");
@@ -192,8 +190,6 @@ export default function ItemMasonry({
                     setState={setState}
                     action={action}
                     setAction={setAction}
-                    activeItem={activeItem}
-                    setActiveItem={setActiveItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}
                     folowersMessage={folowersMessage}
                     setFolowersMessage={setFolowersMessage}
@@ -208,12 +204,8 @@ export default function ItemMasonry({
                                 <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={index} setMsgNotifTopTime={setMsgNotifTopTime} />
                             ))}
                             <ImagesGallery items={data.media.image} />
-                            {data.media.video.map(
-                                (video, index) => video?.path && <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={video} key={index} />
-                            )}
-                            {data.media.music.map(
-                                (music, index) => music?.path && <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={music} key={index} />
-                            )}
+                            {data.media.video.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
+                            {data.media.music.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
                         </div>
                     )}
                 </div>
@@ -225,8 +217,6 @@ export default function ItemMasonry({
                     setState={setState}
                     action={action}
                     setAction={setAction}
-                    activeItem={activeItem}
-                    setActiveItem={setActiveItem}
                     className={state.showModal ? "" : isOpenNV2() ? "" : "nv-hide"}
                     setMsgNotifTopTime={setMsgNotifTopTime}
                     clearPliElapsed={clearPliElapsed}
@@ -255,32 +245,8 @@ export default function ItemMasonry({
                                             {media.type == "text" && <p>{parse(media.content)}</p>}
                                             {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
                                             {media.type == "image" && <ImagesGallery items={media.data} />}
-                                            {media.type == "video" &&
-                                                media.data.map(
-                                                    (video, index) =>
-                                                        video?.path && (
-                                                            <PlayerVideo
-                                                                setActiveItemPlayer={setActiveItemPlayer}
-                                                                activeItemPlayer={activeItemPlayer}
-                                                                item={video}
-                                                                key={index}
-                                                                isOpenOuverture={isOpenNV2()}
-                                                            />
-                                                        )
-                                                )}
-                                            {media.type == "music" &&
-                                                media.data.map(
-                                                    (music, index) =>
-                                                        music?.path && (
-                                                            <PlayerMusic
-                                                                setActiveItemMusic={setActiveItemPlayer}
-                                                                activeItemMusic={activeItemPlayer}
-                                                                item={music}
-                                                                key={index}
-                                                                isOpenOuverture={isOpenNV2()}
-                                                            />
-                                                        )
-                                                )}
+                                            {media.type == "video" && media.data.map((video, index) => video?.path && <PlayerVideo item={video} key={index} isOpenOuverture={isOpenNV2()} />)}
+                                            {media.type == "music" && media.data.map((music, index) => music?.path && <PlayerMusic item={music} key={index} isOpenOuverture={isOpenNV2()} />)}
                                         </span>
                                     ))}
                             </div>

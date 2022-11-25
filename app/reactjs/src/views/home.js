@@ -32,8 +32,6 @@ export default function Home() {
     const thread = useSelector((store) => store.thread);
 
     const [plis, setPlis] = useState([]);
-    const [activeItem, setActiveItem] = useState(null);
-    const [activeItemPlayer, setActiveItemPlayer] = useState(null);
     const [submitting, setSubmitting] = useState(false);
     const [showBlocModalMessage, setShowBlocModalMessage] = useState(null);
     const [openModalMessage, setOpenModalMessage] = useState(false);
@@ -948,10 +946,6 @@ export default function Home() {
                                     setItem={setItem}
                                     action={action}
                                     setAction={setAction}
-                                    activeItem={activeItem}
-                                    setActiveItem={setActiveItem}
-                                    activeItemPlayer={activeItemPlayer}
-                                    setActiveItemPlayer={setActiveItemPlayer}
                                     setMsgNotifTopTime={setMsgNotifTopTime}
                                     setStateModal={setStateModal}
                                     folowersMessage={folowersMessage}
@@ -989,7 +983,6 @@ export default function Home() {
                         setSubscriptions={setSubscriptions}
                         loadingMore={loadingMore}
                         setLoadingMore={setLoadingMoreCheck}
-                        setActiveItem={setActiveItem}
                         plis={plis}
                         typingMessage={typingMessage}
                     />

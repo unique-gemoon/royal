@@ -9,6 +9,7 @@ import App from "./app";
 import logger from "./store/middlewares/logger";
 import AuthReducer from "./store/reducers/authReducer";
 import NotificationReducer from "./store/reducers/notificationReducer";
+import PliReducer from "./store/reducers/pliReducer";
 import ThreadReducer from "./store/reducers/threadReducer";
 
 const REACT_VERSION = React.version;
@@ -19,6 +20,7 @@ const rootReducer = combineReducers({
     auth: AuthReducer,
     notification: NotificationReducer,
     thread: ThreadReducer,
+    pli: PliReducer,
 });
 const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, thunk)));
 

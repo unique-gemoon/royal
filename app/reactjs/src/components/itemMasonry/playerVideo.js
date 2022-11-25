@@ -1,75 +1,80 @@
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { BlocVideoPlayer } from "../../assets/styles/componentStyle";
-import VideoJs from "../videoJs";
 import { getPathMedia } from "../../helper/fonctions";
+import * as actionTypes from "../../store/functions/actionTypes";
+import VideoJs from "../videoJs";
 
-export default function PlayerVideo({
-  item,
-  activeItemPlayer,
-  isOpenOuverture = false,
-  setActiveItemPlayer = () => { },
-}) {
-  const [height, setHeight] = useState(0);
-  const refHeight = useRef(null);
-  const playerRef = React.useRef(null);
+export default function PlayerVideo({ item, isOpenOuverture = false }) {
+    const dispatch = useDispatch();
+    const pli = useSelector((store) => store.pli);
 
-  const videoJsOptions = {
-    // lookup the options in the docs for more options
-    autoplay: false,
-    controls: true,
-    responsive: true,
-    fluid: true,
-    sources: [
-      {
-        src: getPathMedia(item.path, "video"),
-        type: "video/mp4",
-      },
-    ],
-  };
+    const [height, setHeight] = useState(0);
+    const refHeight = useRef(null);
+    const playerRef = React.useRef(null);
 
-  const handlePlayerReady = (player) => {
-    playerRef.current = player;
-    // you can handle player events here
-    player.on("waiting", () => {
-      setActiveItemPlayer(item);
-    });
+    const videoJsOptions = {
+        // lookup the options in the docs for more options
+        autoplay: false,
+        controls: true,
+        responsive: true,
+        fluid: true,
+        sources: [
+            {
+                src: getPathMedia(item.path, "video"),
+                type: "video/mp4",
+            },
+        ],
+    };
 
-    player.on("dispose", () => {
-      setActiveItemPlayer(item);
-    });
+    const handlePlayerReady = (player) => {
+        playerRef.current = player;
+        // you can handle player events here
+        player.on("waiting", () => {
+            dispatch({
+                type: actionTypes.LOAD_PLI,
+                activeItemPlayer: item,
+            });
+        });
 
-    player.on("play", () => {
-      setActiveItemPlayer(item);
-    });
-  };
-  useEffect(() => {
-    if (
-      activeItemPlayer &&
-      activeItemPlayer.path &&
-      activeItemPlayer.id !== item.id
-    ) {
-      if (playerRef.current !== null) {
-        playerRef.current.pause();
-      }
-    }
-  }, [activeItemPlayer]);
+        player.on("dispose", () => {
+            dispatch({
+                type: actionTypes.LOAD_PLI,
+                activeItemPlayer: item,
+            });
+        });
 
-  useEffect(() => {
-    if(!isOpenOuverture){
-      playerRef?.current?.pause();
-    }
-    if (refHeight?.current?.clientHeight) {
-      if (refHeight.current.clientHeight>470) {
-        setHeight(refHeight.current.clientHeight);
-      }
-    }
-  }, [isOpenOuverture,activeItemPlayer,refHeight?.current?.clientHeight]);
+        player.on("play", () => {
+            dispatch({
+                type: actionTypes.LOAD_PLI,
+                activeItemPlayer: item,
+            });
+        });
+    };
+    useEffect(() => {
+        if (pli.activeItemPlayer && pli.activeItemPlayer.path && pli.activeItemPlayer.id !== item.id) {
+            if (playerRef.current !== null) {
+                playerRef.current.pause();
+            }
+        }
+    }, [pli.activeItemPlayer]);
 
-  return (
-    <BlocVideoPlayer  className={`${height > 470 ? "is-larg-video" : ""}`}>
-      <div ref={refHeight} >
-        <VideoJs options={videoJsOptions} onReady={handlePlayerReady} />
-      </div>
-    </BlocVideoPlayer>
-  );
+    useEffect(() => {
+        if (!isOpenOuverture) {
+            playerRef?.current?.pause();
+        }
+        if (refHeight?.current?.clientHeight) {
+            if (refHeight.current.clientHeight > 470) {
+                setHeight(refHeight.current.clientHeight);
+            }
+        }
+    }, [isOpenOuverture, pli.activeItemPlayer, refHeight?.current?.clientHeight]);
+
+    return (
+        <BlocVideoPlayer className={`${height > 470 ? "is-larg-video" : ""}`}>
+            <div ref={refHeight}>
+                <VideoJs options={videoJsOptions} onReady={handlePlayerReady} />
+            </div>
+        </BlocVideoPlayer>
+    );
 }
