@@ -8,3 +8,4 @@ export const REFRESH_TOKEN_FAIL = "REFRESH_TOKEN_FAIL";
 export const LOGOUT = "LOGOUT";
 export const LOAD_NOTIFICATIONS = "LOAD_NOTIFICATIONS";
 export const LOAD_THREADS = "LOAD_THREADS";
+export const LOAD_PLI = "LOAD_PLI";

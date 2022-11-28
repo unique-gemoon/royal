@@ -4,15 +4,18 @@ import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import parse from "html-react-parser";
 import React, { useEffect, useRef, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { MasonryItem, ModalItem } from "../../assets/styles/componentStyle";
 import BarTemporelle from "../barTemporelle";
+import BlocCitations from "../citations/blocCitations";
 import BlocComments from "../comments/blocComments";
 import HeadItem from "./headItem";
 import ImagesGallery from "./imagesGallery";
 import PlayerMusic from "./playerMusic";
 import PlayerVideo from "./playerVideo";
 import Sondage from "./sondage";
-import BlocCitations from "../citations/blocCitations";
+import * as actionTypes from "../../store/functions/actionTypes";
+import { getDataOuverture } from '../../helper/fonctions';
 
 export default function ItemMasonry({
     item,
@@ -20,12 +23,7 @@ export default function ItemMasonry({
     setItem = () => {},
     action,
     setAction = () => {},
-    activeItem = null,
-    setActiveItem = () => {},
-    setActiveItemPlayer = () => {},
-    activeItemPlayer = null,
     setMsgNotifTopTime = () => {},
-    setStateModal = () => {},
     folowersMessage,
     setFolowersMessage = () => {},
     updateSubscriberStatus = () => {},
@@ -47,22 +45,14 @@ export default function ItemMasonry({
             music: [],
             count: 0,
         },
+        dataOuverture : []
     };
     const [data, setData] = useState({ ...initData });
-    const [dataOuverture, setDataOuverture] = useState([]);
+
     const [height, setHeight] = useState(0);
     const refHeight = useRef(null);
-
-    const [state, setState] = useState({
-        showModal: false,
-        showCitation: true,
-        showNV2: false,
-        item: {},
-    });
-
-    useEffect(() => {
-        setStateModal(state);
-    }, [state]);
+    const dispatch = useDispatch();
+    const pli = useSelector((store) => store.pli);
 
     useEffect(() => {
         if (refHeight?.current?.clientHeight) {
@@ -84,13 +74,8 @@ export default function ItemMasonry({
                 cpData.media.count = cpData.media.count + 1;
             }
         }
-        setData(cpData);
-        setDataOuverture(getDataOuverture(item.ouverture));
+        setData({...cpData, dataOuverture : getDataOuverture(item.ouverture, cpData.mediaOuverture)});
     }, [item.medias]);
-
-    const isOpenNV2 = () => {
-        return activeItem && item.id == activeItem.id && state.showNV2;
-    };
 
     const setMedia = (media) => {
         let cpMedias = [...item.medias];
@@ -102,98 +87,14 @@ export default function ItemMasonry({
         setItem({ ...item, medias: cpMedias, action: "update" });
     };
 
-    useEffect(() => {
-        if (activeItem && activeItem.showNV2 != undefined && item.id == activeItem.id) {
-            setState({
-                ...state,
-                showNV2: activeItem.showNV2,
-            });
-        }
-    }, [activeItem]);
-
-    const getDataOuverture = (ouverture) => {
-        let el = document.createElement("html");
-        if (ouverture.indexOf("blockquote")) {
-            ouverture = ouverture.replace("<blockquote>", '<p class="blockquote">').replace("</blockquote>", "</p>");
-        }
-
-        el.innerHTML = ouverture;
-        const listP = el.getElementsByTagName("p");
-        let newOuverture = [];
-        let currentElement = "";
-
-        for (let i = 0; i < listP.length; i++) {
-            const p = listP[i];
-
-            if (p.classList.contains("block-image")) {
-                const listImg = p.getElementsByTagName("img");
-                if (listImg.length) {
-                    const url = listImg[0].src;
-                    const image = getMediaOuvertureByUrl(url, "image");
-
-                    if (currentElement == "image") {
-                        newOuverture[newOuverture.length - 1].data = [...newOuverture[newOuverture.length - 1].data, image];
-                    } else {
-                        newOuverture.push({ type: "image", data: [image] });
-                    }
-                }
-
-                currentElement = "image";
-            } else if (p.classList.contains("block-video")) {
-                const listVideo = p.getElementsByTagName("video");
-                if (listVideo.length) {
-                    const url = listVideo[0].src;
-                    const video = getMediaOuvertureByUrl(url, "video");
-                    newOuverture.push({ type: "video", data: [video] });
-                }
-                currentElement = "video";
-            } else if (p.classList.contains("block-audio")) {
-                const listMusic = p.getElementsByTagName("audio");
-                if (listMusic.length) {
-                    const url = listMusic[0].src;
-                    const music = getMediaOuvertureByUrl(url, "music");
-                    newOuverture.push({ type: "music", data: [music] });
-                }
-                currentElement = "audio";
-            } else if (p.classList.contains("blockquote")) {
-                currentElement = "blockquote";
-                newOuverture.push({ type: "blockquote", content: p.innerHTML });
-            } else if (p.innerHTML == "<br>" && currentElement == "image") {
-            } else {
-                currentElement = "text";
-                newOuverture.push({ type: "text", content: p.innerHTML });
-            }
-        }
-
-        return newOuverture;
-    };
-
-    const getMediaOuvertureByUrl = (url, type) => {
-        let media = { type };
-        if (data.mediaOuverture[type].length) {
-            for (let i = 0; i < data.mediaOuverture[type].length; i++) {
-                const cpMedia = data.mediaOuverture[type][i];
-                if (url.indexOf(cpMedia.path) != -1) {
-                    media = cpMedia;
-                    break;
-                }
-            }
-        }
-        return media;
-    };
-
     const renderContentNV1 = () => {
         return (
             <>
                 <HeadItem
                     item={item}
                     setItem={setItem}
-                    state={state}
-                    setState={setState}
                     action={action}
                     setAction={setAction}
-                    activeItem={activeItem}
-                    setActiveItem={setActiveItem}
                     setMsgNotifTopTime={setMsgNotifTopTime}
                     folowersMessage={folowersMessage}
                     setFolowersMessage={setFolowersMessage}
@@ -208,12 +109,8 @@ export default function ItemMasonry({
                                 <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={index} setMsgNotifTopTime={setMsgNotifTopTime} />
                             ))}
                             <ImagesGallery items={data.media.image} />
-                            {data.media.video.map(
-                                (video, index) => video?.path && <PlayerVideo setActiveItemPlayer={setActiveItemPlayer} activeItemPlayer={activeItemPlayer} item={video} key={index} />
-                            )}
-                            {data.media.music.map(
-                                (music, index) => music?.path && <PlayerMusic setActiveItemMusic={setActiveItemPlayer} activeItemMusic={activeItemPlayer} item={music} key={index} />
-                            )}
+                            {data.media.video.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
+                            {data.media.music.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
                         </div>
                     )}
                 </div>
@@ -221,13 +118,9 @@ export default function ItemMasonry({
                     item={item}
                     indexItem={indexItem}
                     setItem={setItem}
-                    state={state}
-                    setState={setState}
                     action={action}
                     setAction={setAction}
-                    activeItem={activeItem}
-                    setActiveItem={setActiveItem}
-                    className={state.showModal ? "" : isOpenNV2() ? "" : "nv-hide"}
+                    className={pli.showModal ? "" : pli.activeItem?.id == item.id && pli.showNV2 ? "" : "nv-hide"}
                     setMsgNotifTopTime={setMsgNotifTopTime}
                     clearPliElapsed={clearPliElapsed}
                 />
@@ -249,38 +142,14 @@ export default function ItemMasonry({
                         )}
                         {item.ouverture && (
                             <div className="descripton-miniature">
-                                {dataOuverture.length > 0 &&
-                                    dataOuverture.map((media, index) => (
+                                {data.dataOuverture.length > 0 &&
+                                    data.dataOuverture.map((media, index) => (
                                         <span key={index}>
                                             {media.type == "text" && <p>{parse(media.content)}</p>}
                                             {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
                                             {media.type == "image" && <ImagesGallery items={media.data} />}
-                                            {media.type == "video" &&
-                                                media.data.map(
-                                                    (video, index) =>
-                                                        video?.path && (
-                                                            <PlayerVideo
-                                                                setActiveItemPlayer={setActiveItemPlayer}
-                                                                activeItemPlayer={activeItemPlayer}
-                                                                item={video}
-                                                                key={index}
-                                                                isOpenOuverture={isOpenNV2()}
-                                                            />
-                                                        )
-                                                )}
-                                            {media.type == "music" &&
-                                                media.data.map(
-                                                    (music, index) =>
-                                                        music?.path && (
-                                                            <PlayerMusic
-                                                                setActiveItemMusic={setActiveItemPlayer}
-                                                                activeItemMusic={activeItemPlayer}
-                                                                item={music}
-                                                                key={index}
-                                                                isOpenOuverture={isOpenNV2()}
-                                                            />
-                                                        )
-                                                )}
+                                            {media.type == "video" && media.data.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
+                                            {media.type == "music" && media.data.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
                                         </span>
                                     ))}
                             </div>
@@ -294,9 +163,12 @@ export default function ItemMasonry({
     return (
         <>
             <ModalItem
-                show={state.showModal}
+                show={pli.showModal && pli.activeItem?.id == item.id}
                 onHide={() => {
-                    setState({ ...state, showModal: false, item });
+                    dispatch({
+                        type: actionTypes.LOAD_PLI,
+                        showModal: false,
+                    });
                 }}
             >
                 <ModalItem.Body>
@@ -307,7 +179,15 @@ export default function ItemMasonry({
                         <div className="Bloc-NV2">
                             <>
                                 {renderContentNV2()}
-                                <div className="toggle-pli2" onClick={() => setState({ ...state, showModal: false, item })}>
+                                <div
+                                    className="toggle-pli2"
+                                    onClick={() => {
+                                        dispatch({
+                                            type: actionTypes.LOAD_PLI,
+                                            showModal: false,
+                                        });
+                                    }}
+                                >
                                     <span className="users-views">
                                         {item.totalCitations} <CommentOutlinedIcon />
                                     </span>{" "}
@@ -316,8 +196,8 @@ export default function ItemMasonry({
                                         Retour au pli ouvert <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
                                     </span>
                                 </div>
-                                <div className={`${state.showCitation ? "" : "d-none"}`}>
-                                    <BlocCitations item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime} typingCitation={typingCitation} />
+                                <div className={`${pli.showCitation ? "" : "d-none"}`}>
+                                    <BlocCitations item={item} setMsgNotifTopTime={setMsgNotifTopTime} typingCitation={typingCitation} />
                                 </div>
                             </>
                         </div>
@@ -330,13 +210,16 @@ export default function ItemMasonry({
                 </div>
                 <div className="Bloc-NV2">
                     <div className="content-Bloc-NV2">
-                        <div className={`${isOpenNV2() ? "" : "d-none"}`}>
+                        <div className={`${pli.activeItem?.id == item.id && pli.showNV2 ? "" : "d-none"}`}>
                             {renderContentNV2()}
 
                             <div
                                 className="toggle-pli2"
                                 onClick={() => {
-                                    setState({ ...state, showModal: true });
+                                    dispatch({
+                                        type: actionTypes.LOAD_PLI,
+                                        showModal: true,
+                                    });
                                 }}
                             >
                                 <span className="users-views">
@@ -348,7 +231,7 @@ export default function ItemMasonry({
                                     <OpenInFullOutlinedIcon className="open-zoom-icon" />
                                 </span>
                             </div>
-                            <BlocComments item={item} state={state} setState={setState} setMsgNotifTopTime={setMsgNotifTopTime} />
+                            <BlocComments item={item} setMsgNotifTopTime={setMsgNotifTopTime} />
                         </div>
                     </div>
                 </div>

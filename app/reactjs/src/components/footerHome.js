@@ -30,7 +30,6 @@ export default function FooterHome({
   setSubscriptions = () => {},
   loadingMore = {},
   setLoadingMore = () => {},
-  setActiveItem = () => {},
   plis = [],
   typingMessage = {},
 }) {
@@ -61,7 +60,6 @@ export default function FooterHome({
         setSubscriptions={setSubscriptions}
         loadingMore={loadingMore}
         setLoadingMore={setLoadingMore}
-        setActiveItem={setActiveItem}
         plis={plis}
         typingMessage={typingMessage}
       />

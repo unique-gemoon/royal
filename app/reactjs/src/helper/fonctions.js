@@ -103,7 +103,7 @@ export function getDurationMessage(from, to) {
     if (d == 0 && h == 0 && m == 0) {
         return "1m";
     } else if (d == 1) {
-        return "Hier " + moment(to).format("h:mm");;
+        return "Hier " + moment(to).format("h:mm");
     } else if (d > 1) {
         return moment(to).format("DD MMM YYYY h:mm");
     } else {
@@ -179,4 +179,74 @@ export function scrollTop(className = "has-scroll") {
             top: 0,
             behavior: "smooth",
         });
+}
+
+export function getDataOuverture(ouverture, mediaOuverture) {
+    let el = document.createElement("html");
+    if (ouverture.indexOf("blockquote")) {
+        ouverture = ouverture.replace("<blockquote>", '<p class="blockquote">').replace("</blockquote>", "</p>");
+    }
+
+    el.innerHTML = ouverture;
+    const listP = el.getElementsByTagName("p");
+    let newOuverture = [];
+    let currentElement = "";
+
+    for (let i = 0; i < listP.length; i++) {
+        const p = listP[i];
+
+        if (p.classList.contains("block-image")) {
+            const listImg = p.getElementsByTagName("img");
+            if (listImg.length) {
+                const url = listImg[0].src;
+                const image = getMediaOuvertureByUrl(mediaOuverture, url, "image");
+
+                if (currentElement == "image") {
+                    newOuverture[newOuverture.length - 1].data = [...newOuverture[newOuverture.length - 1].data, image];
+                } else {
+                    newOuverture.push({ type: "image", data: [image] });
+                }
+            }
+
+            currentElement = "image";
+        } else if (p.classList.contains("block-video")) {
+            const listVideo = p.getElementsByTagName("video");
+            if (listVideo.length) {
+                const url = listVideo[0].src;
+                const video = getMediaOuvertureByUrl(mediaOuverture, url, "video");
+                newOuverture.push({ type: "video", data: [video] });
+            }
+            currentElement = "video";
+        } else if (p.classList.contains("block-audio")) {
+            const listMusic = p.getElementsByTagName("audio");
+            if (listMusic.length) {
+                const url = listMusic[0].src;
+                const music = getMediaOuvertureByUrl(mediaOuverture, url, "music");
+                newOuverture.push({ type: "music", data: [music] });
+            }
+            currentElement = "audio";
+        } else if (p.classList.contains("blockquote")) {
+            currentElement = "blockquote";
+            newOuverture.push({ type: "blockquote", content: p.innerHTML });
+        } else if (p.innerHTML == "<br>" && currentElement == "image") {
+        } else {
+            currentElement = "text";
+            newOuverture.push({ type: "text", content: p.innerHTML });
+        }
+    }
+    return newOuverture;
+}
+
+export function getMediaOuvertureByUrl(mediaOuverture, url, type) {
+    let media = { type };
+    if (mediaOuverture?.[type].length) {
+        for (let i = 0; i < mediaOuverture[type].length; i++) {
+            const cpMedia = mediaOuverture[type][i];
+            if (url.indexOf(cpMedia.path) != -1) {
+                media = cpMedia;
+                break;
+            }
+        }
+    }
+    return media;
 }

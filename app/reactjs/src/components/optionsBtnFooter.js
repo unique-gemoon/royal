@@ -30,7 +30,6 @@ export default function OptionsBtnFooter({
   setSubscriptions = () => {},
   loadingMore={},
   setLoadingMore=() => {},
-  setActiveItem=() => {},
   plis=[],
   typingMessage={}
 }) {
@@ -156,7 +155,6 @@ export default function OptionsBtnFooter({
           isSeenNotification={isSeenNotification}
           loadingMore={loadingMore}
           setLoadingMore={setLoadingMore}
-          setActiveItem={setActiveItem}
           plis={plis}
         />
       </ButtonActionNotification>

@@ -14,7 +14,7 @@ import { Button } from "@mui/material";
 import ClickAwayListener from "@mui/material/ClickAwayListener";
 import Tooltip from "@mui/material/Tooltip";
 import React, { useEffect, useRef, useState } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import ArrowDownIcon from "../../assets/images/icons/ArrowDownIcon";
 import BallotIcon from "../../assets/images/icons/ballotIcon";
@@ -25,16 +25,13 @@ import moment from "moment";
 import { copyToClipboard, getDurationHM, getMsgError } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
+import * as actionTypes from "../../store/functions/actionTypes";
 
 export default function HeadItem({
     item,
     setItem = () => {},
-    state,
-    setState,
     action,
     setAction = () => {},
-    activeItem,
-    setActiveItem = () => {},
     setMsgNotifTopTime = () => {},
     folowersMessage,
     setFolowersMessage = () => {},
@@ -51,6 +48,9 @@ export default function HeadItem({
     const handleTooltipOpen = () => {
         setToggleProfile(!toggleProfile);
     };
+
+    const dispatch = useDispatch();
+    const pli = useSelector((store) => store.pli);
     const auth = useSelector((store) => store.auth);
 
     const history = useHistory();
@@ -60,7 +60,14 @@ export default function HeadItem({
 
     useEffect(() => {
         if (pliId && item && item.id == pliId) {
-            setState({ ...state, showModal: true, showComment: true, item });
+
+            dispatch({
+                type: actionTypes.LOAD_PLI,
+                activeItem: item,
+                showModal: true,
+                showComment: true,
+            });
+
             const cpAction = {
                 ...action,
                 notification: { ...action.notification, isOpen: false },
@@ -77,10 +84,7 @@ export default function HeadItem({
         if (auth.isConnected) {
             return true;
         } else {
-            setMsgNotifTopTime(
-                "Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages",
-                5000
-            );
+            setMsgNotifTopTime("Vous devez être connecté pour pouvoir ajouter ou enlever du temps, publier, commenter, partager ou envoyer des messages", 5000);
             return false;
         }
     };
@@ -90,7 +94,7 @@ export default function HeadItem({
             if (item.ouverture != "") {
                 cpMediaIcons.push("description");
             }
-            if (item.medias.length > 0 ) {
+            if (item.medias.length > 0) {
                 for (let i = 0; i < item.medias.length; i++) {
                     if (item.medias[i].isOuverture == true && !cpMediaIcons.includes(item.medias[i].type)) {
                         cpMediaIcons.push(item.medias[i].type);
@@ -162,7 +166,7 @@ export default function HeadItem({
                     });
                     setItem({
                         ...item,
-                        user: { ...item.user, isSubscribed: false  },
+                        user: { ...item.user, isSubscribed: false },
                         action: "update",
                     });
                     updateSubscriberStatus({
@@ -232,7 +236,7 @@ export default function HeadItem({
 
     return (
         <HeadContentItem>
-            <div className={`bloc-content-item ${mediaIcons.length == 0 ? "no-media-overture" :""}`}>
+            <div className={`bloc-content-item ${mediaIcons.length == 0 ? "no-media-overture" : ""}`}>
                 <DetailsItems className={mediaIcons.length > 1 && "is-other-media"}>
                     {mediaIcons.length > 0 &&
                         mediaIcons.map((media, index) => (
@@ -350,25 +354,26 @@ export default function HeadItem({
                                                     <Button
                                                         onClick={() => {
                                                             if (!checkIsConnected()) {
-                                                                setState({ ...state, showModal: false, item });
+                                                                dispatch({
+                                                                    type: actionTypes.LOAD_PLI,
+                                                                    activeItem: item,
+                                                                    showModal: false,
+                                                                });
+                                                            }else{
+                                                            dispatch({
+                                                                type: actionTypes.LOAD_PLI,
+                                                                showModal: false,
+                                                            });
                                                             }
                                                             const cpAction = {
                                                                 ...action,
-                                                                // notification: {
-                                                                //     ...action.notification,
-                                                                //     isOpen: false,
-                                                                // },
-                                                                // folower: { ...action.folower, isOpen: false },
-                                                                // search: { ...action.search, isOpen: false },
                                                                 messagerie: {
                                                                     ...action.messagerie,
                                                                     isOpen: true,
                                                                 },
                                                             };
                                                             setAction(cpAction);
-                                                            setState({ ...state, showModal: false });
                                                             setToggleProfile(false);
-
                                                             pliCheckThread(item);
                                                         }}
                                                         className="toggle-item-message"
@@ -426,59 +431,56 @@ export default function HeadItem({
                 </div>
             </div>
             <div className="option-item">
-                {state.showModal ? (
+                {pli.showModal ? (
                     <div
                         className="users-enligne-pli"
                         onClick={() => {
-                            setState({ ...state, showModal: false, item });
+                            dispatch({
+                                type: actionTypes.LOAD_PLI,
+                                activeItem: item,
+                                showModal: false,
+                            });
                         }}
                     >
-                        {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />{" "}
-                        <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
+                        {item?.countOpened ? item.countOpened : 0} <VisibilityIcon /> <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
                     </div>
                 ) : (
                     <div
                         className="users-enligne-pli"
                         onClick={() => {
-                            setState({ ...state, showModal: true, item });
-                            // const cpAction = {
-                            //     ...action,
-                            //     notification: { ...action.notification, isOpen: false },
-                            //     folower: { ...action.folower, isOpen: false },
-                            //     search: { ...action.search, isOpen: false },
-                            //     messagerie: { ...action.messagerie, isOpen: false },
-                            // };
-                            // setAction(cpAction);
-                            setActiveItem(item);
+                            dispatch({
+                                type: actionTypes.LOAD_PLI,
+                                activeItem: item,
+                                showModal: true,
+                                showNV2 : pli.activeItem?.id != item.id ? false : pli.showNV2,
+                                showCitation : pli.activeItem?.id != item.id ? true : pli.showCitation,
+                            });
                         }}
                     >
-                        {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />{" "}
-                        <OpenInFullOutlinedIcon className="open-zoom-icon" />
+                        {item?.countOpened ? item.countOpened : 0} <VisibilityIcon /> <OpenInFullOutlinedIcon className="open-zoom-icon" />
                     </div>
                 )}
                 <div
-                    className={`nb-message-comment ${
-                        (activeItem && activeItem.id == item.id && !state.showModal && state.showNV2) ||
-                        (state.showModal && state.showCitation)
-                            ? "comment-is-open"
-                            : ""
-                    }`}
+                    className={`nb-message-comment ${(!pli.showModal && pli.showNV2 && pli.activeItem?.id == item.id) || (pli.showModal && pli.showCitation) ? "comment-is-open" : ""}`}
                     onClick={() => {
-                        if (state.showModal) {
-                            setState({ ...state, showCitation: !state.showCitation });
+                        if (pli.showModal) {
+                            dispatch({
+                                type: actionTypes.LOAD_PLI,
+                                showCitation: !pli.showCitation,
+                            });
                         } else {
-                            // const cpAction = {
-                            //     ...action,
-                            //     notification: { ...action.notification, isOpen: false },
-                            //     folower: { ...action.folower, isOpen: false },
-                            //     search: { ...action.search, isOpen: false },
-                            //     messagerie: { ...action.messagerie, isOpen: false },
-                            // };
-                            // setAction(cpAction);
-                            if (activeItem && activeItem.id != item.id) {
-                                setActiveItem({ ...item, showNV2: true });
+                            if (pli.activeItem?.id != item.id) {
+                                dispatch({
+                                    type: actionTypes.LOAD_PLI,
+                                    activeItem: item,
+                                    showNV2: true,
+                                });
                             } else {
-                                setActiveItem({ ...item, showNV2: !state.showNV2 });
+                                dispatch({
+                                    type: actionTypes.LOAD_PLI,
+                                    activeItem: item,
+                                    showNV2: !pli.showNV2,
+                                });
                             }
                         }
                     }}
