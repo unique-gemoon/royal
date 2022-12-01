@@ -368,7 +368,6 @@ export default function HeadItem({
 
                                                             dispatch({
                                                                 type: actionTypes.LOAD_PLI,
-                                                                activeItem: null,
                                                                 showModal: false,
                                                             });
                                                         }}
@@ -433,7 +432,6 @@ export default function HeadItem({
                         onClick={() => {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
-                                activeItem: null,
                                 showModal: false,
                             });
                         }}
@@ -453,7 +451,7 @@ export default function HeadItem({
                             });
                         }}
                     >
-                        {item?.countOpened ? item.countOpened : 0} <VisibilityIcon /> <OpenInFullOutlinedIcon className="open-zoom-icon" />
+                        {countOpened ? countOpened : item?.countOpened ? item.countOpened : 0} <VisibilityIcon /> <OpenInFullOutlinedIcon className="open-zoom-icon" />
                     </div>
                 )}
                 <div

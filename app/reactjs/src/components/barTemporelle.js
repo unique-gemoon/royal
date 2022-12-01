@@ -10,6 +10,7 @@ import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { decrementDurationTime, getInt, getPercentDuration } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
+import { useDurationContext } from '../context/DurationContext';
 
 export default function BarTemporelle({
     state = {},
@@ -27,27 +28,16 @@ export default function BarTemporelle({
     const auth = useSelector((store) => store.auth);
     const pli = useSelector((store) => store.pli);
     const [duration, setDuration] = useState(item.duration);
-    const [seconds, setSeconds] = useState(0);
+    const { getSeconds } = useDurationContext();
 
     useEffect(() => {
-        setDuration(item.duration);
-    }, [item.duration]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setSeconds((seconds) => seconds + 1);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
-        let cpDuration = duration ? decrementDurationTime(duration) : false;
+        let cpDuration = decrementDurationTime(item.duration, getSeconds());
         if (cpDuration) {
             setDuration(cpDuration);
         } else {
             clearPliElapsed(indexItem);
         }
-    }, [seconds]);
+    }, [getSeconds()]);
 
     const saveTime = ({ signe }) => {
         if (!isPending) {
@@ -152,7 +142,6 @@ export default function BarTemporelle({
                         if (!checkIsConnected()) {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
-                                activeItem: null,
                                 showModal: false,
                             });
                         } else {
@@ -194,7 +183,6 @@ export default function BarTemporelle({
                         if (!checkIsConnected()) {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
-                                activeItem: null,
                                 showModal: false,
                             });
                         } else {

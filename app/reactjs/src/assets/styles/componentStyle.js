@@ -1901,9 +1901,12 @@ export const MusicPlayer = styled.div`
       color: #6d7b8c;
     }
   }
-  #waveform {
+  .react-waves {
     height: 15px;
     overflow: hidden;
+    padding: 0;
+    margin: 0;
+    width:100%;
     wave {
       top: -10px;
     }
