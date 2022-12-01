@@ -238,9 +238,9 @@ export function seenNotification(req, res) {
 
 export function pliNotifications(req, res) {
     Subscriber.findAll({
-        attributes: ["subscriberId"],
+        attributes: ["userId"],
         where: {
-            userId: req.user.id,
+            subscriberId: req.user.id,
         },
     })
         .then((subscribers) => {
@@ -252,9 +252,9 @@ export function pliNotifications(req, res) {
                     const subscriber = subscribers[i];
                     data.push({
                         pliId: req.pli.id,
-                        userId: subscriber.subscriberId,
+                        userId: subscriber.userId,
                     });
-                    cpsubscribers.push(subscriber.subscriberId);
+                    cpsubscribers.push(subscriber.userId);
                 }
                 PliNotifications.bulkCreate(data, {
                     ignoreDuplicates: true,
