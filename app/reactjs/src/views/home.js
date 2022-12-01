@@ -898,8 +898,8 @@ export default function Home() {
     return (
         <DefaultMain>
             <Helmet>
-                <title>Royalis : Le Réseaux social Français Privé</title>
-                <meta name="description" content="Réseau social Français et indépendant qui privilégie l’expérience collective à l’exposition individuelle." />
+                <title>Royalis : le réseau social français privé</title>
+                <meta name="description" content="Réseau social français et indépendant qui privilégie l’expérience collective à l’exposition individuelle." />
             </Helmet>
             <StyledEngineProvider injectFirst>
                 {isTabletOrMobile && (
