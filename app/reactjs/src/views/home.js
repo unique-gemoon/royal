@@ -22,6 +22,7 @@ import endPoints from "../config/endPoints";
 import connector from "../connector";
 import { getMsgError, getUniqueList, scrollBottomById, sortObjects, uniqid } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
+import ItemMasonryModal from "../components/itemMasonry/itemMasonryModal";
 
 export default function Home() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -78,6 +79,10 @@ export default function Home() {
             className: "search-input",
         },
     });
+
+    useEffect(() => {
+        console.log("pli",pli);
+    }, [pli]);
 
     useEffect(() => {
         if (tokenRestPassword) {
@@ -211,6 +216,8 @@ export default function Home() {
         socket.on("SERVER_COUNT_CONNECTION", updateCountConnection);
 
         const updateOpenPlis = (data) => {
+
+                        console.log("updateOpenPlis");
             if (data) {
                 const cpPlis = [...plis];
                 for (var i = 0; i < cpPlis.length; i++) {
@@ -222,6 +229,13 @@ export default function Home() {
                         }
                     }
                     cpPlis[i] = { ...cpPlis[i], countOpened };
+
+                    if (pli.activeItem?.id == cpPlis[i].id) {
+                        dispatch({
+                            type: actionTypes.LOAD_PLI,
+                            countOpened
+                        }); 
+                    } 
                 }
                 setPlis(cpPlis);
             }
@@ -331,7 +345,7 @@ export default function Home() {
                             dispatch({
                                 type: actionTypes.LOAD_THREADS,
                                 threads: cpThreads,
-                                user: auth.user
+                                user: auth.user,
                             });
                             break;
                         }
@@ -371,8 +385,8 @@ export default function Home() {
                     dispatch({
                         type: actionTypes.LOAD_THREADS,
                         threads: [item, ...cpThreads],
-                        user: auth.user
-                    }); 
+                        user: auth.user,
+                    });
                 }
             }
         };
@@ -530,10 +544,10 @@ export default function Home() {
     };
 
     const refreshPublishPli = (data) => {
-        if(auth?.user){
+        if (auth?.user) {
             for (let i = 0; i < data.length; i++) {
                 const cpPli = { ...data[i] };
-                if(auth.user.id == cpPli.user.id){
+                if (auth.user.id == cpPli.user.id) {
                     setPublishPli(cpPli);
                     break;
                 }
@@ -625,13 +639,27 @@ export default function Home() {
         cpPlis = sortObjects(cpPlis, "duration", "desc");
         setPlis(cpPlis);
         refreshPublishPli(cpPlis);
+
+        if (pli.activeItem?.id == item.id) {
+            dispatch({
+                type: actionTypes.LOAD_PLI,
+                activeItem: { ...pli.activeItem, ...item },
+            }); 
+        }
     };
 
     const clearPliElapsed = (index) => {
-        if (plis[index]) {
+        if (index != null && plis[index]) {
             const cpPli = { ...plis[index] };
             if (publishPli && publishPli.id === cpPli.id) {
                 setPublishPli(null);
+                if (pli.activeItem?.id == cpPli.id) {
+                    dispatch({
+                        type: actionTypes.LOAD_PLI,
+                        activeItem: null,
+                        showModal: false,
+                    });
+                }
             }
             let cpPlis = [...plis];
             cpPlis.splice(index, 1);
@@ -726,7 +754,7 @@ export default function Home() {
                 dispatch({
                     type: actionTypes.LOAD_THREADS,
                     pageThreads: thread.pageThreads + 1,
-                    user: auth.user
+                    user: auth.user,
                 });
             }
         } else if (e.subscribers) {
@@ -947,9 +975,22 @@ export default function Home() {
                                     setFolowersMessage={setFolowersMessage}
                                     updateSubscriberStatus={updateSubscriberStatus}
                                     clearPliElapsed={clearPliElapsed}
-                                    typingCitation={typingCitation}
                                 />
                             ))}
+
+                        {pli.activeItem && (
+                            <ItemMasonryModal
+                                item={pli.activeItem}
+                                setItem={setItem}
+                                action={action}
+                                setAction={setAction}
+                                setMsgNotifTopTime={setMsgNotifTopTime}
+                                folowersMessage={folowersMessage}
+                                setFolowersMessage={setFolowersMessage}
+                                updateSubscriberStatus={updateSubscriberStatus}
+                                typingCitation={typingCitation}
+                            />
+                        )}
                     </Masonry>
                 </ContainerDef>
 

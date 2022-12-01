@@ -41,14 +41,14 @@ export default function PlayerVideo({ item }) {
             dispatch({
                 type: actionTypes.LOAD_PLI,
                 activeItemPlayer: item,
-            });
+            }); 
         });
 
         player.on("play", () => {
             dispatch({
                 type: actionTypes.LOAD_PLI,
                 activeItemPlayer: item,
-            });
+            }); 
         });
     };
     useEffect(() => {

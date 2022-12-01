@@ -30,6 +30,7 @@ import * as actionTypes from "../../store/functions/actionTypes";
 export default function HeadItem({
     item,
     setItem = () => {},
+    countOpened = null,
     action,
     setAction = () => {},
     setMsgNotifTopTime = () => {},
@@ -59,13 +60,12 @@ export default function HeadItem({
     const pliId = query.get("pli") || null;
 
     useEffect(() => {
-        if (pliId && item && item.id == pliId) {
-
+        if (pliId && item?.id == pliId) {
             dispatch({
                 type: actionTypes.LOAD_PLI,
                 activeItem: item,
                 showModal: true,
-                showComment: true,
+                showCitation: true,
             });
 
             const cpAction = {
@@ -334,7 +334,7 @@ export default function HeadItem({
                                 disableFocusListener
                                 disableHoverListener
                                 disableTouchListener
-                                placement="top"
+                                placement="bottom"
                                 title={
                                     <>
                                         <div className="tooltip-info-post">
@@ -343,38 +343,34 @@ export default function HeadItem({
                                                 <div className="folowers-post">
                                                     <p className="abonnes-post">
                                                         <span>{item.user.totalSubscribers || "0"}</span>
-                                                        abonnés
+                                                        abonnements
                                                     </p>
                                                     <p className="abonnes-post">
                                                         <span>{item.user.totalSubscriptions || "0"}</span>
-                                                        abonnements
+                                                        abonnés
                                                     </p>
                                                 </div>
                                                 <div className="tooltip-btns-action">
                                                     <Button
                                                         onClick={() => {
-                                                            if (!checkIsConnected()) {
-                                                                dispatch({
-                                                                    type: actionTypes.LOAD_PLI,
-                                                                    activeItem: item,
-                                                                    showModal: false,
-                                                                });
-                                                            }else{
+                                                            if (checkIsConnected()) {
+                                                                const cpAction = {
+                                                                    ...action,
+                                                                    messagerie: {
+                                                                        ...action.messagerie,
+                                                                        isOpen: true,
+                                                                    },
+                                                                };
+                                                                setAction(cpAction);
+                                                                setToggleProfile(false);
+                                                                pliCheckThread(item);
+                                                            }
+
                                                             dispatch({
                                                                 type: actionTypes.LOAD_PLI,
+                                                                activeItem: null,
                                                                 showModal: false,
                                                             });
-                                                            }
-                                                            const cpAction = {
-                                                                ...action,
-                                                                messagerie: {
-                                                                    ...action.messagerie,
-                                                                    isOpen: true,
-                                                                },
-                                                            };
-                                                            setAction(cpAction);
-                                                            setToggleProfile(false);
-                                                            pliCheckThread(item);
                                                         }}
                                                         className="toggle-item-message"
                                                     >
@@ -389,7 +385,7 @@ export default function HeadItem({
                                                                     }
                                                                 }}
                                                             >
-                                                                Abonner
+                                                                Abonné
                                                                 <PersonRemoveOutlinedIcon />
                                                             </div>
                                                         ) : (
@@ -437,12 +433,12 @@ export default function HeadItem({
                         onClick={() => {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
-                                activeItem: item,
+                                activeItem: null,
                                 showModal: false,
                             });
                         }}
                     >
-                        {item?.countOpened ? item.countOpened : 0} <VisibilityIcon /> <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
+                        {countOpened ? countOpened : item?.countOpened ? item.countOpened : 0} <VisibilityIcon /> <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
                     </div>
                 ) : (
                     <div
@@ -452,8 +448,8 @@ export default function HeadItem({
                                 type: actionTypes.LOAD_PLI,
                                 activeItem: item,
                                 showModal: true,
-                                showNV2 : pli.activeItem?.id != item.id ? false : pli.showNV2,
-                                showCitation : pli.activeItem?.id != item.id ? true : pli.showCitation,
+                                showNV2: pli.activeItem?.id != item.id ? false : pli.showNV2,
+                                showCitation: pli.activeItem?.id != item.id ? true : pli.showCitation,
                             });
                         }}
                     >

@@ -3,6 +3,7 @@ import * as actionTypes from "../functions/actionTypes";
 const initState = {
     activeItem: null,
     activeItemPlayer: null,
+    countOpened:0,
     showModal:false,
     showNV2:false,
     showCitation:false,

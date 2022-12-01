@@ -11,7 +11,17 @@ import connector from "../connector";
 import { decrementDurationTime, getInt, getPercentDuration } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 
-export default function BarTemporelle({ state = {}, item = {}, indexItem, setItem = {}, action = {}, setAction = () => {}, setMsgNotifTopTime = () => {}, clearPliElapsed = () => {}, ...props }) {
+export default function BarTemporelle({
+    state = {},
+    item = {},
+    indexItem = null,
+    setItem = {},
+    action = {},
+    setAction = () => {},
+    setMsgNotifTopTime = () => {},
+    clearPliElapsed = () => {},
+    ...props
+}) {
     const dispatch = useDispatch();
     const [isPending, setIsPending] = useState(false);
     const auth = useSelector((store) => store.auth);
@@ -142,6 +152,7 @@ export default function BarTemporelle({ state = {}, item = {}, indexItem, setIte
                         if (!checkIsConnected()) {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
+                                activeItem: null,
                                 showModal: false,
                             });
                         } else {
@@ -160,13 +171,13 @@ export default function BarTemporelle({ state = {}, item = {}, indexItem, setIte
                                     type: actionTypes.LOAD_PLI,
                                     activeItem: item,
                                     showNV2: true,
-                                });
+                                }); 
                             } else {
                                 dispatch({
                                     type: actionTypes.LOAD_PLI,
                                     activeItem: item,
                                     showNV2: !pli.showNV2,
-                                });
+                                }); 
                             }
                         }
                     }}
@@ -183,6 +194,7 @@ export default function BarTemporelle({ state = {}, item = {}, indexItem, setIte
                         if (!checkIsConnected()) {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
+                                activeItem: null,
                                 showModal: false,
                             });
                         } else {

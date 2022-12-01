@@ -72,7 +72,7 @@ export default function Notifications({ isSeenNotification = () => {}, action = 
                                                 dispatch({
                                                     type: actionTypes.LOAD_PLI,
                                                     activeItem: { ...cpPli, showNV2: true },
-                                                });
+                                                }); 
                                                 break;
                                             }
                                         }
