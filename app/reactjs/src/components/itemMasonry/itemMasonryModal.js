@@ -89,7 +89,6 @@ export default function ItemMasonryModal({
                 onHide={() => {
                     dispatch({
                         type: actionTypes.LOAD_PLI,
-                        activeItem: null,
                         showModal: false,
                     });
                 }}
@@ -163,7 +162,6 @@ export default function ItemMasonryModal({
                                     onClick={() => {
                                         dispatch({
                                             type: actionTypes.LOAD_PLI,
-                                            activeItem: null,
                                             showModal: false,
                                         });
                                     }}

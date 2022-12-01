@@ -216,8 +216,6 @@ export default function Home() {
         socket.on("SERVER_COUNT_CONNECTION", updateCountConnection);
 
         const updateOpenPlis = (data) => {
-
-                        console.log("updateOpenPlis");
             if (data) {
                 const cpPlis = [...plis];
                 for (var i = 0; i < cpPlis.length; i++) {
@@ -656,7 +654,6 @@ export default function Home() {
                 if (pli.activeItem?.id == cpPli.id) {
                     dispatch({
                         type: actionTypes.LOAD_PLI,
-                        activeItem: null,
                         showModal: false,
                     });
                 }

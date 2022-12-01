@@ -152,7 +152,6 @@ export default function BarTemporelle({
                         if (!checkIsConnected()) {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
-                                activeItem: null,
                                 showModal: false,
                             });
                         } else {
@@ -194,7 +193,6 @@ export default function BarTemporelle({
                         if (!checkIsConnected()) {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
-                                activeItem: null,
                                 showModal: false,
                             });
                         } else {
