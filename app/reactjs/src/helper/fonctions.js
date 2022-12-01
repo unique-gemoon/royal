@@ -150,12 +150,12 @@ export function scrollBottomById(id) {
     }
 }
 
-export function decrementDurationTime(duration) {
+export function decrementDurationTime(duration, seconds = 1) {
     if (duration) {
         let hour, minute, second;
         [hour, minute, second] = String(duration).split(":");
 
-        const d = getInt(hour) * 3600 + getInt(minute) * 60 + getInt(second) - 1;
+        const d = getInt(hour) * 3600 + getInt(minute) * 60 + getInt(second) -  getInt(seconds);
 
         if (d < 0) {
             return false;

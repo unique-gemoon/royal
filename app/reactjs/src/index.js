@@ -6,6 +6,7 @@ import { Provider } from "react-redux";
 import { applyMiddleware, combineReducers, compose, createStore } from "redux";
 import thunk from "redux-thunk";
 import App from "./app";
+import { DurationProvider } from "./context/DurationContext";
 import logger from "./store/middlewares/logger";
 import AuthReducer from "./store/reducers/authReducer";
 import NotificationReducer from "./store/reducers/notificationReducer";
@@ -26,7 +27,7 @@ const store = createStore(rootReducer, composeEnhancers(applyMiddleware(logger, 
 
 ReactDOM.render(
     <Provider store={store}>
-        <App />
+        <DurationProvider><App /></DurationProvider>
     </Provider>,
     document.getElementById("root")
 );

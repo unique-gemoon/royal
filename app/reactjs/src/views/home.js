@@ -20,9 +20,10 @@ import { socket } from "../components/socket";
 import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
-import { getMsgError, getUniqueList, scrollBottomById, sortObjects, uniqid } from "../helper/fonctions";
+import { decrementDurationTime, getMsgError, getUniqueList, scrollBottomById, sortObjects, uniqid } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
 import ItemMasonryModal from "../components/itemMasonry/itemMasonryModal";
+import { useDurationContext } from '../context/DurationContext';
 
 export default function Home() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -32,6 +33,7 @@ export default function Home() {
     const notification = useSelector((store) => store.notification);
     const thread = useSelector((store) => store.thread);
     const pli = useSelector((store) => store.pli);
+    const { getSeconds , updateSeconds} = useDurationContext();
 
     const [plis, setPlis] = useState([]);
     const [submitting, setSubmitting] = useState(false);
@@ -79,10 +81,6 @@ export default function Home() {
             className: "search-input",
         },
     });
-
-    useEffect(() => {
-        console.log("pli",pli);
-    }, [pli]);
 
     useEffect(() => {
         if (tokenRestPassword) {
@@ -559,7 +557,7 @@ export default function Home() {
             url: `${endPoints.PLIS}?id=${id}`,
             success: (response) => {
                 if (response.data.plis.length == 1) {
-                    refreshItem({ ...response.data.plis[0], action });
+                    refreshItem({ ...response.data.plis[0], action },true);
                 }
             },
             catch: (error) => {
@@ -622,8 +620,16 @@ export default function Home() {
         refreshItem(item);
     };
 
-    const refreshItem = (item) => {
+    const refreshItem = (item, refreshDuration = false) => {
         let cpPlis = [...plis];
+        if(refreshDuration){
+            const seconds = getSeconds();
+            for (var i = 0; i < cpPlis.length; i++) {
+                cpPlis[i].duration = decrementDurationTime(cpPlis[i].duration, seconds) || "00:00:00";
+            }
+            updateSeconds(0);
+        }
+
         if (item.action == "create") {
             cpPlis.push(item);
         } else if (item.action == "update") {
