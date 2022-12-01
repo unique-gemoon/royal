@@ -31,11 +31,7 @@ export default function BarTemporelle({
     const { getSeconds } = useDurationContext();
 
     useEffect(() => {
-        setDuration(item.duration);
-    }, [item.duration]);
-
-    useEffect(() => {
-        let cpDuration = duration ? decrementDurationTime(duration) : false;
+        let cpDuration = decrementDurationTime(item.duration, getSeconds());
         if (cpDuration) {
             setDuration(cpDuration);
         } else {
