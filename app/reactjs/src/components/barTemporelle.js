@@ -35,7 +35,6 @@ export default function BarTemporelle({
     }, [item.duration]);
 
     useEffect(() => {
-        console.log("barTemporelle",getSeconds());
         let cpDuration = duration ? decrementDurationTime(duration) : false;
         if (cpDuration) {
             setDuration(cpDuration);
