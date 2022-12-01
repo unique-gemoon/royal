@@ -9875,6 +9875,11 @@ react-masonry-css@^1.0.16:
   resolved "https://registry.yarnpkg.com/react-masonry-css/-/react-masonry-css-1.0.16.tgz#72b28b4ae3484e250534700860597553a10f1a2c"
   integrity sha512-KSW0hR2VQmltt/qAa3eXOctQDyOu7+ZBevtKgpNDSzT7k5LA/0XntNa9z9HKCdz3QlxmJHglTZ18e4sX4V8zZQ==
 
+react-masonry-list@^1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/react-masonry-list/-/react-masonry-list-1.0.2.tgz#d2b90f388d69adb0336b8c780c68c865cbf62498"
+  integrity sha512-+voslHLQfvNbzcJx20J0A2+FJVlOBXZw8MvxH7t82/iYDfV1zqc2o7kRvf6Igdvg53uhS3FPIj9zrQp3Vsjc7A==
+
 react-motion@^0.5.0:
   version "0.5.2"
   resolved "https://registry.yarnpkg.com/react-motion/-/react-motion-0.5.2.tgz#0dd3a69e411316567927917c6626551ba0607316"

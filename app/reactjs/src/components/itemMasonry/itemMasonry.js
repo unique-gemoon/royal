@@ -84,97 +84,97 @@ export default function ItemMasonry({
     };
 
     return (
-        <>
+        <div className="item-masonry">
             <MasonryItem height={height} id={`masonryItem_${item.id}`}>
-                <div className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`} ref={refHeight}>
-                    <HeadItem
-                        item={item}
-                        setItem={setItem}
-                        action={action}
-                        setAction={setAction}
-                        setMsgNotifTopTime={setMsgNotifTopTime}
-                        folowersMessage={folowersMessage}
-                        setFolowersMessage={setFolowersMessage}
-                        updateSubscriberStatus={updateSubscriberStatus}
-                    />
-                    <div className="bloc-miniature">
-                        {item.content ? <div className="descripton-miniature">{parse(item.content)}</div> : null}
+                    <div className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`} ref={refHeight}>
+                        <HeadItem
+                            item={item}
+                            setItem={setItem}
+                            action={action}
+                            setAction={setAction}
+                            setMsgNotifTopTime={setMsgNotifTopTime}
+                            folowersMessage={folowersMessage}
+                            setFolowersMessage={setFolowersMessage}
+                            updateSubscriberStatus={updateSubscriberStatus}
+                        />
+                        <div className="bloc-miniature">
+                            {item.content ? <div className="descripton-miniature">{parse(item.content)}</div> : null}
 
-                        {data.media.count > 0 && (
-                            <div>
-                                {data.media.sondage.map((sondage, index) => (
-                                    <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={index} setMsgNotifTopTime={setMsgNotifTopTime} />
-                                ))}
-                                <ImagesGallery items={data.media.image} />
-                                {data.media.video.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
-                                {data.media.music.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
-                            </div>
-                        )}
-                    </div>
-                    <BarTemporelle
-                        item={item}
-                        indexItem={indexItem}
-                        setItem={setItem}
-                        action={action}
-                        setAction={setAction}
-                        className={pli.showModal ? "" : pli.activeItem?.id == item.id && pli.showNV2 ? "" : "nv-hide"}
-                        setMsgNotifTopTime={setMsgNotifTopTime}
-                        clearPliElapsed={clearPliElapsed}
-                    />
-                </div>
-                <div className="Bloc-NV2">
-                    <div className="content-Bloc-NV2">
-                        <div className={`${pli.activeItem?.id == item.id && pli.showNV2 ? "" : "d-none"}`}>
-                            {item.ouverture || data.mediaOuverture.count > 0 ? (
-                                <div className="content-bloc-NV2">
-                                    {data.mediaOuverture.count > 0 && (
-                                        <div>
-                                            {data.mediaOuverture.sondage.map((sondage) => (
-                                                <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={sondage.id} setMsgNotifTopTime={setMsgNotifTopTime} />
-                                            ))}
-                                        </div>
-                                    )}
-                                    {item.ouverture && (
-                                        <div className="descripton-miniature">
-                                            {data.dataOuverture.length > 0 &&
-                                                data.dataOuverture.map((media, index) => (
-                                                    <span key={index}>
-                                                        {media.type == "text" && <p>{parse(media.content)}</p>}
-                                                        {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
-                                                        {media.type == "image" && <ImagesGallery items={media.data} />}
-                                                        {media.type == "video" && media.data.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
-                                                        {media.type == "music" && media.data.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
-                                                    </span>
-                                                ))}
-                                        </div>
-                                    )}
+                            {data.media.count > 0 && (
+                                <div>
+                                    {data.media.sondage.map((sondage, index) => (
+                                        <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={index} setMsgNotifTopTime={setMsgNotifTopTime} />
+                                    ))}
+                                    <ImagesGallery items={data.media.image} />
+                                    {data.media.video.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
+                                    {data.media.music.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
                                 </div>
-                            ) : null}
+                            )}
+                        </div>
+                        <BarTemporelle
+                            item={item}
+                            indexItem={indexItem}
+                            setItem={setItem}
+                            action={action}
+                            setAction={setAction}
+                            className={pli.showModal ? "" : pli.activeItem?.id == item.id && pli.showNV2 ? "" : "nv-hide"}
+                            setMsgNotifTopTime={setMsgNotifTopTime}
+                            clearPliElapsed={clearPliElapsed}
+                        />
+                    </div>
+                    <div className="Bloc-NV2">
+                        <div className="content-Bloc-NV2">
+                            <div className={`${pli.activeItem?.id == item.id && pli.showNV2 ? "" : "d-none"}`}>
+                                {item.ouverture || data.mediaOuverture.count > 0 ? (
+                                    <div className="content-bloc-NV2">
+                                        {data.mediaOuverture.count > 0 && (
+                                            <div>
+                                                {data.mediaOuverture.sondage.map((sondage) => (
+                                                    <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={sondage.id} setMsgNotifTopTime={setMsgNotifTopTime} />
+                                                ))}
+                                            </div>
+                                        )}
+                                        {item.ouverture && (
+                                            <div className="descripton-miniature">
+                                                {data.dataOuverture.length > 0 &&
+                                                    data.dataOuverture.map((media, index) => (
+                                                        <span key={index}>
+                                                            {media.type == "text" && <p>{parse(media.content)}</p>}
+                                                            {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
+                                                            {media.type == "image" && <ImagesGallery items={media.data} />}
+                                                            {media.type == "video" && media.data.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
+                                                            {media.type == "music" && media.data.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
+                                                        </span>
+                                                    ))}
+                                            </div>
+                                        )}
+                                    </div>
+                                ) : null}
 
-                            <div
-                                className="toggle-pli2"
-                                onClick={() => {
-                                    dispatch({
-                                        type: actionTypes.LOAD_PLI,
-                                        activeItem: item,
-                                        showModal: true,
-                                    }); 
-                                }}
-                            >
-                                <span className="users-views">
-                                    {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />
-                                </span>{" "}
-                                .{" "}
-                                <span className="toggle-zoom">
-                                    Etendre le pli
-                                    <OpenInFullOutlinedIcon className="open-zoom-icon" />
-                                </span>
+                                <div
+                                    className="toggle-pli2"
+                                    onClick={() => {
+                                        dispatch({
+                                            type: actionTypes.LOAD_PLI,
+                                            activeItem: item,
+                                            showModal: true,
+                                        }); 
+                                    }}
+                                >
+                                    <span className="users-views">
+                                        {item?.countOpened ? item.countOpened : 0} <VisibilityIcon />
+                                    </span>{" "}
+                                    .{" "}
+                                    <span className="toggle-zoom">
+                                        Etendre le pli
+                                        <OpenInFullOutlinedIcon className="open-zoom-icon" />
+                                    </span>
+                                </div>
+                                <BlocComments item={item} setMsgNotifTopTime={setMsgNotifTopTime} />
                             </div>
-                            <BlocComments item={item} setMsgNotifTopTime={setMsgNotifTopTime} />
                         </div>
                     </div>
-                </div>
             </MasonryItem>
-        </>
+        </div>
     );
 }

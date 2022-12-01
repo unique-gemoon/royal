@@ -5,7 +5,7 @@ import SearchRoundedIcon from "@mui/icons-material/SearchRounded";
 import { StyledEngineProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
-import Masonry from "react-masonry-css";
+import Layout from 'react-masonry-list'
 import { useSelector, useDispatch } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
@@ -26,6 +26,7 @@ import ItemMasonryModal from "../components/itemMasonry/itemMasonryModal";
 
 export default function Home() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
+    const isMobile = useMediaQuery({ query: "(max-width: 767px)" });
 
     const dispatch = useDispatch();
     const auth = useSelector((store) => store.auth);
@@ -960,38 +961,66 @@ export default function Home() {
                             message={msgNotifTop}
                         />
                     )}
-                    <Masonry breakpointCols={breakpointColumnsObj} className="pli-masonry-grid" columnClassName="pli-masonry-grid_column">
-                        {plis &&
-                            plis.map((item, index) => (
-                                <ItemMasonry
-                                    key={index}
-                                    indexItem={index}
-                                    item={item}
-                                    setItem={setItem}
-                                    action={action}
-                                    setAction={setAction}
-                                    setMsgNotifTopTime={setMsgNotifTopTime}
-                                    folowersMessage={folowersMessage}
-                                    setFolowersMessage={setFolowersMessage}
-                                    updateSubscriberStatus={updateSubscriberStatus}
-                                    clearPliElapsed={clearPliElapsed}
-                                />
-                            ))}
-
-                        {pli.activeItem && (
-                            <ItemMasonryModal
-                                item={pli.activeItem}
-                                setItem={setItem}
-                                action={action}
-                                setAction={setAction}
-                                setMsgNotifTopTime={setMsgNotifTopTime}
-                                folowersMessage={folowersMessage}
-                                setFolowersMessage={setFolowersMessage}
-                                updateSubscriberStatus={updateSubscriberStatus}
-                                typingCitation={typingCitation}
-                            />
-                        )}
-                    </Masonry>
+                    {!isMobile ? 
+                        (<Layout
+                            className="pli-masonry-grid"
+                            minWidth={100}
+                            gap={20}
+                            colCount={isTabletOrMobile ? 2 : 3}
+                            items={plis &&
+                                plis.map((item, index) => (
+                                    <ItemMasonry
+                                        key={index}
+                                        indexItem={index}
+                                        item={item}
+                                        setItem={setItem}
+                                        action={action}
+                                        setAction={setAction}
+                                        setMsgNotifTopTime={setMsgNotifTopTime}
+                                        folowersMessage={folowersMessage}
+                                        setFolowersMessage={setFolowersMessage}
+                                        updateSubscriberStatus={updateSubscriberStatus}
+                                        clearPliElapsed={clearPliElapsed}
+                                    />
+                                ))}
+                        >
+                        </Layout>)
+                        :
+                        <div className="pli-masonry-grid">
+                            {plis &&
+                                plis.map((item, index) => (
+                                    <ItemMasonry
+                                        key={index}
+                                        indexItem={index}
+                                        item={item}
+                                        setItem={setItem}
+                                        action={action}
+                                        setAction={setAction}
+                                        setMsgNotifTopTime={setMsgNotifTopTime}
+                                        folowersMessage={folowersMessage}
+                                        setFolowersMessage={setFolowersMessage}
+                                        updateSubscriberStatus={updateSubscriberStatus}
+                                        clearPliElapsed={clearPliElapsed}
+                                    />
+                                ))
+                            }
+                        </div>
+                
+                    }
+                    
+                    {pli.activeItem && (
+                        <ItemMasonryModal
+                            item={pli.activeItem}
+                            setItem={setItem}
+                            action={action}
+                            setAction={setAction}
+                            setMsgNotifTopTime={setMsgNotifTopTime}
+                            folowersMessage={folowersMessage}
+                            setFolowersMessage={setFolowersMessage}
+                            updateSubscriberStatus={updateSubscriberStatus}
+                            typingCitation={typingCitation}
+                        />
+                    )}
                 </ContainerDef>
 
                 {!auth.isConnected ? (
