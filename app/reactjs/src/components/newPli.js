@@ -21,6 +21,7 @@ import NewPliOptions from "./newPliOptions";
 import ButtonDef from "./ui-elements/buttonDef";
 import CountDown from "./ui-elements/countDown";
 import InputTextareaAutosize from "./ui-elements/inputTextareaAutosize";
+import { useDurationContext } from '../context/DurationContext';
 
 export default function NewPli({
     action,
@@ -34,27 +35,14 @@ export default function NewPli({
     const isDesktopOrLaptop = useMediaQuery({ query: "(min-width: 768px)" });
     const auth = useSelector((store) => store.auth);
     const [duration, setDuration] = useState(false);
-    const [seconds, setSeconds] = useState(0);
+    const { getSeconds } = useDurationContext();
 
     useEffect(() => {
-        if (publishPli?.duration) {
-            setDuration(publishPli.duration);
-        }
-    }, [publishPli]);
-
-    useEffect(() => {
-        const interval = setInterval(() => {
-            setSeconds((seconds) => seconds + 1);
-        }, 1000);
-        return () => clearInterval(interval);
-    }, []);
-
-    useEffect(() => {
-        let cpDuration = duration ? decrementDurationTime(duration) : false;
+        let cpDuration = decrementDurationTime(publishPli?.duration, getSeconds());
         if (cpDuration) {
             setDuration(cpDuration);
-        }
-    }, [seconds]);
+        } 
+    }, [getSeconds()]);
 
     const [state, setState] = useState({
         inputEmoji: {
