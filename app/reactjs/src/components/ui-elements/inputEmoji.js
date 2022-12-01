@@ -101,6 +101,7 @@ export default function InputEmoji({
                         if (!checkIsConnected()) {
                             dispatch({
                                 type: actionTypes.LOAD_PLI,
+                                activeItem: null,
                                 showModal: false,
                             });
                         }
@@ -123,6 +124,7 @@ export default function InputEmoji({
                     if (!checkIsConnected()) {
                         dispatch({
                             type: actionTypes.LOAD_PLI,
+                            activeItem: null,
                             showModal: false,
                         });
                     } else if (!waitingTime) {

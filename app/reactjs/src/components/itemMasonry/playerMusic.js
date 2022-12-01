@@ -57,7 +57,7 @@ export default function PlayerMusic({ item }) {
             dispatch({
                 type: actionTypes.LOAD_PLI,
                 activeItemPlayer: item,
-            });
+            }); 
         });
 
         // Removes events, elements and disconnects Web Audio nodes.

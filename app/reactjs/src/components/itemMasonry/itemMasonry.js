@@ -1,13 +1,10 @@
-import CloseFullscreenTwoToneIcon from "@mui/icons-material/CloseFullscreenTwoTone";
-import CommentOutlinedIcon from "@mui/icons-material/CommentOutlined";
 import OpenInFullOutlinedIcon from "@mui/icons-material/OpenInFullOutlined";
 import VisibilityIcon from "@mui/icons-material/Visibility";
 import parse from "html-react-parser";
 import React, { useEffect, useRef, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { MasonryItem, ModalItem } from "../../assets/styles/componentStyle";
+import { MasonryItem } from "../../assets/styles/componentStyle";
 import BarTemporelle from "../barTemporelle";
-import BlocCitations from "../citations/blocCitations";
 import BlocComments from "../comments/blocComments";
 import HeadItem from "./headItem";
 import ImagesGallery from "./imagesGallery";
@@ -15,7 +12,7 @@ import PlayerMusic from "./playerMusic";
 import PlayerVideo from "./playerVideo";
 import Sondage from "./sondage";
 import * as actionTypes from "../../store/functions/actionTypes";
-import { getDataOuverture } from '../../helper/fonctions';
+import { getDataOuverture } from "../../helper/fonctions";
 
 export default function ItemMasonry({
     item,
@@ -28,7 +25,6 @@ export default function ItemMasonry({
     setFolowersMessage = () => {},
     updateSubscriberStatus = () => {},
     clearPliElapsed = () => {},
-    typingCitation = {},
 }) {
     const initData = {
         media: {
@@ -45,7 +41,7 @@ export default function ItemMasonry({
             music: [],
             count: 0,
         },
-        dataOuverture : []
+        dataOuverture: [],
     };
     const [data, setData] = useState({ ...initData });
 
@@ -74,7 +70,7 @@ export default function ItemMasonry({
                 cpData.media.count = cpData.media.count + 1;
             }
         }
-        setData({...cpData, dataOuverture : getDataOuverture(item.ouverture, cpData.mediaOuverture)});
+        setData({ ...cpData, dataOuverture: getDataOuverture(item.ouverture, cpData.mediaOuverture) });
     }, [item.medias]);
 
     const setMedia = (media) => {
@@ -87,139 +83,82 @@ export default function ItemMasonry({
         setItem({ ...item, medias: cpMedias, action: "update" });
     };
 
-    const renderContentNV1 = () => {
-        return (
-            <>
-                <HeadItem
-                    item={item}
-                    setItem={setItem}
-                    action={action}
-                    setAction={setAction}
-                    setMsgNotifTopTime={setMsgNotifTopTime}
-                    folowersMessage={folowersMessage}
-                    setFolowersMessage={setFolowersMessage}
-                    updateSubscriberStatus={updateSubscriberStatus}
-                />
-                <div className="bloc-miniature">
-                    {item.content ? <div className="descripton-miniature">{parse(item.content)}</div> : null}
+    return (
+        <>
+            <MasonryItem height={height} id={`masonryItem_${item.id}`}>
+                <div className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`} ref={refHeight}>
+                    <HeadItem
+                        item={item}
+                        setItem={setItem}
+                        action={action}
+                        setAction={setAction}
+                        setMsgNotifTopTime={setMsgNotifTopTime}
+                        folowersMessage={folowersMessage}
+                        setFolowersMessage={setFolowersMessage}
+                        updateSubscriberStatus={updateSubscriberStatus}
+                    />
+                    <div className="bloc-miniature">
+                        {item.content ? <div className="descripton-miniature">{parse(item.content)}</div> : null}
 
-                    {data.media.count > 0 && (
-                        <div>
-                            {data.media.sondage.map((sondage, index) => (
-                                <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={index} setMsgNotifTopTime={setMsgNotifTopTime} />
-                            ))}
-                            <ImagesGallery items={data.media.image} />
-                            {data.media.video.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
-                            {data.media.music.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
-                        </div>
-                    )}
-                </div>
-                <BarTemporelle
-                    item={item}
-                    indexItem={indexItem}
-                    setItem={setItem}
-                    action={action}
-                    setAction={setAction}
-                    className={pli.showModal ? "" : pli.activeItem?.id == item.id && pli.showNV2 ? "" : "nv-hide"}
-                    setMsgNotifTopTime={setMsgNotifTopTime}
-                    clearPliElapsed={clearPliElapsed}
-                />
-            </>
-        );
-    };
-
-    const renderContentNV2 = () => {
-        return (
-            <>
-                {item.ouverture || data.mediaOuverture.count > 0 ? (
-                    <div className="content-bloc-NV2">
-                        {data.mediaOuverture.count > 0 && (
+                        {data.media.count > 0 && (
                             <div>
-                                {data.mediaOuverture.sondage.map((sondage) => (
-                                    <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={sondage.id} setMsgNotifTopTime={setMsgNotifTopTime} />
+                                {data.media.sondage.map((sondage, index) => (
+                                    <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={index} setMsgNotifTopTime={setMsgNotifTopTime} />
                                 ))}
-                            </div>
-                        )}
-                        {item.ouverture && (
-                            <div className="descripton-miniature">
-                                {data.dataOuverture.length > 0 &&
-                                    data.dataOuverture.map((media, index) => (
-                                        <span key={index}>
-                                            {media.type == "text" && <p>{parse(media.content)}</p>}
-                                            {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
-                                            {media.type == "image" && <ImagesGallery items={media.data} />}
-                                            {media.type == "video" && media.data.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
-                                            {media.type == "music" && media.data.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
-                                        </span>
-                                    ))}
+                                <ImagesGallery items={data.media.image} />
+                                {data.media.video.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
+                                {data.media.music.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
                             </div>
                         )}
                     </div>
-                ) : null}
-            </>
-        );
-    };
-
-    return (
-        <>
-            <ModalItem
-                show={pli.showModal && pli.activeItem?.id == item.id}
-                onHide={() => {
-                    dispatch({
-                        type: actionTypes.LOAD_PLI,
-                        showModal: false,
-                    });
-                }}
-            >
-                <ModalItem.Body>
-                    <MasonryItem height={height}>
-                        <div className="bloc-NV1" ref={refHeight}>
-                            {renderContentNV1()}
-                        </div>
-                        <div className="Bloc-NV2">
-                            <>
-                                {renderContentNV2()}
-                                <div
-                                    className="toggle-pli2"
-                                    onClick={() => {
-                                        dispatch({
-                                            type: actionTypes.LOAD_PLI,
-                                            showModal: false,
-                                        });
-                                    }}
-                                >
-                                    <span className="users-views">
-                                        {item.totalCitations} <CommentOutlinedIcon />
-                                    </span>{" "}
-                                    .
-                                    <span className="toggle-zoom">
-                                        Retour au pli ouvert <CloseFullscreenTwoToneIcon className="open-zoom-icon" />
-                                    </span>
-                                </div>
-                                <div className={`${pli.showCitation ? "" : "d-none"}`}>
-                                    <BlocCitations item={item} setMsgNotifTopTime={setMsgNotifTopTime} typingCitation={typingCitation} />
-                                </div>
-                            </>
-                        </div>
-                    </MasonryItem>
-                </ModalItem.Body>
-            </ModalItem>
-            <MasonryItem height={height} id={`masonryItem_${item.id}`}>
-                <div className={`bloc-NV1 ${height > 700 ? "is-larg-nv1" : ""}`} ref={refHeight}>
-                    {renderContentNV1()}
+                    <BarTemporelle
+                        item={item}
+                        indexItem={indexItem}
+                        setItem={setItem}
+                        action={action}
+                        setAction={setAction}
+                        className={pli.showModal ? "" : pli.activeItem?.id == item.id && pli.showNV2 ? "" : "nv-hide"}
+                        setMsgNotifTopTime={setMsgNotifTopTime}
+                        clearPliElapsed={clearPliElapsed}
+                    />
                 </div>
                 <div className="Bloc-NV2">
                     <div className="content-Bloc-NV2">
                         <div className={`${pli.activeItem?.id == item.id && pli.showNV2 ? "" : "d-none"}`}>
-                            {renderContentNV2()}
+                            {item.ouverture || data.mediaOuverture.count > 0 ? (
+                                <div className="content-bloc-NV2">
+                                    {data.mediaOuverture.count > 0 && (
+                                        <div>
+                                            {data.mediaOuverture.sondage.map((sondage) => (
+                                                <Sondage name={`bloc_${sondage.id}`} item={sondage} setItem={setMedia} key={sondage.id} setMsgNotifTopTime={setMsgNotifTopTime} />
+                                            ))}
+                                        </div>
+                                    )}
+                                    {item.ouverture && (
+                                        <div className="descripton-miniature">
+                                            {data.dataOuverture.length > 0 &&
+                                                data.dataOuverture.map((media, index) => (
+                                                    <span key={index}>
+                                                        {media.type == "text" && <p>{parse(media.content)}</p>}
+                                                        {media.type == "blockquote" && <blockquote>{parse(media.content)}</blockquote>}
+                                                        {media.type == "image" && <ImagesGallery items={media.data} />}
+                                                        {media.type == "video" && media.data.map((video, index) => video?.path && <PlayerVideo item={video} key={index} />)}
+                                                        {media.type == "music" && media.data.map((music, index) => music?.path && <PlayerMusic item={music} key={index} />)}
+                                                    </span>
+                                                ))}
+                                        </div>
+                                    )}
+                                </div>
+                            ) : null}
 
                             <div
                                 className="toggle-pli2"
                                 onClick={() => {
                                     dispatch({
                                         type: actionTypes.LOAD_PLI,
+                                        activeItem: item,
                                         showModal: true,
-                                    });
+                                    }); 
                                 }}
                             >
                                 <span className="users-views">
