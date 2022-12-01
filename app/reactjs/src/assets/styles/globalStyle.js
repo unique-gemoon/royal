@@ -77,8 +77,6 @@ export const DefaultMain = styled.div`
 `;
 export const ContainerDef = styled(Container)`
     .pli-masonry-grid {
-        display: flex;
-        margin-left: -24px; /* gutter size offset */
         width: auto;
         padding: 0 12px;
         margin-bottom: 100px;
@@ -98,7 +96,11 @@ export const ContainerDef = styled(Container)`
         }
     }
     max-width: 100%;
-
+    @media(max-width: 767px){
+        .item-masonry{
+            margin-bottom: 15px;
+        }
+    }
 `;
 export const HeadContentItem = styled.div`
     display: flex;
