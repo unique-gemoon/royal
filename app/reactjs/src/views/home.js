@@ -68,8 +68,6 @@ export default function Home() {
         subscriptions: false,
     });
 
-    const breakpointColumnsObj = { default: 3, 1200: 2, 993: 1 };
-
     const [folowersMessage, setFolowersMessage] = useState({
         showSearchFolower: false,
         activeItem: false,
@@ -217,16 +215,15 @@ export default function Home() {
         const updateOpenPlis = (data) => {
             if (data) {
                 const cpPlis = [...plis];
-                for (var i = 0; i < cpPlis.length; i++) {
+                for (let i = 0; i < cpPlis.length; i++) {
                     let countOpened = 0;
-                    for (var j = 0; j < data.length; j++) {
+                    for (let j = 0; j < data.length; j++) {
                         if (data[j].id == cpPlis[i].id && data[j].count != undefined) {
                             countOpened = data[j].count;
                             break;
                         }
                     }
                     cpPlis[i] = { ...cpPlis[i], countOpened };
-
                     if (pli.activeItem?.id == cpPlis[i].id) {
                         dispatch({
                             type: actionTypes.LOAD_PLI,
@@ -403,6 +400,7 @@ export default function Home() {
             //socket.disconnect();
         };
     }, [
+        pli,
         plis,
         auth,
         folowersMessage,
@@ -625,7 +623,7 @@ export default function Home() {
         let cpPlis = [...plis];
         if (refreshDuration) {
             const seconds = getSeconds();
-            for (var i = 0; i < cpPlis.length; i++) {
+            for (let i = 0; i < cpPlis.length; i++) {
                 cpPlis[i].duration = decrementDurationTime(cpPlis[i].duration, seconds) || "00:00:00";
             }
             updateSeconds(0);
@@ -634,7 +632,7 @@ export default function Home() {
         if (item.action == "create") {
             cpPlis.push(item);
         } else if (item.action == "update") {
-            for (var i = 0; i < cpPlis.length; i++) {
+            for (let i = 0; i < cpPlis.length; i++) {
                 if (cpPlis[i].id == item.id) {
                     cpPlis[i] = item;
                     break;
