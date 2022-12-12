@@ -411,6 +411,7 @@ export default function Home() {
         notification.countNewNotifications,
         notification.totalNotifications,
         notification.pageNotifications,
+        getSeconds()
     ]);
 
     useEffect(() => {
@@ -617,11 +618,7 @@ export default function Home() {
         if (socket) {
             socket.emit("CLIENT_PLI", { ...item, channel });
         }
-        let refreshDuration = false;
-        if (item.action == "create") {
-            refreshDuration = true;
-        }
-        refreshItem(item, refreshDuration);
+        refreshItem(item, true);
     };
 
     const refreshItem = (item, refreshDuration = false) => {
@@ -633,7 +630,6 @@ export default function Home() {
             }
             updateSeconds(0);
         }
-
         if (item.action == "create") {
             cpPlis.push(item);
         } else if (item.action == "update") {
