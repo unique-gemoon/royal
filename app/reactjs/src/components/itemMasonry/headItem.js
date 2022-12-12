@@ -22,7 +22,7 @@ import { DetailsItems, HeadContentItem, PlusIcon } from "../../assets/styles/glo
 import { useOutsideAlerter } from "../../helper/events";
 import { useMediaQuery } from "react-responsive";
 import moment from "moment";
-import { copyToClipboard, getDurationHM, getMsgError } from "../../helper/fonctions";
+import { copyToClipboard, getDurationHM, getMsgError, removeTags } from "../../helper/fonctions";
 import endPoints from "../../config/endPoints";
 import connector from "../../connector";
 import * as actionTypes from "../../store/functions/actionTypes";
@@ -91,7 +91,7 @@ export default function HeadItem({
     useEffect(() => {
         if (item) {
             let cpMediaIcons = [];
-            if (item.ouverture != "") {
+            if (item.ouverture != "" && String(removeTags(item.ouverture)).length > 0) {
                 cpMediaIcons.push("description");
             }
             if (item.medias.length > 0) {
