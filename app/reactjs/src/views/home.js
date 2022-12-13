@@ -61,7 +61,7 @@ export default function Home() {
     useEffect(() => {
         document.addEventListener("visibilitychange", function () {
             if (!document.hidden) {
-                getPlis(false, true);
+                getPlis(true, true);
             }
         });
     }, []);

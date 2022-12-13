@@ -199,8 +199,9 @@ io.on("connect", function (socket) {
         if (!usersConnected.includes(socket.handshake.query.key)) {
             usersConnected.push(socket.handshake.query.key);
         }
-        io.emit("SERVER_COUNT_CONNECTION", {
+        
+        setTimeout(()=>{io.emit("SERVER_COUNT_CONNECTION", {
             countConnection: usersConnected.length,
-        });
+        });}, 500);
     }
 });
