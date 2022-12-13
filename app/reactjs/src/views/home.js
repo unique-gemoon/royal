@@ -6,13 +6,15 @@ import { StyledEngineProvider } from "@mui/material/styles";
 import React, { useEffect, useState } from "react";
 import { Helmet } from "react-helmet";
 import Layout from "react-masonry-list";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { useMediaQuery } from "react-responsive";
 import { useLocation } from "react-router-dom";
+import LogoWithText from "../assets/images/logo-with-text";
 import { ContainerDef, DefaultMain, HeaderMobile } from "../assets/styles/globalStyle";
 import FooterAuthHome from "../components/footerAuthHome";
 import FooterHome from "../components/footerHome";
 import ItemMasonry from "../components/itemMasonry/itemMasonry";
+import ItemMasonryModal from "../components/itemMasonry/itemMasonryModal";
 import MessageNotif from "../components/messageNotif";
 import ModalMessage from "../components/modalMessage";
 import ProfileMenu from "../components/profileMenu";
@@ -20,11 +22,9 @@ import { socket } from "../components/socket";
 import SeeCounter from "../components/ui-elements/seeCounter";
 import endPoints from "../config/endPoints";
 import connector from "../connector";
+import { useDurationContext } from "../context/DurationContext";
 import { decrementDurationTime, getMsgError, getUniqueList, scrollBottomById, sortObjects, uniqid } from "../helper/fonctions";
 import * as actionTypes from "../store/functions/actionTypes";
-import ItemMasonryModal from "../components/itemMasonry/itemMasonryModal";
-import { useDurationContext } from "../context/DurationContext";
-import LogoWithText from "../assets/images/logo-with-text";
 
 export default function Home() {
     const isTabletOrMobile = useMediaQuery({ query: "(max-width: 1199px)" });
@@ -57,6 +57,14 @@ export default function Home() {
     const [totalSubscriptions, setTotalSubscriptions] = useState(0);
     const [pageSubscriptions, setPageSubscriptions] = useState(1);
     const [countNewSubscriptions, setCountNewSubscriptions] = useState(0);
+
+    useEffect(() => {
+        document.addEventListener("visibilitychange", function () {
+            if (!document.hidden) {
+                getPlis(false, true);
+            }
+        });
+    }, []);
 
     const query = new URLSearchParams(useLocation().search);
     const tokenRestPassword = query.get("tokenRestPassword") || null;
@@ -411,7 +419,7 @@ export default function Home() {
         notification.countNewNotifications,
         notification.totalNotifications,
         notification.pageNotifications,
-        getSeconds()
+        getSeconds(),
     ]);
 
     useEffect(() => {
@@ -519,7 +527,7 @@ export default function Home() {
         };
     }, [plis, subscribers, subscriptions, countNewSubscriptions]);
 
-    const getPlis = (refresh = false) => {
+    const getPlis = (refresh = false, initCmp = false) => {
         connector({
             method: "get",
             url: `${endPoints.PLIS}`,
@@ -532,6 +540,9 @@ export default function Home() {
                 }
                 if (refresh) {
                     setInitOpenedPlis(initOpenedPlis + 1);
+                }
+                if (initCmp) {
+                    updateSeconds(0);
                 }
             },
             catch: (error) => {
@@ -993,7 +1004,6 @@ export default function Home() {
                         setAction={setAction}
                         setMsgNotifTop={setMsgNotifTop}
                         setMsgNotifTopTime={setMsgNotifTopTime}
-                        getPlis={getPlis}
                         setItem={setItem}
                         publishPli={publishPli}
                         setPublishPli={setPublishPli}

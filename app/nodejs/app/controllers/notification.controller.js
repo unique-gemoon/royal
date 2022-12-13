@@ -264,6 +264,7 @@ export function pliNotifications(req, res) {
                             message: "ok",
                             pli: req.pli,
                             subscribers: cpsubscribers,
+                            dateNowSys: new Date()
                         });
                     })
                     .catch((err) => {
