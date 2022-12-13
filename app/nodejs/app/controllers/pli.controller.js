@@ -575,6 +575,7 @@ export function findAllPlisNotElapsed(req, res) {
                 res.status(200).send({
                     message: "pli",
                     plis: cpPlis,
+                    dateNowSys: new Date()
                 });
                 return;
             }
