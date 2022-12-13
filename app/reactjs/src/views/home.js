@@ -538,11 +538,11 @@ export default function Home() {
                 } else {
                     refreshPublishPli(response.data.plis);
                 }
-                if (refresh) {
-                    setInitOpenedPlis(initOpenedPlis + 1);
-                }
                 if (initCmp) {
                     updateSeconds(0);
+                }
+                if (refresh) {
+                    setInitOpenedPlis(initOpenedPlis + 1);
                 }
             },
             catch: (error) => {
