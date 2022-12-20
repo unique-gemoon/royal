@@ -33,15 +33,15 @@ services:
     ports:
       - 8080:8080
 
-#  reactjs:
-#    depends_on:
-#      - nodejs
-#    build:
-#      context: .
-#      dockerfile: docker/reactjs/Dockerfile
-#      target: client_nginx
-#    ports:
-#      - 8086:80
+  reactjs:
+    depends_on:
+      - nodejs
+    build:
+      context: .
+      dockerfile: docker/reactjs/Dockerfile
+      target: client_nginx
+    ports:
+      - 3000:80
 
   mailhog:
     image: "mailhog/mailhog"
