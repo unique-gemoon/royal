@@ -2,7 +2,7 @@ import moment from "moment";
 import React from "react";
 import CotteIcon from "../../assets/images/icons/cotteIcon";
 import { SimpleComment } from "../../assets/styles/componentStyle";
-import { getDurationHM } from "../../helper/fonctions";
+import { getDurationHMText } from "../../helper/fonctions";
 
 export default function ItemCitation({
   item,
@@ -31,7 +31,7 @@ export default function ItemCitation({
         <span className="name-user-comment">{item.user.username}</span>
         {item.time ? " . " : null}
         <span className="time-comment">
-          Il y a {getDurationHM(moment(), item.createdAt)}
+          {getDurationHMText(moment(), item.createdAt)}
         </span>
       </div>
       {item.ancestry ? (

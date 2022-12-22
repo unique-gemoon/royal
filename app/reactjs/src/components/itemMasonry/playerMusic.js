@@ -45,20 +45,17 @@ export default function PlayerMusic({ item }) {
                 audioFile={getPathMedia(item.path, "music")}
                 className={"react-waves"}
                 options={{
-                    backend: "MediaElement", // maps the waveform to an audio element
-                    normalize: true,
-                    cursorWidth: 0,
-                    mediaType: "audio",
-                    hideScrollbar: true,
-                    responsive: true,
-
                     waveColor: "#A0A0A0",
                     progressColor: "OrangeRed",
                     cursorColor: "OrangeRed",
                     barWidth: 1,
                     barRadius: 1,
                     height: 50,
-                    width: 100,
+                    normalize: false,
+                    cursorWidth: 0,
+                    mediaType: "audio",
+                    hideScrollbar: true,
+                    responsive: true,
                 }}
                 zoom={1}
                 playing={playingMusic}

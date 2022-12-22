@@ -124,7 +124,7 @@ export default function ItemMasonry({
                     </div>
                     <div className="Bloc-NV2">
                         <div className="content-Bloc-NV2">
-                            <div className={`${pli.activeItem?.id == item.id && pli.showNV2 ? "" : "d-none"}`}>
+                            <div className={`${pli.activeItem?.id == item.id && pli.showNV2 ? "" : "h-0"}`}>
                                 {item.ouverture || data.mediaOuverture.count > 0 ? (
                                     <div className="content-bloc-NV2">
                                         {data.mediaOuverture.count > 0 && (

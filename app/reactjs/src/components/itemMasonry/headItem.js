@@ -479,7 +479,7 @@ export default function HeadItem({
                         }
                     }}
                 >
-                    {item.totalComments} <CommentOutlinedIcon /> <ArrowDownIcon />
+                    {item.totalComments} <CommentOutlinedIcon /> <span className="arrow-toggle-comment"><ArrowDownIcon /></span>
                 </div>
                 <div className="btn-copy">
                     <ClickAwayListener onClickAway={handleCopyClose}>

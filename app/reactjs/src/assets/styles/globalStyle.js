@@ -338,6 +338,11 @@ export const HeadContentItem = styled.div`
         .nb-message-comment{
             display: flex;
             align-items: center;
+            .arrow-toggle-comment{
+                svg{
+                    height: 6px;
+                }
+            }
             svg{
                 &:last-child{
                     transition: none;
