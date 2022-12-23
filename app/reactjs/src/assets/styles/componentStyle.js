@@ -1792,7 +1792,7 @@ export const ItemListMessagerie = styled.div`
 `;
 
 export const MasonryItem = styled.div`
-  background-color: #fff;
+  background-color: #FFF;
   border-radius: 20px;
   box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.16);
   .bloc-miniature {
@@ -1822,6 +1822,11 @@ export const MasonryItem = styled.div`
       max-height: ${({ height }) =>  height < 700 ? `calc(850px - ${height}px)` : `initial`};
       overflow-y: auto;
       border-radius: 0 0 20px 20px;
+      & > div{
+        &.h-0{
+          height: 0;
+        }
+      }
     }
   }
   .content-bloc-NV2 {
@@ -1902,14 +1907,11 @@ export const MusicPlayer = styled.div`
     }
   }
   .react-waves {
-    height: 15px;
+    height: 25px;
     overflow: hidden;
     padding: 0;
     margin: 0;
     width:100%;
-    wave {
-      top: -10px;
-    }
   }
 `;
 export const BarTimer = styled.div`
@@ -2237,6 +2239,7 @@ export const ModalItem = styled(Modal)`
     border-radius: 20px;
     max-height: 100%;
     padding-top: 30px;
+    padding-bottom: 30px;
     @media(max-width: 1200px){
       padding-top: 70px;
     }
@@ -2250,11 +2253,11 @@ export const ModalItem = styled(Modal)`
       padding: 0;
       height: 100%;
       & > div {
-        max-height: calc(100vh - 60px);
+        max-height: calc(100svh - 60px);
         overflow-y: auto;
         margin: auto;
         @media(max-width: 1200px){
-          max-height: calc(100vh - 90px);
+          max-height: calc(100svh - 90px);
         }
       }
       .Bloc-NV2 {

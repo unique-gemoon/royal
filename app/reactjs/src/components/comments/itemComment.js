@@ -5,7 +5,7 @@ import { CommentItem } from "../../assets/styles/componentStyle";
 import { ReplyIcon, ReplyIconGreen } from "../../assets/styles/globalStyle";
 import InputEmoji from "../ui-elements/inputEmoji";
 import moment from "moment";
-import { getDurationHM, sortObjects } from "../../helper/fonctions";
+import { getDurationHMText, sortObjects } from "../../helper/fonctions";
 
 export default function ItemComment({
   item,
@@ -40,7 +40,7 @@ export default function ItemComment({
         <span className="name-user-comment">{item.user.username}</span>
         {item.time ? " . " : null}
         <span className="time-comment">
-          Il y a {getDurationHM(moment(), item.createdAt)}
+          {getDurationHMText(moment(), item.createdAt)}
         </span>
       </div>
       <div className="content-text-comment"> {item.message}</div>
@@ -96,7 +96,7 @@ export default function ItemComment({
                       </span>
                       {rep.createdAt ? " . " : null}
                       <span className="time-comment">
-                        Il y a {getDurationHM(moment(), rep.createdAt)}
+                        {getDurationHMText(moment(), rep.createdAt)}
                       </span>
                     </div>
                     <div className="content-text-comment"> {rep.message}</div>
