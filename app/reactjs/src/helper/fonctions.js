@@ -107,7 +107,7 @@ export function getDurationHMText(from, to) {
         return moment(to).format("DD.MM.YYYY");
     } else {
         const hour = String(h).length == 1 ? "0" + h : h;
-        const minute = String(m).length == 1 ? "0" + m : m;
+        const minute = h > 0 && String(m).length == 1 ? "0" + m : m;
         return `Il y a ${h > 0 ? hour + "h" : ""}${m > 0 ? minute + "m" : ""}`;
     }
 }
