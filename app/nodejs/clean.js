@@ -11,17 +11,10 @@ const Op = db.Sequelize.Op;
 //COMMAND : node clean.js days=365
 //COMMAND : node clean.js minutes=10
 
-//schedule("*/30 * * * * *", () => {
-//   console.log("running a task every 30 seconds.");
-
-schedule("* * */1 * * *", () => {
-    console.log("running a task every 1 hour.");
-
-    const args = getArgs();
-    const days = Number(args?.days) || 365;
-    const minutes = Number(args?.minutes) || days * 24 * 60;
-    cleanOldMediasPlis(minutes);
-});
+const args = getArgs();
+const days = Number(args?.days) || 365;
+const minutes = Number(args?.minutes) || days * 24 * 60;
+cleanOldMediasPlis(minutes);
 
 function cleanOldMediasPlis(minutes) {
     Pli.findAll({
