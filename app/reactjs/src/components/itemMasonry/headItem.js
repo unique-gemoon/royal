@@ -308,7 +308,7 @@ export default function HeadItem({
                                     </div>
                                 ))}
                         </div>
-                        {mediaIcons.length > 1 && !isDesktopOrLaptop && (
+                        {mediaIcons.length > 1 || !isDesktopOrLaptop && (
                             <div
                                 className={`item-detail more-media ${showMediaIcons ? "is-showing" : ""}`}
                                 onClick={() => {
